@@ -1,2 +1,2 @@
 # healthcodec
-Optimal serialization for openEHR reference model
+Página hospedada no próprio Github: https://kyriosdata.github.io/healthcodec. 
