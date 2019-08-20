@@ -6,3 +6,4 @@
  identificador único da _issue_ que está sendo contemplada pela contribuição.
 1. Assine a <a href="https://www.clahub.com/agreements/kyriosdata/exemplo">
 Licença do Acordo de Contribuição</a>.
+1. Crie um _pull request_ correspondente. 
