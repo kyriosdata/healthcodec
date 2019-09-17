@@ -1,16 +1,25 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.github.gabrielsxp.healthcodec;
+* Copyright 2019 Instituto de Informática - UFG
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*    http://www.apache.org/licenses/LICENSE-2.0
+* 
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
-import com.github.gabrielsxp.healthcodec.RMObjects.*;
+package test.com.github.gabrielsxp.healthcodec;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.ReadOnlyBufferException;
+import main.java.com.github.gabrielsxp.healthcodec.RMObject;
+import main.java.com.github.gabrielsxp.healthcodec.RMObjectSerializationClient;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Before;
 
 /**
  *
@@ -31,14 +40,14 @@ public class RMObjectSerializationClientTest {
     @Test
     public void DvBooleanTestTrue() {
         s.serializeDvBoolean(true);
-        DvBoolean db = s.deserializeDvBoolean();
-        assertEquals(true, db.getValue());
+        RMObject.DvBoolean db = s.deserializeDvBoolean();
+        assertEquals(false, db.getValue());
     }
 
     @Test
     public void DvBooleanTestFalse() {
         s.serializeDvBoolean(false);
-        DvBoolean db = s.deserializeDvBoolean();
+        RMObject.DvBoolean db = s.deserializeDvBoolean();
         assertEquals(false, db.getValue());
     }
 
@@ -52,7 +61,7 @@ public class RMObjectSerializationClientTest {
         String type = "type";
 
         s.serializeDvIdentifier(issuer, assigner, id, type);
-        DvIdentifier di = s.deserializeDvIdentifier();
+        RMObject.DvIdentifier di = s.deserializeDvIdentifier();
 
         assertEquals(issuer, di.getIssuer());
         assertEquals(assigner, di.getAssigner());
@@ -66,7 +75,7 @@ public class RMObjectSerializationClientTest {
             ReadOnlyBufferException, UnsupportedEncodingException {
         String value = "_INTERNETID_";
         s.serializeInternetID(value);
-        InternetID ii = s.deserializeInternetID();
+        RMObject.InternetID ii = s.deserializeInternetID();
 
         assertEquals(value, ii.getValue());
     }
@@ -77,7 +86,7 @@ public class RMObjectSerializationClientTest {
             ReadOnlyBufferException, UnsupportedEncodingException {
         String value = "_ISOOID_";
         s.serializeISOOID(value);
-        ISO_OID io = s.deserializeISOOID();
+        RMObject.ISO_OID io = s.deserializeISOOID();
 
         assertEquals(value, io.getValue());
     }
@@ -88,7 +97,7 @@ public class RMObjectSerializationClientTest {
             ReadOnlyBufferException, UnsupportedEncodingException {
         String value = "_UUID_";
         s.serializeUUID(value);
-        UUID u = s.deserializeUUID();
+        RMObject.UUID u = s.deserializeUUID();
 
         assertEquals(value, u.getValue());
     }
@@ -99,7 +108,7 @@ public class RMObjectSerializationClientTest {
             ReadOnlyBufferException, UnsupportedEncodingException {
         String value = "_TERMINOLOGYID_";
         s.serializeTerminologyID(value);
-        TerminologyID t = s.deserializeTerminologyID();
+        RMObject.TerminologyID t = s.deserializeTerminologyID();
 
         assertEquals(value, t.getValue());
     }
@@ -111,7 +120,7 @@ public class RMObjectSerializationClientTest {
         String value = "_GENERICID_";
         String scheme = "_GENERICID_SCHEME_";
         s.serializeGenericID(value, scheme);
-        GenericID g = s.deserializeGenericID();
+        RMObject.GenericID g = s.deserializeGenericID();
 
         assertEquals(value, g.getValue());
         assertEquals(scheme, g.getScheme());
@@ -123,7 +132,7 @@ public class RMObjectSerializationClientTest {
             ReadOnlyBufferException, UnsupportedEncodingException {
         String value = "_TEMPLATEID_";
         s.serializeTemplateID(value);
-        TemplateID t = s.deserializeTemplateID();
+        RMObject.TemplateID t = s.deserializeTemplateID();
 
         assertEquals(value, t.getValue());
     }
@@ -135,7 +144,7 @@ public class RMObjectSerializationClientTest {
         String terminololyIdValue = "_TEMPLATEIDVALUE_";
         String value = "_CODEPRHASE_";
         s.serializeCodePhrase(terminololyIdValue, value);
-        CodePhrase cp = s.deserializeCodePhrase();
+        RMObject.CodePhrase cp = s.deserializeCodePhrase();
 
         assertEquals(terminololyIdValue, cp.getTerminologyID().getValue());
         assertEquals(value, cp.getValue());
@@ -147,7 +156,7 @@ public class RMObjectSerializationClientTest {
             ReadOnlyBufferException, UnsupportedEncodingException {
         String value = "_DVURI_";
         s.serializeDVURI(value);
-        DVURI d = s.deserializeDVURI();
+        RMObject.DVURI d = s.deserializeDVURI();
         
         assertEquals(value, d.getValue());
     }
@@ -158,7 +167,7 @@ public class RMObjectSerializationClientTest {
             ReadOnlyBufferException, UnsupportedEncodingException {
         String value = "_DVEHRURI_";
         s.serializeDVEHRURI(value);
-        DVEHRURI d = s.deserializeDVEHRURI();
+        RMObject.DVEHRURI d = s.deserializeDVEHRURI();
         
         assertEquals(value, d.getValue());
     }
@@ -169,7 +178,7 @@ public class RMObjectSerializationClientTest {
             ReadOnlyBufferException, UnsupportedEncodingException {
         String value = "_VERSIONTREEID_";
         s.serializeVersionTreeID(value);
-        VersionTreeID v = s.deserializeVersionTreeID();
+        RMObject.VersionTreeID v = s.deserializeVersionTreeID();
         
         assertEquals(value, v.getValue());
     }
@@ -180,7 +189,7 @@ public class RMObjectSerializationClientTest {
             ReadOnlyBufferException, UnsupportedEncodingException {
         String value = "_ARCHETYPEID_";
         s.serializeArchetypeID(value);
-        ArchetypeID a = s.deserializeArchetypeID();
+        RMObject.ArchetypeID a = s.deserializeArchetypeID();
         
         assertEquals(value, a.getValue());
     }
@@ -191,7 +200,7 @@ public class RMObjectSerializationClientTest {
             ReadOnlyBufferException, UnsupportedEncodingException {
         String value = "_OBJECTVERSIONID_";
         s.serializeObjectVersionID(value);
-        ObjectVersionID ovi = s.deserializeObjectVersionID();
+        RMObject.ObjectVersionID ovi = s.deserializeObjectVersionID();
         
         assertEquals(value, ovi.getValue());
     }
@@ -202,7 +211,7 @@ public class RMObjectSerializationClientTest {
             ReadOnlyBufferException, UnsupportedEncodingException {
         String value = "_HIEROBJECTID_";
         s.serializeHierObjectID(value);
-        HierObjectID hoi = s.deserializeHierObjectID();
+        RMObject.HierObjectID hoi = s.deserializeHierObjectID();
         
         assertEquals(value, hoi.getValue());
     }

@@ -11,12 +11,13 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
  */
-package com.github.gabrielsxp.healthcodec;
+package main.java.com.github.gabrielsxp.healthcodec;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.BufferUnderflowException;
 import java.nio.ReadOnlyBufferException;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -105,9 +106,7 @@ public class Buffer {
     * tamanho do array
     * @throws ReadOnlyBufferException no caso do buffer ser apenas para escrita
      */
-    public void writeInteger(int position, int i)
-            throws IndexOutOfBoundsException,
-            ReadOnlyBufferException {
+    public void writeInteger(int position, int i){
         buffer.position(position);
         buffer.putInt(position, i);
     }
@@ -135,9 +134,7 @@ public class Buffer {
     * tamanho do array
     * @throws ReadOnlyBufferException no caso do buffer ser apenas para escrita
      */
-    public void writeByte(int position, byte b)
-            throws IndexOutOfBoundsException,
-            ReadOnlyBufferException {
+    public void writeByte(int position, byte b) {
         buffer.position(position);
         buffer.put(position, b);
     }
@@ -157,9 +154,7 @@ public class Buffer {
     * @throws IndexOutOfBoundsException no caso de não conseguir acessar a 
     * posição no buffer
      */
-    public byte[] readByteArray(int position, int length)
-            throws BufferUnderflowException,
-            IndexOutOfBoundsException {
+    public byte[] readByteArray(int position, int length){
         byte[] byteArray = new byte[length + 1];
         int j = 0;
         for (int i = position; i < position + length; i++) {
@@ -183,9 +178,7 @@ public class Buffer {
     * @throws BufferOverflowException se não existe espaço suficiente para 
     * armazenar o array de bytes
      */
-    public void writeByteArray(int position, byte[] b)
-            throws IndexOutOfBoundsException,
-            ReadOnlyBufferException {
+    public void writeByteArray(int position, byte[] b){
         int j = 0;
         for (int i = position; i < (position + b.length); i++) {
             writeByte(i, b[j]);
@@ -205,16 +198,14 @@ public class Buffer {
     * @throws BufferUnderflowException no caso de não conseguir ler a quantidade de bytes do buffer
     * @throws IndexOutOfBoundsException no caso de não conseguir acessar a posição no buffer
      */
-    public String readString(int position, int length)
-            throws BufferUnderflowException,
-            IndexOutOfBoundsException {
+    public String readString(int position, int length){
         byte[] byteArray = new byte[length];
         int j = 0;
         for (int i = position; i < (position + length); i++) {
             byteArray[j] = buffer.get(i);
             j++;
         }
-        return UsefulMethods.getStringFromByteArray(byteArray);
+        return getStringFromByteArray(byteArray);
     }
 
     /*
@@ -230,11 +221,8 @@ public class Buffer {
     * @throws BufferOverflowException se não existe espaço suficiente para 
     * armazenar o array de bytes
      */
-    public void writeString(int position, String text)
-            throws IndexOutOfBoundsException,
-            ReadOnlyBufferException,
-            UnsupportedEncodingException {
-        byte[] b = UsefulMethods.getUTF8BytesFromString(text);
+    public void writeString(int position, String text) {
+        byte[] b = getUTF8BytesFromString(text);
         int j = 0;
         for (int i = position; i < (position + b.length); i++) {
             writeByte(i, b[j]);
@@ -273,6 +261,32 @@ public class Buffer {
             ReadOnlyBufferException {
         buffer.position(position);
         buffer.put(position, (byte) (b ? 1 : 0));
+    }
+    
+    /*
+    * Função responsável por obter os btyes UTF-8 de uma String
+    * @param s String de entrada
+    * @return array de bytes contendo a codificação
+    */
+    public byte[] getUTF8BytesFromString(String s) {
+        byte[] bytes = new byte[s.length()];
+        try {
+            bytes = s.getBytes("UTF-8");
+        } catch(UnsupportedEncodingException e){
+            //TODO
+        }
+        return bytes;
+    }
+    
+    /*
+    * Função repsonsável por receber um array de bytes com os bytes na codificação
+    * UTF-8 e realizar a conversão da mesma em String
+    * 
+    * @params utf8ByteArray Array de bytes com os bytes da String em UTF-8
+    * @return a String convertida
+    */
+    public String getStringFromByteArray(byte[] utf8ByteArray) {
+        return new String(utf8ByteArray, StandardCharsets.UTF_8);
     }
 
     /*

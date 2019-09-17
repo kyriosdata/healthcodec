@@ -11,14 +11,14 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package com.github.gabrielsxp.healthcodec;
+package main.java.com.github.gabrielsxp.healthcodec;
 
 /**
  *
  * @author Gabriel
  */
-public class RMObjects {
-    static class DvBoolean {
+public class RMObject {
+    public static class DvBoolean {
         private final boolean value;
         
         protected DvBoolean(boolean value){
@@ -30,7 +30,7 @@ public class RMObjects {
         }
     }
     
-    static class DvIdentifier {
+    public static class DvIdentifier {
          private final String issuer;
          private final String assigner;
          private final String id;
@@ -60,7 +60,7 @@ public class RMObjects {
         }
     }
     
-    static class InternetID {
+    public static class InternetID {
         private final String value;
 
         protected InternetID(String value) {
@@ -72,7 +72,7 @@ public class RMObjects {
         }
     }
     
-    static class ISO_OID {
+    public static class ISO_OID {
         private final String value;
         
         protected ISO_OID(String value) {
@@ -84,10 +84,10 @@ public class RMObjects {
         }   
     }
     
-    static class UUID {
+    public static class UUID {
         private final String value;
 
-        protected UUID(String value) {
+        public UUID(String value) {
             this.value = value;
         }
 
@@ -96,7 +96,7 @@ public class RMObjects {
         }
     }
     
-    static class GenericID {
+    public static class GenericID {
         private final String value;
         private final String scheme;
 
@@ -114,7 +114,7 @@ public class RMObjects {
         }
     }
     
-    static class TemplateID {
+    public static class TemplateID {
         private final String value;
 
         protected TemplateID(String value) {
@@ -126,10 +126,10 @@ public class RMObjects {
         } 
     }
     
-    static class TerminologyID {
+    public static class TerminologyID {
         private final String value;
         
-        protected TerminologyID(String value){
+        public TerminologyID(String value){
             this.value = value;
         }
         
@@ -138,7 +138,7 @@ public class RMObjects {
         }
     }
     
-    static class CodePhrase {
+    public static class CodePhrase {
         private final TerminologyID terminologyID;
         private final String value;
         
@@ -156,7 +156,7 @@ public class RMObjects {
         }
     }
     
-    static class DVURI {
+    public static class DVURI {
         private final String value;
 
         protected DVURI(String value) {
@@ -168,7 +168,7 @@ public class RMObjects {
         }
     }
     
-    static class DVEHRURI {
+    public static class DVEHRURI {
         private final String value;
 
         protected DVEHRURI(String value) {
@@ -180,7 +180,7 @@ public class RMObjects {
         }
     }
     
-    static class VersionTreeID {
+    public static class VersionTreeID {
         private final String value;
 
         protected VersionTreeID(String value) {
@@ -192,7 +192,7 @@ public class RMObjects {
         }
     }
     
-    static class ArchetypeID {
+    public static class ArchetypeID {
         private final String value;
 
         protected ArchetypeID(String value) {
@@ -204,7 +204,7 @@ public class RMObjects {
         }
     }
     
-    static class ObjectVersionID {
+    public static class ObjectVersionID {
         private final String value;
 
         protected ObjectVersionID(String value) {
@@ -216,7 +216,7 @@ public class RMObjects {
         }
     }
     
-    static class HierObjectID {
+    public static class HierObjectID {
         private final String value;
 
         protected HierObjectID(String value) {

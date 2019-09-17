@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.github.gabrielsxp.healthcodec;
+package main.java.com.github.gabrielsxp.healthcodec;
 
-import com.github.gabrielsxp.healthcodec.RMObjects.*;
+import main.java.com.github.gabrielsxp.healthcodec.RMObject.*;
 
 /**
  *

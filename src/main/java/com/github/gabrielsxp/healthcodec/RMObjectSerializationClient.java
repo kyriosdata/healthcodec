@@ -11,12 +11,16 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
  */
-package com.github.gabrielsxp.healthcodec;
+package main.java.com.github.gabrielsxp.healthcodec;
 
-import com.github.gabrielsxp.healthcodec.SerializationUtils.*;
-import static com.github.gabrielsxp.healthcodec.Constants.RMObjects.*;
-import com.github.gabrielsxp.healthcodec.Constants.RMObjects;
-import com.github.gabrielsxp.healthcodec.RMObjects.*;
+import main.java.com.github.gabrielsxp.healthcodec.Buffer;
+import main.java.com.github.gabrielsxp.healthcodec.Deserializer;
+import main.java.com.github.gabrielsxp.healthcodec.Index;
+import main.java.com.github.gabrielsxp.healthcodec.RMObjectID;
+import main.java.com.github.gabrielsxp.healthcodec.SerializationUtils.*;
+import static main.java.com.github.gabrielsxp.healthcodec.RMObjectID.*;
+import main.java.com.github.gabrielsxp.healthcodec.RMObject.*;
+import main.java.com.github.gabrielsxp.healthcodec.Serializer;
 import java.io.UnsupportedEncodingException;
 import java.nio.ReadOnlyBufferException;
 
@@ -42,7 +46,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     * Construtor privado para ser utilizado na função #link{create}
     */
     RMObjectSerializationClient() {
-        this.order = new int[RMObjects.values().length];
+        this.order = new int[RMObjectID.values().length];
         offset = 0;
     }
 
@@ -90,15 +94,14 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * @param id
      * @param type
      * @return instância de RMObjectSerializationClient atual
-     * @throws IndexOutOfBoundsException
-     * @throws ReadOnlyBufferException
-     * @throws UnsupportedEncodingException
      */
     @Override
     public RMObjectSerializationClient serializeDvIdentifier(
-            String issuer, String assigner, String id, String type
-    ) throws IndexOutOfBoundsException,
-            ReadOnlyBufferException, UnsupportedEncodingException {
+            String issuer,
+            String assigner, 
+            String id, 
+            String type
+    ) throws UnsupportedEncodingException {
         DvIdentifierSerializer s = new DvIdentifierSerializer();
         register(DVIDENTIFIER, offset);
         setOffset(s.serialize(buffer, offset, issuer, assigner, id, type));
@@ -128,8 +131,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeInternetID(String value)
-            throws IndexOutOfBoundsException,
-            ReadOnlyBufferException, UnsupportedEncodingException {
+            throws UnsupportedEncodingException {
 
         InternetIDSerializer s = new InternetIDSerializer();
         register(INTERNETID, offset);
@@ -156,9 +158,8 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * @throws UnsupportedEncodingException
      */
     @Override
-    public RMObjectSerializationClient serializeISOOID(String value) 
-            throws IndexOutOfBoundsException, 
-            ReadOnlyBufferException, UnsupportedEncodingException {
+    public RMObjectSerializationClient serializeISOOID(String value)
+            throws UnsupportedEncodingException {
         ISOOIDSerialilzer s = new ISOOIDSerialilzer();
         register(ISO_OID, offset);
         setOffset(s.serialize(buffer, offset, value));
@@ -186,8 +187,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeUUID(String value) 
-            throws IndexOutOfBoundsException, 
-            ReadOnlyBufferException, UnsupportedEncodingException {
+            throws UnsupportedEncodingException {
         UUIDSerializer s = new UUIDSerializer();
         register(UUID, offset);
         setOffset(s.serialize(buffer, offset, value));
@@ -215,8 +215,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeTerminologyID(String value) 
-            throws IndexOutOfBoundsException, 
-            ReadOnlyBufferException, UnsupportedEncodingException {
+            throws UnsupportedEncodingException {
         TerminologyIDSerializer s = new TerminologyIDSerializer();
         register(TERMINOLOGYID, offset);
         setOffset(s.serialize(buffer, offset, value));
@@ -245,8 +244,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeGenericID(String value, String scheme) 
-            throws IndexOutOfBoundsException, 
-            ReadOnlyBufferException, UnsupportedEncodingException {
+            throws UnsupportedEncodingException {
         GenericIDSerializer s = new GenericIDSerializer();
         register(GENERICID, offset);
         setOffset(s.serialize(buffer, offset, value, scheme));
@@ -274,8 +272,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeTemplateID(String value) 
-            throws IndexOutOfBoundsException, 
-            ReadOnlyBufferException, UnsupportedEncodingException {
+            throws UnsupportedEncodingException {
         TemplateIDSerializer s = new TemplateIDSerializer();
         register(TEMPLATEID, offset);
         setOffset(s.serialize(buffer, offset, value));
@@ -304,9 +301,9 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeCodePhrase(
-            String terminologyIDValue, String value) 
-            throws IndexOutOfBoundsException, 
-            ReadOnlyBufferException, UnsupportedEncodingException {
+            String terminologyIDValue,
+            String value) 
+            throws UnsupportedEncodingException {
         CodePhraseSerializer s = new CodePhraseSerializer();
         register(CODEPHRASE, offset);
         setOffset(s.serialize(buffer, offset, terminologyIDValue, value));
@@ -334,8 +331,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeDVURI(String value) 
-            throws IndexOutOfBoundsException, 
-            ReadOnlyBufferException, UnsupportedEncodingException {
+            throws UnsupportedEncodingException {
         DVURISerializer s = new DVURISerializer();
         register(DVURI, offset);
         setOffset(s.serialize(buffer, offset, value));
@@ -363,8 +359,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeDVEHRURI(String value) 
-            throws IndexOutOfBoundsException, 
-            ReadOnlyBufferException, UnsupportedEncodingException {
+            throws UnsupportedEncodingException {
         DVEHRURISerializer s = new DVEHRURISerializer();
         register(DVEHRURI, offset);
         s.serialize(buffer, offset, value);
@@ -392,8 +387,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeVersionTreeID(String value) 
-            throws IndexOutOfBoundsException, 
-            ReadOnlyBufferException, UnsupportedEncodingException {
+            throws UnsupportedEncodingException {
         VersionTreeIDSerializer s = new VersionTreeIDSerializer();
         register(VERSIONTREEID, offset);
         s.serialize(buffer, offset, value);
@@ -421,8 +415,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeArchetypeID(String value) 
-            throws IndexOutOfBoundsException, 
-            ReadOnlyBufferException, UnsupportedEncodingException {
+            throws UnsupportedEncodingException {
         ArchetypeIDSerializer s = new ArchetypeIDSerializer();
         register(ARCHETYPEID, offset);
         s.serialize(buffer, offset, value);
@@ -450,8 +443,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeObjectVersionID(String value) 
-            throws IndexOutOfBoundsException, 
-            ReadOnlyBufferException, UnsupportedEncodingException {
+            throws UnsupportedEncodingException {
         ObjectVersionIDSerializer s = new ObjectVersionIDSerializer();
         register(OBJECTVERSIONID, offset);
         setOffset(s.serialize(buffer, offset, value));
@@ -478,7 +470,8 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * @throws UnsupportedEncodingException
      */
     @Override
-    public RMObjectSerializationClient serializeHierObjectID(String value) throws IndexOutOfBoundsException, ReadOnlyBufferException, UnsupportedEncodingException {
+    public RMObjectSerializationClient serializeHierObjectID(String value) 
+            throws UnsupportedEncodingException {
         HierObjectIDSerialilzer s = new HierObjectIDSerialilzer();
         register(HIEROBJECTID, offset);
         setOffset(s.serialize(buffer, offset, value));
@@ -501,7 +494,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * @param id
      * @param offset 
      */
-    private void register(RMObjects id, int offset) {
+    private void register(RMObjectID id, int offset) {
         String key = Index.createKey(
                 id.name(), order[id.getValue()]
         );
@@ -514,21 +507,13 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * @param id
      * @return 
      */
-    private int getOffsetFromID(RMObjects id) {
+    private int getOffsetFromID(RMObjectID id) {
         return index.getItemPosition(
                 Index.createKey(
                         id.name(),
                         order[id.getValue()]
                 )
         );
-    }
-
-    /**
-     *
-     * @return
-     */
-    public byte[] getBuffer() {
-        return buffer.data();
     }
 
     private void setOffset(int pos) {
