@@ -14,12 +14,14 @@
 package main.java.com.github.gabrielsxp.healthcodec;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
+import main.java.com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
 
 /**
  *
  * @author Gabriel
  */
- public interface Serializer {
+public interface Serializer {
 
     /**
      * Serializador de DvBoolean
@@ -28,7 +30,7 @@ import java.io.UnsupportedEncodingException;
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-     RMObjectSerializationClient serializeDvBoolean(boolean value)
+    RMObjectSerializationClient serializeDvBoolean(boolean value)
             throws UnsupportedEncodingException;
 
     /**
@@ -41,7 +43,7 @@ import java.io.UnsupportedEncodingException;
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-     RMObjectSerializationClient serializeDvIdentifier(
+    RMObjectSerializationClient serializeDvIdentifier(
             String issuer,
             String assigner,
             String id,
@@ -54,7 +56,7 @@ import java.io.UnsupportedEncodingException;
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-     RMObjectSerializationClient serializeInternetID(String value)
+    RMObjectSerializationClient serializeInternetID(String value)
             throws UnsupportedEncodingException;
 
     /**
@@ -64,7 +66,7 @@ import java.io.UnsupportedEncodingException;
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-     RMObjectSerializationClient serializeISOOID(String value)
+    RMObjectSerializationClient serializeISOOID(String value)
             throws UnsupportedEncodingException;
 
     /**
@@ -74,7 +76,7 @@ import java.io.UnsupportedEncodingException;
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-     RMObjectSerializationClient serializeUUID(String value)
+    RMObjectSerializationClient serializeUUID(String value)
             throws UnsupportedEncodingException;
 
     /**
@@ -84,7 +86,7 @@ import java.io.UnsupportedEncodingException;
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-     RMObjectSerializationClient serializeTerminologyID(String value)
+    RMObjectSerializationClient serializeTerminologyID(String value)
             throws UnsupportedEncodingException;
 
     /**
@@ -95,7 +97,7 @@ import java.io.UnsupportedEncodingException;
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-     RMObjectSerializationClient serializeGenericID(
+    RMObjectSerializationClient serializeGenericID(
             String value,
             String scheme) throws UnsupportedEncodingException;
 
@@ -106,7 +108,7 @@ import java.io.UnsupportedEncodingException;
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-     RMObjectSerializationClient serializeTemplateID(String value)
+    RMObjectSerializationClient serializeTemplateID(String value)
             throws UnsupportedEncodingException;
 
     /**
@@ -117,7 +119,7 @@ import java.io.UnsupportedEncodingException;
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-     RMObjectSerializationClient serializeCodePhrase(
+    RMObjectSerializationClient serializeCodePhrase(
             String terminologyIDValue,
             String codeString) throws UnsupportedEncodingException;
 
@@ -128,7 +130,7 @@ import java.io.UnsupportedEncodingException;
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-     RMObjectSerializationClient serializeDVURI(String value)
+    RMObjectSerializationClient serializeDVURI(String value)
             throws UnsupportedEncodingException;
 
     /**
@@ -138,7 +140,7 @@ import java.io.UnsupportedEncodingException;
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-     RMObjectSerializationClient serializeDVEHRURI(String value)
+    RMObjectSerializationClient serializeDVEHRURI(String value)
             throws UnsupportedEncodingException;
 
     /**
@@ -148,7 +150,7 @@ import java.io.UnsupportedEncodingException;
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-     RMObjectSerializationClient serializeVersionTreeID(String value)
+    RMObjectSerializationClient serializeVersionTreeID(String value)
             throws UnsupportedEncodingException;
 
     /**
@@ -158,7 +160,7 @@ import java.io.UnsupportedEncodingException;
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-     RMObjectSerializationClient serializeArchetypeID(String value)
+    RMObjectSerializationClient serializeArchetypeID(String value)
             throws UnsupportedEncodingException;
 
     /**
@@ -168,7 +170,7 @@ import java.io.UnsupportedEncodingException;
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-     RMObjectSerializationClient serializeObjectVersionID(String value)
+    RMObjectSerializationClient serializeObjectVersionID(String value)
             throws UnsupportedEncodingException;
 
     /**
@@ -178,7 +180,90 @@ import java.io.UnsupportedEncodingException;
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-     RMObjectSerializationClient serializeHierObjectID(String value)
+    RMObjectSerializationClient serializeHierObjectID(String value)
             throws UnsupportedEncodingException;
 
-}
+    /**
+     * Serializador de ObjectID
+     *
+     * @param value
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeObjectID(String value)
+            throws UnsupportedEncodingException;
+
+    /**
+     * Serializador de PartyRef
+     *
+     * @param oidValue String value de ObjectID
+     * @param value
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializePartyRef(String oidValue, String value)
+            throws UnsupportedEncodingException;
+
+    /**
+     * Serializador de ObjectRef
+     *
+     * @param oidValue String value de ObjectID
+     * @param namespace
+     * @param type
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeObjectRef(
+            String oidValue,
+            String namespace,
+            String type) throws UnsupportedEncodingException;
+
+    /**
+     * Serializador de LocatableRef
+     *
+     * @param oidValue
+     * @param namespace
+     * @param type
+     * @param path (opcional)
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeLocatableRef(
+            String oidValue,
+            String namespace,
+            String type,
+            String path) throws UnsupportedEncodingException;
+
+    /**
+     * Serializador de LocatableRef
+     *
+     * @param value
+     * @return Instância de RMObjectSerializationClient para chaining
+     */
+    RMObjectSerializationClient serializeProportionKind(int value);
+
+    /**
+     * Serializador de AccessGroupRef
+     *
+     * @param oidValue
+     * @return Instância de RMObjectSerializationClient para chaining
+     */
+    RMObjectSerializationClient serializeAccessGroupRef(String oidValue);
+
+    /**
+     * Serializador de PartyIdentified
+     *
+     * @param oidValue
+     * @param value
+     * @param name
+     * @param identifiers
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializePartyIdentified(String oidValue,
+            String value,
+            String name,
+            List<DvIdentifier> identifiers)
+            throws UnsupportedEncodingException ;
+
+    }

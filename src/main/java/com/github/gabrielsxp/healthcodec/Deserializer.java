@@ -10,7 +10,7 @@
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
 * limitations under the License.
-*/
+ */
 package main.java.com.github.gabrielsxp.healthcodec;
 
 import main.java.com.github.gabrielsxp.healthcodec.RMObject.*;
@@ -19,95 +19,160 @@ import main.java.com.github.gabrielsxp.healthcodec.RMObject.*;
  *
  * @author Gabriel
  */
- public interface Deserializer {
+public interface Deserializer {
 
     /**
      * Deserializador de DvBoolean
+     *
      * @return Instância de DvBoolean
      */
-     DvBoolean deserializeDvBoolean();
-    
+    DvBoolean deserializeDvBoolean();
+
     /**
      * Deserializador de DvIdentifier
+     *
      * @return Instância de DvIdentifier
      */
-     DvIdentifier deserializeDvIdentifier();
-    
+    DvIdentifier deserializeDvIdentifier();
+
     /**
      * Deserializador de InternetID
+     *
      * @return Instância de InternetID
      */
-     InternetID deserializeInternetID();
-    
+    InternetID deserializeInternetID();
+
     /**
      * Deserializador de ISO_OID
+     *
      * @return Instância de ISO_OID
      */
-     ISO_OID deserializeISOOID();
-    
+    ISO_OID deserializeISOOID();
+
     /**
      * Deserializador de UUID
+     *
      * @return Instância de UUID
      */
-     UUID deserializeUUID();
-    
+    UUID deserializeUUID();
+
     /**
      * Deserializador de TerminologyID
+     *
      * @return Instância de TerminologyID
      */
-     TerminologyID deserializeTerminologyID();
-    
+    TerminologyID deserializeTerminologyID();
+
     /**
      * Deserializador de GenericID
+     *
      * @return Instância de GenericID
      */
-     GenericID deserializeGenericID();
-    
+    GenericID deserializeGenericID();
+
     /**
      * Deserializador de TemplateID
+     *
      * @return Instância de TemplateID
      */
-     TemplateID deserializeTemplateID();
-    
+    TemplateID deserializeTemplateID();
+
     /**
      * Deserializador de CodePhrase
+     *
      * @return Instância de CodePhrase
      */
-     CodePhrase deserializeCodePhrase();
-    
+    CodePhrase deserializeCodePhrase();
+
     /**
      * Deserializador de DVURI
+     *
      * @return Instância de DVURI
      */
-     DVURI deserializeDVURI();
-    
+    DVURI deserializeDVURI();
+
     /**
      * Deserializador de DVEHRURI
+     *
      * @return Instância de DVEHRURI
      */
-     DVEHRURI deserializeDVEHRURI();
-    
+    DVEHRURI deserializeDVEHRURI();
+
     /**
-    * Deserializador de VersionTreeID
+     * Deserializador de VersionTreeID
+     *
      * @return Instância de VersionTreeID
      */
-     VersionTreeID deserializeVersionTreeID();
-    
+    VersionTreeID deserializeVersionTreeID();
+
     /**
      * Deserializador de ArchetypeID
+     *
      * @return Instância de ArchetypeID
      */
-     ArchetypeID deserializeArchetypeID();
-    
+    ArchetypeID deserializeArchetypeID();
+
     /**
      * Deserializador de ObjectVersionID
+     *
      * @return Instância de ObjectVersionID
      */
-     ObjectVersionID deserializeObjectVersionID();
-    
+    ObjectVersionID deserializeObjectVersionID();
+
     /**
      * Deserializador de HierObjectID
+     *
      * @return Instância de HierObjectID
      */
-     HierObjectID deserializeHierObjectID();
+    HierObjectID deserializeHierObjectID();
+
+    /**
+     * Deserializador de ObjectID
+     *
+     * @return Instância de ObjectID
+     */
+    ObjectID deserializeObjectID();
+
+    /**
+     * Deserializador de PartyRef
+     *
+     * @return Instância de PartyRef
+     */
+    PartyRef deserializePartyRef();
+
+    /**
+     * Deserializador de ObjectRef
+     *
+     * @return Instância de ObjectRef
+     */
+    ObjectRef deserializeObjectRef();
+
+    /**
+     * Deserializador de LocatableRef
+     *
+     * @return Instância de LocatableRef
+     */
+    LocatableRef deserializeLocatableRef();
+
+    /**
+     * Deserializador de ProportionKind
+     *
+     * @return Instância de ProportionKind
+     */
+    ProportionKind deserializeProportionKind();
+
+    /**
+     * Deserializador de AccessGroupRef
+     *
+     * @return instância de AccessGroupRef
+     */
+    AccessGroupRef deserializeAccessGroupRef();
+
+    /**
+     * Deserializador de PartyIdentified
+     *
+     * @return instância de PartyIdentified
+     */
+    PartyIdentified deserializePartyIdentified();
+
 }

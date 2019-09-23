@@ -9,32 +9,37 @@
 * distributed under the License is distributed on an "AS IS" BASIS,
 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 * See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+* limitations under the License.f
+ */
 package main.java.com.github.gabrielsxp.healthcodec;
+
+import java.util.List;
 
 /**
  *
  * @author Gabriel
  */
 public class RMObject {
+
     public static class DvBoolean {
+
         private final boolean value;
-        
-        protected DvBoolean(boolean value){
+
+        protected DvBoolean(boolean value) {
             this.value = value;
         }
-        
+
         public boolean getValue() {
             return value;
         }
     }
-    
+
     public static class DvIdentifier {
-         private final String issuer;
-         private final String assigner;
-         private final String id;
-         private final String type;
+
+        private final String issuer;
+        private final String assigner;
+        private final String id;
+        private final String type;
 
         protected DvIdentifier(String issuer, String assigner, String id, String type) {
             this.issuer = issuer;
@@ -59,8 +64,9 @@ public class RMObject {
             return type;
         }
     }
-    
+
     public static class InternetID {
+
         private final String value;
 
         protected InternetID(String value) {
@@ -71,20 +77,22 @@ public class RMObject {
             return value;
         }
     }
-    
+
     public static class ISO_OID {
+
         private final String value;
-        
+
         protected ISO_OID(String value) {
             this.value = value;
         }
-        
-        public String getValue(){
+
+        public String getValue() {
             return this.value;
-        }   
+        }
     }
-    
+
     public static class UUID {
+
         private final String value;
 
         public UUID(String value) {
@@ -95,8 +103,9 @@ public class RMObject {
             return value;
         }
     }
-    
+
     public static class GenericID {
+
         private final String value;
         private final String scheme;
 
@@ -113,8 +122,9 @@ public class RMObject {
             return value;
         }
     }
-    
+
     public static class TemplateID {
+
         private final String value;
 
         protected TemplateID(String value) {
@@ -123,26 +133,28 @@ public class RMObject {
 
         public String getValue() {
             return value;
-        } 
+        }
     }
-    
+
     public static class TerminologyID {
+
         private final String value;
-        
-        public TerminologyID(String value){
+
+        public TerminologyID(String value) {
             this.value = value;
         }
-        
-        public String getValue(){
+
+        public String getValue() {
             return this.value;
         }
     }
-    
+
     public static class CodePhrase {
+
         private final TerminologyID terminologyID;
         private final String value;
-        
-        protected CodePhrase(TerminologyID terminologyID, String value){
+
+        protected CodePhrase(TerminologyID terminologyID, String value) {
             this.terminologyID = terminologyID;
             this.value = value;
         }
@@ -155,8 +167,9 @@ public class RMObject {
             return value;
         }
     }
-    
+
     public static class DVURI {
+
         private final String value;
 
         protected DVURI(String value) {
@@ -167,8 +180,9 @@ public class RMObject {
             return value;
         }
     }
-    
+
     public static class DVEHRURI {
+
         private final String value;
 
         protected DVEHRURI(String value) {
@@ -179,8 +193,9 @@ public class RMObject {
             return value;
         }
     }
-    
+
     public static class VersionTreeID {
+
         private final String value;
 
         protected VersionTreeID(String value) {
@@ -191,8 +206,9 @@ public class RMObject {
             return value;
         }
     }
-    
+
     public static class ArchetypeID {
+
         private final String value;
 
         protected ArchetypeID(String value) {
@@ -203,8 +219,9 @@ public class RMObject {
             return value;
         }
     }
-    
+
     public static class ObjectVersionID {
+
         private final String value;
 
         protected ObjectVersionID(String value) {
@@ -215,8 +232,9 @@ public class RMObject {
             return value;
         }
     }
-    
+
     public static class HierObjectID {
+
         private final String value;
 
         protected HierObjectID(String value) {
@@ -225,6 +243,146 @@ public class RMObject {
 
         public String getValue() {
             return value;
+        }
+    }
+
+    public static class ObjectID {
+
+        private final String value;
+
+        protected ObjectID(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public static class PartyRef {
+
+        private final ObjectID id;
+        private final String value;
+
+        public PartyRef(ObjectID id, String value) {
+            this.id = id;
+            this.value = value;
+        }
+
+        public ObjectID getId() {
+            return id;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public static class ObjectRef {
+
+        private final ObjectID id;
+        private final String namespace;
+        private final String type;
+
+        public ObjectRef(ObjectID id, String namespace, String type) {
+            this.id = id;
+            this.namespace = namespace;
+            this.type = type;
+        }
+
+        public ObjectID getId() {
+            return id;
+        }
+
+        public String getNamespace() {
+            return namespace;
+        }
+
+        public String getType() {
+            return type;
+        }
+    }
+
+    public static class LocatableRef {
+
+        private final ObjectVersionID id;
+        private final String namespace;
+        private final String type;
+        private final String path;
+
+        public ObjectVersionID getId() {
+            return id;
+        }
+
+        public String getNamespace() {
+            return namespace;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public LocatableRef(ObjectVersionID id, String namespace, String type, 
+                String path) {
+            this.id = id;
+            this.namespace = namespace;
+            this.type = type;
+            this.path = path;
+        }
+    }
+
+    public static class ProportionKind {
+
+        private final int value;
+
+        public ProportionKind(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    public static class AccessGroupRef {
+
+        private final ObjectID id;
+
+        public AccessGroupRef(ObjectID id) {
+            this.id = id;
+        }
+
+        public ObjectID getId() {
+            return id;
+        }
+    }
+
+    public static class PartyIdentified {
+        private final PartyRef externalRef;
+        private final String name;
+        private final List<DvIdentifier> identifiers;
+
+        public PartyIdentified(PartyRef externalRef, String name, 
+                List<DvIdentifier> identifiers) {
+            this.externalRef = externalRef;
+            this.name = name;
+            this.identifiers = identifiers;
+        }
+
+        public PartyRef getExternalRef() {
+            return externalRef;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public List<DvIdentifier> getIdentifiers() {
+            return identifiers;
         }
     }
 }
