@@ -181,5 +181,12 @@ public interface Deserializer {
      * @return instância de Archetyped
      */
     Archetyped deserializeArchetyped();
+    
+    /**
+     * Deserializador de DvEncapsulated
+     * 
+     * @return  instância de DvEncapsulated
+     */
+    DvEncapsulated deserializeDvEncapsulated();
 
 }

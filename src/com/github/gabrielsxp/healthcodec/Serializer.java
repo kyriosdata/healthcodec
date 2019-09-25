@@ -273,8 +273,25 @@ public interface Serializer {
      * @param rmVersionLength
      * @param templateIDValue
      * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeArchetyped(String archetypeIDValue,
                 String templateIDValue,
                 String rmVersionLength ) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de DvEncapsulated
+     * 
+     * @param codePhraseCharsetTerminologyIDValue
+     * @param charsetCodeString
+     * @param codePhraseLanguageTerminologyIDValue
+     * @param languageCodeString
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeDvEncapsulated(
+            String codePhraseCharsetTerminologyIDValue,
+            String charsetCodeString,
+            String codePhraseLanguageTerminologyIDValue,
+            String languageCodeString) throws UnsupportedEncodingException;
 }

@@ -720,7 +720,7 @@ public class RMObjectSerialization {
             buffer.writeInteger(offset + INT.getSize(), templateIDValueLength);
             buffer.writeInteger(offset + 2 * INT.getSize(), rmVersionLength);
             
-            int dataPosition = 3 * INT.getSize();
+            int dataPosition = offset + 3 * INT.getSize();
             buffer.writeString(dataPosition, archetypeIDValue);
             dataPosition += archetypeIDValueLength;
             buffer.writeString(dataPosition, templateIDValue);
@@ -737,7 +737,7 @@ public class RMObjectSerialization {
                     offset + INT.getSize());
             int rmVersionLength = buffer.readInteger(offset + 2*INT.getSize());
             
-            int dataPosition = 3 * INT.getSize();
+            int dataPosition = offset + 3 * INT.getSize();
             
             String archetypeIDValue = buffer.readString(
                     dataPosition, archetypeIDValueLength);
@@ -758,6 +758,91 @@ public class RMObjectSerialization {
             
             return RMObjectFactory.
                     newArchetyped(archetypeId, templateId, rmVersion);
+        }
+    }
+    
+    public static class DvEncapsulatedSerializer {
+        protected int serialize(Buffer buffer, 
+                int offset, 
+                String codePhraseCharsetTerminologyIDValue,
+                String charsetCodeString,
+                String codePhraseLanguageTerminologyIDValue,
+                String languageCodeString ){
+            int cpCharsetTerminologyIDValueLength = 
+                    codePhraseCharsetTerminologyIDValue.length();
+            int charsetCodeStringLength = charsetCodeString.length();
+            int cpLanguageTerminologyIDValueLength = 
+                    codePhraseLanguageTerminologyIDValue.length();
+            int languageCodeStringLength = languageCodeString.length();
+            
+            buffer.writeInteger(offset, cpCharsetTerminologyIDValueLength);
+            buffer.writeInteger(
+                    offset + INT.getSize(), charsetCodeStringLength);
+            buffer.writeInteger(
+                    offset + 2 * INT.getSize(), 
+                    cpLanguageTerminologyIDValueLength);
+            buffer.writeInteger(
+                    offset + 3 * INT.getSize(), languageCodeStringLength);
+            
+            int dataPosition = offset + INT.getSize() * 4;
+            buffer.writeString(
+                    dataPosition, codePhraseCharsetTerminologyIDValue);
+            dataPosition += cpCharsetTerminologyIDValueLength;
+            buffer.writeString(dataPosition, charsetCodeString);
+            dataPosition += charsetCodeStringLength;
+            buffer.writeString(
+                    dataPosition, codePhraseLanguageTerminologyIDValue);
+            dataPosition += cpLanguageTerminologyIDValueLength;
+            buffer.writeString(dataPosition, languageCodeString);
+            dataPosition += languageCodeStringLength;
+            
+            return dataPosition;
+        }
+        
+        protected DvEncapsulated deserialize(Buffer buffer, int offset){
+            int cpCharsetTerminologyIDValueLength = buffer.readInteger(offset);
+            int charsetCodeStringLength = 
+                    buffer.readInteger(offset + INT.getSize());
+            int cpLanguageTerminologyIDValueLength = 
+                    buffer.readInteger(offset + 2 * INT.getSize());
+            int languageCodeStringLength = 
+                    buffer.readInteger(offset + 3 * INT.getSize());
+            
+            int dataPosition = offset + 4 * INT.getSize();
+            
+            String codePhraseCharsetTerminologyIDValue = 
+                    buffer.readString(
+                            dataPosition, 
+                            cpCharsetTerminologyIDValueLength);
+            dataPosition += cpCharsetTerminologyIDValueLength;
+            String charsetCodeString = 
+                    buffer.readString(dataPosition, charsetCodeStringLength);
+            dataPosition += charsetCodeStringLength;
+            String cpLanguageTerminologyIDValue = 
+                    buffer.readString(
+                            dataPosition, 
+                            cpLanguageTerminologyIDValueLength);
+            dataPosition += cpLanguageTerminologyIDValueLength;
+            String languageCodeString = 
+                    buffer.readString(dataPosition, languageCodeStringLength);
+            TerminologyID terminologyIDCharset = 
+                    RMObjectFactory.newTerminologyID(
+                            codePhraseCharsetTerminologyIDValue);
+            
+            CodePhrase charset = 
+                    RMObjectFactory.newCodePhrase(
+                            terminologyIDCharset,
+                            charsetCodeString);
+            
+            TerminologyID terminologyIDLanguage = 
+                    RMObjectFactory.newTerminologyID(
+                            cpLanguageTerminologyIDValue);
+            
+            CodePhrase language = 
+                    RMObjectFactory.newCodePhrase(
+                            terminologyIDLanguage, languageCodeString);
+            
+            return RMObjectFactory.newDvEncapsulated(charset, language);
         }
     }
 

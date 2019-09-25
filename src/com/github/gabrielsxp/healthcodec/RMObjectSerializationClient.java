@@ -715,11 +715,54 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         
         return this;
     }
-
+    
+    /**
+     * Deserializa Archetyped
+     * @return nova instância de Archetyped
+     */
     @Override
     public Archetyped deserializeArchetyped() {
         ArchetypedSerializer d = new ArchetypedSerializer();
         return d.deserialize(buffer, getOffsetFromID(ARCHETYPED));
+    }
+    
+    /**
+     * 
+     * @param codePhraseCharsetTerminologyIDValue
+     * @param charsetCodeString
+     * @param codePhraseLanguageTerminologyIDValue
+     * @param languageCodeString
+     * @return
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvEncapsulated(
+            String codePhraseCharsetTerminologyIDValue, 
+            String charsetCodeString, 
+            String codePhraseLanguageTerminologyIDValue, 
+            String languageCodeString) throws UnsupportedEncodingException {
+        DvEncapsulatedSerializer s = new DvEncapsulatedSerializer();
+        register(DVENCAPSULATED, offset);
+        setOffset(s.serialize(
+                buffer, 
+                offset, 
+                codePhraseCharsetTerminologyIDValue, 
+                charsetCodeString, 
+                codePhraseLanguageTerminologyIDValue, 
+                languageCodeString)
+        );
+        
+        return this;
+    }
+    
+    /**
+     * Deserializa DvEncapsulated
+     * @return 
+     */
+    @Override
+    public DvEncapsulated deserializeDvEncapsulated() {
+        DvEncapsulatedSerializer d = new DvEncapsulatedSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVENCAPSULATED));
     }
 
     /**

@@ -409,4 +409,22 @@ public class RMObject {
             this.rmVersion = rmVersion;
         }
     }
+    
+    public static class DvEncapsulated {
+        private final CodePhrase charset;
+        private final CodePhrase language;
+
+        public DvEncapsulated(CodePhrase charset, CodePhrase language) {
+            this.charset = charset;
+            this.language = language;
+        }
+
+        public CodePhrase getCharset() {
+            return charset;
+        }
+
+        public CodePhrase getLanguage() {
+            return language;
+        }
+    }
 }

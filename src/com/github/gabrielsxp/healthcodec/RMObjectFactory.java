@@ -130,4 +130,8 @@ public class RMObjectFactory {
         return new Archetyped(archetypeId, templateId, rmVersion);
     }
     
+    public static DvEncapsulated newDvEncapsulated(CodePhrase charset,
+            CodePhrase language){
+        return new DvEncapsulated(charset, language);
+    }
 }

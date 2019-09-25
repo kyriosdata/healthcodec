@@ -40,7 +40,8 @@ public enum RMObjectID {
     PROPORTIONKIND(19),
     ACCESSGROUPREF(20),
     PARTYIDENTIFIED(21),
-    ARCHETYPED(22);
+    ARCHETYPED(22),
+    DVENCAPSULATED(23);
 
     private final int value;
 
