@@ -15,7 +15,7 @@ package main.java.com.github.gabrielsxp.healthcodec;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import main.java.com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
+import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
 
 /**
  *

@@ -11,7 +11,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
  */
-package main.java.com.github.gabrielsxp.healthcodec;
+package com.github.gabrielsxp.healthcodec;
 
 import main.java.com.github.gabrielsxp.healthcodec.RMObjectSerialization.*;
 import static main.java.com.github.gabrielsxp.healthcodec.RMObjectID.*;

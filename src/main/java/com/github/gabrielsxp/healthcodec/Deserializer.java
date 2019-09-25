@@ -13,7 +13,7 @@
  */
 package main.java.com.github.gabrielsxp.healthcodec;
 
-import main.java.com.github.gabrielsxp.healthcodec.RMObject.*;
+import com.github.gabrielsxp.healthcodec.RMObject.*;
 
 /**
  *
