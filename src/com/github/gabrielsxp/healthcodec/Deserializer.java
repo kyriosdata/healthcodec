@@ -174,18 +174,18 @@ public interface Deserializer {
      * @return instância de PartyIdentified
      */
     PartyIdentified deserializePartyIdentified();
-    
+
     /**
      * Deserializador de Archetyped
      *
      * @return instância de Archetyped
      */
     Archetyped deserializeArchetyped();
-    
+
     /**
      * Deserializador de DvEncapsulated
-     * 
-     * @return  instância de DvEncapsulated
+     *
+     * @return instância de DvEncapsulated
      */
     DvEncapsulated deserializeDvEncapsulated();
 
@@ -195,4 +195,11 @@ public interface Deserializer {
      * @return instância de DvEncapsulated
      */
     UIDBasedID deserializeUIDBasedID();
+    
+    /**
+     * Deserializador de DvParsable
+     *
+     * @return instância de DvParsable
+     */
+    DvParsable deserializeDvParsable();
 }

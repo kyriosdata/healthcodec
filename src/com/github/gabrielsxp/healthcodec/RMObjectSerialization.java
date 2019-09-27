@@ -110,8 +110,8 @@ public class RMObjectSerialization {
                 int assignerLength = assigner.length();
                 int idLength = id.length();
                 int typeLength = type.length();
-                int dvIdentifierSize = 
-                        4 * INT.getSize()
+                int dvIdentifierSize
+                        = 4 * INT.getSize()
                         + issuerLength
                         + assignerLength
                         + idLength
@@ -126,7 +126,7 @@ public class RMObjectSerialization {
                 String assigner = d.getAssigner();
                 String id = d.getId();
                 String type = d.getType();
-                position = s.serialize(buffer, 
+                position = s.serialize(buffer,
                         position, issuer, assigner, id, type);
             }
             return position;
@@ -140,10 +140,10 @@ public class RMObjectSerialization {
             position += INT.getSize();
             int dvPosition = position + listSize * INT.getSize();
             for (int i = 0; i < listSize; i++) {
-                
+
                 DvIdentifier a = d.deserialize(buffer, dvPosition);
                 identifiers.add(a);
-                
+
                 int pos = buffer.readInteger(position);
                 position += INT.getSize();
                 dvPosition += pos;
@@ -704,22 +704,23 @@ public class RMObjectSerialization {
                     externalRef, name, identifiers);
         }
     }
-    
+
     static class ArchetypedSerializer {
+
         protected int serializer(
-                Buffer buffer, 
-                int offset, 
+                Buffer buffer,
+                int offset,
                 String archetypeIDValue,
                 String templateIDValue,
-                String rmVersion ) throws UnsupportedEncodingException {
+                String rmVersion) throws UnsupportedEncodingException {
             int archetypeIDValueLength = archetypeIDValue.length();
             int templateIDValueLength = templateIDValue.length();
             int rmVersionLength = rmVersion.length();
-            
+
             buffer.writeInteger(offset, archetypeIDValueLength);
             buffer.writeInteger(offset + INT.getSize(), templateIDValueLength);
             buffer.writeInteger(offset + 2 * INT.getSize(), rmVersionLength);
-            
+
             int dataPosition = offset + 3 * INT.getSize();
             buffer.writeString(dataPosition, archetypeIDValue);
             dataPosition += archetypeIDValueLength;
@@ -727,63 +728,64 @@ public class RMObjectSerialization {
             dataPosition += templateIDValueLength;
             buffer.writeString(dataPosition, rmVersion);
             dataPosition += rmVersionLength;
-            
+
             return dataPosition;
         }
-        
-        protected Archetyped deserialize(Buffer buffer, int offset){
+
+        protected Archetyped deserialize(Buffer buffer, int offset) {
             int archetypeIDValueLength = buffer.readInteger(offset);
             int templateIDValueLength = buffer.readInteger(
                     offset + INT.getSize());
-            int rmVersionLength = buffer.readInteger(offset + 2*INT.getSize());
-            
+            int rmVersionLength = buffer.readInteger(offset + 2 * INT.getSize());
+
             int dataPosition = offset + 3 * INT.getSize();
-            
+
             String archetypeIDValue = buffer.readString(
                     dataPosition, archetypeIDValueLength);
-            
+
             dataPosition += archetypeIDValueLength;
-            
+
             String templateIDValue = buffer.readString(
                     dataPosition, templateIDValueLength);
-            
+
             dataPosition += templateIDValueLength;
-            
+
             String rmVersion = buffer.readString(dataPosition, rmVersionLength);
-            
+
             ArchetypeID archetypeId = RMObjectFactory.
                     newArchetypeID(archetypeIDValue);
             TemplateID templateId = RMObjectFactory.
                     newTemplateID(templateIDValue);
-            
+
             return RMObjectFactory.
                     newArchetyped(archetypeId, templateId, rmVersion);
         }
     }
-    
+
     public static class DvEncapsulatedSerializer {
-        protected int serialize(Buffer buffer, 
-                int offset, 
+
+        protected int serialize(Buffer buffer,
+                int offset,
                 String codePhraseCharsetTerminologyIDValue,
                 String charsetCodeString,
                 String codePhraseLanguageTerminologyIDValue,
-                String languageCodeString ){
-            int cpCharsetTerminologyIDValueLength = 
-                    codePhraseCharsetTerminologyIDValue.length();
+                String languageCodeString) {
+            int cpCharsetTerminologyIDValueLength
+                    = codePhraseCharsetTerminologyIDValue.length();
             int charsetCodeStringLength = charsetCodeString.length();
-            int cpLanguageTerminologyIDValueLength = 
-                    codePhraseLanguageTerminologyIDValue.length();
+            int cpLanguageTerminologyIDValueLength
+                    = codePhraseLanguageTerminologyIDValue.length();
             int languageCodeStringLength = languageCodeString.length();
-            
+
             buffer.writeInteger(offset, cpCharsetTerminologyIDValueLength);
             buffer.writeInteger(
                     offset + INT.getSize(), charsetCodeStringLength);
             buffer.writeInteger(
-                    offset + 2 * INT.getSize(), 
+                    offset + 2 * INT.getSize(),
                     cpLanguageTerminologyIDValueLength);
             buffer.writeInteger(
                     offset + 3 * INT.getSize(), languageCodeStringLength);
-            
+
             int dataPosition = offset + INT.getSize() * 4;
             buffer.writeString(
                     dataPosition, codePhraseCharsetTerminologyIDValue);
@@ -795,53 +797,53 @@ public class RMObjectSerialization {
             dataPosition += cpLanguageTerminologyIDValueLength;
             buffer.writeString(dataPosition, languageCodeString);
             dataPosition += languageCodeStringLength;
-            
+
             return dataPosition;
         }
-        
-        protected DvEncapsulated deserialize(Buffer buffer, int offset){
+
+        protected DvEncapsulated deserialize(Buffer buffer, int offset) {
             int cpCharsetTerminologyIDValueLength = buffer.readInteger(offset);
-            int charsetCodeStringLength = 
-                    buffer.readInteger(offset + INT.getSize());
-            int cpLanguageTerminologyIDValueLength = 
-                    buffer.readInteger(offset + 2 * INT.getSize());
-            int languageCodeStringLength = 
-                    buffer.readInteger(offset + 3 * INT.getSize());
-            
+            int charsetCodeStringLength
+                    = buffer.readInteger(offset + INT.getSize());
+            int cpLanguageTerminologyIDValueLength
+                    = buffer.readInteger(offset + 2 * INT.getSize());
+            int languageCodeStringLength
+                    = buffer.readInteger(offset + 3 * INT.getSize());
+
             int dataPosition = offset + 4 * INT.getSize();
-            
-            String codePhraseCharsetTerminologyIDValue = 
-                    buffer.readString(
-                            dataPosition, 
+
+            String codePhraseCharsetTerminologyIDValue
+                    = buffer.readString(
+                            dataPosition,
                             cpCharsetTerminologyIDValueLength);
             dataPosition += cpCharsetTerminologyIDValueLength;
-            String charsetCodeString = 
-                    buffer.readString(dataPosition, charsetCodeStringLength);
+            String charsetCodeString
+                    = buffer.readString(dataPosition, charsetCodeStringLength);
             dataPosition += charsetCodeStringLength;
-            String cpLanguageTerminologyIDValue = 
-                    buffer.readString(
-                            dataPosition, 
+            String cpLanguageTerminologyIDValue
+                    = buffer.readString(
+                            dataPosition,
                             cpLanguageTerminologyIDValueLength);
             dataPosition += cpLanguageTerminologyIDValueLength;
-            String languageCodeString = 
-                    buffer.readString(dataPosition, languageCodeStringLength);
-            TerminologyID terminologyIDCharset = 
-                    RMObjectFactory.newTerminologyID(
+            String languageCodeString
+                    = buffer.readString(dataPosition, languageCodeStringLength);
+            TerminologyID terminologyIDCharset
+                    = RMObjectFactory.newTerminologyID(
                             codePhraseCharsetTerminologyIDValue);
-            
-            CodePhrase charset = 
-                    RMObjectFactory.newCodePhrase(
+
+            CodePhrase charset
+                    = RMObjectFactory.newCodePhrase(
                             terminologyIDCharset,
                             charsetCodeString);
-            
-            TerminologyID terminologyIDLanguage = 
-                    RMObjectFactory.newTerminologyID(
+
+            TerminologyID terminologyIDLanguage
+                    = RMObjectFactory.newTerminologyID(
                             cpLanguageTerminologyIDValue);
-            
-            CodePhrase language = 
-                    RMObjectFactory.newCodePhrase(
+
+            CodePhrase language
+                    = RMObjectFactory.newCodePhrase(
                             terminologyIDLanguage, languageCodeString);
-            
+
             return RMObjectFactory.newDvEncapsulated(charset, language);
         }
     }
@@ -861,6 +863,117 @@ public class RMObjectSerialization {
             String value = buffer.readString(offset + INT.getSize(), valueLength);
 
             return RMObjectFactory.newUIDBasedID(value);
+        }
+    }
+    
+    public static class DvParsableSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                String codePhraseCharsetTerminologyIDValue,
+                String charsetCodeString,
+                String codePhraseLanguageTerminologyIDValue,
+                String languageCodeString,
+                String value,
+                String formalism) throws UnsupportedEncodingException {
+            int cpCharsetTerminologyIDValueLength
+                    = codePhraseCharsetTerminologyIDValue.length();
+            int charsetCodeStringLength = charsetCodeString.length();
+            int cpLanguageTerminologyIDValueLength
+                    = codePhraseLanguageTerminologyIDValue.length();
+            int languageCodeStringLength = languageCodeString.length();
+            int valueLength = value.length();
+            int formalismLength = formalism.length();
+
+            buffer.writeInteger(offset, cpCharsetTerminologyIDValueLength);
+            buffer.writeInteger(
+                    offset + INT.getSize(), charsetCodeStringLength);
+            buffer.writeInteger(
+                    offset + 2 * INT.getSize(),
+                    cpLanguageTerminologyIDValueLength);
+            buffer.writeInteger(
+                    offset + 3 * INT.getSize(), languageCodeStringLength);
+            buffer.writeInteger(offset + 4 * INT.getSize(), valueLength);
+            buffer.writeInteger(offset + 5 * INT.getSize(), formalismLength);
+            
+            int dataPosition = offset + INT.getSize() * 6;
+            buffer.writeString(
+                    dataPosition, codePhraseCharsetTerminologyIDValue);
+            dataPosition += cpCharsetTerminologyIDValueLength;
+            buffer.writeString(dataPosition, charsetCodeString);
+            dataPosition += charsetCodeStringLength;
+            buffer.writeString(
+                    dataPosition, codePhraseLanguageTerminologyIDValue);
+            dataPosition += cpLanguageTerminologyIDValueLength;
+            buffer.writeString(dataPosition, languageCodeString);
+            dataPosition += languageCodeStringLength;
+            
+            buffer.writeString(dataPosition, value);
+            dataPosition += valueLength;
+            buffer.writeString(dataPosition, formalism);
+            dataPosition += formalismLength;
+            
+            return dataPosition;
+        }
+        
+        protected DvParsable deserialize(Buffer buffer, int offset){
+            int cpCharsetTerminologyIDValueLength = buffer.readInteger(offset);
+            int charsetCodeStringLength
+                    = buffer.readInteger(offset + INT.getSize());
+            int cpLanguageTerminologyIDValueLength
+                    = buffer.readInteger(offset + 2 * INT.getSize());
+            int languageCodeStringLength
+                    = buffer.readInteger(offset + 3 * INT.getSize());
+            int valueLength = buffer.readInteger(offset + 4 * INT.getSize());
+            int formalismLength = 
+                    buffer.readInteger(offset + 5 * INT.getSize());
+
+            int dataPosition = offset + 6 * INT.getSize();
+
+            String codePhraseCharsetTerminologyIDValue
+                    = buffer.readString(
+                            dataPosition,
+                            cpCharsetTerminologyIDValueLength);
+            dataPosition += cpCharsetTerminologyIDValueLength;
+            
+            String charsetCodeString
+                    = buffer.readString(dataPosition, charsetCodeStringLength);
+            dataPosition += charsetCodeStringLength;
+            
+            String cpLanguageTerminologyIDValue
+                    = buffer.readString(
+                            dataPosition,
+                            cpLanguageTerminologyIDValueLength);
+            dataPosition += cpLanguageTerminologyIDValueLength;
+            
+            String languageCodeString
+                    = buffer.readString(dataPosition, languageCodeStringLength);
+            dataPosition += languageCodeStringLength;
+            
+            String value = buffer.readString(dataPosition, valueLength);
+            dataPosition += valueLength;
+            
+            String formalism = buffer.readString(dataPosition, formalismLength);
+            
+            TerminologyID terminologyIDCharset
+                    = RMObjectFactory.newTerminologyID(
+                            codePhraseCharsetTerminologyIDValue);
+
+            CodePhrase charset
+                    = RMObjectFactory.newCodePhrase(
+                            terminologyIDCharset,
+                            charsetCodeString);
+
+            TerminologyID terminologyIDLanguage
+                    = RMObjectFactory.newTerminologyID(
+                            cpLanguageTerminologyIDValue);
+
+            CodePhrase language
+                    = RMObjectFactory.newCodePhrase(
+                            terminologyIDLanguage, languageCodeString);
+            
+            return RMObjectFactory.newDvParsable(
+                    charset, 
+                    language, 
+                    value, formalism);
         }
     }
 

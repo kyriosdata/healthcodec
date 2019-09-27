@@ -678,7 +678,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         PartyIdentifiedSerializer s = new PartyIdentifiedSerializer();
         register(PARTYIDENTIFIED, offset);
         setOffset(
-            s.serializer(buffer, offset,oidValue, value, name, identifiers));
+                s.serializer(buffer, offset, oidValue, value, name, identifiers));
 
         return this;
     }
@@ -693,31 +693,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         PartyIdentifiedSerializer d = new PartyIdentifiedSerializer();
         return d.deserializer(buffer, getOffsetFromID(PARTYIDENTIFIED));
     }
-    
+
     /**
      * Serializa Archetyped
-     * 
+     *
      * @param archetypeIDValue
      * @param templateIDValue
      * @param rmVersionLength
-     * @return
-     * @throws UnsupportedEncodingException 
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException
      */
     @Override
     public RMObjectSerializationClient serializeArchetyped(
-            String archetypeIDValue, 
-            String templateIDValue, 
+            String archetypeIDValue,
+            String templateIDValue,
             String rmVersionLength) throws UnsupportedEncodingException {
         ArchetypedSerializer s = new ArchetypedSerializer();
         register(ARCHETYPED, offset);
-        setOffset(s.serializer(buffer, offset, 
+        setOffset(s.serializer(buffer, offset,
                 archetypeIDValue, templateIDValue, rmVersionLength));
-        
+
         return this;
     }
-    
+
     /**
      * Deserializa Archetyped
+     *
      * @return nova instância de Archetyped
      */
     @Override
@@ -725,39 +726,40 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         ArchetypedSerializer d = new ArchetypedSerializer();
         return d.deserialize(buffer, getOffsetFromID(ARCHETYPED));
     }
-    
+
     /**
-     * 
+     *
      * @param codePhraseCharsetTerminologyIDValue
      * @param charsetCodeString
      * @param codePhraseLanguageTerminologyIDValue
      * @param languageCodeString
-     * @return
-     * @throws UnsupportedEncodingException 
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException
      */
     @Override
     public RMObjectSerializationClient serializeDvEncapsulated(
-            String codePhraseCharsetTerminologyIDValue, 
-            String charsetCodeString, 
-            String codePhraseLanguageTerminologyIDValue, 
+            String codePhraseCharsetTerminologyIDValue,
+            String charsetCodeString,
+            String codePhraseLanguageTerminologyIDValue,
             String languageCodeString) throws UnsupportedEncodingException {
         DvEncapsulatedSerializer s = new DvEncapsulatedSerializer();
         register(DVENCAPSULATED, offset);
         setOffset(s.serialize(
-                buffer, 
-                offset, 
-                codePhraseCharsetTerminologyIDValue, 
-                charsetCodeString, 
-                codePhraseLanguageTerminologyIDValue, 
+                buffer,
+                offset,
+                codePhraseCharsetTerminologyIDValue,
+                charsetCodeString,
+                codePhraseLanguageTerminologyIDValue,
                 languageCodeString)
         );
-        
+
         return this;
     }
-    
+
     /**
      * Deserializa DvEncapsulated
-     * @return 
+     *
+     * @return
      */
     @Override
     public DvEncapsulated deserializeDvEncapsulated() {
@@ -791,6 +793,51 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     public UIDBasedID deserializeUIDBasedID() {
         UIDBasedIDSerializer d = new UIDBasedIDSerializer();
         return d.deserialize(buffer, getOffsetFromID(UIDBASEDID));
+    }
+
+    /**
+     * Serializa DvParsable
+     *
+     * @param codePhraseCharsetTerminologyIDValue
+     * @param charsetCodeString
+     * @param codePhraseLanguageTerminologyIDValue
+     * @param languageCodeString
+     * @param value
+     * @param formalism
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvParsable(
+            String codePhraseCharsetTerminologyIDValue,
+            String charsetCodeString,
+            String codePhraseLanguageTerminologyIDValue,
+            String languageCodeString,
+            String value,
+            String formalism) throws UnsupportedEncodingException {
+        DvParsableSerializer s = new DvParsableSerializer();
+        register(DVPARSABLE, offset);
+        setOffset(
+                s.serialize(
+                        buffer,
+                        offset,
+                        codePhraseCharsetTerminologyIDValue,
+                        charsetCodeString,
+                        codePhraseLanguageTerminologyIDValue,
+                        languageCodeString, value, formalism)
+        );
+        
+        return this;
+    }
+
+    /**
+     * Deserializa DvParsable
+     * @return nova instância de DvParsable
+     */
+    @Override
+    public DvParsable deserializeDvParsable() {
+        DvParsableSerializer d = new DvParsableSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVPARSABLE));
     }
 
     /**

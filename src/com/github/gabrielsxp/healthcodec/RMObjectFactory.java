@@ -134,8 +134,13 @@ public class RMObjectFactory {
             CodePhrase language){
         return new DvEncapsulated(charset, language);
     }
-
+    
     public static UIDBasedID newUIDBasedID(String value){
         return new UIDBasedID(value);
+    }
+    
+    public static DvParsable newDvParsable(CodePhrase charset, 
+            CodePhrase language, String value, String formalism){
+        return new DvParsable(charset, language, value, formalism);
     }
 }

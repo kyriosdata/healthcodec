@@ -1,4 +1,4 @@
-package test.com.github.gabrielsxp.healthcodec;
+package RMObjectSerializationClient;
 
 /*
 * Copyright 2019 Instituto de Informática - UFG
@@ -14,6 +14,7 @@ package test.com.github.gabrielsxp.healthcodec;
 * limitations under the License.
  */
 import java.io.UnsupportedEncodingException;
+import java.nio.ReadOnlyBufferException;
 import java.util.ArrayList;
 import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.*;
@@ -312,7 +313,7 @@ public class RMObjectSerializationClientTest {
         assertEquals(id, p.getIdentifiers().get(0).getId());
         assertEquals(type, p.getIdentifiers().get(0).getType());
     }
-
+    
     @Test
     public void Archetyped() throws UnsupportedEncodingException {
         String archetypeIDValue = "_ARCHETYPEID_";
@@ -360,5 +361,36 @@ public class RMObjectSerializationClientTest {
         
         UIDBasedID uid = s.deserializeUIDBasedID();
         assertEquals(value, uid.getValue());
+    }
+    
+    @Test
+    public void DvParsable() throws UnsupportedEncodingException  {
+        String codePhraseCharsetTerminologyIDValue = "_TERMINOLOGYCHARSET_";
+        String charsetCodeString = "UTF-8";
+        String codePhraseLanguageTerminologyIDValue = "_LANGUAGETERMINOLOGY_";
+        String languageCodeString = "UTF-8";
+        String value = "_DVPARSABLE_";
+        String formalism = "FORMALISM";
+        
+        
+        s.serializeDvParsable(
+                codePhraseCharsetTerminologyIDValue, 
+                charsetCodeString, 
+                codePhraseLanguageTerminologyIDValue, 
+                languageCodeString, value, formalism);
+        
+        DvParsable d = s.deserializeDvParsable();
+        
+        assertEquals(
+                codePhraseCharsetTerminologyIDValue, 
+                d.getCharset().getTerminologyID().getValue());
+        assertEquals(charsetCodeString, d.getCharset().getValue());
+        assertEquals(
+                codePhraseLanguageTerminologyIDValue, 
+                d.getLanguage().getTerminologyID().getValue());
+        assertEquals(
+                languageCodeString, d.getLanguage().getValue());
+        assertEquals(value, d.getValue());
+        assertEquals(formalism, d.getFormalism());
     }
 }

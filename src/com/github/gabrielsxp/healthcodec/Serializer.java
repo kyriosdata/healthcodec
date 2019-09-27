@@ -265,7 +265,7 @@ public interface Serializer {
             String name,
             List<DvIdentifier> identifiers)
             throws UnsupportedEncodingException;
-    
+
     /**
      * Serializador de Archetyped
      *
@@ -276,25 +276,25 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeArchetyped(String archetypeIDValue,
-                String templateIDValue,
-                String rmVersionLength ) throws UnsupportedEncodingException;
-    
+            String templateIDValue,
+            String rmVersionLength) throws UnsupportedEncodingException;
+
     /**
      * Serializador de DvEncapsulated
-     * 
+     *
      * @param codePhraseCharsetTerminologyIDValue
      * @param charsetCodeString
      * @param codePhraseLanguageTerminologyIDValue
      * @param languageCodeString
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvEncapsulated(
             String codePhraseCharsetTerminologyIDValue,
             String charsetCodeString,
             String codePhraseLanguageTerminologyIDValue,
             String languageCodeString) throws UnsupportedEncodingException;
-            
+
     /**
      * Serializador de UIDBasedID
      *
@@ -304,4 +304,24 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeUIDBasedID(
             String value) throws UnsupportedEncodingException;
+
+    /**
+     * Serializador de DvParsable
+     *
+     * @param codePhraseCharsetTerminologyIDValue
+     * @param charsetCodeString
+     * @param codePhraseLanguageTerminologyIDValue
+     * @param languageCodeString
+     * @param value
+     * @param formalism
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeDvParsable(
+            String codePhraseCharsetTerminologyIDValue,
+            String charsetCodeString,
+            String codePhraseLanguageTerminologyIDValue,
+            String languageCodeString,
+            String value,
+            String formalism) throws UnsupportedEncodingException;
 }

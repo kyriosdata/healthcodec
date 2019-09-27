@@ -393,7 +393,7 @@ public class RMObject {
         private final TemplateID templateId;
         private final String rmVersion;
 
-        protected ArchetypeID getArchetypeId() {
+        public ArchetypeID getArchetypeId() {
             return archetypeId;
         }
 
@@ -441,5 +441,37 @@ public class RMObject {
         public String getValue() {
             return value;
         } 
+    }
+    
+    public static class DvParsable {
+        private final CodePhrase charset;
+        private final CodePhrase language;
+        private final String value;
+        private final String formalism;
+
+        protected DvParsable(CodePhrase charset, CodePhrase language, String value, String formalism) {
+            this.charset = charset;
+            this.language = language;
+            this.value = value;
+            this.formalism = formalism;
+        }
+
+        public CodePhrase getCharset() {
+            return charset;
+        }
+
+        public CodePhrase getLanguage() {
+            return language;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public String getFormalism() {
+            return formalism;
+        }
+        
+        
     }
 }

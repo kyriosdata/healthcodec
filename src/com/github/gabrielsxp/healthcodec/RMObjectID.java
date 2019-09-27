@@ -42,7 +42,9 @@ public enum RMObjectID {
     PARTYIDENTIFIED(21),
     ARCHETYPED(22),
     DVENCAPSULATED(23),
-    UIDBASEDID(24);
+    UIDBASEDID(24),
+    DVPARSABLE(25);
+    
 
     private final int value;
 
