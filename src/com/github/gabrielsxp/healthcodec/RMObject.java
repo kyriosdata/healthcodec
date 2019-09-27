@@ -471,7 +471,17 @@ public class RMObject {
         public String getFormalism() {
             return formalism;
         }
-        
-        
+    }
+    
+    public static class DvTimeSpecification {
+        private final DvParsable value;
+
+        protected DvTimeSpecification(DvParsable value) {
+            this.value = value;
+        }
+
+        public DvParsable getValue() {
+            return value;
+        }
     }
 }

@@ -143,4 +143,8 @@ public class RMObjectFactory {
             CodePhrase language, String value, String formalism){
         return new DvParsable(charset, language, value, formalism);
     }
+    
+    public static DvTimeSpecification newDvTimeSpecification(DvParsable value){
+        return new DvTimeSpecification(value);
+    }
 }

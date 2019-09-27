@@ -202,4 +202,11 @@ public interface Deserializer {
      * @return instância de DvParsable
      */
     DvParsable deserializeDvParsable();
+    
+    /**
+     * Deserializador de DvTimeSpecification
+     *
+     * @return instância de DvParsable
+     */
+    DvTimeSpecification deserializeDvTimeSpecification();
 }

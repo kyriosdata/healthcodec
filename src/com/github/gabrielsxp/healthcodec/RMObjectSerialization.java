@@ -976,5 +976,32 @@ public class RMObjectSerialization {
                     value, formalism);
         }
     }
+    
+    public static class DvTimeSpecificationSerializer {
+        protected int serialize(
+                Buffer buffer, 
+                int offset, 
+                DvParsable value) throws UnsupportedEncodingException{
+            int endPosition = offset;
+            DvParsableSerializer s = new DvParsableSerializer();
+            endPosition += s.serialize(buffer, 
+                    offset,
+                    value.getCharset().getTerminologyID().getValue(),
+                    value.getCharset().getValue(),
+                    value.getLanguage().getTerminologyID().getValue(),
+                    value.getLanguage().getValue(),
+                    value.getValue(),
+                    value.getFormalism() );
+            
+            return endPosition;
+        }
+        
+        protected DvTimeSpecification deserialize(Buffer buffer, int offset){
+            DvParsableSerializer d = new DvParsableSerializer();
+            DvParsable value = d.deserialize(buffer, offset);
+            
+            return RMObjectFactory.newDvTimeSpecification(value);
+        }
+    }
 
 }

@@ -393,4 +393,32 @@ public class RMObjectSerializationClientTest {
         assertEquals(value, d.getValue());
         assertEquals(formalism, d.getFormalism());
     }
+    
+    @Test
+    public void DvTimeSpecification() throws UnsupportedEncodingException {
+        String terminologyIDValue = "_TERMINOLOGYID_";
+        String codePhraseValue = "_CODEPHRASE_";
+        String dvParsablevalue = "_DVVPARSABLEVALUE_";
+        String formalism = "_DVPARSABLEFORMALISM_";
+        TerminologyID terminologyID = 
+                RMObjectFactory.newTerminologyID(terminologyIDValue);
+        CodePhrase charset = RMObjectFactory.newCodePhrase(
+                terminologyID, codePhraseValue);
+        CodePhrase language = RMObjectFactory.newCodePhrase(
+                terminologyID, codePhraseValue);
+        DvParsable value = RMObjectFactory.newDvParsable(
+                charset, language, dvParsablevalue, formalism);
+        
+        s.serializeDvTimeSpecification(value);
+        DvTimeSpecification d = s.deserializeDvTimeSpecification();
+        
+        assertEquals(terminologyIDValue, 
+                d.getValue().getCharset().getTerminologyID().getValue());
+        assertEquals(codePhraseValue, d.getValue().getCharset().getValue());
+        assertEquals(terminologyIDValue, 
+                d.getValue().getLanguage().getTerminologyID().getValue());
+        assertEquals(codePhraseValue, d.getValue().getLanguage().getValue());
+        assertEquals(dvParsablevalue, d.getValue().getValue());
+        assertEquals(formalism, d.getValue().getFormalism());
+    }
 }

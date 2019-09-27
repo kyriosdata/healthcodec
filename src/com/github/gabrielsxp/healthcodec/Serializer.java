@@ -16,6 +16,7 @@ package com.github.gabrielsxp.healthcodec;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
+import com.github.gabrielsxp.healthcodec.RMObject.DvParsable;
 
 /**
  *
@@ -324,4 +325,14 @@ public interface Serializer {
             String languageCodeString,
             String value,
             String formalism) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de DvTimeSpecification
+     *
+     * @param value
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeDvTimeSpecification(
+            DvParsable value) throws UnsupportedEncodingException;
 }

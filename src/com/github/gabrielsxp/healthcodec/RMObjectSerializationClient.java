@@ -839,6 +839,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         DvParsableSerializer d = new DvParsableSerializer();
         return d.deserialize(buffer, getOffsetFromID(DVPARSABLE));
     }
+    
+    /**
+     * Serializa DvTimeSpecification
+     * @param value
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvTimeSpecification(
+            DvParsable value) throws UnsupportedEncodingException {
+        DvTimeSpecificationSerializer s = new DvTimeSpecificationSerializer();
+        register(DVTIMESPECIFICATION, offset);
+        setOffset(s.serialize(buffer, offset, value));
+        
+        return this;
+    }
+
+    /**
+     * Deserializa DvTimeSpecification
+     * @return nova instância de DvTimeSpecification
+     */
+    @Override
+    public DvTimeSpecification deserializeDvTimeSpecification() {
+        DvTimeSpecificationSerializer d = new DvTimeSpecificationSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVTIMESPECIFICATION));
+    }
 
     /**
      * Método para registrar um determinado objeto no índice
