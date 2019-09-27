@@ -95,7 +95,7 @@ public class RMObject {
 
         private final String value;
 
-        public UUID(String value) {
+        protected UUID(String value) {
             this.value = value;
         }
 
@@ -140,7 +140,7 @@ public class RMObject {
 
         private final String value;
 
-        public TerminologyID(String value) {
+        protected TerminologyID(String value) {
             this.value = value;
         }
 
@@ -264,7 +264,7 @@ public class RMObject {
         private final ObjectID id;
         private final String value;
 
-        public PartyRef(ObjectID id, String value) {
+        protected PartyRef(ObjectID id, String value) {
             this.id = id;
             this.value = value;
         }
@@ -284,7 +284,7 @@ public class RMObject {
         private final String namespace;
         private final String type;
 
-        public ObjectRef(ObjectID id, String namespace, String type) {
+        protected ObjectRef(ObjectID id, String namespace, String type) {
             this.id = id;
             this.namespace = namespace;
             this.type = type;
@@ -326,7 +326,7 @@ public class RMObject {
             return path;
         }
 
-        public LocatableRef(ObjectVersionID id, String namespace, String type, 
+        protected LocatableRef(ObjectVersionID id, String namespace, String type,
                 String path) {
             this.id = id;
             this.namespace = namespace;
@@ -339,7 +339,7 @@ public class RMObject {
 
         private final int value;
 
-        public ProportionKind(int value) {
+        protected ProportionKind(int value) {
             this.value = value;
         }
 
@@ -352,7 +352,7 @@ public class RMObject {
 
         private final ObjectID id;
 
-        public AccessGroupRef(ObjectID id) {
+        protected AccessGroupRef(ObjectID id) {
             this.id = id;
         }
 
@@ -362,11 +362,12 @@ public class RMObject {
     }
 
     public static class PartyIdentified {
+
         private final PartyRef externalRef;
         private final String name;
         private final List<DvIdentifier> identifiers;
 
-        public PartyIdentified(PartyRef externalRef, String name, 
+        protected PartyIdentified(PartyRef externalRef, String name,
                 List<DvIdentifier> identifiers) {
             this.externalRef = externalRef;
             this.name = name;
@@ -385,13 +386,14 @@ public class RMObject {
             return identifiers;
         }
     }
-    
+
     public static class Archetyped {
+
         private final ArchetypeID archetypeId;
         private final TemplateID templateId;
         private final String rmVersion;
 
-        public ArchetypeID getArchetypeId() {
+        protected ArchetypeID getArchetypeId() {
             return archetypeId;
         }
 
@@ -409,12 +411,13 @@ public class RMObject {
             this.rmVersion = rmVersion;
         }
     }
-    
+
     public static class DvEncapsulated {
+
         private final CodePhrase charset;
         private final CodePhrase language;
 
-        public DvEncapsulated(CodePhrase charset, CodePhrase language) {
+        protected DvEncapsulated(CodePhrase charset, CodePhrase language) {
             this.charset = charset;
             this.language = language;
         }
