@@ -766,6 +766,34 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializa UIDBasedID
+     *
+     * @param value
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException
+     */
+    @Override
+    public RMObjectSerializationClient serializeUIDBasedID(String value)
+            throws UnsupportedEncodingException {
+        UIDBasedIDSerializer s = new UIDBasedIDSerializer();
+        register(UIDBASEDID, offset);
+        setOffset(s.serialize(buffer, offset, value));
+
+        return this;
+    }
+
+    /**
+     * Deserializa UIDBasedID
+     *
+     * @return nova instância de UIDBasedID
+     */
+    @Override
+    public UIDBasedID deserializeUIDBasedID() {
+        UIDBasedIDSerializer d = new UIDBasedIDSerializer();
+        return d.deserialize(buffer, getOffsetFromID(UIDBASEDID));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      *
      * @param id

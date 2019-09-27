@@ -294,4 +294,14 @@ public interface Serializer {
             String charsetCodeString,
             String codePhraseLanguageTerminologyIDValue,
             String languageCodeString) throws UnsupportedEncodingException;
+            
+    /**
+     * Serializador de UIDBasedID
+     *
+     * @param value
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeUIDBasedID(
+            String value) throws UnsupportedEncodingException;
 }

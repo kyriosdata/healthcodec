@@ -312,4 +312,53 @@ public class RMObjectSerializationClientTest {
         assertEquals(id, p.getIdentifiers().get(0).getId());
         assertEquals(type, p.getIdentifiers().get(0).getType());
     }
+
+    @Test
+    public void Archetyped() throws UnsupportedEncodingException {
+        String archetypeIDValue = "_ARCHETYPEID_";
+        String templateIDValue = "_TEMPLATEID_";
+        String rmVersion = "_RMVERSION_";
+        
+        s.serializeArchetyped(archetypeIDValue, templateIDValue, rmVersion);
+        Archetyped a = s.deserializeArchetyped();
+        
+        assertEquals(archetypeIDValue, a.getArchetypeId().getValue());
+        assertEquals(templateIDValue, a.getTemplateId().getValue());
+        assertEquals(rmVersion, a.getRmVersion());
+    }
+    
+    @Test
+    public void DvEncapsulated() throws UnsupportedEncodingException {
+        String codePhraseCharsetTerminologyIDValue = "_TERMINOLOGYCHARSET_";
+        String charsetCodeString = "UTF-8";
+        String codePhraseLanguageTerminologyIDValue = "_LANGUAGETERMINOLOGY_";
+        String languageCodeString = "UTF-8";
+        
+        
+        s.serializeDvEncapsulated(
+                codePhraseCharsetTerminologyIDValue, 
+                charsetCodeString, 
+                codePhraseLanguageTerminologyIDValue, languageCodeString);
+        
+        DvEncapsulated d = s.deserializeDvEncapsulated();
+        
+        assertEquals(
+                codePhraseCharsetTerminologyIDValue, 
+                d.getCharset().getTerminologyID().getValue());
+        assertEquals(charsetCodeString, d.getCharset().getValue());
+        assertEquals(
+                codePhraseLanguageTerminologyIDValue, 
+                d.getLanguage().getTerminologyID().getValue());
+        assertEquals(
+                languageCodeString, d.getLanguage().getValue());
+    }
+    
+    @Test
+    public void UIDBasedID() throws UnsupportedEncodingException {
+        String value = "_UIDBASEDID_";
+        s.serializeUIDBasedID(value);
+        
+        UIDBasedID uid = s.deserializeUIDBasedID();
+        assertEquals(value, uid.getValue());
+    }
 }

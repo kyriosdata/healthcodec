@@ -430,4 +430,16 @@ public class RMObject {
             return language;
         }
     }
+
+    public static class UIDBasedID {
+        private final String value;
+
+        protected UIDBasedID(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        } 
+    }
 }

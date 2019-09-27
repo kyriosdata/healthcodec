@@ -189,4 +189,10 @@ public interface Deserializer {
      */
     DvEncapsulated deserializeDvEncapsulated();
 
+    /**
+     * Deserializador de UIDBasedID
+     *
+     * @return instância de DvEncapsulated
+     */
+    UIDBasedID deserializeUIDBasedID();
 }

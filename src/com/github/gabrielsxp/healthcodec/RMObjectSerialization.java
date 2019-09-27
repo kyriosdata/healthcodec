@@ -846,4 +846,22 @@ public class RMObjectSerialization {
         }
     }
 
+    public static class UIDBasedIDSerializer {
+        protected int serialize(Buffer buffer, int offset, String value)
+                throws UnsupportedEncodingException {
+            int valueLength = value.length();
+            buffer.writeInteger(offset, valueLength);
+            buffer.writeString(offset + INT.getSize(), value);
+
+            return offset + INT.getSize() + valueLength;
+        }
+
+        protected UIDBasedID deserialize(Buffer buffer, int offset) {
+            int valueLength = buffer.readInteger(offset);
+            String value = buffer.readString(offset + INT.getSize(), valueLength);
+
+            return RMObjectFactory.newUIDBasedID(value);
+        }
+    }
+
 }
