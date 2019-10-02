@@ -585,10 +585,10 @@ public class RMObjectSerialization {
 
     static class AccessGroupRefSerializer {
 
-        protected int serializer(Buffer buffer, int offset, String oidValue) {
-            int oidValueLength = oidValue.length();
+        protected int serializer(Buffer buffer, int offset, ObjectID id) {
+            int oidValueLength = id.getValue().length();
             buffer.writeInteger(offset, oidValueLength);
-            buffer.writeString(offset + INT.getSize(), oidValue);
+            buffer.writeString(offset + INT.getSize(), id.getValue());
 
             return offset + INT.getSize() + oidValueLength;
         }

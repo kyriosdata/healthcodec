@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
 import com.github.gabrielsxp.healthcodec.RMObject.DvParsable;
+import com.github.gabrielsxp.healthcodec.RMObject.ObjectID;
 
 /**
  *
@@ -247,10 +248,10 @@ public interface Serializer {
     /**
      * Serializador de AccessGroupRef
      *
-     * @param oidValue
+     * @param id
      * @return Instância de RMObjectSerializationClient para chaining
      */
-    RMObjectSerializationClient serializeAccessGroupRef(String oidValue);
+    RMObjectSerializationClient serializeAccessGroupRef(ObjectID id);
 
     /**
      * Serializador de PartyIdentified

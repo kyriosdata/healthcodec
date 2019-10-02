@@ -636,14 +636,14 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     /**
      * Serializa AccessGroupRef
      *
-     * @param value
+     * @param id
      * @return instância de RMObjectSerializationClient atual
      */
     @Override
-    public RMObjectSerializationClient serializeAccessGroupRef(String oidValue){
+    public RMObjectSerializationClient serializeAccessGroupRef(ObjectID id){
         AccessGroupRefSerializer s = new AccessGroupRefSerializer();
         register(ACCESSGROUPREF, offset);
-        setOffset(s.serializer(buffer, offset, oidValue));
+        setOffset(s.serializer(buffer, offset, id));
 
         return this;
     }

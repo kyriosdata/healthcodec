@@ -282,7 +282,8 @@ public class RMObjectSerializationClientTest {
     @Test
     public void AccessGroupRef() {
         String oidValue = "_OBJECTID_";
-        s.serializeAccessGroupRef(oidValue);
+        ObjectID id = RMObjectFactory.newObjectID(oidValue);
+        s.serializeAccessGroupRef(id);
         AccessGroupRef a = s.deserializeAccessGroupRef();
         assertEquals(oidValue, a.getId().getValue());
     }
