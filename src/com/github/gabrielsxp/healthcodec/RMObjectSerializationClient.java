@@ -738,19 +738,15 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeDvEncapsulated(
-            String codePhraseCharsetTerminologyIDValue,
-            String charsetCodeString,
-            String codePhraseLanguageTerminologyIDValue,
-            String languageCodeString) throws UnsupportedEncodingException {
+            CodePhrase charset,
+            CodePhrase language) throws UnsupportedEncodingException {
         DvEncapsulatedSerializer s = new DvEncapsulatedSerializer();
         register(DVENCAPSULATED, offset);
         setOffset(s.serialize(
                 buffer,
                 offset,
-                codePhraseCharsetTerminologyIDValue,
-                charsetCodeString,
-                codePhraseLanguageTerminologyIDValue,
-                languageCodeString)
+                charset,
+                language)
         );
 
         return this;

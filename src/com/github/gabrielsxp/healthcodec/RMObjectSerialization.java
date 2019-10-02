@@ -766,16 +766,15 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer,
                 int offset,
-                String codePhraseCharsetTerminologyIDValue,
-                String charsetCodeString,
-                String codePhraseLanguageTerminologyIDValue,
-                String languageCodeString) {
+                CodePhrase charset, CodePhrase language) {
             int cpCharsetTerminologyIDValueLength
-                    = codePhraseCharsetTerminologyIDValue.length();
-            int charsetCodeStringLength = charsetCodeString.length();
+                    = charset.getTerminologyID().getValue().length();
+            int charsetCodeStringLength 
+                    = charset.getValue().length();
             int cpLanguageTerminologyIDValueLength
-                    = codePhraseLanguageTerminologyIDValue.length();
-            int languageCodeStringLength = languageCodeString.length();
+                    = language.getTerminologyID().getValue().length();
+            int languageCodeStringLength 
+                    = language.getValue().length();
 
             buffer.writeInteger(offset, cpCharsetTerminologyIDValueLength);
             buffer.writeInteger(
@@ -788,14 +787,14 @@ public class RMObjectSerialization {
 
             int dataPosition = offset + INT.getSize() * 4;
             buffer.writeString(
-                    dataPosition, codePhraseCharsetTerminologyIDValue);
+                    dataPosition, charset.getTerminologyID().getValue());
             dataPosition += cpCharsetTerminologyIDValueLength;
-            buffer.writeString(dataPosition, charsetCodeString);
+            buffer.writeString(dataPosition, charset.getValue());
             dataPosition += charsetCodeStringLength;
             buffer.writeString(
-                    dataPosition, codePhraseLanguageTerminologyIDValue);
+                    dataPosition, language.getTerminologyID().getValue());
             dataPosition += cpLanguageTerminologyIDValueLength;
-            buffer.writeString(dataPosition, languageCodeString);
+            buffer.writeString(dataPosition, language.getValue());
             dataPosition += languageCodeStringLength;
 
             return dataPosition;

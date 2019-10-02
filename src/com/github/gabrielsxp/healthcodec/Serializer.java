@@ -13,6 +13,7 @@
  */
 package com.github.gabrielsxp.healthcodec;
 
+import com.github.gabrielsxp.healthcodec.RMObject.CodePhrase;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
@@ -283,18 +284,14 @@ public interface Serializer {
     /**
      * Serializador de DvEncapsulated
      *
-     * @param codePhraseCharsetTerminologyIDValue
-     * @param charsetCodeString
-     * @param codePhraseLanguageTerminologyIDValue
-     * @param languageCodeString
+     * @param charset
+     * @param language
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvEncapsulated(
-            String codePhraseCharsetTerminologyIDValue,
-            String charsetCodeString,
-            String codePhraseLanguageTerminologyIDValue,
-            String languageCodeString) throws UnsupportedEncodingException;
+            CodePhrase charset,
+            CodePhrase language) throws UnsupportedEncodingException;
 
     /**
      * Serializador de UIDBasedID

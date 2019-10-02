@@ -1,5 +1,3 @@
-package RMObjectSerializationClient;
-
 /*
 * Copyright 2019 Instituto de Informática - UFG
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +11,9 @@ package RMObjectSerializationClient;
 * See the License for the specific language governing permissions and
 * limitations under the License.
  */
+package test.com.github.gabrielsxp.healthcodec;
+
 import java.io.UnsupportedEncodingException;
-import java.nio.ReadOnlyBufferException;
 import java.util.ArrayList;
 import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.*;
@@ -335,11 +334,24 @@ public class RMObjectSerializationClientTest {
         String codePhraseLanguageTerminologyIDValue = "_LANGUAGETERMINOLOGY_";
         String languageCodeString = "UTF-8";
         
+        TerminologyID charsetTID = 
+                RMObjectFactory.newTerminologyID(
+                        codePhraseCharsetTerminologyIDValue);
+        CodePhrase charset 
+                = RMObjectFactory.newCodePhrase(
+                        charsetTID, 
+                        charsetCodeString);
         
-        s.serializeDvEncapsulated(
-                codePhraseCharsetTerminologyIDValue, 
-                charsetCodeString, 
-                codePhraseLanguageTerminologyIDValue, languageCodeString);
+        TerminologyID languageID = 
+                RMObjectFactory.newTerminologyID(
+                        codePhraseLanguageTerminologyIDValue);
+        
+        CodePhrase language 
+                = RMObjectFactory.newCodePhrase(
+                        languageID, 
+                        languageCodeString);
+        
+        s.serializeDvEncapsulated(charset, language);
         
         DvEncapsulated d = s.deserializeDvEncapsulated();
         
