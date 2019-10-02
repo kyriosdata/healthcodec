@@ -497,14 +497,14 @@ public class RMObjectSerialization {
         protected int serialize(
                 Buffer buffer,
                 int offset,
-                String ovidValue,
+                ObjectVersionID id,
                 String namespace,
                 String type,
                 String path) throws UnsupportedEncodingException {
             boolean hasPath = path != null;
             int dataPositionStart = 0;
 
-            int ovidValueLength = ovidValue.length();
+            int ovidValueLength = id.getValue().length();
             int namespaceLength = namespace.length();
             int typeLength = type.length();
             int pathLength = hasPath ? path.length() : 0;
@@ -521,7 +521,7 @@ public class RMObjectSerialization {
                         + 3 * INT.getSize() + BYTE.getSize(), pathLength);
                 dataPositionStart = offset + 4 * INT.getSize() + BYTE.getSize();
             }
-            buffer.writeString(dataPositionStart, ovidValue);
+            buffer.writeString(dataPositionStart, id.getValue());
             dataPositionStart += ovidValueLength;
             buffer.writeString(dataPositionStart, namespace);
             dataPositionStart += namespaceLength;

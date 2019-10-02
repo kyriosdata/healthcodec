@@ -585,13 +585,13 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeLocatableRef(
-            String oidValue,
+            ObjectVersionID id,
             String namespace,
             String type,
             String path) throws UnsupportedEncodingException {
         LocatableRefSerializer s = new LocatableRefSerializer();
         register(LOCATABLEREF, offset);
-        setOffset(s.serialize(buffer, offset, oidValue, namespace, type, path));
+        setOffset(s.serialize(buffer, offset, id, namespace, type, path));
 
         return this;
     }

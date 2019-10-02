@@ -20,6 +20,7 @@ import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
 import com.github.gabrielsxp.healthcodec.RMObject.DvParsable;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectID;
+import com.github.gabrielsxp.healthcodec.RMObject.ObjectVersionID;
 import com.github.gabrielsxp.healthcodec.RMObject.TemplateID;
 
 /**
@@ -226,7 +227,7 @@ public interface Serializer {
     /**
      * Serializador de LocatableRef
      *
-     * @param oidValue
+     * @param id
      * @param namespace
      * @param type
      * @param path (opcional)
@@ -234,7 +235,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeLocatableRef(
-            String oidValue,
+            ObjectVersionID id,
             String namespace,
             String type,
             String path) throws UnsupportedEncodingException;

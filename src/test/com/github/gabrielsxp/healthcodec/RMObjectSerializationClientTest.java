@@ -251,7 +251,10 @@ public class RMObjectSerializationClientTest {
         String namespace = "NAMESPACE";
         String type = "TYPE";
         String path = "PATH";
-        s.serializeLocatableRef(ovidValue, namespace, type, path);
+        
+        ObjectVersionID id = RMObjectFactory.newObjectVersionID(ovidValue);
+        
+        s.serializeLocatableRef(id, namespace, type, path);
         LocatableRef lr = s.deserializeLocatableRef();
 
         assertEquals(ovidValue, lr.getId().getValue());
@@ -266,7 +269,10 @@ public class RMObjectSerializationClientTest {
         String ovidValue = "_OBJECTVERSIONID_";
         String namespace = "NAMESPACE";
         String type = "TYPE";
-        s.serializeLocatableRef(ovidValue, namespace, type, null);
+        
+        ObjectVersionID id = RMObjectFactory.newObjectVersionID(ovidValue);
+        
+        s.serializeLocatableRef(id, namespace, type, null);
         LocatableRef lr = s.deserializeLocatableRef();
 
         assertEquals(ovidValue, lr.getId().getValue());
