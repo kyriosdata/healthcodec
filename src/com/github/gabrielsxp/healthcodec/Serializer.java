@@ -258,14 +258,14 @@ public interface Serializer {
     /**
      * Serializador de PartyIdentified
      *
-     * @param oidValue
+     * @param id
      * @param value
      * @param name
      * @param identifiers
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializePartyIdentified(String oidValue,
+    RMObjectSerializationClient serializePartyIdentified(ObjectID id,
             String value,
             String name,
             List<DvIdentifier> identifiers)

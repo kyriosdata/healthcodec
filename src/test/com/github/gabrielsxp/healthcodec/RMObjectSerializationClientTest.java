@@ -302,12 +302,14 @@ public class RMObjectSerializationClientTest {
         String assigner = "ASSIGNER";
         String id = "ID";
         String type = "TYPE";
+        
+        ObjectID oid = RMObjectFactory.newObjectID(oidValue);
 
         List<DvIdentifier> identifiers = new ArrayList<>();
         identifiers.add(
                 RMObjectFactory.newDvIdentifier(issuer, assigner, id, type));
 
-        s.serializePartyIdentified(oidValue, value, name, identifiers);
+        s.serializePartyIdentified(oid, value, name, identifiers);
         PartyIdentified p = s.deserializePartyIdentified();
         
         assertEquals(oidValue, p.getExternalRef().getId().getValue());

@@ -609,19 +609,19 @@ public class RMObjectSerialization {
         protected int serializer(
                 Buffer buffer,
                 int offset,
-                String oidValue,
+                ObjectID id,
                 String value,
                 String name,
                 List<DvIdentifier> identifiers)
                 throws UnsupportedEncodingException {
-            int oidValueLength = oidValue.length();
+            int oidValueLength = id.getValue().length();
             int valueLength = value.length();
             int nameLength = name.length();
             buffer.writeInteger(offset, oidValueLength);
             buffer.writeInteger(offset + INT.getSize(), valueLength);
             buffer.writeInteger(offset + 2 * INT.getSize(), nameLength);
             int position = offset + 3 * INT.getSize();
-            buffer.writeString(position, oidValue);
+            buffer.writeString(position, id.getValue());
             position += oidValueLength;
             buffer.writeString(position, value);
             position += valueLength;

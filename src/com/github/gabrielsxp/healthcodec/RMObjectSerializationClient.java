@@ -670,7 +670,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * @throws UnsupportedEncodingException
      */
     @Override
-    public RMObjectSerializationClient serializePartyIdentified(String oidValue,
+    public RMObjectSerializationClient serializePartyIdentified(ObjectID id,
             String value,
             String name,
             List<DvIdentifier> identifiers)
@@ -678,7 +678,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         PartyIdentifiedSerializer s = new PartyIdentifiedSerializer();
         register(PARTYIDENTIFIED, offset);
         setOffset(
-                s.serializer(buffer, offset, oidValue, value, name, identifiers));
+                s.serializer(buffer, offset, id, value, name, identifiers));
 
         return this;
     }
