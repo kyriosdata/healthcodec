@@ -212,14 +212,14 @@ public interface Serializer {
     /**
      * Serializador de ObjectRef
      *
-     * @param oidValue String value de ObjectID
+     * @param id
      * @param namespace
      * @param type
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeObjectRef(
-            String oidValue,
+            ObjectID id,
             String namespace,
             String type) throws UnsupportedEncodingException;
 

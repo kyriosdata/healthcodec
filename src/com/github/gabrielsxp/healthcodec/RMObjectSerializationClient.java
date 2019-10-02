@@ -545,7 +545,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     /**
      * Serializa ObjectRef
      *
-     * @param oidValue
+     * @param id
      * @param namespace
      * @param type
      * @return instância de RMObjectSerializationClient atual
@@ -553,11 +553,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeObjectRef(
-            String oidValue,
+            ObjectID id,
             String namespace, String type) throws UnsupportedEncodingException {
         ObjectRefSerializer s = new ObjectRefSerializer();
         register(OBJECTREF, offset);
-        setOffset(s.serialize(buffer, offset, oidValue, namespace, type));
+        setOffset(s.serialize(buffer, offset, id, namespace, type));
 
         return this;
     }

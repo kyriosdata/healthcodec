@@ -233,7 +233,10 @@ public class RMObjectSerializationClientTest {
         String oidValue = "_OBJECTID_";
         String namespace = "NAMESPACE";
         String type = "TYPE";
-        s.serializeObjectRef(oidValue, namespace, type);
+        
+        ObjectID id = RMObjectFactory.newObjectID(oidValue);
+        
+        s.serializeObjectRef(id, namespace, type);
         ObjectRef or = s.deserializeObjectRef();
 
         assertEquals(oidValue, or.getId().getValue());

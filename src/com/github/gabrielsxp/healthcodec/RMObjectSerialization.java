@@ -444,17 +444,17 @@ public class RMObjectSerialization {
         protected int serialize(
                 Buffer buffer,
                 int offset,
-                String oidValue,
+                ObjectID id,
                 String namespace,
                 String type) throws UnsupportedEncodingException {
-            int oidValueLength = oidValue.length();
+            int oidValueLength = id.getValue().length();
             int namespaceLength = namespace.length();
             int typeLength = type.length();
             buffer.writeInteger(offset, oidValueLength);
             buffer.writeInteger(offset + INT.getSize(), namespaceLength);
             buffer.writeInteger(offset + 2 * INT.getSize(), typeLength);
 
-            buffer.writeString(offset + 3 * INT.getSize(), oidValue);
+            buffer.writeString(offset + 3 * INT.getSize(), id.getValue());
             buffer.writeString(
                     offset + 3 * INT.getSize() + oidValueLength, namespace);
             buffer.writeString(
