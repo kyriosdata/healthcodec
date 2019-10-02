@@ -384,12 +384,25 @@ public class RMObjectSerializationClientTest {
         String value = "_DVPARSABLE_";
         String formalism = "FORMALISM";
         
+        TerminologyID charsetTID = 
+                RMObjectFactory.newTerminologyID(
+                        codePhraseCharsetTerminologyIDValue);
+        CodePhrase charset 
+                = RMObjectFactory.newCodePhrase(
+                        charsetTID, 
+                        charsetCodeString);
         
-        s.serializeDvParsable(
-                codePhraseCharsetTerminologyIDValue, 
-                charsetCodeString, 
-                codePhraseLanguageTerminologyIDValue, 
-                languageCodeString, value, formalism);
+        TerminologyID languageID = 
+                RMObjectFactory.newTerminologyID(
+                        codePhraseLanguageTerminologyIDValue);
+        
+        CodePhrase language 
+                = RMObjectFactory.newCodePhrase(
+                        languageID, 
+                        languageCodeString);
+        
+        
+        s.serializeDvParsable(charset, language,value, formalism);
         
         DvParsable d = s.deserializeDvParsable();
         

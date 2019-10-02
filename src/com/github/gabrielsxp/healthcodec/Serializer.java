@@ -316,10 +316,8 @@ public interface Serializer {
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvParsable(
-            String codePhraseCharsetTerminologyIDValue,
-            String charsetCodeString,
-            String codePhraseLanguageTerminologyIDValue,
-            String languageCodeString,
+            CodePhrase charset,
+            CodePhrase language,
             String value,
             String formalism) throws UnsupportedEncodingException;
     

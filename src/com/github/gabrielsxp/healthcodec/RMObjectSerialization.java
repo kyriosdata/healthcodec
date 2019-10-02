@@ -156,16 +156,13 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            int valueLength = value.length();
-            buffer.writeInteger(offset, valueLength);
-            buffer.writeString(offset + INT.getSize(), value);
-
-            return offset + INT.getSize() + valueLength;
+            return valueStringSerialization(buffer, offset, value);
         }
 
         protected InternetID deserialize(Buffer buffer, int offset) {
             int valueLength = buffer.readInteger(offset);
-            String value = buffer.readString(offset + INT.getSize(), valueLength);
+            String value = buffer.readString(
+                    offset + INT.getSize(), valueLength);
 
             return RMObjectFactory.newInternetID(value);
         }
@@ -175,11 +172,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            int valueLength = value.length();
-            buffer.writeInteger(offset, valueLength);
-            buffer.writeString(offset + INT.getSize(), value);
-
-            return offset + INT.getSize() + valueLength;
+            return valueStringSerialization(buffer, offset, value);
         }
 
         protected ISO_OID deserialize(Buffer buffer, int offset) {
@@ -194,11 +187,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            int valueLength = value.length();
-            buffer.writeInteger(offset, valueLength);
-            buffer.writeString(offset + INT.getSize(), value);
-
-            return offset + INT.getSize() + valueLength;
+            return valueStringSerialization(buffer, offset, value);
         }
 
         protected UUID deserialize(Buffer buffer, int offset) {
@@ -243,11 +232,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            int valueLength = value.length();
-            buffer.writeInteger(offset, valueLength);
-            buffer.writeString(offset + INT.getSize(), value);
-
-            return offset + INT.getSize() + valueLength;
+            return valueStringSerialization(buffer, offset, value);
         }
 
         protected TemplateID deserialize(Buffer buffer, int offset) {
@@ -262,11 +247,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            int valueLength = value.length();
-            buffer.writeInteger(offset, valueLength);
-            buffer.writeString(offset + INT.getSize(), value);
-
-            return offset + INT.getSize() + valueLength;
+            return valueStringSerialization(buffer, offset, value);
         }
 
         protected TerminologyID deserialize(Buffer buffer, int offset) {
@@ -323,11 +304,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            int valueLength = value.length();
-            buffer.writeInteger(offset, valueLength);
-            buffer.writeString(offset + INT.getSize(), value);
-
-            return offset + INT.getSize() + valueLength;
+            return valueStringSerialization(buffer, offset, value);
         }
 
         protected DVURI deserialize(Buffer buffer, int offset) {
@@ -342,11 +319,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            int valueLength = value.length();
-            buffer.writeInteger(offset, valueLength);
-            buffer.writeString(offset + INT.getSize(), value);
-
-            return offset + INT.getSize() + valueLength;
+            return valueStringSerialization(buffer, offset, value);
         }
 
         protected DVEHRURI deserialize(Buffer buffer, int offset) {
@@ -361,11 +334,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            int valueLength = value.length();
-            buffer.writeInteger(offset, valueLength);
-            buffer.writeString(offset + INT.getSize(), value);
-
-            return offset + INT.getSize() + valueLength;
+            return valueStringSerialization(buffer, offset, value);
         }
 
         protected VersionTreeID deserialize(Buffer buffer, int offset) {
@@ -380,11 +349,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            int valueLength = value.length();
-            buffer.writeInteger(offset, valueLength);
-            buffer.writeString(offset + INT.getSize(), value);
-
-            return offset + INT.getSize() + valueLength;
+            return valueStringSerialization(buffer, offset, value);
         }
 
         protected ArchetypeID deserialize(Buffer buffer, int offset) {
@@ -399,11 +364,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            int valueLength = value.length();
-            buffer.writeInteger(offset, valueLength);
-            buffer.writeString(offset + INT.getSize(), value);
-
-            return offset + INT.getSize() + valueLength;
+            return valueStringSerialization(buffer, offset, value);
         }
 
         protected ObjectVersionID deserialize(Buffer buffer, int offset) {
@@ -418,11 +379,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            int valueLength = value.length();
-            buffer.writeInteger(offset, valueLength);
-            buffer.writeString(offset + INT.getSize(), value);
-
-            return offset + INT.getSize() + valueLength;
+            return valueStringSerialization(buffer, offset, value);
         }
 
         protected HierObjectID deserialize(Buffer buffer, int offset) {
@@ -437,11 +394,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            int valueLength = value.length();
-            buffer.writeInteger(offset, valueLength);
-            buffer.writeString(offset + INT.getSize(), value);
-
-            return offset + INT.getSize() + valueLength;
+            return valueStringSerialization(buffer, offset, value);
         }
 
         protected ObjectID deserialize(Buffer buffer, int offset) {
@@ -769,11 +722,11 @@ public class RMObjectSerialization {
                 CodePhrase charset, CodePhrase language) {
             int cpCharsetTerminologyIDValueLength
                     = charset.getTerminologyID().getValue().length();
-            int charsetCodeStringLength 
+            int charsetCodeStringLength
                     = charset.getValue().length();
             int cpLanguageTerminologyIDValueLength
                     = language.getTerminologyID().getValue().length();
-            int languageCodeStringLength 
+            int languageCodeStringLength
                     = language.getValue().length();
 
             buffer.writeInteger(offset, cpCharsetTerminologyIDValueLength);
@@ -848,13 +801,10 @@ public class RMObjectSerialization {
     }
 
     public static class UIDBasedIDSerializer {
+
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            int valueLength = value.length();
-            buffer.writeInteger(offset, valueLength);
-            buffer.writeString(offset + INT.getSize(), value);
-
-            return offset + INT.getSize() + valueLength;
+            return valueStringSerialization(buffer, offset, value);
         }
 
         protected UIDBasedID deserialize(Buffer buffer, int offset) {
@@ -864,21 +814,20 @@ public class RMObjectSerialization {
             return RMObjectFactory.newUIDBasedID(value);
         }
     }
-    
+
     public static class DvParsableSerializer {
+
         protected int serialize(Buffer buffer, int offset,
-                String codePhraseCharsetTerminologyIDValue,
-                String charsetCodeString,
-                String codePhraseLanguageTerminologyIDValue,
-                String languageCodeString,
+                CodePhrase charset,
+                CodePhrase language,
                 String value,
                 String formalism) throws UnsupportedEncodingException {
             int cpCharsetTerminologyIDValueLength
-                    = codePhraseCharsetTerminologyIDValue.length();
-            int charsetCodeStringLength = charsetCodeString.length();
+                    = charset.getTerminologyID().getValue().length();
+            int charsetCodeStringLength = charset.getValue().length();
             int cpLanguageTerminologyIDValueLength
-                    = codePhraseLanguageTerminologyIDValue.length();
-            int languageCodeStringLength = languageCodeString.length();
+                    = language.getTerminologyID().getValue().length();
+            int languageCodeStringLength = language.getValue().length();
             int valueLength = value.length();
             int formalismLength = formalism.length();
 
@@ -892,28 +841,28 @@ public class RMObjectSerialization {
                     offset + 3 * INT.getSize(), languageCodeStringLength);
             buffer.writeInteger(offset + 4 * INT.getSize(), valueLength);
             buffer.writeInteger(offset + 5 * INT.getSize(), formalismLength);
-            
+
             int dataPosition = offset + INT.getSize() * 6;
             buffer.writeString(
-                    dataPosition, codePhraseCharsetTerminologyIDValue);
+                    dataPosition, charset.getTerminologyID().getValue());
             dataPosition += cpCharsetTerminologyIDValueLength;
-            buffer.writeString(dataPosition, charsetCodeString);
+            buffer.writeString(dataPosition, charset.getValue());
             dataPosition += charsetCodeStringLength;
             buffer.writeString(
-                    dataPosition, codePhraseLanguageTerminologyIDValue);
+                    dataPosition, language.getTerminologyID().getValue());
             dataPosition += cpLanguageTerminologyIDValueLength;
-            buffer.writeString(dataPosition, languageCodeString);
+            buffer.writeString(dataPosition, language.getValue());
             dataPosition += languageCodeStringLength;
-            
+
             buffer.writeString(dataPosition, value);
             dataPosition += valueLength;
             buffer.writeString(dataPosition, formalism);
             dataPosition += formalismLength;
-            
+
             return dataPosition;
         }
-        
-        protected DvParsable deserialize(Buffer buffer, int offset){
+
+        protected DvParsable deserialize(Buffer buffer, int offset) {
             int cpCharsetTerminologyIDValueLength = buffer.readInteger(offset);
             int charsetCodeStringLength
                     = buffer.readInteger(offset + INT.getSize());
@@ -922,8 +871,8 @@ public class RMObjectSerialization {
             int languageCodeStringLength
                     = buffer.readInteger(offset + 3 * INT.getSize());
             int valueLength = buffer.readInteger(offset + 4 * INT.getSize());
-            int formalismLength = 
-                    buffer.readInteger(offset + 5 * INT.getSize());
+            int formalismLength
+                    = buffer.readInteger(offset + 5 * INT.getSize());
 
             int dataPosition = offset + 6 * INT.getSize();
 
@@ -932,26 +881,26 @@ public class RMObjectSerialization {
                             dataPosition,
                             cpCharsetTerminologyIDValueLength);
             dataPosition += cpCharsetTerminologyIDValueLength;
-            
+
             String charsetCodeString
                     = buffer.readString(dataPosition, charsetCodeStringLength);
             dataPosition += charsetCodeStringLength;
-            
+
             String cpLanguageTerminologyIDValue
                     = buffer.readString(
                             dataPosition,
                             cpLanguageTerminologyIDValueLength);
             dataPosition += cpLanguageTerminologyIDValueLength;
-            
+
             String languageCodeString
                     = buffer.readString(dataPosition, languageCodeStringLength);
             dataPosition += languageCodeStringLength;
-            
+
             String value = buffer.readString(dataPosition, valueLength);
             dataPosition += valueLength;
-            
+
             String formalism = buffer.readString(dataPosition, formalismLength);
-            
+
             TerminologyID terminologyIDCharset
                     = RMObjectFactory.newTerminologyID(
                             codePhraseCharsetTerminologyIDValue);
@@ -968,39 +917,55 @@ public class RMObjectSerialization {
             CodePhrase language
                     = RMObjectFactory.newCodePhrase(
                             terminologyIDLanguage, languageCodeString);
-            
+
             return RMObjectFactory.newDvParsable(
-                    charset, 
-                    language, 
+                    charset,
+                    language,
                     value, formalism);
         }
     }
-    
+
     public static class DvTimeSpecificationSerializer {
+
         protected int serialize(
-                Buffer buffer, 
-                int offset, 
-                DvParsable value) throws UnsupportedEncodingException{
+                Buffer buffer,
+                int offset,
+                DvParsable value) throws UnsupportedEncodingException {
             int endPosition = offset;
             DvParsableSerializer s = new DvParsableSerializer();
-            endPosition += s.serialize(buffer, 
+            endPosition += s.serialize(buffer,
                     offset,
-                    value.getCharset().getTerminologyID().getValue(),
-                    value.getCharset().getValue(),
-                    value.getLanguage().getTerminologyID().getValue(),
-                    value.getLanguage().getValue(),
+                    value.getCharset(),
+                    value.getLanguage(),
                     value.getValue(),
-                    value.getFormalism() );
-            
+                    value.getFormalism());
+
             return endPosition;
         }
-        
-        protected DvTimeSpecification deserialize(Buffer buffer, int offset){
+
+        protected DvTimeSpecification deserialize(Buffer buffer, int offset) {
             DvParsableSerializer d = new DvParsableSerializer();
             DvParsable value = d.deserialize(buffer, offset);
-            
+
             return RMObjectFactory.newDvTimeSpecification(value);
         }
+    }
+    
+    /**
+     * Serializa uma única String value
+     * @param buffer
+     * @param offset
+     * @param value
+     * @return posição final após a serialização da String no buffer
+     */
+    private static int valueStringSerialization(
+            Buffer buffer, 
+            int offset, String value) throws UnsupportedEncodingException {
+        int valueLength = value.length();
+        buffer.writeInteger(offset, valueLength);
+        buffer.writeString(offset + INT.getSize(), value);
+
+        return offset + INT.getSize() + valueLength;
     }
 
 }

@@ -640,7 +640,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * @return instância de RMObjectSerializationClient atual
      */
     @Override
-    public RMObjectSerializationClient serializeAccessGroupRef(String oidValue) {
+    public RMObjectSerializationClient serializeAccessGroupRef(String oidValue){
         AccessGroupRefSerializer s = new AccessGroupRefSerializer();
         register(ACCESSGROUPREF, offset);
         setOffset(s.serializer(buffer, offset, oidValue));
@@ -728,11 +728,9 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
-     *
-     * @param codePhraseCharsetTerminologyIDValue
-     * @param charsetCodeString
-     * @param codePhraseLanguageTerminologyIDValue
-     * @param languageCodeString
+     * Serializa DvEncapsulated
+     * @param charset
+     * @param languaage
      * @return instância de RMObjectSerializationClient atual
      * @throws UnsupportedEncodingException
      */
@@ -793,11 +791,9 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
 
     /**
      * Serializa DvParsable
-     *
-     * @param codePhraseCharsetTerminologyIDValue
-     * @param charsetCodeString
-     * @param codePhraseLanguageTerminologyIDValue
-     * @param languageCodeString
+     * 
+     * @param charset
+     * @param language
      * @param value
      * @param formalism
      * @return instância de RMObjectSerializationClient atual
@@ -805,10 +801,8 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeDvParsable(
-            String codePhraseCharsetTerminologyIDValue,
-            String charsetCodeString,
-            String codePhraseLanguageTerminologyIDValue,
-            String languageCodeString,
+            CodePhrase charset,
+            CodePhrase language,
             String value,
             String formalism) throws UnsupportedEncodingException {
         DvParsableSerializer s = new DvParsableSerializer();
@@ -817,10 +811,10 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
                 s.serialize(
                         buffer,
                         offset,
-                        codePhraseCharsetTerminologyIDValue,
-                        charsetCodeString,
-                        codePhraseLanguageTerminologyIDValue,
-                        languageCodeString, value, formalism)
+                        charset,
+                        language,
+                        value, 
+                        formalism)
         );
         
         return this;
