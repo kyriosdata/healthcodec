@@ -13,12 +13,14 @@
  */
 package com.github.gabrielsxp.healthcodec;
 
+import com.github.gabrielsxp.healthcodec.RMObject.ArchetypeID;
 import com.github.gabrielsxp.healthcodec.RMObject.CodePhrase;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
 import com.github.gabrielsxp.healthcodec.RMObject.DvParsable;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectID;
+import com.github.gabrielsxp.healthcodec.RMObject.TemplateID;
 
 /**
  *
@@ -278,8 +280,8 @@ public interface Serializer {
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeArchetyped(String archetypeIDValue,
-            String templateIDValue,
+    RMObjectSerializationClient serializeArchetyped(ArchetypeID archetypedId,
+            TemplateID templateId,
             String rmVersionLength) throws UnsupportedEncodingException;
 
     /**

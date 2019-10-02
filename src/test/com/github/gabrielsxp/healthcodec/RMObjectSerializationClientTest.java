@@ -320,7 +320,12 @@ public class RMObjectSerializationClientTest {
         String templateIDValue = "_TEMPLATEID_";
         String rmVersion = "_RMVERSION_";
         
-        s.serializeArchetyped(archetypeIDValue, templateIDValue, rmVersion);
+        ArchetypeID archetypeId = 
+                RMObjectFactory.newArchetypeID(archetypeIDValue);
+        TemplateID templateId = 
+                RMObjectFactory.newTemplateID(templateIDValue);
+        
+        s.serializeArchetyped(archetypeId, templateId, rmVersion);
         Archetyped a = s.deserializeArchetyped();
         
         assertEquals(archetypeIDValue, a.getArchetypeId().getValue());

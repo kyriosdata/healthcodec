@@ -697,21 +697,21 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     /**
      * Serializa Archetyped
      *
-     * @param archetypeIDValue
-     * @param templateIDValue
+     * @param archetypeId
+     * @param templateId
      * @param rmVersionLength
      * @return instância de RMObjectSerializationClient atual
      * @throws UnsupportedEncodingException
      */
     @Override
     public RMObjectSerializationClient serializeArchetyped(
-            String archetypeIDValue,
-            String templateIDValue,
+            ArchetypeID archetypeId,
+            TemplateID templateId,
             String rmVersionLength) throws UnsupportedEncodingException {
         ArchetypedSerializer s = new ArchetypedSerializer();
         register(ARCHETYPED, offset);
         setOffset(s.serializer(buffer, offset,
-                archetypeIDValue, templateIDValue, rmVersionLength));
+                archetypeId, templateId, rmVersionLength));
 
         return this;
     }
@@ -730,7 +730,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     /**
      * Serializa DvEncapsulated
      * @param charset
-     * @param languaage
+     * @param language
      * @return instância de RMObjectSerializationClient atual
      * @throws UnsupportedEncodingException
      */

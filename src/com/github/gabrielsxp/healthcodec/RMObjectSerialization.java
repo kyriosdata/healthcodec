@@ -663,11 +663,11 @@ public class RMObjectSerialization {
         protected int serializer(
                 Buffer buffer,
                 int offset,
-                String archetypeIDValue,
-                String templateIDValue,
+                ArchetypeID archetypeId,
+                TemplateID templateId,
                 String rmVersion) throws UnsupportedEncodingException {
-            int archetypeIDValueLength = archetypeIDValue.length();
-            int templateIDValueLength = templateIDValue.length();
+            int archetypeIDValueLength = archetypeId.getValue().length();
+            int templateIDValueLength = templateId.getValue().length();
             int rmVersionLength = rmVersion.length();
 
             buffer.writeInteger(offset, archetypeIDValueLength);
@@ -675,9 +675,9 @@ public class RMObjectSerialization {
             buffer.writeInteger(offset + 2 * INT.getSize(), rmVersionLength);
 
             int dataPosition = offset + 3 * INT.getSize();
-            buffer.writeString(dataPosition, archetypeIDValue);
+            buffer.writeString(dataPosition, archetypeId.getValue());
             dataPosition += archetypeIDValueLength;
-            buffer.writeString(dataPosition, templateIDValue);
+            buffer.writeString(dataPosition, templateId.getValue());
             dataPosition += templateIDValueLength;
             buffer.writeString(dataPosition, rmVersion);
             dataPosition += rmVersionLength;
