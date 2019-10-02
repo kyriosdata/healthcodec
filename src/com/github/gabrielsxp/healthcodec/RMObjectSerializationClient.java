@@ -515,18 +515,18 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     /**
      * Serializa PartyRef
      *
-     * @param oidValue
+     * @param id
      * @param value
      * @return instância de RMObjectSerializationClient atual
      * @throws UnsupportedEncodingException
      */
     @Override
     public RMObjectSerializationClient serializePartyRef(
-            String oidValue,
+            ObjectID id,
             String value) throws UnsupportedEncodingException {
         PartyRefSerializer s = new PartyRefSerializer();
         register(PARTYREF, offset);
-        setOffset(s.serialize(buffer, offset, oidValue, value));
+        setOffset(s.serialize(buffer, offset, id, value));
 
         return this;
     }

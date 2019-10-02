@@ -206,7 +206,7 @@ public interface Serializer {
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializePartyRef(String oidValue, String value)
+    RMObjectSerializationClient serializePartyRef(ObjectID id, String value)
             throws UnsupportedEncodingException;
 
     /**
@@ -274,9 +274,9 @@ public interface Serializer {
     /**
      * Serializador de Archetyped
      *
-     * @param archetypeIDValue
+     * @param archetypedId
      * @param rmVersionLength
-     * @param templateIDValue
+     * @param templateId
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
@@ -309,10 +309,8 @@ public interface Serializer {
     /**
      * Serializador de DvParsable
      *
-     * @param codePhraseCharsetTerminologyIDValue
-     * @param charsetCodeString
-     * @param codePhraseLanguageTerminologyIDValue
-     * @param languageCodeString
+     * @param charset
+     * @param language
      * @param value
      * @param formalism
      * @return Instância de RMObjectSerializationClient para chaining

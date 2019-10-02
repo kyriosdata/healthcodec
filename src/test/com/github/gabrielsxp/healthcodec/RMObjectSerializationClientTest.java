@@ -218,8 +218,9 @@ public class RMObjectSerializationClientTest {
     public void PartyRef()
             throws UnsupportedEncodingException {
         String oidValue = "_OBJECTID_";
+        ObjectID id = RMObjectFactory.newObjectID(oidValue);
         String value = "_PARTYREF_";
-        s.serializePartyRef(oidValue, value);
+        s.serializePartyRef(id, value);
         PartyRef pr = s.deserializePartyRef();
 
         assertEquals(oidValue, pr.getId().getValue());

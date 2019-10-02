@@ -410,13 +410,13 @@ public class RMObjectSerialization {
         protected int serialize(
                 Buffer buffer,
                 int offset,
-                String oidValue,
+                ObjectID id,
                 String value) throws UnsupportedEncodingException {
-            int oidValueLength = oidValue.length();
+            int oidValueLength = id.getValue().length();
             int valueLength = value.length();
             buffer.writeInteger(offset, oidValueLength);
             buffer.writeInteger(offset + INT.getSize(), valueLength);
-            buffer.writeString(offset + 2 * INT.getSize(), oidValue);
+            buffer.writeString(offset + 2 * INT.getSize(), id.getValue());
             buffer.writeString(offset
                     + 2 * INT.getSize()
                     + oidValueLength, value);
