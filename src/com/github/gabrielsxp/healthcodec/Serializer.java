@@ -22,6 +22,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.DvParsable;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectID;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectVersionID;
 import com.github.gabrielsxp.healthcodec.RMObject.TemplateID;
+import com.github.gabrielsxp.healthcodec.RMObject.TerminologyID;
 
 /**
  *
@@ -120,13 +121,13 @@ public interface Serializer {
     /**
      * Serializador de CodePhrase
      *
-     * @param terminologyIDValue
+     * @param terminologyId
      * @param codeString
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeCodePhrase(
-            String terminologyIDValue,
+            TerminologyID terminologyId,
             String codeString) throws UnsupportedEncodingException;
 
     /**
@@ -202,7 +203,7 @@ public interface Serializer {
     /**
      * Serializador de PartyRef
      *
-     * @param oidValue String value de ObjectID
+     * @param id
      * @param value
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
@@ -332,4 +333,5 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeDvTimeSpecification(
             DvParsable value) throws UnsupportedEncodingException;
+    
 }

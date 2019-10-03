@@ -295,12 +295,12 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeCodePhrase(
-            String terminologyIDValue,
+            TerminologyID terminologyId,
             String value)
             throws UnsupportedEncodingException {
         CodePhraseSerializer s = new CodePhraseSerializer();
         register(CODEPHRASE, offset);
-        setOffset(s.serialize(buffer, offset, terminologyIDValue, value));
+        setOffset(s.serialize(buffer, offset, terminologyId, value));
 
         return this;
     }

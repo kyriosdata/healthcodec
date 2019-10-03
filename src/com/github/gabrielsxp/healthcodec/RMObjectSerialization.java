@@ -262,16 +262,17 @@ public class RMObjectSerialization {
 
         protected int serialize(
                 Buffer buffer, int offset,
-                String terminologyIDValue, String value)
+                TerminologyID terminologyId, String value)
                 throws UnsupportedEncodingException {
-            int terminologyIDValueLength = terminologyIDValue.length();
+            int terminologyIDValueLength = terminologyId.getValue().length();
             int valueLength = value.length();
             buffer.writeInteger(offset, terminologyIDValueLength);
             buffer.writeInteger(offset + INT.getSize(), valueLength);
-            buffer.writeString(offset + 2 * INT.getSize(), terminologyIDValue);
             buffer.writeString(
-                    offset + 2 * INT.getSize() + terminologyIDValueLength, value
-            );
+                    offset + 2 * INT.getSize(), terminologyId.getValue());
+            buffer.writeString(
+                    offset + 2 * INT.getSize() + terminologyIDValueLength, 
+                    value);
 
             return offset
                     + 2 * INT.getSize()
@@ -953,13 +954,14 @@ public class RMObjectSerialization {
     
     /**
      * Serializa uma única String value
+     *
      * @param buffer
      * @param offset
      * @param value
      * @return posição final após a serialização da String no buffer
      */
     private static int valueStringSerialization(
-            Buffer buffer, 
+            Buffer buffer,
             int offset, String value) throws UnsupportedEncodingException {
         int valueLength = value.length();
         buffer.writeInteger(offset, valueLength);
@@ -967,5 +969,4 @@ public class RMObjectSerialization {
 
         return offset + INT.getSize() + valueLength;
     }
-
 }
