@@ -1255,6 +1255,49 @@ public class RMObjectSerialization {
                     value, null, formatting, hyperlink, language, charset);
         }
     }
+    
+    public static class DvCodedTextSerializer {
+        protected int serialize(Buffer buffer, int offset, 
+                DvText dvText, CodePhrase definingCode) 
+                throws UnsupportedEncodingException{
+            int position = offset + 2 * INT.getSize();
+            int meta = offset;
+            DvTextSerializer dvt = new DvTextSerializer();
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = dvt.serialize(
+                    buffer, 
+                    position, 
+                    dvText.getValue(), 
+                    dvText.getMappings(), 
+                    dvText.getFormatting(), 
+                    dvText.getHyperlink(), 
+                    dvText.getLanguage(), 
+                    dvText.getCharset());
+            
+            meta = writeHeader(buffer, meta, position);
+            position = cps.serialize(buffer, position, 
+                    definingCode.getTerminologyID(), definingCode.getValue());
+            
+            return position;
+        }
+        
+        protected DvCodedText deserialize(Buffer buffer, int offset){
+            int position = offset;
+            int dvTextPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            int definingCodePosition = buffer.readInteger(position);
+            DvTextSerializer dvt = new DvTextSerializer();
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            
+            DvText dvText = dvt.deserialize(buffer, dvTextPosition);
+            CodePhrase definingCode = 
+                    cps.deserialize(buffer, definingCodePosition);
+            
+            return RMObjectFactory.newDvCodedText(dvText, definingCode);
+        }
+    }
 
     /**
      * Serializa uma única String value

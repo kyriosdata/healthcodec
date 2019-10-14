@@ -905,8 +905,6 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     
     /**
      * Serializa DvText
-     * @param buffer
-     * @param offset
      * @param value
      * @param mappings
      * @param formatting
@@ -916,6 +914,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * @return instância de RMObjectSerializationClient atual
      * @throws UnsupportedEncodingException 
      */
+    @Override
     public RMObjectSerializationClient serializeDvText(String value,
             List<TermMapping> mappings,
             String formatting,
@@ -939,6 +938,33 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     public DvText deserializeDvText(){
         DvTextSerializer d = new DvTextSerializer();
         return d.deserialize(buffer, getOffsetFromID(DVTEXT));
+    }
+    
+    /**
+     * Serializador de DvCodedText
+     * @param dvText
+     * @param definingCode
+     * @return
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvCodedText(DvText dvText, 
+            CodePhrase definingCode) throws UnsupportedEncodingException {
+        DvCodedTextSerializer s = new DvCodedTextSerializer();
+        register(DVCODEDTEXT, offset);
+        setOffset(s.serialize(buffer, offset, dvText, definingCode));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializa DvCodedText
+     * @return nova instância de DvCodedText
+     */
+    @Override
+    public DvCodedText deserializeDvCodedText() {
+        DvCodedTextSerializer d = new DvCodedTextSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVCODEDTEXT));
     }
 
     /**

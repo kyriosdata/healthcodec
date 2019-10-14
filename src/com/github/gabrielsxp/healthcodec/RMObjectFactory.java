@@ -172,4 +172,9 @@ public class RMObjectFactory {
             CodePhrase charset) {
         return new DvText(value,mappings,formatting,hyperlink,language,charset);
     }
+    
+    public static DvCodedText newDvCodedText(DvText dvText, 
+            CodePhrase definingCode){
+        return new DvCodedText(dvText, definingCode);
+    }
 }

@@ -223,4 +223,11 @@ public interface Deserializer {
      * @return instância de DvText
      */
     DvText deserializeDvText();
+    
+    /**
+     * Deserializador de DvCodedText
+     * 
+     * @return instância de DvText
+     */
+    DvCodedText deserializeDvCodedText();
 }

@@ -22,6 +22,7 @@ import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
 import com.github.gabrielsxp.healthcodec.RMObject.DvMultimedia;
 import com.github.gabrielsxp.healthcodec.RMObject.DvParsable;
+import com.github.gabrielsxp.healthcodec.RMObject.DvText;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectID;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectVersionID;
 import com.github.gabrielsxp.healthcodec.RMObject.TemplateID;
@@ -380,4 +381,15 @@ public interface Serializer {
             DVURI hyperlink,
             CodePhrase language,
             CodePhrase charset) throws UnsupportedEncodingException;
+    
+    /**
+     * Serilizador de DvCodedText
+     * 
+     * @param dvText
+     * @param definingCode
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeDvCodedText(DvText dvText, 
+            CodePhrase definingCode) throws UnsupportedEncodingException;;
 }
