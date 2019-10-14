@@ -147,4 +147,19 @@ public class RMObjectFactory {
     public static DvTimeSpecification newDvTimeSpecification(DvParsable value){
         return new DvTimeSpecification(value);
     }
+    
+    public static DvMultimedia newDvMultimedia(DvEncapsulated dvMultimediaDvEncapsulated,
+                String alternateText,
+                CodePhrase mediaType,
+                CodePhrase compressionAlgorithm,
+                byte[] integrityCheck,
+                CodePhrase integrityCheckAlgorithm,
+                DvMultimedia thumbnail,
+                DVURI uri,
+                byte[] data){
+        return new DvMultimedia(
+                dvMultimediaDvEncapsulated, alternateText, mediaType,
+                compressionAlgorithm, integrityCheck, integrityCheckAlgorithm,
+                thumbnail, uri, data);
+    }
 }

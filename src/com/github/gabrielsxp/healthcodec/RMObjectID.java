@@ -44,7 +44,8 @@ public enum RMObjectID {
     DVENCAPSULATED(23),
     UIDBASEDID(24),
     DVPARSABLE(25),
-    DVTIMESPECIFICATION(26);
+    DVTIMESPECIFICATION(26),
+    DVMULTIMEDIA(27);
     
 
     private final int value;

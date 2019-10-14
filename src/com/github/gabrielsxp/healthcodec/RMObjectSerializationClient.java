@@ -640,7 +640,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * @return instância de RMObjectSerializationClient atual
      */
     @Override
-    public RMObjectSerializationClient serializeAccessGroupRef(ObjectID id){
+    public RMObjectSerializationClient serializeAccessGroupRef(ObjectID id) {
         AccessGroupRefSerializer s = new AccessGroupRefSerializer();
         register(ACCESSGROUPREF, offset);
         setOffset(s.serializer(buffer, offset, id));
@@ -729,6 +729,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
 
     /**
      * Serializa DvEncapsulated
+     *
      * @param charset
      * @param language
      * @return instância de RMObjectSerializationClient atual
@@ -791,7 +792,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
 
     /**
      * Serializa DvParsable
-     * 
+     *
      * @param charset
      * @param language
      * @param value
@@ -813,15 +814,16 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
                         offset,
                         charset,
                         language,
-                        value, 
+                        value,
                         formalism)
         );
-        
+
         return this;
     }
 
     /**
      * Deserializa DvParsable
+     *
      * @return nova instância de DvParsable
      */
     @Override
@@ -829,12 +831,13 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         DvParsableSerializer d = new DvParsableSerializer();
         return d.deserialize(buffer, getOffsetFromID(DVPARSABLE));
     }
-    
+
     /**
      * Serializa DvTimeSpecification
+     *
      * @param value
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     @Override
     public RMObjectSerializationClient serializeDvTimeSpecification(
@@ -842,18 +845,62 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         DvTimeSpecificationSerializer s = new DvTimeSpecificationSerializer();
         register(DVTIMESPECIFICATION, offset);
         setOffset(s.serialize(buffer, offset, value));
-        
+
         return this;
     }
 
     /**
      * Deserializa DvTimeSpecification
+     *
      * @return nova instância de DvTimeSpecification
      */
     @Override
     public DvTimeSpecification deserializeDvTimeSpecification() {
         DvTimeSpecificationSerializer d = new DvTimeSpecificationSerializer();
         return d.deserialize(buffer, getOffsetFromID(DVTIMESPECIFICATION));
+    }
+
+    /**
+     * Serializa DvMultimedia
+     *
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvMultimedia(
+            DvEncapsulated dvMultimediaDvEncapsulated,
+            String alternateText,
+            CodePhrase mediaType,
+            CodePhrase compressionAlgorithm,
+            byte[] integrityCheck,
+            CodePhrase integrityCheckAlgorithm,
+            DvMultimedia thumbnail,
+            DVURI uri,
+            byte[] data) throws UnsupportedEncodingException {
+        DvMultimediaSerializer s = new DvMultimediaSerializer();
+        register(DVMULTIMEDIA, offset);
+        setOffset(s.serialize(buffer,
+                        offset, dvMultimediaDvEncapsulated,
+                        alternateText,
+                        mediaType,
+                        compressionAlgorithm,
+                        integrityCheck,
+                        integrityCheckAlgorithm,
+                        thumbnail,
+                        uri,
+                        data));
+
+        return this;
+    }
+    
+    /**
+     * Deserialize DvMultimedia
+     * @return nova instância de DvMultimedia
+     */
+    @Override
+    public DvMultimedia deserializeDvMultimedia() {
+        DvMultimediaSerializer d = new DvMultimediaSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVMULTIMEDIA));
     }
 
     /**

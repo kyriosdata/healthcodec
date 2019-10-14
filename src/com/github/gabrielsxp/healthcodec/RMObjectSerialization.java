@@ -271,7 +271,7 @@ public class RMObjectSerialization {
             buffer.writeString(
                     offset + 2 * INT.getSize(), terminologyId.getValue());
             buffer.writeString(
-                    offset + 2 * INT.getSize() + terminologyIDValueLength, 
+                    offset + 2 * INT.getSize() + terminologyIDValueLength,
                     value);
 
             return offset
@@ -951,7 +951,205 @@ public class RMObjectSerialization {
             return RMObjectFactory.newDvTimeSpecification(value);
         }
     }
-    
+
+    public static class DvMultimediaSerializer {
+
+        protected int serialize(
+                Buffer buffer,
+                int offset,
+                DvEncapsulated dvMultimediaDvEncapsulated,
+                String alternateText,
+                CodePhrase mediaType,
+                CodePhrase compressionAlgorithm,
+                byte[] integrityCheck,
+                CodePhrase integrityCheckAlgorithm,
+                DvMultimedia thumbnail,
+                DVURI uri,
+                byte[] data) throws
+                UnsupportedEncodingException, IllegalArgumentException {
+
+            boolean hasCompressionAlgorithm = compressionAlgorithm != null;
+            boolean hasIntegrityCheck = integrityCheck != null;
+            boolean hasIntegrityCheckAlgorithm
+                    = integrityCheckAlgorithm != null;
+            boolean hasThumbnail = thumbnail != null;
+
+            DvEncapsulatedSerializer dve = new DvEncapsulatedSerializer();
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            DVURISerializer dvu = new DVURISerializer();
+            DvMultimediaSerializer dvm = new DvMultimediaSerializer();
+
+            int position = offset + 56;
+            int meta = offset;
+
+            meta = writeHeader(buffer, meta, position);
+            position = dve.serialize(
+                    buffer,
+                    position,
+                    dvMultimediaDvEncapsulated.getCharset(),
+                    dvMultimediaDvEncapsulated.getLanguage());
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(
+                    buffer, position, alternateText);
+
+            meta = writeHeader(buffer, meta, position);
+            position = cps.serialize(
+                    buffer,
+                    position,
+                    mediaType.getTerminologyID(),
+                    mediaType.getValue());
+
+            if (hasCompressionAlgorithm) {
+                meta = writeHeader(
+                        buffer, meta, hasCompressionAlgorithm, position);
+                position = cps.serialize(
+                        buffer,
+                        position,
+                        compressionAlgorithm.getTerminologyID(),
+                        compressionAlgorithm.getValue());
+            } else {
+                meta = writeHeader(buffer, meta, false);
+            }
+
+            if (hasIntegrityCheck && hasIntegrityCheckAlgorithm) {
+                meta = writeHeader(buffer, meta, hasIntegrityCheck, position);
+                meta = writeHeader(buffer, meta, integrityCheck.length);
+                buffer.writeByteArray(position, integrityCheck);
+                position += integrityCheck.length;
+
+                meta = writeHeader(
+                        buffer, meta, hasIntegrityCheckAlgorithm, position);
+                position = cps.serialize(
+                        buffer,
+                        position,
+                        integrityCheckAlgorithm.getTerminologyID(),
+                        integrityCheckAlgorithm.getValue());
+            } else {
+                throw new IllegalArgumentException("Integrity Check fails!");
+            }
+
+            if (hasThumbnail) {
+                meta = writeHeader(buffer, meta, hasThumbnail, position);
+                position = dvm.serialize(
+                        buffer,
+                        position,
+                        thumbnail.getDvMultimediaDvEncapsulated(),
+                        thumbnail.getAlternateText(),
+                        thumbnail.getMediaType(),
+                        thumbnail.getCompressionAlgorithm(),
+                        thumbnail.getIntegrityCheck(),
+                        thumbnail.getIntegrityCheckAlgorithm(),
+                        thumbnail.getThumbnail(),
+                        thumbnail.getUri(),
+                        thumbnail.getData());
+            } else {
+                meta = writeHeader(buffer, meta, hasThumbnail);
+            }
+
+            meta = writeHeader(buffer, meta, position);
+            position = dvu.serialize(
+                    buffer,
+                    position,
+                    uri.getValue());
+
+            meta = writeHeader(buffer, meta, position);
+            meta = writeHeader(buffer, meta, data.length);
+            buffer.writeByteArray(position, data);
+            position += data.length;
+
+            return position;
+        }
+
+        protected DvMultimedia deserialize(Buffer buffer, int offset) {
+
+            DvEncapsulatedSerializer dve = new DvEncapsulatedSerializer();;
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            DVURISerializer dvu = new DVURISerializer();
+            DvMultimediaSerializer dvm = new DvMultimediaSerializer();
+
+            int meta = offset;
+            int dvEncapsulatedPosition = buffer.readInteger(meta);
+            DvEncapsulated dvMultimediaDvEncapsulated
+                    = dve.deserialize(buffer, dvEncapsulatedPosition);
+            meta += INT.getSize();
+            
+            int alternateTextPosition = buffer.readInteger(meta);
+            String alternateText
+                    = valueStringDeserialization(buffer, alternateTextPosition);
+            meta += INT.getSize();
+            
+            int mediaTypePosition = buffer.readInteger(meta);
+            CodePhrase mediaType = cps.deserialize(buffer, mediaTypePosition);
+            meta += INT.getSize();
+            
+            boolean hasCompressionAlgorithm = buffer.readBoolean(meta);
+            int compressionAlgorithmPosition = 0;
+            CodePhrase compressionAlgorithm = null;
+            if (hasCompressionAlgorithm) {
+                meta += BOOLEAN.getSize();
+                compressionAlgorithmPosition = buffer.readInteger(meta);
+                compressionAlgorithm
+                        = cps.deserialize(buffer, compressionAlgorithmPosition);
+                meta += INT.getSize();
+            } else {
+                meta += BOOLEAN.getSize();
+            }
+            boolean hasIntegrityCheck = buffer.readBoolean(meta);
+            int integrityCheckPosition = 0;
+            int integrityCheckLength = 0;
+            byte[] integrityCheck = null;
+            if (hasIntegrityCheck) {
+                meta += BOOLEAN.getSize();
+                integrityCheckPosition = buffer.readInteger(meta);
+                meta += INT.getSize();
+                integrityCheckLength = buffer.readInteger(meta);
+                meta += INT.getSize();
+                
+                integrityCheck = buffer.readByteArray(integrityCheckPosition, integrityCheckLength);
+            } else {
+                meta += BOOLEAN.getSize();
+            }
+            
+            boolean hasIntegrityCheckAlgorithm = buffer.readBoolean(meta);
+            int integrityCheckAlgorithmPosition = 0;
+            CodePhrase integrityCheckAlgorithm = null;
+            if (hasIntegrityCheckAlgorithm) {
+                meta += BOOLEAN.getSize();
+                integrityCheckAlgorithmPosition = buffer.readInteger(meta);
+                meta += INT.getSize();
+                integrityCheckAlgorithm = cps.deserialize(buffer, integrityCheckAlgorithmPosition);
+            } else {
+                meta += BOOLEAN.getSize();
+            }
+
+            boolean hasThumbnail = buffer.readBoolean(meta);
+            int thumbnailPosition = 0;
+            DvMultimedia thumbnail = null;
+            if (hasThumbnail) {
+                meta += BOOLEAN.getSize();
+                thumbnailPosition = buffer.readInteger(meta);
+                meta += INT.getSize();
+                thumbnail = dvm.deserialize(buffer, thumbnailPosition);
+            } else {
+                meta += BOOLEAN.getSize();
+            }
+
+            int uriPosition = buffer.readInteger(meta);
+            DVURI uri = dvu.deserialize(buffer, uriPosition);
+            meta += INT.getSize();
+            
+            int dataPosition = buffer.readInteger(meta);
+            meta += INT.getSize();
+            int dataLength = buffer.readInteger(meta);
+            byte[] data = buffer.readByteArray(dataPosition, dataLength);
+            
+            return RMObjectFactory.newDvMultimedia(dvMultimediaDvEncapsulated,
+                    alternateText, mediaType, compressionAlgorithm,
+                    integrityCheck, integrityCheckAlgorithm, thumbnail,
+                    uri, data);
+        }
+    }
+
     /**
      * Serializa uma única String value
      *
@@ -968,5 +1166,82 @@ public class RMObjectSerialization {
         buffer.writeString(offset + INT.getSize(), value);
 
         return offset + INT.getSize() + valueLength;
+    }
+
+    /**
+     * Deserializa uma string dado um determinado offset
+     *
+     * @param buffer
+     * @param offset
+     * @return String deserializada
+     */
+    private static String valueStringDeserialization(Buffer buffer, int offset) {
+        int position = offset;
+        int length = buffer.readInteger(position);
+        position += INT.getSize();
+
+        return buffer.readString(position, length);
+    }
+
+    /**
+     * Escreve o valor inteiro do header de um determinado parâmetro que será
+     * serializado em uma posição do buffer
+     *
+     * @param buffer
+     * @param offset
+     * @param value
+     * @return posição final após a escrita do valor do header
+     */
+    private static int writeHeader(Buffer buffer, int offset, int value) {
+        int position = offset;
+        System.out.println("VALOR DE POSITION: " + offset);
+        System.out.println("VALOR DE META: " + value);
+        buffer.writeInteger(offset, value);
+        return position + INT.getSize();
+    }
+
+    /**
+     * Escreve o valor boolean do header de um determinado parâmetro que será
+     * serializado em uma posição do buffer
+     *
+     * @param buffer
+     * @param offset
+     * @param exists
+     * @return posição final após a escrita do valor do header
+     */
+    private static int writeHeader(Buffer buffer, int offset, boolean exists) {
+        int position = offset;
+        System.out.println("VALOR DE POSITION: " + offset);
+        buffer.writeBoolean(offset, exists);
+        return position + BOOLEAN.getSize();
+    }
+
+    /**
+     * Escreve o valor inteiro do header de um determinado parâmetro que será
+     * serializado em uma posição do buffer
+     *
+     * @param buffer
+     * @param offset
+     * @param exists
+     * @param value
+     * @return posição final após a escrita do valor do header
+     */
+    private static int writeHeader(Buffer buffer, int offset,
+            boolean exists, int value) {
+        System.out.println("VALOR DE POSITION: " + offset);
+        System.out.println("VALOR DE META: " + value);
+        int position = offset;
+        if (exists) {
+            buffer.writeBoolean(position, exists);
+            position += BOOLEAN.getSize();
+            System.out.println("VALOR DE VALUE: " + value);
+            buffer.writeInteger(position, value);
+
+            position += INT.getSize();
+        } else {
+            buffer.writeBoolean(position, exists);
+            position += BOOLEAN.getSize();
+        }
+        return position;
     }
 }

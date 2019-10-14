@@ -137,7 +137,9 @@ public class RMObjectSerializationClientTest {
             throws UnsupportedEncodingException {
         String terminololyIdValue = "_TEMPLATEIDVALUE_";
         String value = "_CODEPRHASE_";
-        s.serializeCodePhrase(terminololyIdValue, value);
+        TerminologyID terminologyId = 
+                RMObjectFactory.newTerminologyID(terminololyIdValue);
+        s.serializeCodePhrase(terminologyId, value);
         CodePhrase cp = s.deserializeCodePhrase();
 
         assertEquals(terminololyIdValue, cp.getTerminologyID().getValue());
@@ -463,5 +465,147 @@ public class RMObjectSerializationClientTest {
         assertEquals(codePhraseValue, d.getValue().getLanguage().getValue());
         assertEquals(dvParsablevalue, d.getValue().getValue());
         assertEquals(formalism, d.getValue().getFormalism());
+    }
+    
+    @Test
+    public void DvMultimedia() throws UnsupportedEncodingException {
+        TerminologyID charsetTID = RMObjectFactory.newTerminologyID("charset");
+        TerminologyID languageTID = 
+                RMObjectFactory.newTerminologyID("language");
+        CodePhrase charset = 
+                RMObjectFactory.newCodePhrase(charsetTID, "charset");
+        CodePhrase language = 
+                RMObjectFactory.newCodePhrase(languageTID, "language");
+        DvEncapsulated dvMultimediaDvEncapsulated = 
+                RMObjectFactory.newDvEncapsulated(charset, language);
+        String alternateText = "alternateText";
+        TerminologyID mediaTypeTID = RMObjectFactory.newTerminologyID("media");
+        CodePhrase mediaType = 
+                RMObjectFactory.newCodePhrase(mediaTypeTID, "mediaType");
+        TerminologyID compressionAlgorithmTID = 
+                RMObjectFactory.newTerminologyID("compressionAlgorithm");
+        CodePhrase compressionAlgorithm = 
+                RMObjectFactory.newCodePhrase(
+                        compressionAlgorithmTID, "compressionAlgorithm");
+        byte[] integrityCheck = {0, 1, 0, 1 ,0, 1};
+        TerminologyID integrityCheckTID = 
+                RMObjectFactory.newTerminologyID("integrityCheck");
+        CodePhrase integrityCheckAlgorithm = 
+                RMObjectFactory.newCodePhrase(integrityCheckTID, "integrity");
+        DVURI uri = RMObjectFactory.newDVURI("DVURI");
+        byte[] data = {1,0,1,1,0};
+        DvMultimedia thumbnail = RMObjectFactory.newDvMultimedia(
+                dvMultimediaDvEncapsulated, 
+                alternateText, 
+                mediaType, 
+                compressionAlgorithm, 
+                integrityCheck, 
+                integrityCheckAlgorithm, 
+                null, 
+                uri,
+                data);
+        
+        s.serializeDvMultimedia(
+                dvMultimediaDvEncapsulated, 
+                alternateText, 
+                mediaType, 
+                compressionAlgorithm, integrityCheck, integrityCheckAlgorithm, 
+                thumbnail, uri, data);
+        
+        DvMultimedia dvMultimedia = s.deserializeDvMultimedia();
+        
+        assertEquals(
+                dvMultimediaDvEncapsulated.
+                        getCharset().getTerminologyID().getValue(),
+                dvMultimedia.getDvMultimediaDvEncapsulated().
+                        getCharset().getTerminologyID().getValue());
+        
+        assertEquals(alternateText, dvMultimedia.getAlternateText());
+        
+        assertEquals(mediaType.getTerminologyID().getValue(), 
+                dvMultimedia.getMediaType().getTerminologyID().getValue());
+        
+        assertEquals(mediaType.getValue(), 
+                dvMultimedia.getMediaType().getValue());
+        
+        assertEquals(compressionAlgorithm.getTerminologyID().getValue(), 
+                dvMultimedia.
+                        getCompressionAlgorithm().
+                        getTerminologyID().getValue());
+        
+        assertArrayEquals(integrityCheck, dvMultimedia.getIntegrityCheck());
+        
+        assertEquals(integrityCheckAlgorithm.getTerminologyID().getValue(),
+                dvMultimedia.
+                        getIntegrityCheckAlgorithm().
+                        getTerminologyID().getValue());
+        
+        assertEquals(dvMultimediaDvEncapsulated.
+                getCharset().getTerminologyID().getValue(),
+                dvMultimedia.
+                        getThumbnail().
+                            getDvMultimediaDvEncapsulated().
+                                getCharset().getTerminologyID().getValue());
+        
+        assertEquals(dvMultimediaDvEncapsulated.
+                getLanguage().getTerminologyID().getValue(),
+                dvMultimedia.
+                        getThumbnail().
+                            getDvMultimediaDvEncapsulated().
+                                getLanguage().getTerminologyID().getValue());
+        
+        assertEquals(dvMultimediaDvEncapsulated.getCharset().getValue(),
+                dvMultimedia.
+                        getThumbnail().
+                        getDvMultimediaDvEncapsulated().
+                            getCharset().getValue());
+        
+        assertEquals(dvMultimediaDvEncapsulated.getLanguage().getValue(),
+                dvMultimedia.
+                        getDvMultimediaDvEncapsulated().
+                            getLanguage().getValue());
+        
+        assertEquals(alternateText, 
+                dvMultimedia.getThumbnail().getAlternateText());
+        
+        assertEquals(mediaType.getTerminologyID().getValue(),
+                dvMultimedia.getMediaType().getTerminologyID().getValue());
+        
+        assertEquals(mediaType.getValue(), 
+                dvMultimedia.getThumbnail().getMediaType().getValue());
+        
+        assertEquals(mediaType.getTerminologyID().getValue(),
+                dvMultimedia.
+                        getThumbnail().
+                        getMediaType().getTerminologyID().getValue());
+        
+        assertEquals(compressionAlgorithm.getTerminologyID().getValue(),
+                dvMultimedia.
+                        getThumbnail().
+                            getCompressionAlgorithm().
+                                getTerminologyID().getValue());
+        
+        assertEquals(compressionAlgorithm.getValue(),
+                dvMultimedia.
+                        getThumbnail().getCompressionAlgorithm().getValue());
+        
+        assertArrayEquals(integrityCheck, 
+                dvMultimedia.getThumbnail().getIntegrityCheck());
+        
+        assertEquals(integrityCheckAlgorithm.getTerminologyID().getValue(), 
+                dvMultimedia.
+                        getThumbnail().
+                            getIntegrityCheckAlgorithm().
+                                getTerminologyID().getValue());
+        
+        assertEquals(integrityCheckAlgorithm.getValue(),
+                dvMultimedia.
+                        getThumbnail().getIntegrityCheckAlgorithm().getValue());
+        
+        assertEquals(null, dvMultimedia.getThumbnail().getThumbnail());
+        
+        assertEquals(uri.getValue(), dvMultimedia.getThumbnail().getUri().getValue());
+        
+        assertArrayEquals(data, dvMultimedia.getThumbnail().getData());
     }
 }

@@ -484,4 +484,74 @@ public class RMObject {
             return value;
         }
     }
+    
+    public static class DvMultimedia {
+        private final DvEncapsulated DvMultimediaDvEncapsulated;
+        private final String alternateText;
+        private final CodePhrase mediaType;
+        private final CodePhrase compressionAlgorithm;
+        private final byte[] integrityCheck;
+        private final CodePhrase integrityCheckAlgorithm;
+        private final DvMultimedia thumbnail;
+        private final DVURI uri;
+        private final byte[] data;
+
+        public DvMultimedia(
+                DvEncapsulated DvMultimediaDvEncapsulated,
+                String alternateText,
+                CodePhrase mediaType,
+                CodePhrase compressionAlgorithm,
+                byte[] integrityCheck,
+                CodePhrase integrityCheckAlgorithm,
+                DvMultimedia thumbnail,
+                DVURI uri,
+                byte[] data) {
+            this.DvMultimediaDvEncapsulated = DvMultimediaDvEncapsulated;
+            this.alternateText = alternateText;
+            this.mediaType = mediaType;
+            this.compressionAlgorithm = compressionAlgorithm;
+            this.integrityCheck = integrityCheck;
+            this.integrityCheckAlgorithm = integrityCheckAlgorithm;
+            this.thumbnail = thumbnail;
+            this.uri = uri;
+            this.data = data;
+        }
+
+        public DvEncapsulated getDvMultimediaDvEncapsulated() {
+            return DvMultimediaDvEncapsulated;
+        }
+
+        public String getAlternateText() {
+            return alternateText;
+        }
+
+        public CodePhrase getMediaType() {
+            return mediaType;
+        }
+
+        public CodePhrase getCompressionAlgorithm() {
+            return compressionAlgorithm;
+        }
+
+        public byte[] getIntegrityCheck() {
+            return integrityCheck;
+        }
+
+        public CodePhrase getIntegrityCheckAlgorithm() {
+            return integrityCheckAlgorithm;
+        }
+
+        public DvMultimedia getThumbnail() {
+            return thumbnail;
+        }
+
+        public DVURI getUri() {
+            return uri;
+        }
+
+        public byte[] getData() {
+            return data;
+        }
+    }
+    
 }

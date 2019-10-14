@@ -15,9 +15,12 @@ package com.github.gabrielsxp.healthcodec;
 
 import com.github.gabrielsxp.healthcodec.RMObject.ArchetypeID;
 import com.github.gabrielsxp.healthcodec.RMObject.CodePhrase;
+import com.github.gabrielsxp.healthcodec.RMObject.DVURI;
+import com.github.gabrielsxp.healthcodec.RMObject.DvEncapsulated;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
+import com.github.gabrielsxp.healthcodec.RMObject.DvMultimedia;
 import com.github.gabrielsxp.healthcodec.RMObject.DvParsable;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectID;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectVersionID;
@@ -323,7 +326,7 @@ public interface Serializer {
             CodePhrase language,
             String value,
             String formalism) throws UnsupportedEncodingException;
-    
+
     /**
      * Serializador de DvTimeSpecification
      *
@@ -333,5 +336,30 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeDvTimeSpecification(
             DvParsable value) throws UnsupportedEncodingException;
-    
+
+    /**
+     * Serializador de Multimedia
+     *
+     * @param dvMultimediaDvEncapsulated
+     * @param alternateText
+     * @param mediaType
+     * @param compressionAlgorithm
+     * @param integrityCheck
+     * @param integrityCheckAlgorithm
+     * @param thumbnail
+     * @param uri
+     * @param data
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeDvMultimedia(
+            DvEncapsulated dvMultimediaDvEncapsulated,
+            String alternateText,
+            CodePhrase mediaType,
+            CodePhrase compressionAlgorithm,
+            byte[] integrityCheck,
+            CodePhrase integrityCheckAlgorithm,
+            DvMultimedia thumbnail,
+            DVURI uri,
+            byte[] data) throws UnsupportedEncodingException;
 }

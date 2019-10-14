@@ -155,9 +155,9 @@ public class Buffer {
     * posição no buffer
      */
     public byte[] readByteArray(int position, int length){
-        byte[] byteArray = new byte[length + 1];
+        byte[] byteArray = new byte[length];
         int j = 0;
-        for (int i = position; i < position + length; i++) {
+        for (int i = position; i < (position + length); i++) {
             byteArray[j] = buffer.get(i);
             j++;
         }

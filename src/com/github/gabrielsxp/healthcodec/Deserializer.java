@@ -195,18 +195,25 @@ public interface Deserializer {
      * @return instância de DvEncapsulated
      */
     UIDBasedID deserializeUIDBasedID();
-    
+
     /**
      * Deserializador de DvParsable
      *
      * @return instância de DvParsable
      */
     DvParsable deserializeDvParsable();
-    
+
     /**
      * Deserializador de DvTimeSpecification
      *
      * @return instância de DvParsable
      */
     DvTimeSpecification deserializeDvTimeSpecification();
+
+    /**
+     * Deserializador de DvMultimedia
+     *
+     * @return instância de DvMultimedia
+     */
+    DvMultimedia deserializeDvMultimedia();
 }
