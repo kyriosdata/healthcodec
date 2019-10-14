@@ -902,6 +902,44 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         DvMultimediaSerializer d = new DvMultimediaSerializer();
         return d.deserialize(buffer, getOffsetFromID(DVMULTIMEDIA));
     }
+    
+    /**
+     * Serializa DvText
+     * @param buffer
+     * @param offset
+     * @param value
+     * @param mappings
+     * @param formatting
+     * @param hyperlink
+     * @param language
+     * @param charset
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    public RMObjectSerializationClient serializeDvText(String value,
+            List<TermMapping> mappings,
+            String formatting,
+            DVURI hyperlink,
+            CodePhrase language,
+            CodePhrase charset) throws UnsupportedEncodingException{
+        
+        DvTextSerializer s = new DvTextSerializer();
+        register(DVTEXT, offset);
+        setOffset(s.serialize(buffer, 
+                offset, 
+                value, mappings, formatting, hyperlink, language, charset));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializa DvText
+     * @return nova instância de DvText
+     */
+    public DvText deserializeDvText(){
+        DvTextSerializer d = new DvTextSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVTEXT));
+    }
 
     /**
      * Método para registrar um determinado objeto no índice

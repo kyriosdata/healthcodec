@@ -115,51 +115,61 @@ public class RMObjectFactory {
     public static AccessGroupRef newAccessGroupRef(ObjectID id) {
         return new AccessGroupRef(id);
     }
-    
+
     public static PartyIdentified newPartyIdentified(
             PartyRef externalRef,
             String name,
-            List<DvIdentifier> identifiers){
+            List<DvIdentifier> identifiers) {
         return new PartyIdentified(externalRef, name, identifiers);
     }
-    
+
     public static Archetyped newArchetyped(
             ArchetypeID archetypeId,
-            TemplateID templateId, 
-            String rmVersion){
+            TemplateID templateId,
+            String rmVersion) {
         return new Archetyped(archetypeId, templateId, rmVersion);
     }
-    
+
     public static DvEncapsulated newDvEncapsulated(CodePhrase charset,
-            CodePhrase language){
+            CodePhrase language) {
         return new DvEncapsulated(charset, language);
     }
-    
-    public static UIDBasedID newUIDBasedID(String value){
+
+    public static UIDBasedID newUIDBasedID(String value) {
         return new UIDBasedID(value);
     }
-    
-    public static DvParsable newDvParsable(CodePhrase charset, 
-            CodePhrase language, String value, String formalism){
+
+    public static DvParsable newDvParsable(CodePhrase charset,
+            CodePhrase language, String value, String formalism) {
         return new DvParsable(charset, language, value, formalism);
     }
-    
-    public static DvTimeSpecification newDvTimeSpecification(DvParsable value){
+
+    public static DvTimeSpecification newDvTimeSpecification(DvParsable value) {
         return new DvTimeSpecification(value);
     }
-    
-    public static DvMultimedia newDvMultimedia(DvEncapsulated dvMultimediaDvEncapsulated,
-                String alternateText,
-                CodePhrase mediaType,
-                CodePhrase compressionAlgorithm,
-                byte[] integrityCheck,
-                CodePhrase integrityCheckAlgorithm,
-                DvMultimedia thumbnail,
-                DVURI uri,
-                byte[] data){
+
+    public static DvMultimedia newDvMultimedia(
+            DvEncapsulated dvMultimediaDvEncapsulated,
+            String alternateText,
+            CodePhrase mediaType,
+            CodePhrase compressionAlgorithm,
+            byte[] integrityCheck,
+            CodePhrase integrityCheckAlgorithm,
+            DvMultimedia thumbnail,
+            DVURI uri,
+            byte[] data) {
         return new DvMultimedia(
                 dvMultimediaDvEncapsulated, alternateText, mediaType,
                 compressionAlgorithm, integrityCheck, integrityCheckAlgorithm,
                 thumbnail, uri, data);
+    }
+
+    public static DvText newDvText(String value,
+            List<TermMapping> mappings,
+            String formatting,
+            DVURI hyperlink,
+            CodePhrase language,
+            CodePhrase charset) {
+        return new DvText(value,mappings,formatting,hyperlink,language,charset);
     }
 }

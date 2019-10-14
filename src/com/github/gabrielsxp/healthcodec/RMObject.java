@@ -432,6 +432,7 @@ public class RMObject {
     }
 
     public static class UIDBasedID {
+
         private final String value;
 
         protected UIDBasedID(String value) {
@@ -440,10 +441,11 @@ public class RMObject {
 
         public String getValue() {
             return value;
-        } 
+        }
     }
-    
+
     public static class DvParsable {
+
         private final CodePhrase charset;
         private final CodePhrase language;
         private final String value;
@@ -472,8 +474,9 @@ public class RMObject {
             return formalism;
         }
     }
-    
+
     public static class DvTimeSpecification {
+
         private final DvParsable value;
 
         protected DvTimeSpecification(DvParsable value) {
@@ -484,8 +487,9 @@ public class RMObject {
             return value;
         }
     }
-    
+
     public static class DvMultimedia {
+
         private final DvEncapsulated DvMultimediaDvEncapsulated;
         private final String alternateText;
         private final CodePhrase mediaType;
@@ -496,7 +500,7 @@ public class RMObject {
         private final DVURI uri;
         private final byte[] data;
 
-        public DvMultimedia(
+        protected DvMultimedia(
                 DvEncapsulated DvMultimediaDvEncapsulated,
                 String alternateText,
                 CodePhrase mediaType,
@@ -553,5 +557,112 @@ public class RMObject {
             return data;
         }
     }
+
+    public static enum Match {
+        NARROWER("<"),
+        EQUIVALENT ("="),
+        BROADER (">"),
+        UNKNOWN ("?");
+        
+        private Match(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        private String value;
+    }
+
+    public static class TermMapping {
+
+        public final CodePhrase target;
+        public final Match match;
+        public final DvCodedText purpose;
+
+        protected TermMapping(CodePhrase target, Match match, DvCodedText purpose) {
+            this.target = target;
+            this.match = match;
+            this.purpose = purpose;
+        }
+
+        public CodePhrase getTarget() {
+            return target;
+        }
+
+        public Match getMatch() {
+            return match;
+        }
+
+        public DvCodedText getPurpose() {
+            return purpose;
+        }
+    }
+
+    public static class DvText {
+
+        private final String value;
+        private final List<TermMapping> mappings;
+        private final String formatting;
+        private final DVURI hyperlink;
+        private final CodePhrase language;
+        private final CodePhrase charset;
+
+        public DvText(String value,
+                List<TermMapping> mappings,
+                String formatting,
+                DVURI hyperlink, CodePhrase language, CodePhrase charset) {
+            this.value = value;
+            this.mappings = mappings;
+            this.formatting = formatting;
+            this.hyperlink = hyperlink;
+            this.language = language;
+            this.charset = charset;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public List<TermMapping> getMappings() {
+            return mappings;
+        }
+
+        public String getFormatting() {
+            return formatting;
+        }
+
+        public DVURI getHyperlink() {
+            return hyperlink;
+        }
+
+        public CodePhrase getLanguage() {
+            return language;
+        }
+
+        public CodePhrase getCharset() {
+            return charset;
+        }
+    }
     
+    public static class DvCodedText {
+
+        private final DvText dvText;
+        private final CodePhrase definingCode;
+
+        protected DvCodedText(DvText dvText, CodePhrase definingCode) {
+            this.dvText = dvText;
+            this.definingCode = definingCode;
+        }
+
+        public DvText getDvText() {
+            return dvText;
+        }
+
+        public CodePhrase getDefiningCode() {
+            return definingCode;
+        }
+    }
+
 }

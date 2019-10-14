@@ -362,4 +362,22 @@ public interface Serializer {
             DvMultimedia thumbnail,
             DVURI uri,
             byte[] data) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de DvText
+     * @param value
+     * @param mappings
+     * @param formatting
+     * @param hyperlink
+     * @param language
+     * @param charset
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeDvText(String value,
+            List<RMObject.TermMapping> mappings,
+            String formatting,
+            DVURI hyperlink,
+            CodePhrase language,
+            CodePhrase charset) throws UnsupportedEncodingException;
 }

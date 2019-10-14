@@ -1072,16 +1072,16 @@ public class RMObjectSerialization {
             DvEncapsulated dvMultimediaDvEncapsulated
                     = dve.deserialize(buffer, dvEncapsulatedPosition);
             meta += INT.getSize();
-            
+
             int alternateTextPosition = buffer.readInteger(meta);
             String alternateText
                     = valueStringDeserialization(buffer, alternateTextPosition);
             meta += INT.getSize();
-            
+
             int mediaTypePosition = buffer.readInteger(meta);
             CodePhrase mediaType = cps.deserialize(buffer, mediaTypePosition);
             meta += INT.getSize();
-            
+
             boolean hasCompressionAlgorithm = buffer.readBoolean(meta);
             int compressionAlgorithmPosition = 0;
             CodePhrase compressionAlgorithm = null;
@@ -1104,12 +1104,12 @@ public class RMObjectSerialization {
                 meta += INT.getSize();
                 integrityCheckLength = buffer.readInteger(meta);
                 meta += INT.getSize();
-                
+
                 integrityCheck = buffer.readByteArray(integrityCheckPosition, integrityCheckLength);
             } else {
                 meta += BOOLEAN.getSize();
             }
-            
+
             boolean hasIntegrityCheckAlgorithm = buffer.readBoolean(meta);
             int integrityCheckAlgorithmPosition = 0;
             CodePhrase integrityCheckAlgorithm = null;
@@ -1137,16 +1137,122 @@ public class RMObjectSerialization {
             int uriPosition = buffer.readInteger(meta);
             DVURI uri = dvu.deserialize(buffer, uriPosition);
             meta += INT.getSize();
-            
+
             int dataPosition = buffer.readInteger(meta);
             meta += INT.getSize();
             int dataLength = buffer.readInteger(meta);
             byte[] data = buffer.readByteArray(dataPosition, dataLength);
-            
+
             return RMObjectFactory.newDvMultimedia(dvMultimediaDvEncapsulated,
                     alternateText, mediaType, compressionAlgorithm,
                     integrityCheck, integrityCheckAlgorithm, thumbnail,
                     uri, data);
+        }
+    }
+
+    public static class DvTextSerializer {
+
+        protected int serialize(Buffer buffer,
+                int offset,
+                String value,
+                List<TermMapping> mappings,
+                String formatting,
+                DVURI hyperlink,
+                CodePhrase language,
+                CodePhrase charset) throws UnsupportedEncodingException {
+            boolean hasMappings = mappings != null;
+            boolean hasFormatting = formatting != null;
+            boolean hasHyperlink = hyperlink != null;
+
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            DVURISerializer dvu = new DVURISerializer();
+
+            int meta = offset;
+            int position = offset + 27;
+
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, value);
+            if (hasMappings) {
+                meta = writeHeader(buffer, meta, hasMappings, position);
+                // TO DO
+            } else {
+                meta = writeHeader(buffer, meta, hasMappings);
+            }
+
+            if (hasFormatting) {
+                meta = writeHeader(buffer, meta, hasFormatting, position);
+                position
+                        = valueStringSerialization(buffer, position, formatting);
+            } else {
+                meta = writeHeader(buffer, meta, hasFormatting);
+            }
+
+            if (hasHyperlink) {
+                meta = writeHeader(buffer, meta, hasHyperlink, position);
+                position
+                        = dvu.serialize(buffer, position,
+                                hyperlink.getValue());
+            } else {
+                meta = writeHeader(buffer, meta, hasHyperlink);
+            }
+
+            meta = writeHeader(buffer, meta, position);
+            position = cps.serialize(buffer, position,
+                    language.getTerminologyID(), language.getValue());
+            meta = writeHeader(buffer, meta, position);
+            position = cps.serialize(buffer, position,
+                    charset.getTerminologyID(), charset.getValue());
+
+            return position;
+        }
+
+        protected DvText deserialize(Buffer buffer, int offset) {
+            int position = offset;
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            DVURISerializer dvu = new DVURISerializer();
+
+            int valuePosition = buffer.readInteger(position);
+            String value = valueStringDeserialization(buffer, valuePosition);
+            position += INT.getSize();
+
+            boolean hasMappings = buffer.readBoolean(position);
+            int mappingsPosition = 0;
+            position += BOOLEAN.getSize();
+            if (hasMappings) {
+                //TO DO
+                mappingsPosition = buffer.readInteger(position);
+                position += INT.getSize();
+            }
+
+            boolean hasFormatting = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            int formattingPosition = 0;
+            String formatting = null;
+            if (hasFormatting) {
+                formattingPosition = buffer.readInteger(position);
+                formatting
+                        = valueStringDeserialization(buffer, formattingPosition);
+                position += INT.getSize();
+            }
+            boolean hasHyperlink = buffer.readBoolean(position);
+            int hyperlinkPosition = 0;
+            DVURI hyperlink = null;
+            position += BOOLEAN.getSize();
+            if (hasHyperlink) {
+                hyperlinkPosition = buffer.readInteger(position);
+                hyperlink = dvu.deserialize(buffer, hyperlinkPosition);
+                position += INT.getSize();
+            }
+
+            int languagePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            CodePhrase language = cps.deserialize(buffer, languagePosition);
+
+            int charsetPosition = buffer.readInteger(position);
+            CodePhrase charset = cps.deserialize(buffer, charsetPosition);
+
+            return RMObjectFactory.newDvText(
+                    value, null, formatting, hyperlink, language, charset);
         }
     }
 
@@ -1175,7 +1281,8 @@ public class RMObjectSerialization {
      * @param offset
      * @return String deserializada
      */
-    private static String valueStringDeserialization(Buffer buffer, int offset) {
+    private static String valueStringDeserialization(Buffer buffer,
+            int offset) {
         int position = offset;
         int length = buffer.readInteger(position);
         position += INT.getSize();
@@ -1194,8 +1301,6 @@ public class RMObjectSerialization {
      */
     private static int writeHeader(Buffer buffer, int offset, int value) {
         int position = offset;
-        System.out.println("VALOR DE POSITION: " + offset);
-        System.out.println("VALOR DE META: " + value);
         buffer.writeInteger(offset, value);
         return position + INT.getSize();
     }
@@ -1211,7 +1316,6 @@ public class RMObjectSerialization {
      */
     private static int writeHeader(Buffer buffer, int offset, boolean exists) {
         int position = offset;
-        System.out.println("VALOR DE POSITION: " + offset);
         buffer.writeBoolean(offset, exists);
         return position + BOOLEAN.getSize();
     }
@@ -1228,13 +1332,10 @@ public class RMObjectSerialization {
      */
     private static int writeHeader(Buffer buffer, int offset,
             boolean exists, int value) {
-        System.out.println("VALOR DE POSITION: " + offset);
-        System.out.println("VALOR DE META: " + value);
         int position = offset;
         if (exists) {
             buffer.writeBoolean(position, exists);
             position += BOOLEAN.getSize();
-            System.out.println("VALOR DE VALUE: " + value);
             buffer.writeInteger(position, value);
 
             position += INT.getSize();

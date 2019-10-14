@@ -604,8 +604,54 @@ public class RMObjectSerializationClientTest {
         
         assertEquals(null, dvMultimedia.getThumbnail().getThumbnail());
         
-        assertEquals(uri.getValue(), dvMultimedia.getThumbnail().getUri().getValue());
+        assertEquals(uri.getValue(), 
+                dvMultimedia.getThumbnail().getUri().getValue());
         
         assertArrayEquals(data, dvMultimedia.getThumbnail().getData());
+    }
+    
+    @Test
+    public void DvText() throws UnsupportedEncodingException {
+        String value = "DvTextValue";
+        List<TermMapping> mappings = null;
+        String formatting = "DvText Formatting";
+        String hyperlinkValue = "Hyperlink value";
+        DVURI hyperlink =  RMObjectFactory.newDVURI(hyperlinkValue);
+        
+        String languageTIDValue = "Language Terminology ID";
+        TerminologyID languageTID = RMObjectFactory.newTerminologyID(languageTIDValue);
+        String languageValue = "Language value";
+        CodePhrase language = RMObjectFactory.newCodePhrase(languageTID, 
+                languageValue);
+        
+        String charsetTIDValue = "Charset Terminology ID";
+        String charsetValue = "Charset Value";
+        TerminologyID charsetTID = 
+                RMObjectFactory.newTerminologyID(charsetTIDValue);
+        CodePhrase charset = 
+                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
+        
+        s.serializeDvText(
+                value, mappings, formatting, hyperlink, language, charset);
+        DvText dvText = s.deserializeDvText();
+        
+        assertEquals(value, dvText.getValue());
+        
+        assertEquals(null, dvText.getMappings());
+        
+        assertEquals(formatting, dvText.getFormatting());
+        
+        assertEquals(hyperlink.getValue(), dvText.getHyperlink().getValue());
+        
+        assertEquals(language.getTerminologyID().getValue(), 
+                dvText.getLanguage().getTerminologyID().getValue());
+        
+        assertEquals(language.getValue(), dvText.getLanguage().getValue());
+        
+        assertEquals(charset.getTerminologyID().getValue(), 
+                dvText.getCharset().getTerminologyID().getValue());
+        
+        assertEquals(charset.getValue(), dvText.getCharset().getValue());
+        
     }
 }

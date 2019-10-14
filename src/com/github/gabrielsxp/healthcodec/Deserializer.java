@@ -216,4 +216,11 @@ public interface Deserializer {
      * @return instância de DvMultimedia
      */
     DvMultimedia deserializeDvMultimedia();
+    
+    /**
+     * Deserializador de DvText
+     * 
+     * @return instância de DvText
+     */
+    DvText deserializeDvText();
 }
