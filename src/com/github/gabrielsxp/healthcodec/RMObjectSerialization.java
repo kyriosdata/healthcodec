@@ -21,6 +21,9 @@ import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.*;
 import static com.github.gabrielsxp.healthcodec.PrimitiveTypeSize.*;
 import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
+import com.github.gabrielsxp.healthcodec.RMObject.TermMapping;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -1165,16 +1168,18 @@ public class RMObjectSerialization {
             boolean hasHyperlink = hyperlink != null;
 
             CodePhraseSerializer cps = new CodePhraseSerializer();
+            TermMappingSerializer tms = new TermMappingSerializer();
             DVURISerializer dvu = new DVURISerializer();
 
             int meta = offset;
-            int position = offset + 27;
+            int position = offset + 6 * INT.getSize() + 3 * BOOLEAN.getSize();
 
             meta = writeHeader(buffer, meta, position);
             position = valueStringSerialization(buffer, position, value);
             if (hasMappings) {
+                
                 meta = writeHeader(buffer, meta, hasMappings, position);
-                // TO DO
+                position = tms.listSerialize(buffer, position, mappings);
             } else {
                 meta = writeHeader(buffer, meta, hasMappings);
             }
@@ -1209,6 +1214,7 @@ public class RMObjectSerialization {
         protected DvText deserialize(Buffer buffer, int offset) {
             int position = offset;
             CodePhraseSerializer cps = new CodePhraseSerializer();
+            TermMappingSerializer tms = new TermMappingSerializer();
             DVURISerializer dvu = new DVURISerializer();
 
             int valuePosition = buffer.readInteger(position);
@@ -1217,10 +1223,11 @@ public class RMObjectSerialization {
 
             boolean hasMappings = buffer.readBoolean(position);
             int mappingsPosition = 0;
+            List<TermMapping> mappings = null;
             position += BOOLEAN.getSize();
             if (hasMappings) {
-                //TO DO
                 mappingsPosition = buffer.readInteger(position);
+                mappings = tms.deserializeList(buffer, mappingsPosition);
                 position += INT.getSize();
             }
 
@@ -1252,50 +1259,175 @@ public class RMObjectSerialization {
             CodePhrase charset = cps.deserialize(buffer, charsetPosition);
 
             return RMObjectFactory.newDvText(
-                    value, null, formatting, hyperlink, language, charset);
+                    value, mappings, formatting, hyperlink, language, charset);
         }
     }
-    
+
     public static class DvCodedTextSerializer {
-        protected int serialize(Buffer buffer, int offset, 
-                DvText dvText, CodePhrase definingCode) 
-                throws UnsupportedEncodingException{
+
+        protected int serialize(Buffer buffer, int offset,
+                DvText dvText, CodePhrase definingCode)
+                throws UnsupportedEncodingException {
             int position = offset + 2 * INT.getSize();
             int meta = offset;
             DvTextSerializer dvt = new DvTextSerializer();
             CodePhraseSerializer cps = new CodePhraseSerializer();
-            
+
             meta = writeHeader(buffer, meta, position);
             position = dvt.serialize(
-                    buffer, 
-                    position, 
-                    dvText.getValue(), 
-                    dvText.getMappings(), 
-                    dvText.getFormatting(), 
-                    dvText.getHyperlink(), 
-                    dvText.getLanguage(), 
+                    buffer,
+                    position,
+                    dvText.getValue(),
+                    dvText.getMappings(),
+                    dvText.getFormatting(),
+                    dvText.getHyperlink(),
+                    dvText.getLanguage(),
                     dvText.getCharset());
-            
+
             meta = writeHeader(buffer, meta, position);
-            position = cps.serialize(buffer, position, 
+            position = cps.serialize(buffer, position,
                     definingCode.getTerminologyID(), definingCode.getValue());
-            
+
             return position;
         }
-        
-        protected DvCodedText deserialize(Buffer buffer, int offset){
+
+        protected DvCodedText deserialize(Buffer buffer, int offset) {
             int position = offset;
             int dvTextPosition = buffer.readInteger(position);
             position += INT.getSize();
             int definingCodePosition = buffer.readInteger(position);
             DvTextSerializer dvt = new DvTextSerializer();
             CodePhraseSerializer cps = new CodePhraseSerializer();
-            
+
             DvText dvText = dvt.deserialize(buffer, dvTextPosition);
-            CodePhrase definingCode = 
-                    cps.deserialize(buffer, definingCodePosition);
-            
+            CodePhrase definingCode
+                    = cps.deserialize(buffer, definingCodePosition);
+
             return RMObjectFactory.newDvCodedText(dvText, definingCode);
+        }
+    }
+
+    public static class MatchSerializer {
+
+        protected int serialize(Buffer buffer, int offset, Match match)
+                throws UnsupportedEncodingException {
+            int position = offset;
+            String value = match.getValue();
+            position = valueStringSerialization(buffer, position, value);
+
+            return position;
+        }
+
+        protected Match deserialize(Buffer buffer, int offset)
+                throws IllegalAccessException {
+            int position = offset;
+            String value = valueStringDeserialization(buffer, position);
+
+            Match match = Match.fromValue(value);
+
+            return match;
+        }
+    }
+
+    public static class TermMappingSerializer {
+
+        protected int serialize(
+                Buffer buffer,
+                int offset,
+                CodePhrase target,
+                Match match,
+                DvCodedText purpose) throws UnsupportedEncodingException {
+            int meta = offset;
+            int position = offset + 3 * INT.getSize() + BOOLEAN.getSize();
+            boolean hasPurpose = purpose != null;
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            MatchSerializer ms = new MatchSerializer();
+            DvCodedTextSerializer dct = new DvCodedTextSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = cps.serialize(buffer, position,
+                    target.getTerminologyID(), target.getValue());
+            meta = writeHeader(buffer, meta, position);
+            position = ms.serialize(buffer, position, match);
+            if (hasPurpose) {
+                meta = writeHeader(buffer, meta, hasPurpose, position);
+                position = dct.serialize(buffer, position,
+                        purpose.getDvText(), purpose.getDefiningCode());
+            } else {
+                meta = writeHeader(buffer, meta, hasPurpose);
+            }
+            return position;
+        }
+
+        protected TermMapping deserialize(Buffer buffer, int offset) {
+            int position = offset;
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            MatchSerializer ms = new MatchSerializer();
+            DvCodedTextSerializer dct = new DvCodedTextSerializer();
+
+            int targetPosition = buffer.readInteger(position);
+            CodePhrase target = cps.deserialize(buffer, targetPosition);
+            position += INT.getSize();
+
+            int matchPosition = buffer.readInteger(position);
+            Match match = null;
+            try {
+                match = ms.deserialize(buffer, matchPosition);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(RMObjectSerialization.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            position += INT.getSize();
+
+            boolean hasPurpose = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            int purposePosition = 0;
+            DvCodedText purpose = null;
+            if (hasPurpose) {
+                purposePosition = buffer.readInteger(position);
+                purpose = dct.deserialize(buffer, purposePosition);
+                position += INT.getSize();
+            }
+
+            return RMObjectFactory.newTermMapping(target, match, purpose);
+        }
+
+        protected int listSerialize(
+                Buffer buffer, int offset, List<TermMapping> mappings)
+                throws UnsupportedEncodingException {
+            int meta = offset;
+            int listSize = mappings.size();
+            int position = offset + (listSize * INT.getSize()) + INT.getSize();
+            
+            meta = writeHeader(buffer, meta, listSize);
+            TermMappingSerializer tms = new TermMappingSerializer();
+            
+            for (TermMapping t : mappings) {
+                meta = writeHeader(buffer, meta, position);
+                position = tms.serialize(buffer, position,
+                        t.getTarget(), t.getMatch(), t.getPurpose());
+            }
+            
+            
+            return position;
+        }
+
+        protected List<TermMapping> deserializeList(Buffer buffer, int offset) {
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += INT.getSize();
+            
+            List<TermMapping> list = new ArrayList<>();
+            TermMappingSerializer tms = new TermMappingSerializer();
+            
+            for(int i = 0; i < listSize; i++){
+                int termMappingPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                TermMapping t = tms.deserialize(buffer, termMappingPosition);
+                list.add(t);
+            }
+            
+            
+            return list;
         }
     }
 

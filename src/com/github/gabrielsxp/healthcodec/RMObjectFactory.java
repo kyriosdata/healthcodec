@@ -177,4 +177,10 @@ public class RMObjectFactory {
             CodePhrase definingCode){
         return new DvCodedText(dvText, definingCode);
     }
+    
+    public static TermMapping newTermMapping(CodePhrase target, 
+                Match match,
+                DvCodedText purpose){
+        return new TermMapping(target, match, purpose);
+    }
 }

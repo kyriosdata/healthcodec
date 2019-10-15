@@ -560,19 +560,35 @@ public class RMObject {
 
     public static enum Match {
         NARROWER("<"),
-        EQUIVALENT ("="),
-        BROADER (">"),
-        UNKNOWN ("?");
-        
+        EQUIVALENT("="),
+        BROADER(">"),
+        UNKNOWN("?");
+
         private Match(String value) {
             this.value = value;
+        }
+
+        public static Match fromValue(String value){
+            if (value != null) {
+                for (Match match : values()) {
+                    if (match.value.equals(value)) {
+                        return match;
+                    }
+                }
+            }
+
+            return getDefault();
+        }
+        
+        public static Match getDefault(){
+            return UNKNOWN;
         }
 
         public String getValue() {
             return value;
         }
 
-        private String value;
+        private final String value;
     }
 
     public static class TermMapping {
@@ -581,7 +597,8 @@ public class RMObject {
         public final Match match;
         public final DvCodedText purpose;
 
-        protected TermMapping(CodePhrase target, Match match, DvCodedText purpose) {
+        protected TermMapping(CodePhrase target,
+                Match match, DvCodedText purpose) {
             this.target = target;
             this.match = match;
             this.purpose = purpose;
@@ -609,7 +626,7 @@ public class RMObject {
         private final CodePhrase language;
         private final CodePhrase charset;
 
-        public DvText(String value,
+        protected DvText(String value,
                 List<TermMapping> mappings,
                 String formatting,
                 DVURI hyperlink, CodePhrase language, CodePhrase charset) {
@@ -645,7 +662,7 @@ public class RMObject {
             return charset;
         }
     }
-    
+
     public static class DvCodedText {
 
         private final DvText dvText;

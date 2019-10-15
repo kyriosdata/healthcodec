@@ -19,6 +19,8 @@ import com.github.gabrielsxp.healthcodec.RMObject.*;
 import java.io.UnsupportedEncodingException;
 import java.nio.ReadOnlyBufferException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -966,6 +968,35 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         DvCodedTextSerializer d = new DvCodedTextSerializer();
         return d.deserialize(buffer, getOffsetFromID(DVCODEDTEXT));
     }
+    
+    /**
+     * Serializador de TermMapping
+     * 
+     * @param target
+     * @param match
+     * @param purpose
+     * @return 
+     */
+    @Override
+    public RMObjectSerializationClient serializeTermMapping(
+            CodePhrase target, Match match, DvCodedText purpose) {
+        
+        TermMappingSerializer s = new TermMappingSerializer();
+        register(TERMMAPPING, offset);
+        try {
+            setOffset(s.serialize(buffer, offset, target, match, purpose));
+        } catch (UnsupportedEncodingException ex) {
+            //TO DO 
+        }
+        
+        return this;
+    }
+
+    @Override
+    public TermMapping deserializeTermMapping() {
+        TermMappingSerializer d = new TermMappingSerializer();
+        return d.deserialize(buffer, getOffsetFromID(TERMMAPPING));
+    }
 
     /**
      * Método para registrar um determinado objeto no índice
@@ -1003,4 +1034,6 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     public byte[] getBuffer() {
         return this.buffer.data();
     }
+
+    
 }

@@ -230,4 +230,11 @@ public interface Deserializer {
      * @return instância de DvText
      */
     DvCodedText deserializeDvCodedText();
+    
+    /**
+     * Deserializador de TermMapping
+     * 
+     * @return instância de TermMapping;
+     */
+    TermMapping deserializeTermMapping();
 }

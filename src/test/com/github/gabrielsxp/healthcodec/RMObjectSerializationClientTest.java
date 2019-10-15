@@ -651,7 +651,310 @@ public class RMObjectSerializationClientTest {
         assertEquals(charset.getTerminologyID().getValue(), 
                 dvText.getCharset().getTerminologyID().getValue());
         
-        assertEquals(charset.getValue(), dvText.getCharset().getValue());
+        assertEquals(charset.getValue(), dvText.getCharset().getValue());   
+    }
+    
+    @Test
+    public void DvCodedText() throws UnsupportedEncodingException{
+        String value = "DvTextValue";
+        List<TermMapping> mappings = null;
+        String formatting = "DvText Formatting";
+        String hyperlinkValue = "Hyperlink value";
+        DVURI hyperlink =  RMObjectFactory.newDVURI(hyperlinkValue);
         
+        String languageTIDValue = "Language Terminology ID";
+        TerminologyID languageTID = RMObjectFactory.newTerminologyID(languageTIDValue);
+        String languageValue = "Language value";
+        CodePhrase language = RMObjectFactory.newCodePhrase(languageTID, 
+                languageValue);
+        
+        String charsetTIDValue = "Charset Terminology ID";
+        String charsetValue = "Charset Value";
+        TerminologyID charsetTID = 
+                RMObjectFactory.newTerminologyID(charsetTIDValue);
+        CodePhrase charset = 
+                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
+        
+        DvText dvText = RMObjectFactory.newDvText(
+                value, mappings, formatting, hyperlink, language, charset);
+        
+        String definingCodeTIDValue = "Defining Code Terminology ID Value";
+        TerminologyID definingCodeTID = 
+                RMObjectFactory.newTerminologyID(definingCodeTIDValue);
+        String definingCodeValue = "Defining Code Value";
+        CodePhrase definingCode = 
+                RMObjectFactory.newCodePhrase(
+                        definingCodeTID, definingCodeTIDValue);
+        
+        s.serializeDvCodedText(dvText, definingCode);
+        DvCodedText dvCodedText = s.deserializeDvCodedText();
+        
+        assertEquals(value, dvCodedText.getDvText().getValue());
+        
+        assertEquals(null, dvCodedText.getDvText().getMappings());
+        
+        assertEquals(formatting, dvCodedText.getDvText().getFormatting());
+        
+        assertEquals(hyperlinkValue, 
+                dvCodedText.getDvText().getHyperlink().getValue());
+        
+        assertEquals(language.getTerminologyID().getValue(),
+                dvCodedText.getDvText().
+                        getLanguage().getTerminologyID().getValue());
+        
+        assertEquals(language.getValue(),dvCodedText.getDvText().
+                getLanguage().getValue());
+        
+        assertEquals(charset.getTerminologyID().getValue(),
+                dvCodedText.getDvText().
+                        getCharset().getTerminologyID().getValue());
+        
+        assertEquals(charset.getValue(),dvCodedText.getDvText().
+                getCharset().getValue());
+        
+        assertEquals(definingCode.getTerminologyID().getValue(), 
+                dvCodedText.getDefiningCode().getTerminologyID().getValue());
+        
+        assertEquals(definingCode.getValue(), 
+                dvCodedText.getDefiningCode().getValue());
+    }
+    
+    @Test
+    public void TermMapping(){
+        CodePhrase target = null;
+        Match match = Match.BROADER;
+        DvCodedText purpose = null;
+        
+        String targetTIDValue = "Target TerminologyID";
+        String targetValue = "Target Value";
+        TerminologyID targetTID = 
+                RMObjectFactory.newTerminologyID(targetTIDValue);
+        target = RMObjectFactory.newCodePhrase(targetTID, targetValue);
+        
+        String value = "DvTextValue";
+        List<TermMapping> mappings = null;
+        String formatting = "DvText Formatting";
+        String hyperlinkValue = "Hyperlink value";
+        DVURI hyperlink =  RMObjectFactory.newDVURI(hyperlinkValue);
+        
+        String languageTIDValue = "Language Terminology ID";
+        TerminologyID languageTID = RMObjectFactory.newTerminologyID(languageTIDValue);
+        String languageValue = "Language value";
+        CodePhrase language = RMObjectFactory.newCodePhrase(languageTID, 
+                languageValue);
+        
+        String charsetTIDValue = "Charset Terminology ID";
+        String charsetValue = "Charset Value";
+        TerminologyID charsetTID = 
+                RMObjectFactory.newTerminologyID(charsetTIDValue);
+        CodePhrase charset = 
+                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
+        
+        DvText dvText = RMObjectFactory.newDvText(
+                value, mappings, formatting, hyperlink, language, charset);
+        
+        String definingCodeTIDValue = "Defining Code Terminology ID Value";
+        TerminologyID definingCodeTID = 
+                RMObjectFactory.newTerminologyID(definingCodeTIDValue);
+        String definingCodeValue = "Defining Code Value";
+        CodePhrase definingCode = 
+                RMObjectFactory.newCodePhrase(
+                        definingCodeTID, definingCodeTIDValue);
+        
+        purpose = RMObjectFactory.newDvCodedText(dvText, definingCode);
+        
+        s.serializeTermMapping(target, match, purpose);
+        
+        TermMapping termMapping = s.deserializeTermMapping();
+        
+        assertEquals(target.getTerminologyID().getValue(),
+                termMapping.getTarget().getTerminologyID().getValue());
+        
+        assertEquals(target.getValue(), termMapping.getTarget().getValue());
+        
+        assertEquals(match.EQUIVALENT, termMapping.getMatch().EQUIVALENT);
+        
+        assertEquals(dvText.getValue(), 
+                termMapping.getPurpose().getDvText().getValue());
+        
+        assertEquals(dvText.getMappings(), 
+                termMapping.getPurpose().getDvText().getMappings());
+        
+        assertEquals(dvText.getFormatting(), 
+                termMapping.getPurpose().getDvText().getFormatting());
+        
+        assertEquals(dvText.getHyperlink().getValue(), 
+                termMapping.getPurpose().getDvText().getHyperlink().getValue());
+        
+        assertEquals(dvText.getLanguage().getTerminologyID().getValue(),
+                termMapping.
+                        getPurpose().
+                            getDvText().
+                                getLanguage().getTerminologyID().getValue());
+        
+       assertEquals(dvText.getLanguage().getValue(),
+               termMapping.getPurpose().getDvText().getLanguage().getValue());
+       
+       assertEquals(dvText.getCharset().getTerminologyID().getValue(),
+                termMapping.
+                        getPurpose().
+                            getDvText().
+                                getCharset().getTerminologyID().getValue());
+       
+       assertEquals(dvText.getCharset().getValue(),
+               termMapping.getPurpose().getDvText().getCharset().getValue());
+       
+       assertEquals(definingCode.getTerminologyID().getValue(), 
+               termMapping.
+                       getPurpose().
+                            getDefiningCode().
+                                getTerminologyID().getValue());
+       assertEquals(definingCode.getValue(), 
+               termMapping.getPurpose().getDefiningCode().getValue());
+    }
+    
+    @Test
+    public void TermMappingList() throws UnsupportedEncodingException{
+        
+        String value = "DvTextValue";
+        List<TermMapping> mappings = new ArrayList<>();
+        String formatting = "DvText Formatting";
+        String hyperlinkValue = "Hyperlink value";
+        DVURI hyperlink =  RMObjectFactory.newDVURI(hyperlinkValue);
+        
+        String languageTIDValue = "Language Terminology ID";
+        TerminologyID languageTID = RMObjectFactory.newTerminologyID(languageTIDValue);
+        String languageValue = "Language value";
+        CodePhrase language = RMObjectFactory.newCodePhrase(languageTID, 
+                languageValue);
+        
+        String charsetTIDValue = "Charset Terminology ID";
+        String charsetValue = "Charset Value";
+        TerminologyID charsetTID = 
+                RMObjectFactory.newTerminologyID(charsetTIDValue);
+        CodePhrase charset = 
+                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
+        
+        DvText dvText = RMObjectFactory.newDvText(
+                value, null, formatting, hyperlink, language, charset);
+        
+        String definingCodeTIDValue = "Defining Code Terminology ID Value";
+        TerminologyID definingCodeTID = 
+                RMObjectFactory.newTerminologyID(definingCodeTIDValue);
+        String definingCodeValue = "Defining Code Value";
+        CodePhrase definingCode = 
+                RMObjectFactory.newCodePhrase(
+                        definingCodeTID, definingCodeTIDValue);
+        
+        DvCodedText purpose = 
+                RMObjectFactory.newDvCodedText(dvText, definingCode);
+        
+        TermMapping t = 
+                RMObjectFactory.newTermMapping(charset, Match.BROADER, purpose);
+        
+        mappings.add(t);
+        
+        s.serializeDvText(
+                value, mappings, formatting, hyperlink, language, charset);
+        dvText = s.deserializeDvText();
+        
+        assertEquals(value, dvText.getValue());
+        
+        assertEquals(mappings.get(0).getTarget().getTerminologyID().getValue(), 
+                dvText.getMappings().get(0).
+                        getTarget().getTerminologyID().getValue());
+        
+        assertEquals(mappings.get(0).getTarget().getValue(),
+                dvText.getMappings().get(0).getTarget().getValue());
+        
+        assertEquals(mappings.get(0).getMatch().BROADER, 
+                dvText.getMappings().get(0).getMatch().BROADER);
+        
+        assertEquals(mappings.get(0).getPurpose().
+                getDefiningCode().getTerminologyID().getValue(),
+                    dvText.getMappings().
+                        get(0).
+                            getPurpose().
+                                getDefiningCode().getTerminologyID().getValue());
+        
+        assertEquals(mappings.get(0).getPurpose().
+                getDefiningCode().getValue(),
+                    dvText.getMappings().
+                        get(0).
+                            getPurpose().
+                                getDefiningCode().getValue());
+        
+        assertEquals(mappings.get(0).getPurpose().
+                getDvText().getValue(),
+                    dvText.getMappings().
+                        get(0).
+                            getPurpose().
+                                getDvText().getValue());
+        
+        assertEquals(mappings.get(0).getPurpose().
+                getDvText().getMappings(),
+                    dvText.getMappings().
+                        get(0).
+                            getPurpose().
+                                getDvText().getMappings());
+        
+        assertEquals(mappings.get(0).getPurpose().
+                getDvText().getFormatting(),
+                    dvText.getMappings().
+                        get(0).
+                            getPurpose().
+                                getDvText().getFormatting());
+        
+        assertEquals(mappings.get(0).getPurpose().
+                getDvText().getHyperlink().getValue(),
+                    dvText.getMappings().
+                        get(0).
+                            getPurpose().
+                                getDvText().getHyperlink().getValue());
+        
+        assertEquals(mappings.get(0).getPurpose().
+                getDvText().getLanguage().getTerminologyID().getValue(),
+                    dvText.getMappings().
+                        get(0).
+                            getPurpose().
+                                getDvText().getLanguage().
+                                    getTerminologyID().getValue());
+        
+        assertEquals(mappings.get(0).getPurpose().
+                getDvText().getLanguage().getValue(),
+                    dvText.getMappings().
+                        get(0).
+                            getPurpose().
+                                getDvText().getLanguage().getValue());
+        
+        assertEquals(mappings.get(0).getPurpose().
+                getDvText().getCharset().getTerminologyID().getValue(),
+                    dvText.getMappings().
+                        get(0).
+                            getPurpose().
+                                getDvText().getCharset().
+                                    getTerminologyID().getValue());
+        
+        assertEquals(mappings.get(0).getPurpose().
+                getDvText().getCharset().getValue(),
+                    dvText.getMappings().
+                        get(0).
+                            getPurpose().
+                                getDvText().getCharset().getValue());
+        
+        assertEquals(formatting, dvText.getFormatting());
+        
+        assertEquals(hyperlink.getValue(), dvText.getHyperlink().getValue());
+        
+        assertEquals(language.getTerminologyID().getValue(), 
+                dvText.getLanguage().getTerminologyID().getValue());
+        
+        assertEquals(language.getValue(), dvText.getLanguage().getValue());
+        
+        assertEquals(charset.getTerminologyID().getValue(), 
+                dvText.getCharset().getTerminologyID().getValue());
+        
+        assertEquals(charset.getValue(), dvText.getCharset().getValue()); 
+    
     }
 }

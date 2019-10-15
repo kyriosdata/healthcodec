@@ -16,6 +16,7 @@ package com.github.gabrielsxp.healthcodec;
 import com.github.gabrielsxp.healthcodec.RMObject.ArchetypeID;
 import com.github.gabrielsxp.healthcodec.RMObject.CodePhrase;
 import com.github.gabrielsxp.healthcodec.RMObject.DVURI;
+import com.github.gabrielsxp.healthcodec.RMObject.DvCodedText;
 import com.github.gabrielsxp.healthcodec.RMObject.DvEncapsulated;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -23,6 +24,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
 import com.github.gabrielsxp.healthcodec.RMObject.DvMultimedia;
 import com.github.gabrielsxp.healthcodec.RMObject.DvParsable;
 import com.github.gabrielsxp.healthcodec.RMObject.DvText;
+import com.github.gabrielsxp.healthcodec.RMObject.Match;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectID;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectVersionID;
 import com.github.gabrielsxp.healthcodec.RMObject.TemplateID;
@@ -363,9 +365,10 @@ public interface Serializer {
             DvMultimedia thumbnail,
             DVURI uri,
             byte[] data) throws UnsupportedEncodingException;
-    
+
     /**
      * Serializador de DvText
+     *
      * @param value
      * @param mappings
      * @param formatting
@@ -373,7 +376,7 @@ public interface Serializer {
      * @param language
      * @param charset
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvText(String value,
             List<RMObject.TermMapping> mappings,
@@ -381,15 +384,19 @@ public interface Serializer {
             DVURI hyperlink,
             CodePhrase language,
             CodePhrase charset) throws UnsupportedEncodingException;
-    
+
     /**
      * Serilizador de DvCodedText
-     * 
+     *
      * @param dvText
      * @param definingCode
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeDvCodedText(DvText dvText, 
-            CodePhrase definingCode) throws UnsupportedEncodingException;;
+    RMObjectSerializationClient serializeDvCodedText(DvText dvText,
+            CodePhrase definingCode) throws UnsupportedEncodingException;
+
+    RMObjectSerializationClient serializeTermMapping(CodePhrase target,
+            Match match,
+            DvCodedText purpose);
 }
