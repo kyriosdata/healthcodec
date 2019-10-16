@@ -672,15 +672,13 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * @throws UnsupportedEncodingException
      */
     @Override
-    public RMObjectSerializationClient serializePartyIdentified(ObjectID id,
-            String value,
-            String name,
-            List<DvIdentifier> identifiers)
+    public RMObjectSerializationClient serializePartyIdentified(
+            PartyRef externalRef,
+            String name, List<DvIdentifier> identifiers) 
             throws UnsupportedEncodingException {
         PartyIdentifiedSerializer s = new PartyIdentifiedSerializer();
         register(PARTYIDENTIFIED, offset);
-        setOffset(
-                s.serializer(buffer, offset, id, value, name, identifiers));
+        setOffset(s.serialize(buffer, offset, externalRef, name, identifiers));
 
         return this;
     }
@@ -693,7 +691,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     @Override
     public PartyIdentified deserializePartyIdentified() {
         PartyIdentifiedSerializer d = new PartyIdentifiedSerializer();
-        return d.deserializer(buffer, getOffsetFromID(PARTYIDENTIFIED));
+        return d.deserialize(buffer, getOffsetFromID(PARTYIDENTIFIED));
     }
 
     /**
@@ -882,21 +880,22 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         DvMultimediaSerializer s = new DvMultimediaSerializer();
         register(DVMULTIMEDIA, offset);
         setOffset(s.serialize(buffer,
-                        offset, dvMultimediaDvEncapsulated,
-                        alternateText,
-                        mediaType,
-                        compressionAlgorithm,
-                        integrityCheck,
-                        integrityCheckAlgorithm,
-                        thumbnail,
-                        uri,
-                        data));
+                offset, dvMultimediaDvEncapsulated,
+                alternateText,
+                mediaType,
+                compressionAlgorithm,
+                integrityCheck,
+                integrityCheckAlgorithm,
+                thumbnail,
+                uri,
+                data));
 
         return this;
     }
-    
+
     /**
      * Deserialize DvMultimedia
+     *
      * @return nova instância de DvMultimedia
      */
     @Override
@@ -904,9 +903,10 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         DvMultimediaSerializer d = new DvMultimediaSerializer();
         return d.deserialize(buffer, getOffsetFromID(DVMULTIMEDIA));
     }
-    
+
     /**
      * Serializa DvText
+     *
      * @param value
      * @param mappings
      * @param formatting
@@ -914,7 +914,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * @param language
      * @param charset
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     @Override
     public RMObjectSerializationClient serializeDvText(String value,
@@ -922,45 +922,48 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
             String formatting,
             DVURI hyperlink,
             CodePhrase language,
-            CodePhrase charset) throws UnsupportedEncodingException{
-        
+            CodePhrase charset) throws UnsupportedEncodingException {
+
         DvTextSerializer s = new DvTextSerializer();
         register(DVTEXT, offset);
-        setOffset(s.serialize(buffer, 
-                offset, 
+        setOffset(s.serialize(buffer,
+                offset,
                 value, mappings, formatting, hyperlink, language, charset));
-        
+
         return this;
     }
-    
+
     /**
      * Deserializa DvText
+     *
      * @return nova instância de DvText
      */
-    public DvText deserializeDvText(){
+    public DvText deserializeDvText() {
         DvTextSerializer d = new DvTextSerializer();
         return d.deserialize(buffer, getOffsetFromID(DVTEXT));
     }
-    
+
     /**
      * Serializador de DvCodedText
+     *
      * @param dvText
      * @param definingCode
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     @Override
-    public RMObjectSerializationClient serializeDvCodedText(DvText dvText, 
+    public RMObjectSerializationClient serializeDvCodedText(DvText dvText,
             CodePhrase definingCode) throws UnsupportedEncodingException {
         DvCodedTextSerializer s = new DvCodedTextSerializer();
         register(DVCODEDTEXT, offset);
         setOffset(s.serialize(buffer, offset, dvText, definingCode));
-        
+
         return this;
     }
-    
+
     /**
      * Deserializa DvCodedText
+     *
      * @return nova instância de DvCodedText
      */
     @Override
@@ -968,10 +971,10 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         DvCodedTextSerializer d = new DvCodedTextSerializer();
         return d.deserialize(buffer, getOffsetFromID(DVCODEDTEXT));
     }
-    
+
     /**
      * Serializador de TermMapping
-     * 
+     *
      * @param target
      * @param match
      * @param purpose
@@ -980,18 +983,19 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeTermMapping(
-            CodePhrase target, Match match, 
+            CodePhrase target, Match match,
             DvCodedText purpose) throws UnsupportedEncodingException {
-        
+
         TermMappingSerializer s = new TermMappingSerializer();
         register(TERMMAPPING, offset);
         setOffset(s.serialize(buffer, offset, target, match, purpose));
-        
+
         return this;
     }
 
     /**
      * Deserializador de TermMapping
+     *
      * @return nova instância de TermMappping
      */
     @Override
@@ -999,10 +1003,10 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         TermMappingSerializer d = new TermMappingSerializer();
         return d.deserialize(buffer, getOffsetFromID(TERMMAPPING));
     }
-    
+
     /**
      * Serializador de Link
-     * 
+     *
      * @param meaning
      * @param type
      * @param target
@@ -1011,21 +1015,21 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeLink(
-            DvText meaning, DvText type, 
-            DVEHRURI target) throws UnsupportedEncodingException{
+            DvText meaning, DvText type,
+            DVEHRURI target) throws UnsupportedEncodingException {
         LinkSerializer s = new LinkSerializer();
         register(LINK, offset);
         setOffset(s.serialize(buffer, offset, meaning, type, target));
-        
+
         return this;
     }
-    
+
     /**
      * Serializador de Link
-     * 
+     *
      * @param link
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     @Override
     public RMObjectSerializationClient serializeLink(
@@ -1033,13 +1037,13 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         LinkSerializer s = new LinkSerializer();
         register(LINK, offset);
         setOffset(s.serialize(buffer, offset, link));
-        
+
         return this;
     }
-    
+
     /**
      * Deserializador de Link
-     * 
+     *
      * @return nova instância de Link
      */
     @Override
@@ -1047,30 +1051,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         LinkSerializer d = new LinkSerializer();
         return d.deserialize(buffer, getOffsetFromID(LINK));
     }
-    
+
     /**
      * Serializador de DvState
+     *
      * @param value
      * @param terminal
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     @Override
     public RMObjectSerializationClient serializeDvState(
-            DvCodedText value, 
+            DvCodedText value,
             String terminal) throws UnsupportedEncodingException {
         DvStateSerializer s = new DvStateSerializer();
         register(DVSTATE, offset);
         setOffset(s.serialize(buffer, offset, value, terminal));
-        
+
         return this;
     }
-    
+
     /**
      * Serializador de DvState
+     *
      * @param dvState
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     @Override
     public RMObjectSerializationClient serializeDvState(
@@ -1078,26 +1084,26 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         DvStateSerializer s = new DvStateSerializer();
         register(DVSTATE, offset);
         setOffset(s.serialize(buffer, offset, dvState));
-        
+
         return this;
     }
-    
+
     /**
-     * Deserializador de DvState
-     * return nova instância de DvState
+     * Deserializador de DvState return nova instância de DvState
      */
     @Override
     public DvState deserializaDvState() {
         DvStateSerializer d = new DvStateSerializer();
-        
+
         return d.deserialize(buffer, getOffsetFromID(DVSTATE));
     }
-    
+
     /**
      * Serializador de DvParagraph
+     *
      * @param items
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     @Override
     public RMObjectSerializationClient serializeDvParagraph(
@@ -1105,15 +1111,16 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         DvParagraphSerializer s = new DvParagraphSerializer();
         register(DVPARAGRAPH, offset);
         setOffset(s.serialize(buffer, offset, items));
-        
+
         return this;
     }
-    
+
     /**
      * Serializador de DvParagraph
+     *
      * @param dvparagraph
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     @Override
     public RMObjectSerializationClient serializeDvParagraph(
@@ -1121,12 +1128,13 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         DvParagraphSerializer s = new DvParagraphSerializer();
         register(DVPARAGRAPH, offset);
         setOffset(s.serialize(buffer, offset, dvparagraph));
-        
+
         return this;
     }
-    
+
     /**
      * Deserializador de DvParagraph
+     *
      * @return nova instância de DvParagraph
      */
     @Override
@@ -1134,12 +1142,13 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         DvParagraphSerializer d = new DvParagraphSerializer();
         return d.deserialize(buffer, getOffsetFromID(DVPARAGRAPH));
     }
-    
+
     /**
      * Serializador de PartyProxy
+     *
      * @param externalRef
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     @Override
     public RMObjectSerializationClient serializePartyProxy(
@@ -1147,15 +1156,16 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         PartyProxySerializer s = new PartyProxySerializer();
         register(PARTYPROXY, offset);
         setOffset(s.serialize(buffer, offset, externalRef));
-        
+
         return this;
     }
-    
+
     /**
      * Serializador de PartyProxy
+     *
      * @param partyProxy
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @throws UnsupportedEncodingException
      */
     @Override
     public RMObjectSerializationClient serializePartyProxy(
@@ -1163,18 +1173,71 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         PartyProxySerializer s = new PartyProxySerializer();
         register(PARTYPROXY, offset);
         setOffset(s.serialize(buffer, offset, partyProxy));
-        
+
         return this;
     }
-    
+
     /**
      * Deserializador de PartyProxy
-     * @return 
+     *
+     * @return nova instância de PartyProxy
      */
     @Override
     public PartyProxy deserializePartyProxy() {
-        PartyProxySerializer  d = new PartyProxySerializer();
+        PartyProxySerializer d = new PartyProxySerializer();
         return d.deserialize(buffer, getOffsetFromID(PARTYPROXY));
+    }
+
+    /**
+     * Serializador de FeederAuditDetails
+     *
+     * @param systemID
+     * @param provider
+     * @param location
+     * @param subject
+     * @param versionID
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException
+     */
+    @Override
+    public RMObjectSerializationClient serializeFeederAuditDetails(
+            String systemID, PartyIdentified provider,
+            PartyIdentified location, PartyProxy subject,
+            String versionID) throws UnsupportedEncodingException {
+        FeederAuditDetailsSerializer s = new FeederAuditDetailsSerializer();
+        register(FEEDERAUDITDETAILS, offset);
+        setOffset(s.serialize(buffer, offset,
+                systemID, provider, location, subject, versionID));
+
+        return this;
+    }
+
+    /**
+     * Serializador de FeederAuditDetails
+     *
+     * @param fad
+     * @return instância de RMObjectSerializationClient atual* @return
+     * @throws UnsupportedEncodingException
+     */
+    @Override
+    public RMObjectSerializationClient serializeFeederAuditDetails(
+            FeederAuditDetails fad) throws UnsupportedEncodingException {
+        FeederAuditDetailsSerializer s = new FeederAuditDetailsSerializer();
+        register(FEEDERAUDITDETAILS, offset);
+        setOffset(s.serialize(buffer, offset, fad));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de FeederAuditDetails
+     *
+     * @return nova instância de FeederAuditDetails
+     */
+    @Override
+    public FeederAuditDetails deserializeFeederAuditDetails() {
+        FeederAuditDetailsSerializer d = new FeederAuditDetailsSerializer();
+        return d.deserialize(buffer, getOffsetFromID(FEEDERAUDITDETAILS));
     }
 
     /**

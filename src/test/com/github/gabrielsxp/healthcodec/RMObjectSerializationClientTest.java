@@ -306,19 +306,20 @@ public class RMObjectSerializationClientTest {
         String oidValue = "OBJECTID";
         String value = "VALUE";
         String name = "NAME";
-
+        
+        ObjectID oid = RMObjectFactory.newObjectID(oidValue);
+        PartyRef externalRef = RMObjectFactory.newPartyRef(oid, value);
+        
         String issuer = "ISSUER";
         String assigner = "ASSIGNER";
         String id = "ID";
         String type = "TYPE";
-        
-        ObjectID oid = RMObjectFactory.newObjectID(oidValue);
 
         List<DvIdentifier> identifiers = new ArrayList<>();
         identifiers.add(
                 RMObjectFactory.newDvIdentifier(issuer, assigner, id, type));
-
-        s.serializePartyIdentified(oid, value, name, identifiers);
+        
+        s.serializePartyIdentified(externalRef, name, identifiers);
         PartyIdentified p = s.deserializePartyIdentified();
         
         assertEquals(oidValue, p.getExternalRef().getId().getValue());
@@ -1255,4 +1256,121 @@ public class RMObjectSerializationClientTest {
         
         assertEquals(partyRefValue, p.getExternalRef().getValue());
     }
+    
+    @Test
+    public void FeederAuditDetails() throws UnsupportedEncodingException{
+        String systemID = "System ID";
+        
+        String oidValue = "_OBJECTID_";
+        ObjectID id = RMObjectFactory.newObjectID(oidValue);
+        String value = "_PARTYREF_";
+        PartyRef providerRef = RMObjectFactory.newPartyRef(id, value);
+        
+        String providerName = "Provider Name";
+        
+        String idIssuer = "issuer";
+        String idAssigner = "assigner";
+        String idId = "id";
+        String idType = "type";
+        DvIdentifier idf = 
+                RMObjectFactory.newDvIdentifier(
+                        idIssuer, idAssigner, idId, idType);
+        List<DvIdentifier> identifiers = new ArrayList<>();
+        identifiers.add(idf);
+        identifiers.add(idf);
+        
+        PartyIdentified provider = 
+                RMObjectFactory.newPartyIdentified(
+                        providerRef, providerName, identifiers);
+        
+        PartyIdentified location = 
+                RMObjectFactory.newPartyIdentified(
+                        providerRef, providerName, identifiers);
+        
+        PartyProxy subject = RMObjectFactory.newPartyProxy(providerRef);
+        
+        String versionID = "Version ID";
+        
+        FeederAuditDetails f = RMObjectFactory.newFeederAuditDetails(
+                systemID, provider, location, subject, versionID);
+        
+        s.serializeFeederAuditDetails(f);
+        f = s.deserializeFeederAuditDetails();
+        
+        assertEquals(systemID, f.getSystemID());
+        
+        assertEquals(providerRef.getId().getValue(), 
+                f.getProvider().getExternalRef().getId().getValue());
+        
+        assertEquals(providerRef.getValue(), 
+                f.getProvider().getExternalRef().getValue());
+        
+        assertEquals(providerName, f.getProvider().getName());
+        
+        assertEquals(idIssuer, 
+                f.getProvider().getIdentifiers().get(0).getIssuer());
+        
+        assertEquals(idAssigner, 
+                f.getProvider().getIdentifiers().get(0).getAssigner());
+        
+        assertEquals(idId, 
+                f.getProvider().getIdentifiers().get(0).getId());
+        
+        assertEquals(idType, 
+                f.getProvider().getIdentifiers().get(1).getType());
+        
+        assertEquals(idIssuer, 
+                f.getProvider().getIdentifiers().get(1).getIssuer());
+        
+        assertEquals(idAssigner, 
+                f.getProvider().getIdentifiers().get(1).getAssigner());
+        
+        assertEquals(idId, 
+                f.getProvider().getIdentifiers().get(1).getId());
+        
+        assertEquals(idType, 
+                f.getProvider().getIdentifiers().get(1).getType());
+        
+        assertEquals(providerRef.getId().getValue(), 
+                f.getLocation().getExternalRef().getId().getValue());
+        
+        assertEquals(providerRef.getValue(), 
+                f.getLocation().getExternalRef().getValue());
+        
+        assertEquals(providerName, f.getLocation().getName());
+        
+        assertEquals(idIssuer, 
+                f.getLocation().getIdentifiers().get(0).getIssuer());
+        
+        assertEquals(idAssigner, 
+                f.getLocation().getIdentifiers().get(0).getAssigner());
+        
+        assertEquals(idId, 
+                f.getLocation().getIdentifiers().get(0).getId());
+        
+        assertEquals(idType, 
+                f.getLocation().getIdentifiers().get(1).getType());
+        
+        assertEquals(idIssuer, 
+                f.getLocation().getIdentifiers().get(1).getIssuer());
+        
+        assertEquals(idAssigner, 
+                f.getLocation().getIdentifiers().get(1).getAssigner());
+        
+        assertEquals(idId, 
+                f.getLocation().getIdentifiers().get(1).getId());
+        
+        assertEquals(idType, 
+                f.getLocation().getIdentifiers().get(1).getType());
+        
+        
+        assertEquals(subject.getExternalRef().getId().getValue(),
+                f.getSubject().getExternalRef().getId().getValue());
+        
+        assertEquals(subject.getExternalRef().getValue(),
+                f.getSubject().getExternalRef().getValue());
+        
+        assertEquals(versionID, f.getVersionID());
+        
+    }    
 }

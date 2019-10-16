@@ -629,14 +629,14 @@ public class RMObjectSerialization {
 
     static class PartyIdentifiedSerializer {
 
-        protected int serializer(
-                Buffer buffer,
-                int offset,
-                ObjectID id,
-                String value,
-                String name,
+        protected int serialize(Buffer buffer, 
+                int offset, 
+                PartyRef externalRef, 
+                String name, 
                 List<DvIdentifier> identifiers)
-                throws UnsupportedEncodingException {
+                    throws UnsupportedEncodingException {
+            ObjectID id = externalRef.getId();
+            String value = externalRef.getValue();
             int oidValueLength = id.getValue().length();
             int valueLength = value.length();
             int nameLength = name.length();
@@ -655,8 +655,21 @@ public class RMObjectSerialization {
             position += s.listSerialize(buffer, position, identifiers);
             return position;
         }
+        
+        protected int serialize(Buffer buffer, int offset, PartyIdentified pi) 
+                throws UnsupportedEncodingException{
+            PartyIdentifiedSerializer pis = new PartyIdentifiedSerializer();
+            int position = offset;
+            
+            position = 
+                    pis.serialize(buffer, position, 
+                            pi.getExternalRef(), pi.getName(), 
+                            pi.getIdentifiers());
+            
+            return position;
+        }
 
-        protected PartyIdentified deserializer(Buffer buffer, int offset) {
+        protected PartyIdentified deserialize(Buffer buffer, int offset) {
             int oidValueLength = buffer.readInteger(offset);
             int valueLength = buffer.readInteger(offset + INT.getSize());
             int nameLength = buffer.readInteger(offset + 2 * INT.getSize());
@@ -1727,6 +1740,138 @@ public class RMObjectSerialization {
             PartyRef externalRef = prs.deserialize(buffer, position);
             
             return RMObjectFactory.newPartyProxy(externalRef);
+        }
+    }
+    
+    public static class FeederAuditDetailsSerializer {
+        protected int serialize(Buffer buffer, int offset, String systemID, 
+                PartyIdentified provider, PartyIdentified location, 
+                /*DvDateTime time,*/ PartyProxy subject, 
+                String versionID) throws UnsupportedEncodingException {
+            int meta = offset;
+            int position = offset + (6 * INT.getSize()) + 5 * BOOLEAN.getSize();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, systemID);
+            
+            boolean hasProvider = provider != null;
+            PartyIdentifiedSerializer pis = new PartyIdentifiedSerializer();
+            if(hasProvider){
+                meta = writeHeader(buffer, meta, hasProvider, position);
+                position = pis.serialize(buffer, position, provider);
+            } else {
+                meta = writeHeader(buffer, meta, hasProvider);
+            }
+            
+            boolean hasLocation = location != null;
+            if(hasLocation){
+                meta = writeHeader(buffer, meta, hasLocation, position);
+                position = pis.serialize(buffer, position, location);
+            } else {
+                meta = writeHeader(buffer, meta, hasLocation);
+            }
+            
+            boolean hasTime = false; //TO DO
+            if(hasTime){
+                meta = writeHeader(buffer, meta, hasTime, position);
+                //position = pdt.serialize(buffer, position, time);
+            } else {
+                meta = writeHeader(buffer, meta, hasTime);
+            }
+            boolean hasSubject = subject != null;
+            PartyProxySerializer pps = new PartyProxySerializer();
+            if(hasSubject){
+                meta = writeHeader(buffer, meta, hasSubject, position);
+                position = pps.serialize(buffer, position, subject);
+            } else {
+                meta = writeHeader(buffer, meta, hasSubject);
+            }
+            
+            boolean hasVersionID = versionID != null;
+            if(hasVersionID){
+                writeHeader(buffer, meta, hasVersionID, position);
+                position = valueStringSerialization(buffer, position, versionID);
+            } else {
+                writeHeader(buffer, meta, hasVersionID);
+            }
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                FeederAuditDetails fad) throws UnsupportedEncodingException {
+            FeederAuditDetailsSerializer fas = 
+                    new FeederAuditDetailsSerializer();
+            int position = offset;
+            
+            position = fas.serialize(
+                    buffer, 
+                    position, 
+                    fad.getSystemID(),
+                    fad.getProvider(),
+                    fad.getLocation(),
+                    /*fad.getTime(),*/
+                    fad.getSubject(),
+                    fad.getVersionID());
+            
+            return position;
+        }
+        
+        protected FeederAuditDetails deserialize(Buffer buffer, int offset){
+            int position = offset;
+            PartyIdentifiedSerializer pis = new PartyIdentifiedSerializer();
+            PartyProxySerializer pps = new PartyProxySerializer();
+            //DvDateTimeSerializer dds = new DvDateTimeSerializer();
+            int systemIDPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String systemID = 
+                    valueStringDeserialization(buffer, systemIDPosition);
+            
+            boolean hasProvider = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            PartyIdentified provider = null;
+            if(hasProvider){
+                int providerPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                provider = pis.deserialize(buffer, providerPosition);
+            }
+            
+            boolean hasLocation = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            PartyIdentified location = null;
+            if(hasLocation){
+                int locationPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                location = pis.deserialize(buffer, locationPosition);
+            }
+            
+            boolean hasTime = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            if(hasTime){
+                //TODO
+            }
+            
+            boolean hasSubject = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            PartyProxy subject = null;
+            if(hasSubject){
+                int subjectPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                subject = pps.deserialize(buffer, subjectPosition);
+            }
+            
+            boolean hasVersionID = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            String versionID = null;
+            if(hasVersionID){
+                int versionIDPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                versionID = 
+                        valueStringDeserialization(buffer, versionIDPosition);
+            }
+            
+            return RMObjectFactory.newFeederAuditDetails(
+                    systemID, provider, location, subject, versionID);
         }
     }
 

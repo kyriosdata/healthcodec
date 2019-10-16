@@ -261,4 +261,10 @@ public interface Deserializer {
      * @return nova instância de PartyProxy
      */
     PartyProxy deserializePartyProxy();
+    
+    /**
+     * Deserializador de FeederAuditDetails
+     * @return nova instância de FeederAuditDetails
+     */
+    FeederAuditDetails deserializeFeederAuditDetails();
 }

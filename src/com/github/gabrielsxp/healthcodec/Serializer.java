@@ -27,10 +27,12 @@ import com.github.gabrielsxp.healthcodec.RMObject.DvParagraph;
 import com.github.gabrielsxp.healthcodec.RMObject.DvParsable;
 import com.github.gabrielsxp.healthcodec.RMObject.DvState;
 import com.github.gabrielsxp.healthcodec.RMObject.DvText;
+import com.github.gabrielsxp.healthcodec.RMObject.FeederAuditDetails;
 import com.github.gabrielsxp.healthcodec.RMObject.Link;
 import com.github.gabrielsxp.healthcodec.RMObject.Match;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectID;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectVersionID;
+import com.github.gabrielsxp.healthcodec.RMObject.PartyIdentified;
 import com.github.gabrielsxp.healthcodec.RMObject.PartyProxy;
 import com.github.gabrielsxp.healthcodec.RMObject.PartyRef;
 import com.github.gabrielsxp.healthcodec.RMObject.TemplateID;
@@ -279,10 +281,10 @@ public interface Serializer {
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializePartyIdentified(ObjectID id,
-            String value,
-            String name,
-            List<DvIdentifier> identifiers)
+    RMObjectSerializationClient serializePartyIdentified(
+                PartyRef externalRef, 
+                String name, 
+                List<DvIdentifier> identifiers)
             throws UnsupportedEncodingException;
 
     /**
@@ -490,4 +492,28 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializePartyProxy(
             PartyProxy partyProxy) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de FeederAuditDetails
+     * @param systemID
+     * @param provider
+     * @param location
+     * @param subject
+     * @param versionID
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeFeederAuditDetails(String systemID, 
+                PartyIdentified provider, PartyIdentified location, 
+                /*DvDateTime time,*/ PartyProxy subject, 
+                String versionID) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de FeederAuditDetails
+     * @param fad
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeFeederAuditDetails(
+            FeederAuditDetails fad) throws UnsupportedEncodingException;
 }
