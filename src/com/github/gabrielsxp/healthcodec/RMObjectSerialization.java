@@ -79,6 +79,22 @@ public class RMObjectSerialization {
                     + idLength
                     + typeLength;
         }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                DvIdentifier dvi) throws UnsupportedEncodingException{
+            DvIdentifierSerializer dis = new DvIdentifierSerializer();
+            int position = offset;
+            
+            position = dis.serialize(
+                    buffer, 
+                    position , 
+                    dvi.getIssuer(), 
+                    dvi.getAssigner(),
+                    dvi.getId(), 
+                    dvi.getType());
+            
+            return position;
+        }
 
         protected DvIdentifier deserialize(Buffer buffer, int offset) {
             int issuerLength = buffer.readInteger(offset);
@@ -97,63 +113,43 @@ public class RMObjectSerialization {
 
             return RMObjectFactory.newDvIdentifier(issuer, assigner, id, type);
         }
-
-        protected int serializeList(
-                Buffer buffer, int offset, List<DvIdentifier> list)
+        
+        protected int listSerialize(
+                Buffer buffer, int offset, List<DvIdentifier> items)
                 throws UnsupportedEncodingException {
-            int position = offset;
-            int size = list.size();
-            buffer.writeInteger(position, size);
-            position += INT.getSize();
-            for (Iterator<DvIdentifier> it = list.iterator(); it.hasNext();) {
-                DvIdentifier d = it.next();
-                String issuer = d.getIssuer();
-                String assigner = d.getAssigner();
-                String id = d.getId();
-                String type = d.getType();
-                int issuerLength = issuer.length();
-                int assignerLength = assigner.length();
-                int idLength = id.length();
-                int typeLength = type.length();
-                int dvIdentifierSize
-                        = 4 * INT.getSize()
-                        + issuerLength
-                        + assignerLength
-                        + idLength
-                        + typeLength;
-                buffer.writeInteger(position, dvIdentifierSize);
-                position += INT.getSize();
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize * INT.getSize()) + INT.getSize();
+            
+            meta = writeHeader(buffer, meta, listSize);
+            DvIdentifierSerializer dis = new DvIdentifierSerializer();
+            
+            for (DvIdentifier d : items) {
+                meta = writeHeader(buffer, meta, position);
+                position = dis.serialize(buffer, position, d);
             }
-            for (Iterator<DvIdentifier> it = list.iterator(); it.hasNext();) {
-                DvIdentifier d = it.next();
-                DvIdentifierSerializer s = new DvIdentifierSerializer();
-                String issuer = d.getIssuer();
-                String assigner = d.getAssigner();
-                String id = d.getId();
-                String type = d.getType();
-                position = s.serialize(buffer,
-                        position, issuer, assigner, id, type);
-            }
+            
+            
             return position;
         }
 
         protected List<DvIdentifier> deserializeList(Buffer buffer, int offset) {
             int position = offset;
-            DvIdentifierSerializer d = new DvIdentifierSerializer();
             int listSize = buffer.readInteger(position);
-            List<DvIdentifier> identifiers = new ArrayList<>();
             position += INT.getSize();
-            int dvPosition = position + listSize * INT.getSize();
-            for (int i = 0; i < listSize; i++) {
-
-                DvIdentifier a = d.deserialize(buffer, dvPosition);
-                identifiers.add(a);
-
-                int pos = buffer.readInteger(position);
+            
+            List<DvIdentifier> list = new ArrayList<>();
+            DvIdentifierSerializer dis = new DvIdentifierSerializer();
+            
+            for(int i = 0; i < listSize; i++){
+                int dvIdentifierPosition = buffer.readInteger(position);
                 position += INT.getSize();
-                dvPosition += pos;
+                DvIdentifier t = dis.deserialize(buffer, dvIdentifierPosition);
+                list.add(t);
             }
-            return identifiers;
+            
+            
+            return list;
         }
     }
 
@@ -645,7 +641,7 @@ public class RMObjectSerialization {
             position += nameLength;
 
             DvIdentifierSerializer s = new DvIdentifierSerializer();
-            position += s.serializeList(buffer, position, identifiers);
+            position += s.listSerialize(buffer, position, identifiers);
             return position;
         }
 
@@ -1319,9 +1315,9 @@ public class RMObjectSerialization {
             DvTextSerializer dts = new DvTextSerializer();
             
             for(int i = 0; i < listSize; i++){
-                int termMappingPosition = buffer.readInteger(position);
+                int dvTextPosition = buffer.readInteger(position);
                 position += INT.getSize();
-                DvText t = dts.deserialize(buffer, termMappingPosition);
+                DvText t = dts.deserialize(buffer, dvTextPosition);
                 list.add(t);
             }
             
