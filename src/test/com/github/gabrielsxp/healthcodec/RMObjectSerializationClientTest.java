@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.*;
 import com.github.gabrielsxp.healthcodec.RMObjectFactory;
+import com.github.gabrielsxp.healthcodec.RMObjectSerialization;
 import com.github.gabrielsxp.healthcodec.RMObjectSerializationClient;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -720,7 +721,7 @@ public class RMObjectSerializationClientTest {
     }
     
     @Test
-    public void TermMapping(){
+    public void TermMapping() throws UnsupportedEncodingException{
         CodePhrase target = null;
         Match match = Match.BROADER;
         DvCodedText purpose = null;
@@ -955,6 +956,77 @@ public class RMObjectSerializationClientTest {
                 dvText.getCharset().getTerminologyID().getValue());
         
         assertEquals(charset.getValue(), dvText.getCharset().getValue()); 
+    }
     
+    @Test
+    public void Link() throws UnsupportedEncodingException{
+        String value = "DvTextValue";
+        List<TermMapping> mappings = new ArrayList<>();
+        String formatting = "DvText Formatting";
+        String hyperlinkValue = "Hyperlink value";
+        DVURI hyperlink =  RMObjectFactory.newDVURI(hyperlinkValue);
+        
+        String languageTIDValue = "Language Terminology ID";
+        TerminologyID languageTID = RMObjectFactory.newTerminologyID(languageTIDValue);
+        String languageValue = "Language value";
+        CodePhrase language = RMObjectFactory.newCodePhrase(languageTID, 
+                languageValue);
+        
+        String charsetTIDValue = "Charset Terminology ID";
+        String charsetValue = "Charset Value";
+        TerminologyID charsetTID = 
+                RMObjectFactory.newTerminologyID(charsetTIDValue);
+        CodePhrase charset = 
+                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
+        
+        DvText dvText = RMObjectFactory.newDvText(
+                value, null, formatting, hyperlink, language, charset);
+        
+        String dvehruriValue = "DVEHRURI Value";
+        DVEHRURI dvehruri = RMObjectFactory.newDVEHRURI(dvehruriValue);
+        
+        Link link = RMObjectFactory.newLink(dvText, dvText, dvehruri);
+        RMObjectSerialization.LinkSerializer ls = new RMObjectSerialization.LinkSerializer();
+        
+        s.serializeLink(link);
+        link = s.deserializeLink();
+        
+        assertEquals(dvText.getValue(), link.getMeaning().getValue());
+        
+        assertEquals(dvText.getMappings(), link.getMeaning().getMappings());
+        
+        assertEquals(dvText.getFormatting(), link.getMeaning().getFormatting());
+        
+        assertEquals(dvText.getHyperlink().getValue(), 
+                link.getMeaning().getHyperlink().getValue());
+        
+        assertEquals(dvText.getLanguage().getTerminologyID().getValue(),
+                link.getMeaning().getLanguage().getTerminologyID().getValue());
+        assertEquals(dvText.getLanguage().getValue(),
+                link.getMeaning().getLanguage().getValue());
+        assertEquals(dvText.getCharset().getTerminologyID().getValue(),
+                link.getMeaning().getCharset().getTerminologyID().getValue());
+        assertEquals(dvText.getCharset().getValue(),
+                link.getMeaning().getCharset().getValue());
+        
+        assertEquals(dvText.getValue(), link.getType().getValue());
+        
+        assertEquals(dvText.getMappings(), link.getType().getMappings());
+        
+        assertEquals(dvText.getFormatting(), link.getType().getFormatting());
+        
+        assertEquals(dvText.getHyperlink().getValue(), 
+                link.getType().getHyperlink().getValue());
+        
+        assertEquals(dvText.getLanguage().getTerminologyID().getValue(),
+                link.getType().getLanguage().getTerminologyID().getValue());
+        assertEquals(dvText.getLanguage().getValue(),
+                link.getType().getLanguage().getValue());
+        assertEquals(dvText.getCharset().getTerminologyID().getValue(),
+                link.getType().getCharset().getTerminologyID().getValue());
+        assertEquals(dvText.getCharset().getValue(),
+                link.getType().getCharset().getValue());
+        
+        assertEquals(dvehruri.getValue(), link.getTarget().getValue());
     }
 }

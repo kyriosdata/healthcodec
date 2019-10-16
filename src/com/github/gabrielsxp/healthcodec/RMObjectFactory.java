@@ -183,4 +183,8 @@ public class RMObjectFactory {
                 DvCodedText purpose){
         return new TermMapping(target, match, purpose);
     }
+    
+    public static Link newLink(DvText meaning, DvText type, DVEHRURI target){
+        return new Link(meaning, type, target);
+    }
 }

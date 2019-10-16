@@ -15,6 +15,7 @@ package com.github.gabrielsxp.healthcodec;
 
 import com.github.gabrielsxp.healthcodec.RMObject.ArchetypeID;
 import com.github.gabrielsxp.healthcodec.RMObject.CodePhrase;
+import com.github.gabrielsxp.healthcodec.RMObject.DVEHRURI;
 import com.github.gabrielsxp.healthcodec.RMObject.DVURI;
 import com.github.gabrielsxp.healthcodec.RMObject.DvCodedText;
 import com.github.gabrielsxp.healthcodec.RMObject.DvEncapsulated;
@@ -24,6 +25,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
 import com.github.gabrielsxp.healthcodec.RMObject.DvMultimedia;
 import com.github.gabrielsxp.healthcodec.RMObject.DvParsable;
 import com.github.gabrielsxp.healthcodec.RMObject.DvText;
+import com.github.gabrielsxp.healthcodec.RMObject.Link;
 import com.github.gabrielsxp.healthcodec.RMObject.Match;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectID;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectVersionID;
@@ -395,8 +397,36 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeDvCodedText(DvText dvText,
             CodePhrase definingCode) throws UnsupportedEncodingException;
-
+    
+    /**
+     * Serializador de TermMapping
+     * @param target
+     * @param match
+     * @param purpose
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException
+     */
     RMObjectSerializationClient serializeTermMapping(CodePhrase target,
             Match match,
-            DvCodedText purpose);
+            DvCodedText purpose) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de Link
+     * @param meaning
+     * @param type
+     * @param target
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeLink(DvText meaning, DvText type, 
+            DVEHRURI target) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de Link
+     * @param link
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeLink(
+            Link link) throws UnsupportedEncodingException;
 }

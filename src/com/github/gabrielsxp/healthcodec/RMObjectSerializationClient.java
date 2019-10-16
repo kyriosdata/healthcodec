@@ -946,7 +946,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * Serializador de DvCodedText
      * @param dvText
      * @param definingCode
-     * @return
+     * @return instância de RMObjectSerializationClient atual
      * @throws UnsupportedEncodingException 
      */
     @Override
@@ -975,27 +975,77 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * @param target
      * @param match
      * @param purpose
-     * @return 
+     * @return instância de RMObjectSerializationClient atual
+     * @throws java.io.UnsupportedEncodingException
      */
     @Override
     public RMObjectSerializationClient serializeTermMapping(
-            CodePhrase target, Match match, DvCodedText purpose) {
+            CodePhrase target, Match match, 
+            DvCodedText purpose) throws UnsupportedEncodingException {
         
         TermMappingSerializer s = new TermMappingSerializer();
         register(TERMMAPPING, offset);
-        try {
-            setOffset(s.serialize(buffer, offset, target, match, purpose));
-        } catch (UnsupportedEncodingException ex) {
-            //TO DO 
-        }
+        setOffset(s.serialize(buffer, offset, target, match, purpose));
         
         return this;
     }
 
+    /**
+     * Deserializador de TermMapping
+     * @return nova instância de TermMappping
+     */
     @Override
     public TermMapping deserializeTermMapping() {
         TermMappingSerializer d = new TermMappingSerializer();
         return d.deserialize(buffer, getOffsetFromID(TERMMAPPING));
+    }
+    
+    /**
+     * Serializador de Link
+     * 
+     * @param meaning
+     * @param type
+     * @param target
+     * @return instância de RMObjectSerializationClient atual
+     * @throws java.io.UnsupportedEncodingException
+     */
+    @Override
+    public RMObjectSerializationClient serializeLink(
+            DvText meaning, DvText type, 
+            DVEHRURI target) throws UnsupportedEncodingException{
+        LinkSerializer s = new LinkSerializer();
+        register(LINK, offset);
+        setOffset(s.serialize(buffer, offset, meaning, type, target));
+        
+        return this;
+    }
+    
+    /**
+     * Serializador de Link
+     * 
+     * @param link
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeLink(
+            Link link) throws UnsupportedEncodingException {
+        LinkSerializer s = new LinkSerializer();
+        register(LINK, offset);
+        setOffset(s.serialize(buffer, offset, link));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de Link
+     * 
+     * @return nova instância de Link
+     */
+    @Override
+    public Link deserializeLink() {
+        LinkSerializer d = new LinkSerializer();
+        return d.deserialize(buffer, getOffsetFromID(LINK));
     }
 
     /**
@@ -1034,6 +1084,4 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     public byte[] getBuffer() {
         return this.buffer.data();
     }
-
-    
 }

@@ -237,4 +237,10 @@ public interface Deserializer {
      * @return instância de TermMapping;
      */
     TermMapping deserializeTermMapping();
+    
+    /**
+     * Deserializador de Link
+     * @return nova instância de Link
+     */
+    Link deserializeLink();
 }

@@ -681,5 +681,31 @@ public class RMObject {
             return definingCode;
         }
     }
+    
+    public static class Link {
+        private final DvText meaning; 
+        private final DvText type; 
+        private final DVEHRURI target;
+
+        protected Link(DvText meaning, DvText type, DVEHRURI target) {
+            this.meaning = meaning;
+            this.type = type;
+            this.target = target;
+        }
+
+        public DvText getMeaning() {
+            return meaning;
+        }
+
+        public DvText getType() {
+            return type;
+        }
+
+        public DVEHRURI getTarget() {
+            return target;
+        }
+        
+        
+    }
 
 }

@@ -325,6 +325,16 @@ public class RMObjectSerialization {
                 throws UnsupportedEncodingException {
             return valueStringSerialization(buffer, offset, value);
         }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                DVEHRURI dvehruri) throws UnsupportedEncodingException{
+            DVEHRURISerializer des = new DVEHRURISerializer();
+            int position = offset;
+            
+            position = des.serialize(buffer, position, dvehruri.getValue());
+            
+            return position;
+        }
 
         protected DVEHRURI deserialize(Buffer buffer, int offset) {
             int valueLength = buffer.readInteger(offset);
@@ -1210,6 +1220,23 @@ public class RMObjectSerialization {
 
             return position;
         }
+        
+        protected int serialize(Buffer buffer, int offset, DvText dvText) 
+                throws UnsupportedEncodingException{
+            DvTextSerializer dts = new DvTextSerializer();
+            int position = offset;
+            position = dts.serialize(
+                    buffer, 
+                    offset, 
+                    dvText.getValue(), 
+                    dvText.getMappings(), 
+                    dvText.getFormatting(), 
+                    dvText.getHyperlink(), 
+                    dvText.getLanguage(), 
+                    dvText.getCharset());
+            
+            return position;
+        }
 
         protected DvText deserialize(Buffer buffer, int offset) {
             int position = offset;
@@ -1428,6 +1455,63 @@ public class RMObjectSerialization {
             
             
             return list;
+        }
+    }
+    
+    public static class LinkSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                DvText meaning, 
+                DvText type, 
+                DVEHRURI target) throws UnsupportedEncodingException{
+            
+            int position = offset + 3 * INT.getSize();
+            int meta = offset;
+            
+            DvTextSerializer dts = new DvTextSerializer();
+            DVEHRURISerializer des = new DVEHRURISerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, meaning);
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, type);
+            meta = writeHeader(buffer, meta, position);
+            position = des.serialize(buffer, position, target);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                Link link) throws UnsupportedEncodingException{
+            LinkSerializer ls = new LinkSerializer();
+            int position = offset;
+            
+            position = ls.serialize(
+                    buffer, 
+                    position, 
+                    link.getMeaning(), 
+                    link.getType(), 
+                    link.getTarget());
+            
+            return position;
+        }
+        
+        protected Link deserialize(Buffer buffer, int offset){
+            int position = offset;
+            DvTextSerializer dts = new DvTextSerializer();
+            DVEHRURISerializer des = new DVEHRURISerializer();
+            
+            int meaningPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            DvText meaning = dts.deserialize(buffer, meaningPosition);
+            
+            int typePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            DvText type = dts.deserialize(buffer, typePosition);
+            
+            int targetPosition = buffer.readInteger(position);
+            DVEHRURI target = des.deserialize(buffer, targetPosition);
+            
+            return RMObjectFactory.newLink(meaning, type, target);
         }
     }
 
