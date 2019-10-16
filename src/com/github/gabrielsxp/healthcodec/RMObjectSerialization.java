@@ -22,6 +22,8 @@ import com.github.gabrielsxp.healthcodec.RMObject.*;
 import static com.github.gabrielsxp.healthcodec.PrimitiveTypeSize.*;
 import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
 import com.github.gabrielsxp.healthcodec.RMObject.TermMapping;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -1512,6 +1514,45 @@ public class RMObjectSerialization {
             DVEHRURI target = des.deserialize(buffer, targetPosition);
             
             return RMObjectFactory.newLink(meaning, type, target);
+        }
+        
+        protected int setSerializer(Buffer buffer, int offset, 
+                Set<Link> links) throws UnsupportedEncodingException{
+            int setSize = links.size();
+            int position = offset + (setSize * INT.getSize()) + INT.getSize();
+            int meta = offset;
+            LinkSerializer ls = new LinkSerializer();
+            
+            meta = writeHeader(buffer, meta, setSize);
+            Iterator<Link> it = links.iterator();
+            
+            while(it.hasNext()){
+                Link link = it.next();
+                int linkPosition = position;
+                meta = writeHeader(buffer, meta, linkPosition);
+                position = ls.serialize(buffer, position, link);
+            }
+            
+            return position;
+        }
+        
+        protected Set<Link> setDeserializer(Buffer buffer, int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += INT.getSize();
+            
+            LinkSerializer ls = new LinkSerializer();
+            Set<Link> links = new HashSet<>();
+            
+            for(int i = 0; i < listSize; i++){
+                int linkPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                
+                Link link = ls.deserialize(buffer, linkPosition);
+                links.add(link);
+            }
+            
+            return links;
         }
     }
 
