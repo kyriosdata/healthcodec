@@ -267,4 +267,10 @@ public interface Deserializer {
      * @return nova instância de FeederAuditDetails
      */
     FeederAuditDetails deserializeFeederAuditDetails();
+    
+    /**
+     * Deserializador de FeederAudit
+     * @return 
+     */
+    FeederAudit deserializeFeederAudit();
 }

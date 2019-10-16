@@ -1216,7 +1216,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * Serializador de FeederAuditDetails
      *
      * @param fad
-     * @return instância de RMObjectSerializationClient atual* @return
+     * @return instância de RMObjectSerializationClient atual
      * @throws UnsupportedEncodingException
      */
     @Override
@@ -1238,6 +1238,57 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     public FeederAuditDetails deserializeFeederAuditDetails() {
         FeederAuditDetailsSerializer d = new FeederAuditDetailsSerializer();
         return d.deserialize(buffer, getOffsetFromID(FEEDERAUDITDETAILS));
+    }
+    
+    /**
+     * Serializador de FeederAudit
+     * 
+     * @param originatingSystemAudit
+     * @param originatingSystemItemIDs
+     * @param feederSystemAudit
+     * @param feederSystemItemIDs
+     * @param originalContent
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeFeederAudit(
+            FeederAuditDetails originatingSystemAudit, 
+            List<DvIdentifier> originatingSystemItemIDs, 
+            FeederAuditDetails feederSystemAudit, 
+            List<DvIdentifier> feederSystemItemIDs, 
+            DvEncapsulated originalContent) throws UnsupportedEncodingException {
+        FeederAuditSerializer s = new FeederAuditSerializer();
+        register(FEEDERAUDIT, offset);
+        setOffset(s.serialize(
+                buffer, 
+                offset, originatingSystemAudit, originatingSystemItemIDs, 
+                feederSystemAudit, feederSystemItemIDs, originalContent));
+        
+        return this;
+    }
+    
+    /**
+     * Serializador de FeederAudit
+     * 
+     * @param fa
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeFeederAudit(
+            FeederAudit fa) throws UnsupportedEncodingException {
+        FeederAuditSerializer s = new FeederAuditSerializer();
+        register(FEEDERAUDIT, offset);
+        setOffset(s.serialize(buffer, offset, fa));
+        
+        return this;
+    }
+
+    @Override
+    public FeederAudit deserializeFeederAudit() {
+        FeederAuditSerializer d = new FeederAuditSerializer();
+        return d.deserialize(buffer, getOffsetFromID(FEEDERAUDIT));
     }
 
     /**
@@ -1276,4 +1327,6 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     public byte[] getBuffer() {
         return this.buffer.data();
     }
+
+    
 }

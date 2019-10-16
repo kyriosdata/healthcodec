@@ -1371,6 +1371,232 @@ public class RMObjectSerializationClientTest {
                 f.getSubject().getExternalRef().getValue());
         
         assertEquals(versionID, f.getVersionID());
-        
     }    
+    
+    @Test
+    public void FeederAudit() throws UnsupportedEncodingException{
+         String systemID = "System ID";
+        
+        String oidValue = "_OBJECTID_";
+        ObjectID id = RMObjectFactory.newObjectID(oidValue);
+        String value = "_PARTYREF_";
+        PartyRef providerRef = RMObjectFactory.newPartyRef(id, value);
+        
+        String providerName = "Provider Name";
+        
+        String idIssuer = "issuer";
+        String idAssigner = "assigner";
+        String idId = "id";
+        String idType = "type";
+        DvIdentifier idf = 
+                RMObjectFactory.newDvIdentifier(
+                        idIssuer, idAssigner, idId, idType);
+        List<DvIdentifier> identifiers = new ArrayList<>();
+        identifiers.add(idf);
+        
+        PartyIdentified provider = 
+                RMObjectFactory.newPartyIdentified(
+                        providerRef, providerName, identifiers);
+        
+        PartyIdentified location = 
+                RMObjectFactory.newPartyIdentified(
+                        providerRef, providerName, identifiers);
+        
+        PartyProxy subject = RMObjectFactory.newPartyProxy(providerRef);
+        
+        String versionID = "Version ID";
+        
+        FeederAuditDetails f = RMObjectFactory.newFeederAuditDetails(
+                systemID, provider, location, subject, versionID);
+        String codePhraseCharsetTerminologyIDValue = "_TERMINOLOGYCHARSET_";
+        String charsetCodeString = "UTF-8";
+        String codePhraseLanguageTerminologyIDValue = "_LANGUAGETERMINOLOGY_";
+        String languageCodeString = "UTF-8";
+        
+        TerminologyID charsetTID = 
+                RMObjectFactory.newTerminologyID(
+                        codePhraseCharsetTerminologyIDValue);
+        CodePhrase charset 
+                = RMObjectFactory.newCodePhrase(
+                        charsetTID, 
+                        charsetCodeString);
+        
+        TerminologyID languageID = 
+                RMObjectFactory.newTerminologyID(
+                        codePhraseLanguageTerminologyIDValue);
+        
+        CodePhrase language 
+                = RMObjectFactory.newCodePhrase(
+                        languageID, 
+                        languageCodeString);
+        DvEncapsulated originalContent = 
+                RMObjectFactory.newDvEncapsulated(charset, language);
+        
+        FeederAudit fa = RMObjectFactory.newFeederAudit(
+                f, identifiers, f, identifiers, originalContent);
+        
+        s.serializeFeederAudit(fa);
+        fa = s.deserializeFeederAudit();
+        
+        //originatingSystemAudit
+        assertEquals(systemID, fa.getOriginatingSystemAudit().getSystemID());
+        
+        assertEquals(providerRef.getId().getValue(), 
+                fa.getOriginatingSystemAudit().
+                        getProvider().getExternalRef().getId().getValue());
+        
+        assertEquals(providerRef.getValue(), 
+                fa.getOriginatingSystemAudit().
+                        getProvider().getExternalRef().getValue());
+        
+        assertEquals(providerName, fa.getOriginatingSystemAudit().
+                getProvider().getName());
+        
+        assertEquals(idIssuer, 
+                fa.getOriginatingSystemAudit().
+                        getProvider().getIdentifiers().get(0).getIssuer());
+        
+        assertEquals(idAssigner, 
+                fa.getOriginatingSystemAudit().
+                        getProvider().getIdentifiers().get(0).getAssigner());
+        
+        assertEquals(idId, 
+                fa.getOriginatingSystemAudit().
+                        getProvider().getIdentifiers().get(0).getId());
+        
+        assertEquals(providerRef.getId().getValue(), 
+                fa.getOriginatingSystemAudit().
+                        getLocation().getExternalRef().getId().getValue());
+        
+        assertEquals(providerRef.getValue(), 
+                fa.getOriginatingSystemAudit().
+                        getLocation().getExternalRef().getValue());
+        
+        assertEquals(providerName, fa.getOriginatingSystemAudit().
+                getLocation().getName());
+        
+        assertEquals(idIssuer, 
+                fa.getOriginatingSystemAudit().
+                        getLocation().getIdentifiers().get(0).getIssuer());
+        
+        assertEquals(idAssigner, 
+                fa.getOriginatingSystemAudit().
+                        getLocation().getIdentifiers().get(0).getAssigner());
+        
+        assertEquals(idId, 
+                fa.getOriginatingSystemAudit().
+                        getLocation().getIdentifiers().get(0).getId());
+        
+        
+        assertEquals(subject.getExternalRef().getId().getValue(),
+                fa.getOriginatingSystemAudit().
+                        getSubject().getExternalRef().getId().getValue());
+        
+        assertEquals(subject.getExternalRef().getValue(),
+                fa.getOriginatingSystemAudit().
+                        getSubject().getExternalRef().getValue());
+        
+        assertEquals(versionID, fa.getOriginatingSystemAudit().getVersionID());
+        
+        //originatingSystemItemIDs
+        assertEquals(idIssuer, 
+                fa.getOriginatingSystemItemIDs().get(0).getIssuer());
+        
+        assertEquals(idAssigner, 
+                fa.getOriginatingSystemItemIDs().get(0).getAssigner());
+        
+        assertEquals(idId, 
+                fa.getOriginatingSystemItemIDs().get(0).getId());
+        
+        assertEquals(idType, 
+                fa.getOriginatingSystemItemIDs().get(0).getType());
+        
+        //feederSystemAudit
+        assertEquals(systemID, fa.getFeederSystemAudit().getSystemID());
+        
+        assertEquals(providerRef.getId().getValue(), 
+                fa.getFeederSystemAudit().
+                        getProvider().getExternalRef().getId().getValue());
+        
+        assertEquals(providerRef.getValue(), 
+                fa.getFeederSystemAudit().
+                        getProvider().getExternalRef().getValue());
+        
+        assertEquals(providerName, fa.getFeederSystemAudit().
+                getProvider().getName());
+        
+        assertEquals(idIssuer, 
+                fa.getFeederSystemAudit().
+                        getProvider().getIdentifiers().get(0).getIssuer());
+        
+        assertEquals(idAssigner, 
+                fa.getFeederSystemAudit().
+                        getProvider().getIdentifiers().get(0).getAssigner());
+        
+        assertEquals(idId, 
+                fa.getFeederSystemAudit().
+                        getProvider().getIdentifiers().get(0).getId());
+        
+        assertEquals(providerRef.getId().getValue(), 
+                fa.getFeederSystemAudit().
+                        getLocation().getExternalRef().getId().getValue());
+        
+        assertEquals(providerRef.getValue(), 
+                fa.getFeederSystemAudit().
+                        getLocation().getExternalRef().getValue());
+        
+        assertEquals(providerName, fa.getFeederSystemAudit().
+                getLocation().getName());
+        
+        assertEquals(idIssuer, 
+                fa.getFeederSystemAudit().
+                        getLocation().getIdentifiers().get(0).getIssuer());
+        
+        assertEquals(idAssigner, 
+                fa.getFeederSystemAudit().
+                        getLocation().getIdentifiers().get(0).getAssigner());
+        
+        assertEquals(idId, 
+                fa.getFeederSystemAudit().
+                        getLocation().getIdentifiers().get(0).getId());
+        
+        
+        assertEquals(subject.getExternalRef().getId().getValue(),
+                fa.getFeederSystemAudit().
+                        getSubject().getExternalRef().getId().getValue());
+        
+        assertEquals(subject.getExternalRef().getValue(),
+                fa.getFeederSystemAudit().
+                        getSubject().getExternalRef().getValue());
+        
+        assertEquals(versionID, fa.getFeederSystemAudit().getVersionID());
+        
+        //feederSystemItemIDs
+        assertEquals(idIssuer, 
+                fa.getFeederSystemItemIDs().get(0).getIssuer());
+        
+        assertEquals(idAssigner, 
+                fa.getFeederSystemItemIDs().get(0).getAssigner());
+        
+        assertEquals(idId, 
+                fa.getFeederSystemItemIDs().get(0).getId());
+        
+        assertEquals(idType, 
+                fa.getFeederSystemItemIDs().get(0).getType());
+        
+        //originalContent
+        assertEquals(charset.getTerminologyID().getValue(), 
+                fa.getOriginalContent().
+                        getCharset().getTerminologyID().getValue());
+        
+        assertEquals(charset.getValue(), fa.getOriginalContent().
+                        getCharset().getValue());
+        
+        assertEquals(language.getTerminologyID().getValue(), 
+                fa.getOriginalContent().
+                        getLanguage().getTerminologyID().getValue());
+        
+        assertEquals(language.getValue(), fa.getOriginalContent().
+                        getLanguage().getValue());
+    }
 }

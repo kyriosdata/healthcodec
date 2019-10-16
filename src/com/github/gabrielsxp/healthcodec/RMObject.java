@@ -798,7 +798,12 @@ public class RMObject {
     	private final List<DvIdentifier> feederSystemItemIDs;
     	private final DvEncapsulated originalContent;
 
-        public FeederAudit(FeederAuditDetails originatingSystemAudit, List<DvIdentifier> originatingSystemItemIDs, FeederAuditDetails feederSystemAudit, List<DvIdentifier> feederSystemItemIDs, DvEncapsulated originalContent) {
+        public FeederAudit(
+                FeederAuditDetails originatingSystemAudit, 
+                List<DvIdentifier> originatingSystemItemIDs, 
+                FeederAuditDetails feederSystemAudit, 
+                List<DvIdentifier> feederSystemItemIDs, 
+                DvEncapsulated originalContent) {
             this.originatingSystemAudit = originatingSystemAudit;
             this.originatingSystemItemIDs = originatingSystemItemIDs;
             this.feederSystemAudit = feederSystemAudit;

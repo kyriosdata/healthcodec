@@ -635,24 +635,20 @@ public class RMObjectSerialization {
                 String name, 
                 List<DvIdentifier> identifiers)
                     throws UnsupportedEncodingException {
-            ObjectID id = externalRef.getId();
-            String value = externalRef.getValue();
-            int oidValueLength = id.getValue().length();
-            int valueLength = value.length();
-            int nameLength = name.length();
-            buffer.writeInteger(offset, oidValueLength);
-            buffer.writeInteger(offset + INT.getSize(), valueLength);
-            buffer.writeInteger(offset + 2 * INT.getSize(), nameLength);
-            int position = offset + 3 * INT.getSize();
-            buffer.writeString(position, id.getValue());
-            position += oidValueLength;
-            buffer.writeString(position, value);
-            position += valueLength;
-            buffer.writeString(position, name);
-            position += nameLength;
-
-            DvIdentifierSerializer s = new DvIdentifierSerializer();
-            position += s.listSerialize(buffer, position, identifiers);
+            int meta = offset;
+            int position = offset + (3 * INT.getSize());
+            PartyRefSerializer prs = new PartyRefSerializer();
+            DvIdentifierSerializer dis = new DvIdentifierSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = prs.serialize(buffer, position, externalRef);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, name);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = dis.listSerialize(buffer, position, identifiers);
+            
             return position;
         }
         
@@ -670,25 +666,23 @@ public class RMObjectSerialization {
         }
 
         protected PartyIdentified deserialize(Buffer buffer, int offset) {
-            int oidValueLength = buffer.readInteger(offset);
-            int valueLength = buffer.readInteger(offset + INT.getSize());
-            int nameLength = buffer.readInteger(offset + 2 * INT.getSize());
-
-            int position = offset + 3 * INT.getSize();
-            String oidValue = buffer.readString(position, oidValueLength);
-            position += oidValueLength;
-            String value = buffer.readString(position, valueLength);
-            position += valueLength;
-            String name = buffer.readString(position, nameLength);
-            position += nameLength;
-
-            ObjectID id = RMObjectFactory.newObjectID(oidValue);
-            PartyRef externalRef = RMObjectFactory.newPartyRef(id, value);
-
-            DvIdentifierSerializer s = new DvIdentifierSerializer();
-
-            List<DvIdentifier> identifiers = s.deserializeList(buffer, position);
-
+            int position = offset;
+            PartyRefSerializer prs = new PartyRefSerializer();
+            DvIdentifierSerializer dis = new DvIdentifierSerializer();
+            
+            int externalRefPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            PartyRef externalRef = prs.deserialize(buffer, externalRefPosition);
+            
+            int namePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String name = valueStringDeserialization(buffer, namePosition);
+            
+            int identifiersPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            List<DvIdentifier> identifiers = dis.deserializeList(
+                    buffer, identifiersPosition);
+            
             return RMObjectFactory.newPartyIdentified(
                     externalRef, name, identifiers);
         }
@@ -755,7 +749,8 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer,
                 int offset,
-                CodePhrase charset, CodePhrase language) {
+                CodePhrase charset, 
+                CodePhrase language) throws UnsupportedEncodingException {
             int cpCharsetTerminologyIDValueLength
                     = charset.getTerminologyID().getValue().length();
             int charsetCodeStringLength
@@ -787,6 +782,16 @@ public class RMObjectSerialization {
             dataPosition += languageCodeStringLength;
 
             return dataPosition;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                DvEncapsulated de) throws UnsupportedEncodingException {
+            int position = offset;
+            DvEncapsulatedSerializer des = new DvEncapsulatedSerializer();
+            position = des.serialize(
+                    buffer, position, de.getCharset(), de.getLanguage());
+            
+            return position;
         }
 
         protected DvEncapsulated deserialize(Buffer buffer, int offset) {
@@ -1750,12 +1755,13 @@ public class RMObjectSerialization {
                 String versionID) throws UnsupportedEncodingException {
             int meta = offset;
             int position = offset + (6 * INT.getSize()) + 5 * BOOLEAN.getSize();
+            PartyIdentifiedSerializer pis = new PartyIdentifiedSerializer();
+            PartyProxySerializer pps = new PartyProxySerializer();
             
             meta = writeHeader(buffer, meta, position);
             position = valueStringSerialization(buffer, position, systemID);
             
             boolean hasProvider = provider != null;
-            PartyIdentifiedSerializer pis = new PartyIdentifiedSerializer();
             if(hasProvider){
                 meta = writeHeader(buffer, meta, hasProvider, position);
                 position = pis.serialize(buffer, position, provider);
@@ -1779,7 +1785,6 @@ public class RMObjectSerialization {
                 meta = writeHeader(buffer, meta, hasTime);
             }
             boolean hasSubject = subject != null;
-            PartyProxySerializer pps = new PartyProxySerializer();
             if(hasSubject){
                 meta = writeHeader(buffer, meta, hasSubject, position);
                 position = pps.serialize(buffer, position, subject);
@@ -1872,6 +1877,133 @@ public class RMObjectSerialization {
             
             return RMObjectFactory.newFeederAuditDetails(
                     systemID, provider, location, subject, versionID);
+        }
+    }
+    
+    public static class FeederAuditSerializer {
+        protected int serialize(Buffer buffer, int offset, 
+                FeederAuditDetails originatingSystemAudit, 
+                List<DvIdentifier> originatingSystemItemIDs, 
+                FeederAuditDetails feederSystemAudit, 
+                List<DvIdentifier> feederSystemItemIDs, 
+                DvEncapsulated originalContent
+        ) throws UnsupportedEncodingException{
+            int meta = offset;
+            int position = offset + (4 * INT.getSize()) + 4 * BOOLEAN.getSize();
+            FeederAuditDetailsSerializer fas = 
+                    new FeederAuditDetailsSerializer();
+            meta = writeHeader(buffer, meta, position);
+            position = fas.serialize(buffer, position, originatingSystemAudit);
+            
+            boolean hasOriginatingSystemItemIDs = 
+                    originatingSystemItemIDs != null;
+            DvIdentifierSerializer dis = new DvIdentifierSerializer();
+            if(hasOriginatingSystemItemIDs){
+                meta = writeHeader(
+                        buffer, meta, hasOriginatingSystemItemIDs, position);
+                position = dis.listSerialize(
+                        buffer, position, originatingSystemItemIDs);
+            } else {
+                meta = writeHeader(buffer, meta, hasOriginatingSystemItemIDs);
+            }
+            
+            boolean hasFeederSystemAudit = feederSystemAudit != null;
+            if(hasFeederSystemAudit){
+                meta = writeHeader(buffer, meta, hasFeederSystemAudit, position);
+                position = fas.serialize(buffer, position, feederSystemAudit);
+            } else {
+                meta = writeHeader(buffer, meta, hasFeederSystemAudit);
+            }
+            
+            boolean hasFeederSystemItemIDs = feederSystemItemIDs != null;
+            if(hasFeederSystemItemIDs){
+                meta = writeHeader(
+                        buffer, meta, hasFeederSystemItemIDs, position);
+                position = dis.listSerialize(
+                        buffer, position, feederSystemItemIDs);
+            } else {
+                meta = writeHeader(buffer, meta, hasFeederSystemItemIDs);
+            }
+            
+            boolean hasOriginalContent = originalContent != null;
+            DvEncapsulatedSerializer des = new DvEncapsulatedSerializer();
+            if(hasOriginalContent){
+                writeHeader(buffer, meta, hasOriginalContent, position);
+                position = des.serialize(buffer, position, originalContent);
+            } else {
+                writeHeader(buffer, meta, hasOriginalContent, position);
+            }
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                FeederAudit fa) throws UnsupportedEncodingException{
+            int position = offset;
+            FeederAuditSerializer fas = new FeederAuditSerializer();
+            
+            position = fas.serialize(
+                    buffer, 
+                    position, 
+                    fa.getOriginatingSystemAudit(),
+                    fa.getFeederSystemItemIDs(),
+                    fa.getFeederSystemAudit(),
+                    fa.getFeederSystemItemIDs(),
+                    fa.getOriginalContent());
+            
+            return position;
+        }
+        
+        protected FeederAudit deserialize(Buffer buffer, int offset){
+            int position = offset;
+            DvIdentifierSerializer dis = new DvIdentifierSerializer();
+            FeederAuditDetailsSerializer f = new FeederAuditDetailsSerializer();
+            DvEncapsulatedSerializer des = new DvEncapsulatedSerializer();
+            int OriginatingSystemAuditPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            
+            boolean hasOriginatingSystemItemIDs = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            List<DvIdentifier> originatingSystemItemIDs = null;
+            if(hasOriginatingSystemItemIDs){
+                int feederSystemItemIDsPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                originatingSystemItemIDs = dis.deserializeList(
+                        buffer, feederSystemItemIDsPosition);
+            }
+            
+            boolean hasFeederSystemAudit = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            FeederAuditDetails feederSystemAudit = null;
+            if(hasFeederSystemAudit){
+                int hasFeederSystemAuditPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                feederSystemAudit = f.deserialize(
+                        buffer, hasFeederSystemAuditPosition);
+            }
+            
+            boolean hasFeederSystemItemIDs = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            List<DvIdentifier> feederSystemItemIDs = null;
+            if(hasFeederSystemItemIDs){
+                int feederSystemItemIDsPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                feederSystemItemIDs = dis.deserializeList(
+                        buffer, feederSystemItemIDsPosition);
+            }
+            
+            boolean hasOriginalContent = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            DvEncapsulated originalContent = null;
+            if(hasOriginalContent){
+                int originalContentPosition = buffer.readInteger(position);
+                originalContent = des.deserialize(
+                        buffer, originalContentPosition);
+            }
+            
+            return RMObjectFactory.newFeederAudit(
+                    feederSystemAudit, originatingSystemItemIDs, 
+                    feederSystemAudit, feederSystemItemIDs, originalContent);
         }
     }
 
