@@ -50,7 +50,8 @@ public enum RMObjectID {
     DVCODEDTEXT(29),
     TERMMAPPING(30),
     LINK(31),
-    DVSTATE(32);
+    DVSTATE(32),
+    DVPARAGRAPH(33);
     
 
     private final int value;

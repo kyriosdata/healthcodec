@@ -23,6 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
 import com.github.gabrielsxp.healthcodec.RMObject.DvMultimedia;
+import com.github.gabrielsxp.healthcodec.RMObject.DvParagraph;
 import com.github.gabrielsxp.healthcodec.RMObject.DvParsable;
 import com.github.gabrielsxp.healthcodec.RMObject.DvState;
 import com.github.gabrielsxp.healthcodec.RMObject.DvText;
@@ -445,10 +446,28 @@ public interface Serializer {
     /**
      * Serializador de DvState
      * @param dvState
-     @return Instância de RMObjectSerializationClient para chaining
+     * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvState(
             DvState dvState) throws UnsupportedEncodingException;
     
+    
+    /**
+     * Serializador de DvParagraph
+     * @param items
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeDvParagraph(
+            List<DvText> items) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de DvParagraph
+     * @param dvparagraph
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeDvParagraph(
+            DvParagraph dvparagraph) throws UnsupportedEncodingException;
 }

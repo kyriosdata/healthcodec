@@ -1661,6 +1661,36 @@ public class RMObjectSerialization {
             return RMObjectFactory.newDvState(value, terminal);
         }
     }
+    
+    public static class DvParagraphSerializer {
+        protected int serialize(Buffer buffer, int offset, 
+                List<DvText> items) throws UnsupportedEncodingException{
+            int position = offset;
+            DvTextSerializer dts = new DvTextSerializer();
+            position = dts.listSerialize(buffer, position, items);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                DvParagraph dvParagraph) throws UnsupportedEncodingException{
+            int position = offset;
+            DvParagraphSerializer dps = new DvParagraphSerializer();
+            position = dps.serialize(buffer, position, dvParagraph.getItems());
+            
+            return position;
+        }
+        
+        protected DvParagraph deserialize(Buffer buffer, int offset){
+            int position = offset;
+            DvTextSerializer dts = new DvTextSerializer();
+            List<DvText> items = dts.deserializeList(buffer, position);
+            
+            DvParagraph dvParagraph = RMObjectFactory.newDvParagraph(items);
+            
+            return dvParagraph;
+        }
+    }
 
     /**
      * Serializa uma única String value

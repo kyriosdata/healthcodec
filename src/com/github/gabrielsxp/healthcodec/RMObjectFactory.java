@@ -191,4 +191,8 @@ public class RMObjectFactory {
     public static DvState newDvState(DvCodedText value, String terminal){
         return new DvState(value, terminal);
     }
+    
+    public static DvParagraph newDvParagraph(List<DvText> items){
+        return new DvParagraph(items);
+    }
 }

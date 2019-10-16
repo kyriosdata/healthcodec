@@ -249,4 +249,10 @@ public interface Deserializer {
      * @return nova instância de DvState
      */
     DvState deserializaDvState();
+    
+    /**
+     * Deserializador de DvParagraph
+     * @return nova instância de DvParagraph
+     */
+    DvParagraph deserializeDvParagraph();
 }

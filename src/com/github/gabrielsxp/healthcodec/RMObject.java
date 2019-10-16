@@ -724,4 +724,15 @@ public class RMObject {
         }
     }
     
+    public static class DvParagraph {
+        private final List<DvText> items;
+
+        public DvParagraph(List<DvText> items) {
+            this.items = items;
+        }
+
+        public List<DvText> getItems() {
+            return items;
+        }
+    }
 }

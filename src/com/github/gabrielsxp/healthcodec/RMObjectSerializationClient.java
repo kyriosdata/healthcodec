@@ -1092,6 +1092,38 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         
         return d.deserialize(buffer, getOffsetFromID(DVSTATE));
     }
+    
+    /**
+     * Serializador de DvParagraph
+     * @param items
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvParagraph(
+            List<DvText> items) throws UnsupportedEncodingException {
+        DvParagraphSerializer s = new DvParagraphSerializer();
+        register(DVPARAGRAPH, offset);
+        setOffset(s.serialize(buffer, offset, items));
+        
+        return this;
+    }
+
+    @Override
+    public RMObjectSerializationClient serializeDvParagraph(
+            DvParagraph dvparagraph) throws UnsupportedEncodingException {
+        DvParagraphSerializer s = new DvParagraphSerializer();
+        register(DVPARAGRAPH, offset);
+        setOffset(s.serialize(buffer, offset, dvparagraph));
+        
+        return this;
+    }
+
+    @Override
+    public DvParagraph deserializeDvParagraph() {
+        DvParagraphSerializer d = new DvParagraphSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVPARAGRAPH));
+    }
 
     /**
      * Método para registrar um determinado objeto no índice
@@ -1129,6 +1161,4 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     public byte[] getBuffer() {
         return this.buffer.data();
     }
-
-    
 }
