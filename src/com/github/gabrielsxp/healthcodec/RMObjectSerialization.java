@@ -1229,7 +1229,7 @@ public class RMObjectSerialization {
             int position = offset;
             position = dts.serialize(
                     buffer, 
-                    offset, 
+                    position, 
                     dvText.getValue(), 
                     dvText.getMappings(), 
                     dvText.getFormatting(), 
@@ -1289,6 +1289,44 @@ public class RMObjectSerialization {
 
             return RMObjectFactory.newDvText(
                     value, mappings, formatting, hyperlink, language, charset);
+        }
+        
+        protected int listSerialize(
+                Buffer buffer, int offset, List<DvText> items)
+                throws UnsupportedEncodingException {
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize * INT.getSize()) + INT.getSize();
+            
+            meta = writeHeader(buffer, meta, listSize);
+            DvTextSerializer tms = new DvTextSerializer();
+            
+            for (DvText d : items) {
+                meta = writeHeader(buffer, meta, position);
+                position = tms.serialize(buffer, position, d);
+            }
+            
+            
+            return position;
+        }
+
+        protected List<DvText> deserializeList(Buffer buffer, int offset) {
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += INT.getSize();
+            
+            List<DvText> list = new ArrayList<>();
+            DvTextSerializer dts = new DvTextSerializer();
+            
+            for(int i = 0; i < listSize; i++){
+                int termMappingPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                DvText t = dts.deserialize(buffer, termMappingPosition);
+                list.add(t);
+            }
+            
+            
+            return list;
         }
     }
 
