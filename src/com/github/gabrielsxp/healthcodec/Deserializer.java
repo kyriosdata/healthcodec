@@ -243,4 +243,10 @@ public interface Deserializer {
      * @return nova instância de Link
      */
     Link deserializeLink();
+    
+    /**
+     * Deserializador de DvState
+     * @return nova instância de DvState
+     */
+    DvState deserializaDvState();
 }

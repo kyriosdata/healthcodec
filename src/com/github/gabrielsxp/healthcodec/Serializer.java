@@ -24,6 +24,7 @@ import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
 import com.github.gabrielsxp.healthcodec.RMObject.DvMultimedia;
 import com.github.gabrielsxp.healthcodec.RMObject.DvParsable;
+import com.github.gabrielsxp.healthcodec.RMObject.DvState;
 import com.github.gabrielsxp.healthcodec.RMObject.DvText;
 import com.github.gabrielsxp.healthcodec.RMObject.Link;
 import com.github.gabrielsxp.healthcodec.RMObject.Match;
@@ -429,4 +430,25 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeLink(
             Link link) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de DvState
+     * @param value
+     * @param terminal
+     @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeDvState(
+            DvCodedText value, 
+            String terminal) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de DvState
+     * @param dvState
+     @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeDvState(
+            DvState dvState) throws UnsupportedEncodingException;
+    
 }

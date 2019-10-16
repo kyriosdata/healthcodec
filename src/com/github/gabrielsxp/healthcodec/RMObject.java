@@ -704,8 +704,24 @@ public class RMObject {
         public DVEHRURI getTarget() {
             return target;
         }
-        
-        
     }
+    
+    public static class DvState {
+        private final DvCodedText value;
+        private final String terminal;
 
+        protected DvState(DvCodedText value, String terminal) {
+            this.value = value;
+            this.terminal = terminal;
+        }
+
+        public DvCodedText getValue() {
+            return value;
+        }
+
+        public String getTerminal() {
+            return terminal;
+        }
+    }
+    
 }

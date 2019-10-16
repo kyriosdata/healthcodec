@@ -1047,6 +1047,51 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         LinkSerializer d = new LinkSerializer();
         return d.deserialize(buffer, getOffsetFromID(LINK));
     }
+    
+    /**
+     * Serializador de DvState
+     * @param value
+     * @param terminal
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvState(
+            DvCodedText value, 
+            String terminal) throws UnsupportedEncodingException {
+        DvStateSerializer s = new DvStateSerializer();
+        register(DVSTATE, offset);
+        setOffset(s.serialize(buffer, offset, value, terminal));
+        
+        return this;
+    }
+    
+    /**
+     * Serializador de DvState
+     * @param dvState
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvState(
+            DvState dvState) throws UnsupportedEncodingException {
+        DvStateSerializer s = new DvStateSerializer();
+        register(DVSTATE, offset);
+        setOffset(s.serialize(buffer, offset, dvState));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de DvState
+     * return nova instância de DvState
+     */
+    @Override
+    public DvState deserializaDvState() {
+        DvStateSerializer d = new DvStateSerializer();
+        
+        return d.deserialize(buffer, getOffsetFromID(DVSTATE));
+    }
 
     /**
      * Método para registrar um determinado objeto no índice
@@ -1084,4 +1129,6 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     public byte[] getBuffer() {
         return this.buffer.data();
     }
+
+    
 }

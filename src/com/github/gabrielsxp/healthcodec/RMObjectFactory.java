@@ -187,4 +187,8 @@ public class RMObjectFactory {
     public static Link newLink(DvText meaning, DvText type, DVEHRURI target){
         return new Link(meaning, type, target);
     }
+    
+    public static DvState newDvState(DvCodedText value, String terminal){
+        return new DvState(value, terminal);
+    }
 }

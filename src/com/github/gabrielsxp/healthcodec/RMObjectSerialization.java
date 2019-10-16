@@ -1319,6 +1319,18 @@ public class RMObjectSerialization {
 
             return position;
         }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                DvCodedText dct) throws UnsupportedEncodingException{
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+            int position = offset;
+            
+            position = dcs.serialize(buffer, offset, 
+                    dct.getDvText(), dct.getDefiningCode());
+            
+            return position;
+        }
+                
 
         protected DvCodedText deserialize(Buffer buffer, int offset) {
             int position = offset;
@@ -1553,6 +1565,62 @@ public class RMObjectSerialization {
             }
             
             return links;
+        }
+    }
+    
+    public static class DvStateSerializer {
+        protected int serialize(
+                Buffer buffer, 
+                int offset,
+                DvCodedText value, 
+                String terminal) throws UnsupportedEncodingException{
+            int meta = offset;
+            int position = offset + 2 * INT.getSize() + BOOLEAN.getSize();
+            boolean hasTerminal = terminal != null;
+            
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+            meta = writeHeader(buffer, meta, position);
+            position = dcs.serialize(buffer, position, value);
+            
+            if(hasTerminal){
+                meta = writeHeader(buffer, meta, hasTerminal, position);
+                position = valueStringSerialization(buffer, position, terminal);
+            } else {
+                meta = writeHeader(buffer, meta, hasTerminal);
+            }
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, 
+                int offset, 
+                DvState dvState) throws UnsupportedEncodingException{
+            int position = offset;
+            DvStateSerializer dss = new DvStateSerializer();
+            position = dss.serialize(
+                    buffer, position, dvState.getValue(), dvState.getTerminal());
+            
+            return position;
+        }
+        
+        protected DvState deserialize(Buffer buffer, int offset){
+            int position = offset;
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+            
+            int valuePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            
+            DvCodedText value = dcs.deserialize(buffer, valuePosition);
+            
+            boolean hasTerminal = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            String terminal = null;
+            if(hasTerminal){
+                int terminalPosition = buffer.readInteger(position);
+                terminal = valueStringDeserialization(buffer, terminalPosition);
+            }
+            
+            return RMObjectFactory.newDvState(value, terminal);
         }
     }
 
