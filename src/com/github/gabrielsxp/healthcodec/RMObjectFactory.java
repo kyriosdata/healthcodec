@@ -170,29 +170,62 @@ public class RMObjectFactory {
             DVURI hyperlink,
             CodePhrase language,
             CodePhrase charset) {
-        return new DvText(value,mappings,formatting,hyperlink,language,charset);
+        return new DvText(value, mappings, formatting, hyperlink, language, charset);
     }
-    
-    public static DvCodedText newDvCodedText(DvText dvText, 
-            CodePhrase definingCode){
+
+    public static DvCodedText newDvCodedText(DvText dvText,
+            CodePhrase definingCode) {
         return new DvCodedText(dvText, definingCode);
     }
-    
-    public static TermMapping newTermMapping(CodePhrase target, 
-                Match match,
-                DvCodedText purpose){
+
+    public static TermMapping newTermMapping(CodePhrase target,
+            Match match,
+            DvCodedText purpose) {
         return new TermMapping(target, match, purpose);
     }
-    
-    public static Link newLink(DvText meaning, DvText type, DVEHRURI target){
+
+    public static Link newLink(DvText meaning, DvText type, DVEHRURI target) {
         return new Link(meaning, type, target);
     }
-    
-    public static DvState newDvState(DvCodedText value, String terminal){
+
+    public static DvState newDvState(DvCodedText value, String terminal) {
         return new DvState(value, terminal);
     }
-    
-    public static DvParagraph newDvParagraph(List<DvText> items){
+
+    public static DvParagraph newDvParagraph(List<DvText> items) {
         return new DvParagraph(items);
+    }
+
+    public static PartyProxy newPartyProxy(PartyRef externalRef) {
+        return new PartyProxy(externalRef);
+    }
+
+    public static FeederAuditDetails newFeederAuditDetails(
+            String systemID,
+            PartyIdentified provider,
+            PartyIdentified location,
+            //DateTime time, TODO
+            PartyProxy subject,
+            String versionID) {
+        return new FeederAuditDetails(
+                systemID,
+                provider,
+                location,
+                /*time,*/
+                subject, versionID);
+    }
+
+    public static FeederAudit newFeederAudit(
+            FeederAuditDetails originatingSystemAudit,
+            List<DvIdentifier> originatingSystemItemIDs,
+            FeederAuditDetails feederSystemAudit,
+            List<DvIdentifier> feederSystemItemIDs,
+            DvEncapsulated originalContent){
+        return new FeederAudit(
+                originatingSystemAudit, 
+                originatingSystemItemIDs, 
+                feederSystemAudit, 
+                feederSystemItemIDs, 
+                originalContent);
     }
 }

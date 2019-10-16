@@ -1108,7 +1108,13 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         
         return this;
     }
-
+    
+    /**
+     * Serializador de DvParagraph
+     * @param dvparagraph
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
     @Override
     public RMObjectSerializationClient serializeDvParagraph(
             DvParagraph dvparagraph) throws UnsupportedEncodingException {
@@ -1118,11 +1124,57 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         
         return this;
     }
-
+    
+    /**
+     * Deserializador de DvParagraph
+     * @return nova instância de DvParagraph
+     */
     @Override
     public DvParagraph deserializeDvParagraph() {
         DvParagraphSerializer d = new DvParagraphSerializer();
         return d.deserialize(buffer, getOffsetFromID(DVPARAGRAPH));
+    }
+    
+    /**
+     * Serializador de PartyProxy
+     * @param externalRef
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializePartyProxy(
+            PartyRef externalRef) throws UnsupportedEncodingException {
+        PartyProxySerializer s = new PartyProxySerializer();
+        register(PARTYPROXY, offset);
+        setOffset(s.serialize(buffer, offset, externalRef));
+        
+        return this;
+    }
+    
+    /**
+     * Serializador de PartyProxy
+     * @param partyProxy
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializePartyProxy(
+            PartyProxy partyProxy) throws UnsupportedEncodingException {
+        PartyProxySerializer s = new PartyProxySerializer();
+        register(PARTYPROXY, offset);
+        setOffset(s.serialize(buffer, offset, partyProxy));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de PartyProxy
+     * @return 
+     */
+    @Override
+    public PartyProxy deserializePartyProxy() {
+        PartyProxySerializer  d = new PartyProxySerializer();
+        return d.deserialize(buffer, getOffsetFromID(PARTYPROXY));
     }
 
     /**

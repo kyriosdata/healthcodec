@@ -255,4 +255,10 @@ public interface Deserializer {
      * @return nova instância de DvParagraph
      */
     DvParagraph deserializeDvParagraph();
+    
+    /**
+     * Deserializador de PartyProxy
+     * @return nova instância de PartyProxy
+     */
+    PartyProxy deserializePartyProxy();
 }

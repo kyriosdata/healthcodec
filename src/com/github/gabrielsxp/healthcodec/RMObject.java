@@ -735,4 +735,97 @@ public class RMObject {
             return items;
         }
     }
+    
+    public static class PartyProxy {
+        private final PartyRef externalRef;
+
+        public PartyProxy(PartyRef externalRef) {
+            this.externalRef = externalRef;
+        }
+
+        public PartyRef getExternalRef() {
+            return externalRef;
+        }
+    }
+    
+    public static class FeederAuditDetails {
+        private final String systemID;
+        private final PartyIdentified provider;
+        private final PartyIdentified location;
+        //private final DvDateTime time; TODO
+        private final PartyProxy subject;
+        private final String versionID;
+
+        public FeederAuditDetails(
+                String systemID, 
+                PartyIdentified provider, 
+                PartyIdentified location,
+                //DateTime time, TODO
+                PartyProxy subject, 
+                String versionID) {
+            this.systemID = systemID;
+            this.provider = provider;
+            this.location = location;
+            this.subject = subject;
+            this.versionID = versionID;
+        }
+
+        public String getSystemID() {
+            return systemID;
+        }
+
+        public PartyIdentified getProvider() {
+            return provider;
+        }
+
+        public PartyIdentified getLocation() {
+            return location;
+        }
+
+        public PartyProxy getSubject() {
+            return subject;
+        }
+
+        public String getVersionID() {
+            return versionID;
+        }
+    }
+    
+    public static class FeederAudit {
+        private final FeederAuditDetails originatingSystemAudit;
+        private final List<DvIdentifier> originatingSystemItemIDs;
+    	private final FeederAuditDetails feederSystemAudit;
+    	private final List<DvIdentifier> feederSystemItemIDs;
+    	private final DvEncapsulated originalContent;
+
+        public FeederAudit(FeederAuditDetails originatingSystemAudit, List<DvIdentifier> originatingSystemItemIDs, FeederAuditDetails feederSystemAudit, List<DvIdentifier> feederSystemItemIDs, DvEncapsulated originalContent) {
+            this.originatingSystemAudit = originatingSystemAudit;
+            this.originatingSystemItemIDs = originatingSystemItemIDs;
+            this.feederSystemAudit = feederSystemAudit;
+            this.feederSystemItemIDs = feederSystemItemIDs;
+            this.originalContent = originalContent;
+        }
+
+        public FeederAuditDetails getOriginatingSystemAudit() {
+            return originatingSystemAudit;
+        }
+
+        public List<DvIdentifier> getOriginatingSystemItemIDs() {
+            return originatingSystemItemIDs;
+        }
+
+        public FeederAuditDetails getFeederSystemAudit() {
+            return feederSystemAudit;
+        }
+
+        public List<DvIdentifier> getFeederSystemItemIDs() {
+            return feederSystemItemIDs;
+        }
+
+        public DvEncapsulated getOriginalContent() {
+            return originalContent;
+        }
+        
+        
+    }
 }

@@ -435,6 +435,17 @@ public class RMObjectSerialization {
 
             return offset + 2 * INT.getSize() + valueLength + oidValueLength;
         }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                PartyRef pr) throws UnsupportedEncodingException{
+            int position = offset;
+            PartyRefSerializer prs = new PartyRefSerializer();
+            
+            position = 
+                    prs.serialize(buffer, position, pr.getId(), pr.getValue());
+            
+            return position;
+        }
 
         protected PartyRef deserialize(Buffer buffer, int offset) {
             int oidValueLength = buffer.readInteger(offset);
@@ -1685,6 +1696,37 @@ public class RMObjectSerialization {
             DvParagraph dvParagraph = RMObjectFactory.newDvParagraph(items);
             
             return dvParagraph;
+        }
+    }
+    
+    public static class PartyProxySerializer {
+        protected int serialize(Buffer buffer, int offset, 
+            PartyRef externalRef) throws UnsupportedEncodingException{
+            int position = offset;
+            PartyRefSerializer prs = new PartyRefSerializer();
+            position = prs.serialize(buffer, position, externalRef);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                PartyProxy partyProxy) throws UnsupportedEncodingException{
+            int position = offset;
+            PartyProxySerializer prs = new PartyProxySerializer();
+            
+            position = 
+                    prs.serialize(
+                            buffer, position, partyProxy.getExternalRef());
+            
+            return position;
+        }
+        
+        protected PartyProxy deserialize(Buffer buffer, int offset){
+            int position = offset;
+            PartyRefSerializer prs = new PartyRefSerializer();
+            PartyRef externalRef = prs.deserialize(buffer, position);
+            
+            return RMObjectFactory.newPartyProxy(externalRef);
         }
     }
 

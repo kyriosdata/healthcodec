@@ -51,7 +51,11 @@ public enum RMObjectID {
     TERMMAPPING(30),
     LINK(31),
     DVSTATE(32),
-    DVPARAGRAPH(33);
+    DVPARAGRAPH(33),
+    PARTYPROXY(34),
+    FEEDERAUDITDETAILS(35),
+    FEEDERAUDIT(36);
+    
     
 
     private final int value;

@@ -1236,4 +1236,23 @@ public class RMObjectSerializationClientTest {
         assertEquals(dvText.getCharset().getValue(),
                 dvp.getItems().get(0).getCharset().getValue());
     }
+    
+    @Test
+    public void PartyProxy() throws UnsupportedEncodingException{
+        String partyRefOIDValue = "ObjectID value";
+        String partyRefValue = "PartyRefValue";
+        
+        ObjectID oid = RMObjectFactory.newObjectID(partyRefOIDValue);
+        PartyRef externalValue = 
+                RMObjectFactory.newPartyRef(oid, partyRefValue);
+        
+        PartyProxy p = RMObjectFactory.newPartyProxy(externalValue);
+        
+        s.serializePartyProxy(p);
+        p = s.deserializePartyProxy();
+        
+        assertEquals(oid.getValue(), p.getExternalRef().getId().getValue());
+        
+        assertEquals(partyRefValue, p.getExternalRef().getValue());
+    }
 }

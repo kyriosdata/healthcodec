@@ -31,6 +31,8 @@ import com.github.gabrielsxp.healthcodec.RMObject.Link;
 import com.github.gabrielsxp.healthcodec.RMObject.Match;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectID;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectVersionID;
+import com.github.gabrielsxp.healthcodec.RMObject.PartyProxy;
+import com.github.gabrielsxp.healthcodec.RMObject.PartyRef;
 import com.github.gabrielsxp.healthcodec.RMObject.TemplateID;
 import com.github.gabrielsxp.healthcodec.RMObject.TerminologyID;
 
@@ -470,4 +472,22 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeDvParagraph(
             DvParagraph dvparagraph) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de PartyProxy
+     * @param externalRef
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializePartyProxy(
+            PartyRef externalRef) throws UnsupportedEncodingException;
+    
+    /***
+     * Serializador de PartyProxy
+     * @param partyProxy
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializePartyProxy(
+            PartyProxy partyProxy) throws UnsupportedEncodingException;
 }
