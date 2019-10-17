@@ -2391,6 +2391,49 @@ public class RMObjectSerialization {
                     keywords, use, misuse, copyright, originalResourceUri, 
                     otherDetails);
         }
+        
+        protected int listSerialize(
+                Buffer buffer, int offset, List<ResourceDescriptionItem> items)
+                throws UnsupportedEncodingException {
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize * INT.getSize()) + INT.getSize();
+            
+            meta = writeHeader(buffer, meta, listSize);
+            ResourceDescriptionItemSerializer rdis = 
+                    new ResourceDescriptionItemSerializer();
+            
+            for (ResourceDescriptionItem d : items) {
+                meta = writeHeader(buffer, meta, position);
+                position = rdis.serialize(buffer, position, d);
+            }
+            
+            
+            return position;
+        }
+
+        protected List<ResourceDescriptionItem> deserializeList(Buffer buffer, 
+                int offset) {
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += INT.getSize();
+            
+            List<ResourceDescriptionItem> list = new ArrayList<>();
+            ResourceDescriptionItemSerializer rdis = 
+                    new ResourceDescriptionItemSerializer();
+            
+            for(int i = 0; i < listSize; i++){
+                int resourceDescriptionItemPosition = 
+                        buffer.readInteger(position);
+                position += INT.getSize();
+                ResourceDescriptionItem t = rdis.deserialize(
+                        buffer, resourceDescriptionItemPosition);
+                list.add(t);
+            }
+            
+            
+            return list;
+        }
     }
 
     /**
