@@ -14,6 +14,7 @@
 package com.github.gabrielsxp.healthcodec;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -830,7 +831,53 @@ public class RMObject {
         public DvEncapsulated getOriginalContent() {
             return originalContent;
         }
-        
-        
+    }
+    
+    public static class Locatable {
+        private final UIDBasedID uid;
+        private final String archetypeNodeId;
+        private final DvText name;
+        private final Archetyped archetypeDetails;
+        private final FeederAudit feederAudit;
+        private final Set<Link> links;
+
+        public Locatable(
+                UIDBasedID uid, 
+                String archetypeNodeId, 
+                DvText name, 
+                Archetyped archetypeDetails, 
+                FeederAudit feederAudit, 
+                Set<Link> links) {
+            this.uid = uid;
+            this.archetypeNodeId = archetypeNodeId;
+            this.name = name;
+            this.archetypeDetails = archetypeDetails;
+            this.feederAudit = feederAudit;
+            this.links = links;
+        }
+
+        public UIDBasedID getUid() {
+            return uid;
+        }
+
+        public String getArchetypeNodeId() {
+            return archetypeNodeId;
+        }
+
+        public DvText getName() {
+            return name;
+        }
+
+        public Archetyped getArchetypeDetails() {
+            return archetypeDetails;
+        }
+
+        public FeederAudit getFeederAudit() {
+            return feederAudit;
+        }
+
+        public Set<Link> getLinks() {
+            return links;
+        }
     }
 }

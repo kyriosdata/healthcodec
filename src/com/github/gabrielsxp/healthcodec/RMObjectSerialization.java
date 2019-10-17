@@ -690,7 +690,7 @@ public class RMObjectSerialization {
 
     static class ArchetypedSerializer {
 
-        protected int serializer(
+        protected int serialize(
                 Buffer buffer,
                 int offset,
                 ArchetypeID archetypeId,
@@ -713,6 +713,17 @@ public class RMObjectSerialization {
             dataPosition += rmVersionLength;
 
             return dataPosition;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                Archetyped a) throws UnsupportedEncodingException {
+            int position = offset;
+            ArchetypedSerializer as = new ArchetypedSerializer();
+            
+            position = as.serialize(buffer, offset, 
+                    a.getArchetypeId(), a.getTemplateId(), a.getRmVersion());
+            
+            return position;
         }
 
         protected Archetyped deserialize(Buffer buffer, int offset) {
@@ -2004,6 +2015,137 @@ public class RMObjectSerialization {
             return RMObjectFactory.newFeederAudit(
                     feederSystemAudit, originatingSystemItemIDs, 
                     feederSystemAudit, feederSystemItemIDs, originalContent);
+        }
+    }
+    
+    public static class LocatableSerializer {
+        protected int serialize(Buffer buffer, int offset, UIDBasedID uid, 
+            String archetypeNodeId, DvText name,Archetyped archetypeDetails,
+            FeederAudit feederAudit, 
+            Set<Link> links) throws UnsupportedEncodingException{
+            
+            if(archetypeNodeId == null || name == null){
+                throw new IllegalArgumentException(
+                        "archetypeNodeId e name não podem ser null");
+            }
+            
+            int position = offset + (7 * INT.getSize()) + 5 * BOOLEAN.getSize();
+            int meta = offset;
+            
+            UIDBasedIDSerializer uids = new UIDBasedIDSerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+            ArchetypedSerializer as = new ArchetypedSerializer();
+            FeederAuditSerializer fas = new FeederAuditSerializer();
+            LinkSerializer ls = new LinkSerializer();
+            
+            boolean hasUid = uid != null;
+            if(hasUid){
+                meta = writeHeader(buffer, meta, hasUid, position);
+                position = uids.serialize(buffer, position, archetypeNodeId);
+            } else {
+                meta = writeHeader(buffer, meta, hasUid);
+            }
+            
+            meta = writeHeader(buffer, meta, position);
+            position = 
+                    valueStringSerialization(buffer, position, archetypeNodeId);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, name);
+            
+            boolean hasArchetypeDetails = archetypeDetails != null;
+            if(hasArchetypeDetails){
+                meta = writeHeader(buffer, meta, hasArchetypeDetails, position);
+                position = as.serialize(buffer, position, archetypeDetails);
+            } else {
+                meta = writeHeader(buffer, meta, hasArchetypeDetails);
+            }
+            
+            boolean hasFeederAudit = feederAudit != null;
+            if(hasFeederAudit){
+                meta = writeHeader(buffer, meta, hasFeederAudit, position);
+                position = fas.serialize(buffer, position, feederAudit);
+            } else {
+                meta = writeHeader(buffer, meta, hasFeederAudit);
+            }
+            
+            boolean hasLinks = links != null;
+            if(hasLinks){
+                writeHeader(buffer, meta, hasLinks, position);
+                position = ls.setSerializer(buffer, position, links);
+            } else {
+                writeHeader(buffer, meta, hasLinks);
+            }
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                Locatable locatable) throws UnsupportedEncodingException{
+            int position = offset;
+            LocatableSerializer ls = new LocatableSerializer();
+            position = ls.serialize(buffer, position, locatable);
+            
+            return position;
+        }
+        
+        protected Locatable deserialize(Buffer buffer, int offset){
+            int position = offset;
+            
+            UIDBasedIDSerializer uids = new UIDBasedIDSerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+            ArchetypedSerializer as = new ArchetypedSerializer();
+            FeederAuditSerializer fas = new FeederAuditSerializer();
+            LinkSerializer ls = new LinkSerializer();
+            
+            boolean hasUid = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            UIDBasedID uid = null;
+            if(hasUid){
+                int uidPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                uid = uids.deserialize(buffer, uidPosition);
+            }
+            
+            int archetypeNodeIdPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String archetypeNodeId = valueStringDeserialization(
+                    buffer, archetypeNodeIdPosition);
+            
+            int namePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            DvText name = dts.deserialize(buffer, namePosition);
+            
+            boolean hasArchetypeDetails = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            Archetyped archetypeDetails = null;
+            if(hasArchetypeDetails){
+                int archetypeDetailsPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                archetypeDetails = as.deserialize(
+                        buffer, archetypeDetailsPosition);
+            }
+            
+            boolean hasFeederAudit = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            FeederAudit feederAudit = null;
+            if(hasFeederAudit){
+                int hasFeederAuditPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                feederAudit = fas.deserialize(buffer, hasFeederAuditPosition);
+            }
+            
+            boolean hasLinks = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            Set<Link> links = null;
+            if(hasLinks){
+                int linksPosition = buffer.readInteger(position);
+                links = ls.setDeserializer(buffer, linksPosition);
+            }
+            
+            return RMObjectFactory.newLocatable(
+                    uid, archetypeNodeId, name, archetypeDetails, 
+                    feederAudit, links);
         }
     }
 

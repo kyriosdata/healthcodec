@@ -19,6 +19,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.*;
 import java.io.UnsupportedEncodingException;
 import java.nio.ReadOnlyBufferException;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -710,7 +711,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
             String rmVersionLength) throws UnsupportedEncodingException {
         ArchetypedSerializer s = new ArchetypedSerializer();
         register(ARCHETYPED, offset);
-        setOffset(s.serializer(buffer, offset,
+        setOffset(s.serialize(buffer, offset,
                 archetypeId, templateId, rmVersionLength));
 
         return this;
@@ -1284,13 +1285,74 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         
         return this;
     }
-
+    
+    /**
+     * Deserializador de FeederAudit
+     * @return instância de FeederAudit
+     */
     @Override
     public FeederAudit deserializeFeederAudit() {
         FeederAuditSerializer d = new FeederAuditSerializer();
         return d.deserialize(buffer, getOffsetFromID(FEEDERAUDIT));
     }
-
+    
+    /**
+     * Serializador de Locatable
+     * @param uid
+     * @param archetypeNodeId
+     * @param name
+     * @param archetypeDetails
+     * @param feederAudit
+     * @param links
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeLocatable(
+            UIDBasedID uid, String archetypeNodeId, DvText name, 
+            Archetyped archetypeDetails, FeederAudit feederAudit, 
+            Set<Link> links) throws UnsupportedEncodingException {
+        LocatableSerializer s = new LocatableSerializer();
+        register(LOCATABLE, offset);
+        setOffset(
+                s.serialize(
+                        buffer, 
+                        offset, 
+                        uid, 
+                        archetypeNodeId, 
+                        name, 
+                        archetypeDetails, 
+                        feederAudit, links));
+        
+        return this;
+    }
+    
+    /**
+     * Serializador de Locatable
+     * @param locatable
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeLocatable(
+            Locatable locatable) throws UnsupportedEncodingException {
+       LocatableSerializer s = new LocatableSerializer();
+       register(LOCATABLE, offset);
+       setOffset(s.serialize(buffer, offset, locatable));
+       
+       return this;
+    }
+    
+    /**
+     * Deserializador de Locatable
+     * @return nova instância de Locatable
+     */
+    @Override
+    public Locatable deserializeLocatable() {
+       LocatableSerializer d = new LocatableSerializer();
+       return d.deserialize(buffer, getOffsetFromID(LOCATABLE));
+    }
+    
     /**
      * Método para registrar um determinado objeto no índice
      *
@@ -1327,6 +1389,4 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     public byte[] getBuffer() {
         return this.buffer.data();
     }
-
-    
 }

@@ -15,6 +15,7 @@ package com.github.gabrielsxp.healthcodec;
 
 import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.*;
+import java.util.Set;
 
 /**
  *
@@ -227,5 +228,12 @@ public class RMObjectFactory {
                 feederSystemAudit, 
                 feederSystemItemIDs, 
                 originalContent);
+    }
+    
+    public static Locatable newLocatable(UIDBasedID uid, 
+            String archetypeNodeId, DvText name,Archetyped archetypeDetails,
+            FeederAudit feederAudit, Set<Link> links){
+        return new Locatable(uid, archetypeNodeId, name, archetypeDetails,
+            feederAudit, links);
     }
 }

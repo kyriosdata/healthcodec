@@ -270,7 +270,13 @@ public interface Deserializer {
     
     /**
      * Deserializador de FeederAudit
-     * @return 
+     * @return nova instância de FeederAudit
      */
     FeederAudit deserializeFeederAudit();
+    
+    /**
+     * Deserializador de Locatable
+     * @return nova instância de Locatable
+     */
+    Locatable deserializeLocatable();
 }

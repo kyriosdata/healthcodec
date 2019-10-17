@@ -54,7 +54,8 @@ public enum RMObjectID {
     DVPARAGRAPH(33),
     PARTYPROXY(34),
     FEEDERAUDITDETAILS(35),
-    FEEDERAUDIT(36);
+    FEEDERAUDIT(36),
+    LOCATABLE(37);
     
     
 

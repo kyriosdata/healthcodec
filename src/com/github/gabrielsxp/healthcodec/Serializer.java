@@ -14,6 +14,7 @@
 package com.github.gabrielsxp.healthcodec;
 
 import com.github.gabrielsxp.healthcodec.RMObject.ArchetypeID;
+import com.github.gabrielsxp.healthcodec.RMObject.Archetyped;
 import com.github.gabrielsxp.healthcodec.RMObject.CodePhrase;
 import com.github.gabrielsxp.healthcodec.RMObject.DVEHRURI;
 import com.github.gabrielsxp.healthcodec.RMObject.DVURI;
@@ -30,6 +31,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.DvText;
 import com.github.gabrielsxp.healthcodec.RMObject.FeederAudit;
 import com.github.gabrielsxp.healthcodec.RMObject.FeederAuditDetails;
 import com.github.gabrielsxp.healthcodec.RMObject.Link;
+import com.github.gabrielsxp.healthcodec.RMObject.Locatable;
 import com.github.gabrielsxp.healthcodec.RMObject.Match;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectID;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectVersionID;
@@ -38,6 +40,8 @@ import com.github.gabrielsxp.healthcodec.RMObject.PartyProxy;
 import com.github.gabrielsxp.healthcodec.RMObject.PartyRef;
 import com.github.gabrielsxp.healthcodec.RMObject.TemplateID;
 import com.github.gabrielsxp.healthcodec.RMObject.TerminologyID;
+import com.github.gabrielsxp.healthcodec.RMObject.UIDBasedID;
+import java.util.Set;
 
 /**
  *
@@ -555,4 +559,12 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeFeederAudit(
             FeederAudit fa) throws UnsupportedEncodingException;
+    
+    RMObjectSerializationClient serializeLocatable(UIDBasedID uid, 
+            String archetypeNodeId, DvText name, Archetyped archetypeDetails,
+            FeederAudit feederAudit, 
+            Set<Link> links) throws UnsupportedEncodingException;
+    
+    RMObjectSerializationClient serializeLocatable(
+            Locatable locatable) throws UnsupportedEncodingException;
 }

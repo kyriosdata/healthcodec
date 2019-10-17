@@ -20,6 +20,8 @@ import com.github.gabrielsxp.healthcodec.RMObject.*;
 import com.github.gabrielsxp.healthcodec.RMObjectFactory;
 import com.github.gabrielsxp.healthcodec.RMObjectSerialization;
 import com.github.gabrielsxp.healthcodec.RMObjectSerializationClient;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -1599,4 +1601,131 @@ public class RMObjectSerializationClientTest {
         assertEquals(language.getValue(), fa.getOriginalContent().
                         getLanguage().getValue());
     }
-}
+    
+    @Test
+    public void Locatable(){
+        String uidValue = "UID Value";
+        
+        String value = "DvTextValue";
+        List<TermMapping> mappings = null;
+        String formatting = "DvText Formatting";
+        String hyperlinkValue = "Hyperlink value";
+        DVURI hyperlink =  RMObjectFactory.newDVURI(hyperlinkValue);
+        
+        String languageTIDValue = "Language Terminology ID";
+        TerminologyID languageTID = RMObjectFactory.newTerminologyID(languageTIDValue);
+        String languageValue = "Language value";
+        CodePhrase language = RMObjectFactory.newCodePhrase(languageTID, 
+                languageValue);
+        
+        String charsetTIDValue = "Charset Terminology ID";
+        String charsetValue = "Charset Value";
+        TerminologyID charsetTID = 
+                RMObjectFactory.newTerminologyID(charsetTIDValue);
+        CodePhrase charset = 
+                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
+        
+        String archetypeIDValue = "ArchetypeID Value";
+        ArchetypeID archetypeId = RMObjectFactory.newArchetypeID(
+                archetypeIDValue);
+        String templateIDValue = "TemplateID Value";
+        TemplateID templateId = RMObjectFactory.newTemplateID(value);
+        
+        String dvehruriValue = "DVEHRURI Value";
+        DVEHRURI dvehruri = RMObjectFactory.newDVEHRURI(dvehruriValue);
+        
+        String systemID = "System ID";
+        
+        String oidValue = "_OBJECTID_";
+        ObjectID id = RMObjectFactory.newObjectID(oidValue);
+        String PrefValue = "_PARTYREF_";
+        PartyRef providerRef = RMObjectFactory.newPartyRef(id, PrefValue);
+        
+        String providerName = "Provider Name";
+        
+        String idIssuer = "issuer";
+        String idAssigner = "assigner";
+        String idId = "id";
+        String idType = "type";
+        DvIdentifier idf = 
+                RMObjectFactory.newDvIdentifier(
+                        idIssuer, idAssigner, idId, idType);
+        List<DvIdentifier> identifiers = new ArrayList<>();
+        identifiers.add(idf);
+        
+        DvEncapsulated originalContent = 
+                RMObjectFactory.newDvEncapsulated(charset, language);
+        
+        PartyIdentified provider = 
+                RMObjectFactory.newPartyIdentified(
+                        providerRef, providerName, identifiers);
+        
+        PartyIdentified location = 
+                RMObjectFactory.newPartyIdentified(
+                        providerRef, providerName, identifiers);
+        
+        PartyProxy subject = RMObjectFactory.newPartyProxy(providerRef);
+        
+        String versionID = "Version ID";
+        
+        FeederAuditDetails f = RMObjectFactory.newFeederAuditDetails(
+                systemID, provider, location, subject, versionID);
+        
+        //Construindo todos os componentes de Locatable
+        UIDBasedID uid = RMObjectFactory.newUIDBasedID(uidValue);
+        
+        String archetypeNodeId = "Archetyped Node ID";
+        
+        DvText name = RMObjectFactory.newDvText(
+                value, mappings, formatting, hyperlink, language, charset);
+        
+        Archetyped archetypeDetails = RMObjectFactory.newArchetyped(
+                archetypeId, templateId, formatting);
+        
+        FeederAudit feederAudit = RMObjectFactory.newFeederAudit(
+                f, identifiers, f, identifiers, originalContent);
+        
+        Link link = RMObjectFactory.newLink(name, name, dvehruri);
+        Set<Link> links = new HashSet<>();
+        links.add(link);
+        
+        Locatable l = RMObjectFactory.newLocatable(
+                uid, archetypeNodeId, name, archetypeDetails, 
+                feederAudit, links);
+        
+        //Inicio dos testes
+        
+        //UID
+        assertEquals(uidValue, l.getUid().getValue());
+        
+        //archetypeNodeId
+        assertEquals(archetypeNodeId, l.getArchetypeNodeId());
+        
+        //name
+        assertEquals(value, l.getName().getValue());
+        assertEquals(mappings, l.getName().getMappings());
+        assertEquals(formatting, l.getName().getFormatting());
+        assertEquals(hyperlink.getValue(), 
+                l.getName().getHyperlink().getValue());
+        assertEquals(language.getTerminologyID().getValue(),
+                l.getName().getLanguage().getTerminologyID().getValue());
+        assertEquals(language.getValue(), 
+                l.getName().getLanguage().getValue());
+        assertEquals(charset.getTerminologyID().getValue(),
+                l.getName().getCharset().getTerminologyID().getValue());
+        assertEquals(charset.getValue(), 
+                l.getName().getCharset().getValue());
+        
+        //archetypeDetails
+        assertEquals(archetypeDetails.getArchetypeId().getValue(),
+                l.getArchetypeDetails().getArchetypeId().getValue());
+        assertEquals(archetypeDetails.getTemplateId().getValue(),
+                l.getArchetypeDetails().getTemplateId().getValue());
+        assertEquals(archetypeDetails.getRmVersion(),
+                l.getArchetypeDetails().getRmVersion());
+        
+        //feederAudit
+        assertEquals(feederAudit.getOriginatingSystemAudit().getLocation().getName(),
+                l.getFeederAudit().getOriginatingSystemAudit().getLocation().getName());
+    }
+}}
