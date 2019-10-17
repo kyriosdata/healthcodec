@@ -2288,6 +2288,64 @@ public class RMObjectSerialization {
     }
     
     /**
+     * Serializa uma lista de Strings
+     * @param buffer
+     * @param offset
+     * @param list
+     * @return posição final após a serialização
+     * @throws UnsupportedEncodingException 
+     */
+    public static int listStringSerialization(Buffer buffer, int offset, 
+            List<String> list) throws UnsupportedEncodingException{
+        int meta = offset;
+        int listSize = list.size();
+        int position = offset + (listSize * INT.getSize()) + INT.getSize();
+        
+        meta = writeHeader(buffer, meta, listSize);
+        if(listSize == 0){
+            return meta;
+        }
+        
+        Iterator<String> it = list.iterator();
+        while(it.hasNext()){
+            String value = it.next();
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, value);
+        }
+        
+        return position;
+    }
+    
+    /**
+     * Deserializa uma lista de strings
+     * @param buffer
+     * @param offset
+     * @return lista original que foi serializada
+     * @throws UnsupportedEncodingException 
+     */
+    public static List<String> listStringDeserialization(Buffer buffer, 
+            int offset) throws UnsupportedEncodingException{
+        int position = offset;
+        int listSize = buffer.readInteger(position);
+        position += INT.getSize();
+        
+        List<String> list = new ArrayList<>();
+        if(listSize == 0){
+            return list;
+        }
+        
+        for(int i = 0; i < listSize; i++){
+            int valuePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            
+            String value = valueStringDeserialization(buffer, valuePosition);
+            list.add(value);
+        }
+        
+        return list;
+    }
+    
+    /**
      * Serializa um map de Strings
      * @param buffer
      * @param offset
