@@ -15,6 +15,7 @@ package com.github.gabrielsxp.healthcodec;
 
 import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.*;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -221,28 +222,38 @@ public class RMObjectFactory {
             List<DvIdentifier> originatingSystemItemIDs,
             FeederAuditDetails feederSystemAudit,
             List<DvIdentifier> feederSystemItemIDs,
-            DvEncapsulated originalContent){
+            DvEncapsulated originalContent) {
         return new FeederAudit(
-                originatingSystemAudit, 
-                originatingSystemItemIDs, 
-                feederSystemAudit, 
-                feederSystemItemIDs, 
+                originatingSystemAudit,
+                originatingSystemItemIDs,
+                feederSystemAudit,
+                feederSystemItemIDs,
                 originalContent);
     }
-    
-    public static Locatable newLocatable(UIDBasedID uid, 
-            String archetypeNodeId, DvText name,Archetyped archetypeDetails,
-            FeederAudit feederAudit, Set<Link> links){
+
+    public static Locatable newLocatable(UIDBasedID uid,
+            String archetypeNodeId, DvText name, Archetyped archetypeDetails,
+            FeederAudit feederAudit, Set<Link> links) {
         return new Locatable(uid, archetypeNodeId, name, archetypeDetails,
-            feederAudit, links);
+                feederAudit, links);
     }
-    
-    public static PartyRelated newPartyRelated(PartyIdentified pi, 
-            DvCodedText relationship){
+
+    public static PartyRelated newPartyRelated(PartyIdentified pi,
+            DvCodedText relationship) {
         return new PartyRelated(pi, relationship);
     }
-    
-    public static PartySelf newPartySelf(PartyRef externalRef){
+
+    public static PartySelf newPartySelf(PartyRef externalRef) {
         return new PartySelf(externalRef);
+    }
+
+    public static ResourceDescriptionItem newResourceDescriptionItem(
+            CodePhrase language, String purpose,List<String> keywords, 
+            String use, String misuse, String copyright,
+            Map<String, String> originalResourceUri, 
+            Map<String, String> otherDetails){
+        return new ResourceDescriptionItem(
+                language, purpose, keywords, use, misuse, copyright, 
+                originalResourceUri, otherDetails);
     }
 }

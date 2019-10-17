@@ -19,6 +19,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.*;
 import java.io.UnsupportedEncodingException;
 import java.nio.ReadOnlyBufferException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1437,6 +1438,64 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     public PartySelf deserializePartySelf() {
         PartySelfSerializer d = new PartySelfSerializer();
         return d.deserialize(buffer, getOffsetFromID(PARTYSELF));
+    }
+    
+    /**
+     * Serializador de ResourceDescriptionItem
+     * @param language
+     * @param purpose
+     * @param keywords
+     * @param use
+     * @param misuse
+     * @param copyright
+     * @param originalResourceUri
+     * @param otherDetails
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeResourceDescriptionItem(
+            CodePhrase language, String purpose, List<String> keywords, 
+            String use, String misuse, String copyright, 
+            Map<String, String> originalResourceUri, 
+            Map<String, String> otherDetails) throws UnsupportedEncodingException {
+        ResourceDescriptionItemSerializer s = 
+                new ResourceDescriptionItemSerializer();
+        register(RESOURCEDESCRIPTIONITEM, offset);
+        setOffset(s.serialize(buffer, offset, 
+                language, purpose, keywords, use, misuse, copyright, 
+                originalResourceUri, otherDetails));
+        
+        return this;
+    }
+    
+    /**
+     * Serializador de ResourceDescriptionItem
+     * @param rdi
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeResourceDescriptionItem(
+            ResourceDescriptionItem rdi) throws UnsupportedEncodingException {
+        ResourceDescriptionItemSerializer s = 
+                new ResourceDescriptionItemSerializer();
+        register(RESOURCEDESCRIPTIONITEM, offset);
+        setOffset(s.serialize(buffer, offset, rdi));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de ResourceDescriptionItem
+     * @return nova instância de ResourceDescriptionItem
+     */
+    @Override
+    public ResourceDescriptionItem deserializeResourceDescriptionItem() {
+        ResourceDescriptionItemSerializer d = 
+                new ResourceDescriptionItemSerializer();
+        
+        return d.deserialize(buffer, getOffsetFromID(RESOURCEDESCRIPTIONITEM));
     }
     
     /**

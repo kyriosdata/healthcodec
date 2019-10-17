@@ -40,9 +40,11 @@ import com.github.gabrielsxp.healthcodec.RMObject.PartyProxy;
 import com.github.gabrielsxp.healthcodec.RMObject.PartyRef;
 import com.github.gabrielsxp.healthcodec.RMObject.PartyRelated;
 import com.github.gabrielsxp.healthcodec.RMObject.PartySelf;
+import com.github.gabrielsxp.healthcodec.RMObject.ResourceDescriptionItem;
 import com.github.gabrielsxp.healthcodec.RMObject.TemplateID;
 import com.github.gabrielsxp.healthcodec.RMObject.TerminologyID;
 import com.github.gabrielsxp.healthcodec.RMObject.UIDBasedID;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -628,4 +630,33 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializePartySelf(
             PartySelf ps) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de ResourceDescriptionItem
+     * @param language
+     * @param purpose
+     * @param keywords
+     * @param use
+     * @param misuse
+     * @param copyright
+     * @param originalResourceUri
+     * @param otherDetails
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeResourceDescriptionItem(
+            CodePhrase language, String purpose, List<String> keywords, 
+            String use, String misuse, String copyright, 
+            Map<String, String> originalResourceUri, 
+            Map<String, String> otherDetails) 
+                throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de ResourceDescriptionItem
+     * @param rdi
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeResourceDescriptionItem(
+            ResourceDescriptionItem rdi) throws UnsupportedEncodingException;
 }

@@ -282,14 +282,23 @@ public class RMObjectSerialization {
                     + valueLength
                     + terminologyIDValueLength;
         }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                CodePhrase cp) throws UnsupportedEncodingException{
+            int position = offset;
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            position = cps.serialize(buffer, 
+                    position, cp.getTerminologyID(), cp.getValue());
+            
+            return position;
+        }
 
         protected CodePhrase deserialize(
                 Buffer buffer, int offset) {
             int terminologyIDValueLength = buffer.readInteger(offset);
             int valueLength = buffer.readInteger(offset + INT.getSize());
             String terminologyIDValue = buffer.readString(
-                    offset + 2 * INT.getSize(), terminologyIDValueLength
-            );
+                    offset + 2 * INT.getSize(), terminologyIDValueLength);
 
             String value = buffer.readString(
                     offset + 2 * INT.getSize() + terminologyIDValueLength,
@@ -1075,8 +1084,7 @@ public class RMObjectSerialization {
                 position = cps.serialize(
                         buffer,
                         position,
-                        integrityCheckAlgorithm.getTerminologyID(),
-                        integrityCheckAlgorithm.getValue());
+                        integrityCheckAlgorithm);
             } else {
                 throw new IllegalArgumentException("Integrity Check fails!");
             }
@@ -1252,11 +1260,9 @@ public class RMObjectSerialization {
             }
 
             meta = writeHeader(buffer, meta, position);
-            position = cps.serialize(buffer, position,
-                    language.getTerminologyID(), language.getValue());
+            position = cps.serialize(buffer, position, language);
             meta = writeHeader(buffer, meta, position);
-            position = cps.serialize(buffer, position,
-                    charset.getTerminologyID(), charset.getValue());
+            position = cps.serialize(buffer, position, charset);
 
             return position;
         }
@@ -1390,8 +1396,7 @@ public class RMObjectSerialization {
                     dvText.getCharset());
 
             meta = writeHeader(buffer, meta, position);
-            position = cps.serialize(buffer, position,
-                    definingCode.getTerminologyID(), definingCode.getValue());
+            position = cps.serialize(buffer, position, definingCode);
 
             return position;
         }
@@ -1462,8 +1467,7 @@ public class RMObjectSerialization {
             DvCodedTextSerializer dct = new DvCodedTextSerializer();
             
             meta = writeHeader(buffer, meta, position);
-            position = cps.serialize(buffer, position,
-                    target.getTerminologyID(), target.getValue());
+            position = cps.serialize(buffer, position, target);
             meta = writeHeader(buffer, meta, position);
             position = ms.serialize(buffer, position, match);
             if (hasPurpose) {
@@ -2252,6 +2256,142 @@ public class RMObjectSerialization {
             return RMObjectFactory.newPartySelf(externalRef);
         }
     }
+    
+    public static class ResourceDescriptionItemSerializer {
+        protected int serialize(Buffer buffer, int offset, 
+                CodePhrase language, String purpose, List<String> keywords, 
+                String use, String misuse, String copyright,
+                Map<String, String> originalResourceUri, 
+                Map<String, String> otherDetails) 
+                    throws UnsupportedEncodingException{
+            int position = offset + 8 * INT.getSize() + 3 * BOOLEAN.getSize();
+            
+            int meta = offset;
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = cps.serialize(buffer, position, language);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, purpose);
+            
+            boolean hasKeywords = keywords != null;
+            if(hasKeywords){
+                meta = writeHeader(buffer, meta, hasKeywords, position);
+                position = listStringSerialization(buffer, position, keywords);
+            } else {
+                meta = writeHeader(buffer, meta, hasKeywords);
+            }
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, use);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, misuse);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, copyright);
+            
+            boolean hasOriginalResourceUri = originalResourceUri != null;
+            if(hasOriginalResourceUri){
+                meta = 
+                        writeHeader(buffer, meta, hasOriginalResourceUri, 
+                                position);
+                position = mapStringSerialization(
+                        buffer, position, originalResourceUri);
+            } else {
+                meta = writeHeader(buffer, meta, hasOriginalResourceUri);
+            }
+            
+            boolean hasOtherDetails = otherDetails != null;
+            if(hasOtherDetails){
+                writeHeader(buffer, meta, hasOtherDetails, position);
+                position = mapStringSerialization(buffer, position, 
+                        otherDetails);
+            } else {
+                writeHeader(buffer, meta, hasOtherDetails);
+            }
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                ResourceDescriptionItem rdi) 
+                    throws UnsupportedEncodingException{
+            ResourceDescriptionItemSerializer rdis = 
+                    new ResourceDescriptionItemSerializer();
+            int position = offset;
+            
+            position = rdis.serialize(buffer, position, rdi.getLanguage(), 
+                    rdi.getPurpose(), rdi.getKeywords(), rdi.getUse(),
+                    rdi.getMisuse(), rdi.getCopyright(), 
+                    rdi.getOriginalResourceUri(), rdi.getOtherDetails());
+            
+            return position;
+        }
+        
+        protected ResourceDescriptionItem deserialize(Buffer buffer, 
+                int offset){
+            int position = offset;
+            
+            int languagePosition = buffer.readInteger(position);
+            System.out.println(languagePosition);
+            position += INT.getSize();
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            CodePhrase language = cps.deserialize(buffer, languagePosition);
+            
+            int purposePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String purpose = valueStringDeserialization(
+                    buffer, purposePosition);
+            
+            boolean hasKeywords = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            List<String> keywords = null;
+            if(hasKeywords){
+                int keywordsPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                keywords = listStringDeserialization(buffer, keywordsPosition);
+            }
+            
+            int usePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String use = valueStringDeserialization(buffer, usePosition);
+            
+            int misusePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String misuse = valueStringDeserialization(buffer, misusePosition);
+            
+            int copyrightPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String copyright = valueStringDeserialization(
+                    buffer, copyrightPosition);
+            
+            boolean hasOriginalResourceUri = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            Map<String, String> originalResourceUri = null;
+            if(hasOriginalResourceUri){
+                int originalResourceUriPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                originalResourceUri = mapStringDeserialization(
+                        buffer, originalResourceUriPosition);
+            }
+            
+            boolean hasOtherDetails = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            Map<String, String> otherDetails = null;
+            if(hasOtherDetails){
+                int otherDetailsPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                otherDetails = mapStringDeserialization(
+                        buffer, otherDetailsPosition);
+            }
+            
+            return RMObjectFactory.newResourceDescriptionItem(language, purpose, 
+                    keywords, use, misuse, copyright, originalResourceUri, 
+                    otherDetails);
+        }
+    }
 
     /**
      * Serializa uma única String value
@@ -2324,7 +2464,7 @@ public class RMObjectSerialization {
      * @throws UnsupportedEncodingException 
      */
     public static List<String> listStringDeserialization(Buffer buffer, 
-            int offset) throws UnsupportedEncodingException{
+            int offset){
         int position = offset;
         int listSize = buffer.readInteger(position);
         position += INT.getSize();
@@ -2386,7 +2526,7 @@ public class RMObjectSerialization {
      * @return mapa original que foi serializado
      */
     public static Map<String, String> mapStringDeserialization(
-            Buffer buffer, int offset){
+            Buffer buffer, int offset) {
         int position = offset;
         int mapSize = buffer.readInteger(position);
         position += INT.getSize();

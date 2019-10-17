@@ -291,4 +291,10 @@ public interface Deserializer {
      * @return nova instância de PartySelf
      */
     PartySelf deserializePartySelf();
+    
+    /**
+     * Deserializador de ResourceDescriptionItem
+     * @return nova instância de ResourceDescriptionItem
+     */
+    ResourceDescriptionItem deserializeResourceDescriptionItem();
 }

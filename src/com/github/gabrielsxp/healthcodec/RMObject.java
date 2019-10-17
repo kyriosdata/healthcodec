@@ -14,6 +14,7 @@
 package com.github.gabrielsxp.healthcodec;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -728,7 +729,7 @@ public class RMObject {
     public static class DvParagraph {
         private final List<DvText> items;
 
-        public DvParagraph(List<DvText> items) {
+        protected DvParagraph(List<DvText> items) {
             this.items = items;
         }
 
@@ -740,7 +741,7 @@ public class RMObject {
     public static class PartyProxy {
         private final PartyRef externalRef;
 
-        public PartyProxy(PartyRef externalRef) {
+        protected PartyProxy(PartyRef externalRef) {
             this.externalRef = externalRef;
         }
 
@@ -757,7 +758,7 @@ public class RMObject {
         private final PartyProxy subject;
         private final String versionID;
 
-        public FeederAuditDetails(
+        protected FeederAuditDetails(
                 String systemID, 
                 PartyIdentified provider, 
                 PartyIdentified location,
@@ -799,7 +800,7 @@ public class RMObject {
     	private final List<DvIdentifier> feederSystemItemIDs;
     	private final DvEncapsulated originalContent;
 
-        public FeederAudit(
+        protected FeederAudit(
                 FeederAuditDetails originatingSystemAudit, 
                 List<DvIdentifier> originatingSystemItemIDs, 
                 FeederAuditDetails feederSystemAudit, 
@@ -841,7 +842,7 @@ public class RMObject {
         private final FeederAudit feederAudit;
         private final Set<Link> links;
 
-        public Locatable(
+        protected Locatable(
                 UIDBasedID uid, 
                 String archetypeNodeId, 
                 DvText name, 
@@ -885,7 +886,7 @@ public class RMObject {
         private final PartyIdentified pi;
         private final DvCodedText relationship;
 
-        public PartyRelated(PartyIdentified pi, DvCodedText relationship) {
+        protected PartyRelated(PartyIdentified pi, DvCodedText relationship) {
             this.pi = pi;
             this.relationship = relationship;
         }
@@ -902,12 +903,70 @@ public class RMObject {
     public static class PartySelf {
         private final PartyRef externalRef;
 
-        public PartySelf(PartyRef externalRef) {
+        protected PartySelf(PartyRef externalRef) {
             this.externalRef = externalRef;
         }
 
         public PartyRef getExternalRef() {
             return externalRef;
+        }
+    }
+    
+    public static class ResourceDescriptionItem {
+        private final CodePhrase language;
+        private final String purpose;
+        private final List<String> keywords;
+        private final String use;
+        private final String misuse;
+        private final String copyright;
+        private final Map<String, String> originalResourceUri;
+        private final Map<String, String> otherDetails;
+
+        protected ResourceDescriptionItem(
+                CodePhrase language, String purpose, List<String> keywords, 
+                String use, String misuse, String copyright, 
+                Map<String, String> originalResourceUri, 
+                Map<String, String> otherDetails) {
+            this.language = language;
+            this.purpose = purpose;
+            this.keywords = keywords;
+            this.use = use;
+            this.misuse = misuse;
+            this.copyright = copyright;
+            this.originalResourceUri = originalResourceUri;
+            this.otherDetails = otherDetails;
+        }
+
+        public CodePhrase getLanguage() {
+            return language;
+        }
+
+        public String getPurpose() {
+            return purpose;
+        }
+
+        public List<String> getKeywords() {
+            return keywords;
+        }
+
+        public String getUse() {
+            return use;
+        }
+
+        public String getMisuse() {
+            return misuse;
+        }
+
+        public String getCopyright() {
+            return copyright;
+        }
+
+        public Map<String, String> getOriginalResourceUri() {
+            return originalResourceUri;
+        }
+
+        public Map<String, String> getOtherDetails() {
+            return otherDetails;
         }
     }
 }
