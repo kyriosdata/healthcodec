@@ -1499,6 +1499,35 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
     
     /**
+     * Serializador de TranslationDetails
+     * @param td
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeTranslationDetails(
+            TranslationDetails td) throws UnsupportedEncodingException {
+        TranslationDetailsSerializer s = 
+                new TranslationDetailsSerializer();
+        register(TRANSLATIONDETAILS, offset);
+        setOffset(s.serialize(buffer, offset, td));
+        
+        return this;
+    }
+
+    /**
+     * Deserializador de TranslationDetails
+     * @return 
+     */
+    @Override
+    public TranslationDetails deserializeTranslationDetails() {
+        TranslationDetailsSerializer d = 
+                new TranslationDetailsSerializer();
+        
+        return d.deserialize(buffer, getOffsetFromID(TRANSLATIONDETAILS));
+    }
+    
+    /**
      * Método para registrar um determinado objeto no índice
      *
      * @param id

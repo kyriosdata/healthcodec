@@ -2435,6 +2435,101 @@ public class RMObjectSerialization {
             return list;
         }
     }
+    
+    public static class TranslationDetailsSerializer {
+        protected int serialize(Buffer buffer, int offset, CodePhrase language, 
+                Map<String, String> author, String accreditation, 
+                Map<String, String> otherDetails) 
+                    throws UnsupportedEncodingException {
+            int meta = offset;
+            int position = offset + 4 * INT.getSize() + 2 * BOOLEAN.getSize();
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            
+            if(language == null){
+                throw new IllegalArgumentException("null language");
+            }
+            if(author == null){
+                throw new IllegalArgumentException("null author");
+            }
+            
+            meta = writeHeader(buffer, meta, position);
+            position = cps.serialize(buffer, position, language);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = mapStringSerialization(buffer, position, author);
+            
+            boolean hasAccreditation = accreditation != null;
+            if(hasAccreditation){
+                meta = writeHeader(buffer, meta, hasAccreditation, position);
+                position = valueStringSerialization(
+                        buffer, position, accreditation);
+            } else {
+                meta = writeHeader(buffer, meta, hasAccreditation);
+            }
+            
+            boolean hasOtherDetails = otherDetails != null;
+            if(hasOtherDetails){
+                writeHeader(buffer, meta, hasOtherDetails, position);
+                position = mapStringSerialization(buffer, position, 
+                        otherDetails);
+            } else {
+                writeHeader(buffer, meta, hasOtherDetails);
+            }
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                TranslationDetails td) throws UnsupportedEncodingException {
+            TranslationDetailsSerializer tdss = 
+                    new TranslationDetailsSerializer();
+            
+            int position = offset;
+            position = tdss.serialize(
+                    buffer, position, td.getLanguage(), td.getAuthor(), 
+                    td.getAccreditation(), td.getOtherDetails());
+            
+            return position;
+        }
+        
+        protected TranslationDetails deserialize(Buffer buffer, int offset){
+            int position = offset;
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            
+            int languagePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            CodePhrase language = cps.deserialize(buffer, languagePosition);
+            
+            int authorPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Map<String, String> author = mapStringDeserialization(
+                    buffer, authorPosition);
+            
+            boolean hasAccreditation = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            String accreditation = null;
+            if(hasAccreditation){
+                int accreditationPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                accreditation = valueStringDeserialization(
+                        buffer, accreditationPosition);
+            }
+            
+            boolean hasOtherDetails = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            Map<String, String> otherDetails = null;
+            if(hasOtherDetails){
+                int otherDetailsPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                
+                otherDetails = mapStringDeserialization(
+                        buffer, otherDetailsPosition);
+            }
+            
+            return RMObjectFactory.newTranslationDetails(language, author, 
+                    accreditation, otherDetails);
+        }
+    }
 
     /**
      * Serializa uma única String value

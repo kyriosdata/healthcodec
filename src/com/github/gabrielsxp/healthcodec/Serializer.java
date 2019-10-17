@@ -43,6 +43,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.PartySelf;
 import com.github.gabrielsxp.healthcodec.RMObject.ResourceDescriptionItem;
 import com.github.gabrielsxp.healthcodec.RMObject.TemplateID;
 import com.github.gabrielsxp.healthcodec.RMObject.TerminologyID;
+import com.github.gabrielsxp.healthcodec.RMObject.TranslationDetails;
 import com.github.gabrielsxp.healthcodec.RMObject.UIDBasedID;
 import java.util.Map;
 import java.util.Set;
@@ -659,4 +660,13 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeResourceDescriptionItem(
             ResourceDescriptionItem rdi) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de TranslationDetails
+     * @param td
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeTranslationDetails(
+            TranslationDetails td) throws UnsupportedEncodingException;;
 }

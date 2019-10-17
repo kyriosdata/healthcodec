@@ -969,4 +969,34 @@ public class RMObject {
             return otherDetails;
         }
     }
+    
+    public static class TranslationDetails {
+        private final CodePhrase language;
+        private final Map<String, String> author;
+        private final String accreditation;
+        private final Map<String, String> otherDetails;
+
+        public TranslationDetails(CodePhrase language, Map<String, String> author, String accreditation, Map<String, String> otherDetails) {
+            this.language = language;
+            this.author = author;
+            this.accreditation = accreditation;
+            this.otherDetails = otherDetails;
+        }
+
+        public CodePhrase getLanguage() {
+            return language;
+        }
+
+        public Map<String, String> getAuthor() {
+            return author;
+        }
+
+        public String getAccreditation() {
+            return accreditation;
+        }
+
+        public Map<String, String> getOtherDetails() {
+            return otherDetails;
+        }
+    }
 }

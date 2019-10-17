@@ -297,4 +297,10 @@ public interface Deserializer {
      * @return nova instância de ResourceDescriptionItem
      */
     ResourceDescriptionItem deserializeResourceDescriptionItem();
+    
+    /**
+     * Deserializador de TranslationDetails
+     * @return nova instância de TranslationDetails
+     */
+    TranslationDetails deserializeTranslationDetails();
 }

@@ -256,4 +256,11 @@ public class RMObjectFactory {
                 language, purpose, keywords, use, misuse, copyright, 
                 originalResourceUri, otherDetails);
     }
+    
+    public static TranslationDetails newTranslationDetails(CodePhrase language, 
+            Map<String, String> author, String accreditation, 
+            Map<String, String> otherDetails){
+        return new TranslationDetails(language, author, 
+                accreditation, otherDetails);
+    }
 }
