@@ -2148,6 +2148,64 @@ public class RMObjectSerialization {
                     feederAudit, links);
         }
     }
+    
+    public static class PartyRelatedSerializer {
+        protected int serialize(Buffer buffer, int offset, PartyIdentified pi, 
+                DvCodedText relationship) throws UnsupportedEncodingException {
+            int meta = offset;
+            int position = offset + (2 * INT.getSize()) + BOOLEAN.getSize();
+            PartyIdentifiedSerializer pis = new PartyIdentifiedSerializer();
+            DvCodedTextSerializer dts = new DvCodedTextSerializer();
+            
+            if(relationship == null){
+                throw new IllegalArgumentException(
+                        "relantionship não pode ser null");
+            }
+            boolean hasPi = pi != null;
+            if(hasPi){
+                meta = writeHeader(buffer, meta, hasPi, position);
+                position = pis.serialize(buffer, position, pi);
+            } else {
+                meta = writeHeader(buffer, meta, hasPi);
+            }
+            
+            writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, relationship);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                PartyRelated pr) throws UnsupportedEncodingException {
+            int position = offset;
+            PartyRelatedSerializer prs = new PartyRelatedSerializer();
+            position = prs.serialize(
+                    buffer, position, pr.getPi(), pr.getRelationship());
+            
+            return position;
+        }
+        
+        protected PartyRelated deserialize(Buffer buffer, int offset){
+            int position = offset;
+            PartyIdentifiedSerializer pis = new PartyIdentifiedSerializer();
+            DvCodedTextSerializer dts = new DvCodedTextSerializer();
+            
+            boolean hasPi = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            PartyIdentified pi = null;
+            if(hasPi){
+                int piPosition = buffer.readInteger(position);
+                pi = pis.deserialize(buffer, piPosition);
+                position += INT.getSize();
+            }
+            
+            DvCodedText relationship = null;
+            int relationshipPosition = buffer.readInteger(position);
+            relationship = dts.deserialize(buffer, relationshipPosition);
+            
+            return RMObjectFactory.newPartyRelated(pi, relationship);
+        }
+    }
 
     /**
      * Serializa uma única String value

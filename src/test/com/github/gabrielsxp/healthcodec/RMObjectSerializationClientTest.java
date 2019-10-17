@@ -1728,4 +1728,66 @@ public class RMObjectSerializationClientTest {
         assertEquals(feederAudit.getOriginatingSystemAudit().getLocation().getName(),
                 l.getFeederAudit().getOriginatingSystemAudit().getLocation().getName());
     }
-}}
+    
+    @Test
+    public void PartyRelated() throws UnsupportedEncodingException{
+        String oidValue = "OBJECTID";
+        String value = "VALUE";
+        String name = "NAME";
+        
+        ObjectID oid = RMObjectFactory.newObjectID(oidValue);
+        PartyRef externalRef = RMObjectFactory.newPartyRef(oid, value);
+        
+        String issuer = "ISSUER";
+        String assigner = "ASSIGNER";
+        String id = "ID";
+        String type = "TYPE";
+
+        List<DvIdentifier> identifiers = new ArrayList<>();
+        identifiers.add(
+                RMObjectFactory.newDvIdentifier(issuer, assigner, id, type));
+        
+        PartyIdentified pi = RMObjectFactory.newPartyIdentified(
+                externalRef, name, identifiers);
+        
+        List<TermMapping> mappings = null;
+        String formatting = "DvText Formatting";
+        String hyperlinkValue = "Hyperlink value";
+        DVURI hyperlink =  RMObjectFactory.newDVURI(hyperlinkValue);
+        
+        String languageTIDValue = "Language Terminology ID";
+        TerminologyID languageTID = RMObjectFactory.newTerminologyID(languageTIDValue);
+        String languageValue = "Language value";
+        CodePhrase language = RMObjectFactory.newCodePhrase(languageTID, 
+                languageValue);
+        
+        String charsetTIDValue = "Charset Terminology ID";
+        String charsetValue = "Charset Value";
+        TerminologyID charsetTID = 
+                RMObjectFactory.newTerminologyID(charsetTIDValue);
+        CodePhrase charset = 
+                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
+        
+        DvText dvText = RMObjectFactory.newDvText(
+                value, mappings, formatting, hyperlink, language, charset);
+        
+        String definingCodeTIDValue = "Defining Code Terminology ID Value";
+        TerminologyID definingCodeTID = 
+                RMObjectFactory.newTerminologyID(definingCodeTIDValue);
+        String definingCodeValue = "Defining Code Value";
+        CodePhrase definingCode = 
+                RMObjectFactory.newCodePhrase(
+                        definingCodeTID, definingCodeTIDValue);
+        
+        DvCodedText relationship = RMObjectFactory.newDvCodedText(
+                dvText, definingCode);
+        
+        PartyRelated pr = RMObjectFactory.newPartyRelated(pi, relationship);
+        
+        s.serializePartyRelated(pr);
+        //pr = s.deserializePartyRelated();
+        
+        //assertEquals(relationship.getDvText().getValue(), pr.getRelationship().getDvText().getValue());
+        
+    }
+}}}

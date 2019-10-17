@@ -880,4 +880,22 @@ public class RMObject {
             return links;
         }
     }
+    
+    public static class PartyRelated {
+        private final PartyIdentified pi;
+        private final DvCodedText relationship;
+
+        public PartyRelated(PartyIdentified pi, DvCodedText relationship) {
+            this.pi = pi;
+            this.relationship = relationship;
+        }
+
+        public PartyIdentified getPi() {
+            return pi;
+        }
+
+        public DvCodedText getRelationship() {
+            return relationship;
+        }
+    }
 }

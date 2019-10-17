@@ -38,6 +38,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.ObjectVersionID;
 import com.github.gabrielsxp.healthcodec.RMObject.PartyIdentified;
 import com.github.gabrielsxp.healthcodec.RMObject.PartyProxy;
 import com.github.gabrielsxp.healthcodec.RMObject.PartyRef;
+import com.github.gabrielsxp.healthcodec.RMObject.PartyRelated;
 import com.github.gabrielsxp.healthcodec.RMObject.TemplateID;
 import com.github.gabrielsxp.healthcodec.RMObject.TerminologyID;
 import com.github.gabrielsxp.healthcodec.RMObject.UIDBasedID;
@@ -560,11 +561,52 @@ public interface Serializer {
     RMObjectSerializationClient serializeFeederAudit(
             FeederAudit fa) throws UnsupportedEncodingException;
     
+    /**
+     * Serializador de Locatable
+     * @param uid
+     * @param archetypeNodeId
+     * @param name
+     * @param archetypeDetails
+     * @param feederAudit
+     * @param links
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
     RMObjectSerializationClient serializeLocatable(UIDBasedID uid, 
             String archetypeNodeId, DvText name, Archetyped archetypeDetails,
             FeederAudit feederAudit, 
             Set<Link> links) throws UnsupportedEncodingException;
     
+    /**
+     * Serializador de Locatable
+     * 
+     * @param locatable
+     * @return
+     * @throws UnsupportedEncodingException 
+     */
     RMObjectSerializationClient serializeLocatable(
             Locatable locatable) throws UnsupportedEncodingException;
+    
+    /**
+     * Serilizador de PartyRelated
+     * @param pr
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializePartyRelated(
+            PartyRelated pr) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de PartyRelated
+     * 
+     * @param pi
+     * @param relationship
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializePartyRelated(
+            PartyIdentified pi, 
+            DvCodedText relationship) throws UnsupportedEncodingException;
+    
+    
 }

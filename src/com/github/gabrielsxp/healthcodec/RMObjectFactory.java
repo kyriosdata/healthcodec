@@ -236,4 +236,9 @@ public class RMObjectFactory {
         return new Locatable(uid, archetypeNodeId, name, archetypeDetails,
             feederAudit, links);
     }
+    
+    public static PartyRelated newPartyRelated(PartyIdentified pi, 
+            DvCodedText relationship){
+        return new PartyRelated(pi, relationship);
+    }
 }

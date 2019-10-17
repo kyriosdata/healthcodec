@@ -279,4 +279,10 @@ public interface Deserializer {
      * @return nova instância de Locatable
      */
     Locatable deserializeLocatable();
+    
+    /**
+     * Deserilizador de PartyRelated
+     * @return nova instância de PartyRelated
+     */
+    PartyRelated deserializePartyRelated();
 }

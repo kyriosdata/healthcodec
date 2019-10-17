@@ -1353,6 +1353,33 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
        return d.deserialize(buffer, getOffsetFromID(LOCATABLE));
     }
     
+        @Override
+    public RMObjectSerializationClient serializePartyRelated(
+            PartyRelated pr) throws UnsupportedEncodingException {
+        PartyRelatedSerializer s = new PartyRelatedSerializer();
+        register(PARTYRELATED, offset);
+        setOffset(s.serialize(buffer, offset, pr));
+        
+        return this;
+    }
+
+    @Override
+    public RMObjectSerializationClient serializePartyRelated(
+            PartyIdentified pi, 
+            DvCodedText relationship) throws UnsupportedEncodingException {
+        PartyRelatedSerializer s = new PartyRelatedSerializer();
+        register(PARTYRELATED, offset);
+        setOffset(s.serialize(buffer, offset, pi, relationship));
+        
+        return this;
+    }
+
+    @Override
+    public PartyRelated deserializePartyRelated() {
+        PartyRelatedSerializer d = new PartyRelatedSerializer();
+        return d.deserialize(buffer, getOffsetFromID(PARTYRELATED));
+    }
+    
     /**
      * Método para registrar um determinado objeto no índice
      *
@@ -1389,4 +1416,5 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     public byte[] getBuffer() {
         return this.buffer.data();
     }
+
 }
