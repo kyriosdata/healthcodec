@@ -898,4 +898,16 @@ public class RMObject {
             return relationship;
         }
     }
+    
+    public static class PartySelf {
+        private final PartyRef externalRef;
+
+        public PartySelf(PartyRef externalRef) {
+            this.externalRef = externalRef;
+        }
+
+        public PartyRef getExternalRef() {
+            return externalRef;
+        }
+    }
 }

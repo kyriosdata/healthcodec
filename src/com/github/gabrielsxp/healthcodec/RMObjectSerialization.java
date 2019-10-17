@@ -2206,6 +2206,50 @@ public class RMObjectSerialization {
             return RMObjectFactory.newPartyRelated(pi, relationship);
         }
     }
+    
+    public static class PartySelfSerializer {
+        protected int serialize(Buffer buffer, int offset, 
+                PartyRef externalRef) throws UnsupportedEncodingException {
+            int position = offset + INT.getSize() + BOOLEAN.getSize();
+            int meta = offset;
+            PartyRefSerializer prs = new PartyRefSerializer();
+            
+            boolean hasExternalRef = externalRef != null;
+            if(hasExternalRef){
+                writeHeader(buffer, meta, hasExternalRef, position);
+                position = prs.serialize(buffer, position, externalRef);
+            } else {
+                writeHeader(buffer, meta, hasExternalRef);
+            }
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                PartySelf ps) throws UnsupportedEncodingException {
+            int position = offset;
+            PartyRefSerializer prs = new PartyRefSerializer();
+            position = prs.serialize(buffer, position, ps.getExternalRef());
+            
+            return position;
+        }
+        
+        protected PartySelf deserialize(Buffer buffer, int offset){
+            int position = offset;
+            boolean hasExternalRef = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            
+            PartyRefSerializer prs = new PartyRefSerializer();
+            
+            PartyRef externalRef = null;
+            if(hasExternalRef){
+                int externalRefPosition = buffer.readInteger(position);
+                externalRef = prs.deserialize(buffer, externalRefPosition);
+            }
+            
+            return RMObjectFactory.newPartySelf(externalRef);
+        }
+    }
 
     /**
      * Serializa uma única String value

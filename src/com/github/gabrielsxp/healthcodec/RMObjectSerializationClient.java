@@ -1353,7 +1353,13 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
        return d.deserialize(buffer, getOffsetFromID(LOCATABLE));
     }
     
-        @Override
+    /**
+     * Serializador de PartyRelated
+     * @param pr
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
     public RMObjectSerializationClient serializePartyRelated(
             PartyRelated pr) throws UnsupportedEncodingException {
         PartyRelatedSerializer s = new PartyRelatedSerializer();
@@ -1362,7 +1368,14 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         
         return this;
     }
-
+    
+    /**
+     * Serializador de PartyRelated
+     * @param pi
+     * @param relationship
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
     @Override
     public RMObjectSerializationClient serializePartyRelated(
             PartyIdentified pi, 
@@ -1374,10 +1387,56 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         return this;
     }
 
+    /**
+     * Deserializador de PartyRelated
+     * @return nova instância de PartyRelated
+     */
     @Override
     public PartyRelated deserializePartyRelated() {
         PartyRelatedSerializer d = new PartyRelatedSerializer();
         return d.deserialize(buffer, getOffsetFromID(PARTYRELATED));
+    }
+    
+    /**
+     * Serializador de PartySelf
+     * @param externalRef
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializePartySelf(
+            PartyRef externalRef) throws UnsupportedEncodingException {
+        PartySelfSerializer s = new PartySelfSerializer();
+        register(PARTYSELF, offset);
+        setOffset(s.serialize(buffer, offset, externalRef));
+        
+        return this;
+    }
+
+    /**
+     * Serializador de PartySelf
+     * @param ps
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializePartySelf(
+            PartySelf ps) throws UnsupportedEncodingException {
+        PartySelfSerializer s = new PartySelfSerializer();
+        register(PARTYSELF, offset);
+        setOffset(s.serialize(buffer, offset, ps));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de PartySelf
+     * @return nova instância de PartySelf
+     */
+    @Override
+    public PartySelf deserializePartySelf() {
+        PartySelfSerializer d = new PartySelfSerializer();
+        return d.deserialize(buffer, getOffsetFromID(PARTYSELF));
     }
     
     /**
@@ -1416,5 +1475,4 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     public byte[] getBuffer() {
         return this.buffer.data();
     }
-
 }

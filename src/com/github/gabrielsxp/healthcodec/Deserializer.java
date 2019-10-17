@@ -285,4 +285,10 @@ public interface Deserializer {
      * @return nova instância de PartyRelated
      */
     PartyRelated deserializePartyRelated();
+    
+    /**
+     * Deserializador de PartySelf
+     * @return nova instância de PartySelf
+     */
+    PartySelf deserializePartySelf();
 }

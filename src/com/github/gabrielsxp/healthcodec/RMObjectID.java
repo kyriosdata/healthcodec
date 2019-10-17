@@ -56,7 +56,8 @@ public enum RMObjectID {
     FEEDERAUDITDETAILS(35),
     FEEDERAUDIT(36),
     LOCATABLE(37),
-    PARTYRELATED(38);
+    PARTYRELATED(38),
+    PARTYSELF(39);
     
     
 

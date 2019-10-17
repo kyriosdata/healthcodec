@@ -39,6 +39,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.PartyIdentified;
 import com.github.gabrielsxp.healthcodec.RMObject.PartyProxy;
 import com.github.gabrielsxp.healthcodec.RMObject.PartyRef;
 import com.github.gabrielsxp.healthcodec.RMObject.PartyRelated;
+import com.github.gabrielsxp.healthcodec.RMObject.PartySelf;
 import com.github.gabrielsxp.healthcodec.RMObject.TemplateID;
 import com.github.gabrielsxp.healthcodec.RMObject.TerminologyID;
 import com.github.gabrielsxp.healthcodec.RMObject.UIDBasedID;
@@ -608,5 +609,23 @@ public interface Serializer {
             PartyIdentified pi, 
             DvCodedText relationship) throws UnsupportedEncodingException;
     
+    /**
+     * Serializador de PartySelf
+     * 
+     * @param externalRef
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializePartySelf(
+            PartyRef externalRef) throws UnsupportedEncodingException;
     
+    /**
+     * Serializador de PartySelf
+     * 
+     * @param ps
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializePartySelf(
+            PartySelf ps) throws UnsupportedEncodingException;
 }

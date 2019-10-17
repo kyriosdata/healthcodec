@@ -241,4 +241,8 @@ public class RMObjectFactory {
             DvCodedText relationship){
         return new PartyRelated(pi, relationship);
     }
+    
+    public static PartySelf newPartySelf(PartyRef externalRef){
+        return new PartySelf(externalRef);
+    }
 }
