@@ -22,7 +22,9 @@ import com.github.gabrielsxp.healthcodec.RMObject.*;
 import static com.github.gabrielsxp.healthcodec.PrimitiveTypeSize.*;
 import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
 import com.github.gabrielsxp.healthcodec.RMObject.TermMapping;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -2283,6 +2285,71 @@ public class RMObjectSerialization {
         position += INT.getSize();
 
         return buffer.readString(position, length);
+    }
+    
+    /**
+     * Serializa um map de Strings
+     * @param buffer
+     * @param offset
+     * @param map
+     * @return posição final após a serialização de todos os items do map
+     * @throws UnsupportedEncodingException 
+     */
+    public static int mapStringSerialization(
+            Buffer buffer, 
+            int offset, 
+            Map<String, String> map) throws UnsupportedEncodingException {
+        int mapSize = map.size();
+        int meta = offset;
+        meta = writeHeader(buffer, meta, mapSize);
+        if(mapSize == 0){
+            return meta;
+        }
+        int position = offset + mapSize * (2 * INT.getSize()) + INT.getSize();
+        
+        for(Map.Entry<String, String> entry : map.entrySet()){
+            String key = entry.getKey();
+            String value = entry.getValue();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, key);
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, value);
+        }
+        
+        
+        return position;
+    }
+    
+    /**
+     * Deserializa um map de Strings
+     * @param buffer
+     * @param offset
+     * @return mapa original que foi serializado
+     */
+    public static Map<String, String> mapStringDeserialization(
+            Buffer buffer, int offset){
+        int position = offset;
+        int mapSize = buffer.readInteger(position);
+        position += INT.getSize();
+        if(mapSize == 0){
+            Map<String, String> map = new HashMap<>();
+            return map;
+        }
+        Map<String, String> map = new HashMap<>();
+        
+        for(int i = 0; i < mapSize; i++){
+            int keyPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            int valuePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String key = valueStringDeserialization(buffer, keyPosition);
+            String value = valueStringDeserialization(buffer, valuePosition);
+            
+            map.put(key, value);
+        }
+        
+        return map;
     }
 
     /**
