@@ -70,7 +70,8 @@ public enum RMObjectID {
     ITEMTABLE(49),
     ITEMTREE(50),
     PARTYIDENTITY(51),
-    PARTYRELATIONSHIP(52);
+    PARTYRELATIONSHIP(52),
+    ADDRESS(53);
     
     
     

@@ -312,4 +312,9 @@ public class RMObjectFactory {
             ItemStructure details, ObjectRef source, ObjectRef target ){
         return new PartyRelationship(locatable, details, source, target);
     }
+    
+    public static Address newAddress(Locatable locatable, 
+            ItemStructure details){
+        return new Address(locatable, details);
+    }
 }

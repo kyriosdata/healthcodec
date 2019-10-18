@@ -370,4 +370,10 @@ public interface Deserializer {
      * @return nova instância de PartyRelationship
      */
     PartyRelationship deserializePartyRelationship();
+    
+    /**
+     * Deserializador de Address
+     * @return nova instância de Address
+     */
+    Address deserializeAddress();
 }

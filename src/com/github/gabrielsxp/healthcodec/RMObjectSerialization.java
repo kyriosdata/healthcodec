@@ -3389,7 +3389,54 @@ public class RMObjectSerialization {
             return RMObjectFactory.newPartyRelationship(locatable, details, 
                     source, target);
         }
-    }   
+    }
+    
+    public static class AddressSerializer {
+        protected int serialize(Buffer buffer, int offset, Locatable locatable, 
+                ItemStructure details) throws UnsupportedEncodingException{
+            int meta = offset;
+            int position = offset + 2 * INT.getSize();
+            
+            LocatableSerializer ls = new LocatableSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = ls.serialize(buffer, position, locatable);
+            
+            writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, details);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                Address a) throws UnsupportedEncodingException {
+            int position = offset;
+            AddressSerializer as = new AddressSerializer();
+            
+            position = as.serialize(buffer, position, a);
+            
+            return position;
+        }
+        
+        protected Address deserialize(Buffer buffer, int offset){
+            int position = offset;
+            
+            LocatableSerializer ls = new LocatableSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            
+            int locatablePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Locatable locatable = ls.deserialize(buffer, locatablePosition);
+            
+            int detailsPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            ItemStructure details = iss.deserialize(buffer, detailsPosition);
+            
+            return RMObjectFactory.newAddress(locatable, details);
+        }
+    }
+    
     /**
      * Serializa uma única String value
      *

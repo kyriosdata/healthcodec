@@ -1802,11 +1802,37 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         
         return this;
     }
-
+    
+    /**
+     * Deserializador de PartyRelationship
+     * @return nova instância de PartyRelationship
+     */
     @Override
     public PartyRelationship deserializePartyRelationship() {
         PartyRelationshipSerializer d = new PartyRelationshipSerializer();
         return d.deserialize(buffer, getOffsetFromID(PARTYRELATIONSHIP));
+    }
+    
+    /**
+     * Serializador de Address
+     * @param a
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeAddress(
+            Address a) throws UnsupportedEncodingException {
+        AddressSerializer s = new AddressSerializer();
+        register(ADDRESS, offset);
+        setOffset(s.serialize(buffer, offset, a));
+        
+        return this;
+    }
+
+    @Override
+    public Address deserializeAddress() {
+        AddressSerializer d = new AddressSerializer();
+        return d.deserialize(buffer, getOffsetFromID(ADDRESS));
     }
     
     /**

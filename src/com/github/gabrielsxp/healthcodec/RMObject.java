@@ -1229,4 +1229,22 @@ public class RMObject {
             return target;
         }
     }
+    
+    public static class Address {
+        private final Locatable locatable;
+        private final ItemStructure details;
+
+        public Address(Locatable locatable, ItemStructure details) {
+            this.locatable = locatable;
+            this.details = details;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public ItemStructure getDetails() {
+            return details;
+        }
+    }
 }
