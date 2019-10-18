@@ -330,4 +330,9 @@ public class RMObjectFactory {
         return new Party(locatable, identities, contacts, relationships, 
                 reverseRelationships, details);
     }
+    
+    public static Capability newCapability(Locatable locatable, 
+            ItemStructure credentials){
+        return new Capability(locatable, credentials);
+    }
 }

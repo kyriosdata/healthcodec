@@ -388,4 +388,10 @@ public interface Deserializer {
      * @return nova instância de Party
      */
     Party deserializeParty();
+    
+    /**
+     * Deserializadoe de Capability
+     * @return nova instância de Capability
+     */
+    Capability deserializeCapability();
 }

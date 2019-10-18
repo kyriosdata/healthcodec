@@ -1307,4 +1307,22 @@ public class RMObject {
             return details;
         }
     }
+    
+     public static class Capability {
+        private final Locatable locatable;
+        private final ItemStructure credentials;
+
+        public Capability(Locatable locatable, ItemStructure credentials) {
+            this.locatable = locatable;
+            this.credentials = credentials;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public ItemStructure getCredentials() {
+            return credentials;
+        }
+    }
 }

@@ -3712,6 +3712,54 @@ public class RMObjectSerialization {
                     contacts, relationships, reverseRelationships, details);
         }
     }
+    
+    public static class CapabilitySerializer {
+
+        protected int serialize(Buffer buffer, int offset, Locatable credentials,
+                ItemStructure details) throws UnsupportedEncodingException {
+            int meta = offset;
+            int position = offset + 2 * INT.getSize();
+
+            LocatableSerializer ls = new LocatableSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = ls.serialize(buffer, position, credentials);
+
+            writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, details);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                Capability c) throws UnsupportedEncodingException {
+            int position = offset;
+            CapabilitySerializer cs = new CapabilitySerializer();
+
+            position = cs.serialize(buffer, position, c);
+
+            return position;
+        }
+
+        protected Capability deserialize(Buffer buffer, int offset) {
+            int position = offset;
+
+            LocatableSerializer ls = new LocatableSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            int locatablePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Locatable locatable = ls.deserialize(buffer, locatablePosition);
+
+            int credentialsPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            ItemStructure credentials = iss.deserialize(
+                    buffer, credentialsPosition);
+
+            return RMObjectFactory.newCapability(locatable, credentials);
+        }
+    }
 
     /**
      * Serializa uma única String value

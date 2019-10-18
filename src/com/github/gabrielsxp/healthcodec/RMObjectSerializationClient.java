@@ -1889,6 +1889,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
     
     /**
+     * Serializador de Capability
+     * @param c
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serialilzeCapability(
+            Capability c) throws UnsupportedEncodingException {
+        CapabilitySerializer s = new CapabilitySerializer();
+        register(CAPABILITY, offset);
+        setOffset(s.serialize(buffer, offset, c));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de Capability
+     * @return nova instância de Capability
+     */
+    @Override
+    public Capability deserializeCapability() {
+        CapabilitySerializer d = new CapabilitySerializer();
+        return d.deserialize(buffer, getOffsetFromID(CAPABILITY));
+    }
+    
+    /**
      * Método para registrar um determinado objeto no índice
      * @param id
      * @param offset

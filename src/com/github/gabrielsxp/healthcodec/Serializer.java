@@ -16,6 +16,7 @@ package com.github.gabrielsxp.healthcodec;
 import com.github.gabrielsxp.healthcodec.RMObject.Address;
 import com.github.gabrielsxp.healthcodec.RMObject.ArchetypeID;
 import com.github.gabrielsxp.healthcodec.RMObject.Archetyped;
+import com.github.gabrielsxp.healthcodec.RMObject.Capability;
 import com.github.gabrielsxp.healthcodec.RMObject.Cluster;
 import com.github.gabrielsxp.healthcodec.RMObject.CodePhrase;
 import com.github.gabrielsxp.healthcodec.RMObject.Contact;
@@ -808,4 +809,13 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeParty(
             Party p) throws UnsupportedEncodingException; 
+    
+    /**
+     * Serializador de Capability
+     * @param c
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serialilzeCapability(
+            Capability c) throws UnsupportedEncodingException; 
 }
