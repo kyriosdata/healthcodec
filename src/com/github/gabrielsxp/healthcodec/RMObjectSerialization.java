@@ -3032,8 +3032,53 @@ public class RMObjectSerialization {
             
             DataStructure ds = dss.deserialize(buffer, position);
             return RMObjectFactory.newItemStructure(ds);
+        }   
+    }
+    
+    public static class ItemSingleSerializer {
+        protected int serialize(Buffer buffer, int offset, ItemStructure is, 
+                Element item) throws UnsupportedEncodingException{
+            int meta = offset;
+            int position = offset + 2 * INT.getSize();
+            
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            ElementSerializer es = new ElementSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, is);
+            
+            writeHeader(buffer, meta, position);
+            position = es.serialize(buffer, position, item);
+            
+            return position;
         }
         
+        protected int serialize(Buffer buffer, int offset, 
+                ItemSingle is) throws UnsupportedEncodingException{
+            int position = offset;
+            ItemSingleSerializer iss = new ItemSingleSerializer();
+            
+            position = iss.serialize(buffer, position, is);
+            
+            return position;
+        }
+        
+        protected ItemSingle deserialize(Buffer buffer, int offset){
+            int position = offset;
+            
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            ElementSerializer es = new ElementSerializer();
+            
+            int itemStructurePosition = buffer.readInteger(position);
+            ItemStructure is = iss.deserialize(buffer, itemStructurePosition);
+            position += INT.getSize();
+            
+            int itemPosition = buffer.readInteger(position);
+            Element item = es.deserialize(buffer, itemPosition);
+            position += INT.getSize();
+            
+            return RMObjectFactory.newItemSingle(is, item);
+        }
     }
 
     /**

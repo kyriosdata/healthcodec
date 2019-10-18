@@ -1125,4 +1125,22 @@ public class RMObject {
             return dataStructure;
         }
     }
+    
+    public static class ItemSingle {
+        private final ItemStructure itemStructure;
+        private final Element item;
+
+        public ItemSingle(ItemStructure itemStructure, Element item) {
+            this.itemStructure = itemStructure;
+            this.item = item;
+        }
+
+        public ItemStructure getItemStructure() {
+            return itemStructure;
+        }
+
+        public Element getItem() {
+            return item;
+        }
+    }
 }

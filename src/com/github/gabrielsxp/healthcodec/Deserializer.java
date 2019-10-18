@@ -339,4 +339,11 @@ public interface Deserializer {
      * @return nova instância de ItemStructure
      */
     ItemStructure deserializeItemStructure();
+    
+    
+    /**
+     * Deserializador de ItemSingle
+     * @return nova instância de ItemSingle
+     */
+    ItemSingle deserializaeItemSingle();
 }

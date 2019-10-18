@@ -290,4 +290,8 @@ public class RMObjectFactory {
     public static ItemStructure newItemStructure(DataStructure ds){
         return new ItemStructure(ds);
     }
+    
+    public static ItemSingle newItemSingle(ItemStructure is, Element item){
+        return new ItemSingle(is, item);
+    }
 }
