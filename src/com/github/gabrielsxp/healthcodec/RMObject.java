@@ -1113,4 +1113,16 @@ public class RMObject {
             return items;
         }
     }
+    
+    public static class ItemStructure {
+        private final DataStructure dataStructure;
+
+        public ItemStructure(DataStructure dataStructure) {
+            this.dataStructure = dataStructure;
+        }
+
+        public DataStructure getDataStructure() {
+            return dataStructure;
+        }
+    }
 }

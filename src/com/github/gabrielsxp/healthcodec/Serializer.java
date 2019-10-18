@@ -719,4 +719,13 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeItemList(
             ItemList il) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de ItemStructure
+     * @param ds
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeItemStructure(
+            DataStructure ds) throws UnsupportedEncodingException;
 }

@@ -2868,6 +2868,8 @@ public class RMObjectSerialization {
             int position = offset + (7 * INT.getSize()) + 5 * BOOLEAN.getSize();
             
             UIDBasedIDSerializer us = new UIDBasedIDSerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+            FeederAuditSerializer fas = new FeederAuditSerializer();
             ArchetypedSerializer as = new ArchetypedSerializer();
             LinkSerializer ls = new LinkSerializer();
             ElementSerializer es = new ElementSerializer();
@@ -2875,18 +2877,163 @@ public class RMObjectSerialization {
             boolean hasUid = uid != null;
             if(hasUid){
                 meta = writeHeader(buffer, meta, hasUid, position);
-                position = us.serialize(buffer, offset, archetypeNodeId)
+                position = us.serialize(buffer, position, uid);
+            } else {
+                meta = writeHeader(buffer, meta, hasUid);
             }
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(
+                    buffer, position, archetypeNodeId);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, name);
+            
+            boolean hasArchetypeDetails = archetypeDetails != null;
+            if(hasArchetypeDetails){
+                meta = writeHeader(buffer, meta, hasArchetypeDetails, position);
+                position = as.serialize(buffer, position, archetypeDetails);
+            } else {
+                meta = writeHeader(buffer, meta, hasArchetypeDetails);
+            }
+            
+            boolean hasFeederAudit = feederAudit != null;
+            if(hasFeederAudit){
+                meta = writeHeader(buffer, meta, hasFeederAudit, position);
+                position = fas.serialize(buffer, position, feederAudit);
+            } else {
+                meta = writeHeader(buffer, meta, hasFeederAudit);
+            }
+            
+            boolean hasLinks = links != null;
+            if(hasLinks){
+                meta = writeHeader(buffer, meta, hasLinks, position);
+                position = ls.setSerializer(buffer, position, links);
+            } else {
+                meta = writeHeader(buffer, meta, hasLinks);
+            }
+            
+            boolean hasItems = items != null;
+            if(hasItems){
+                writeHeader(buffer, meta, hasItems, position);
+                position = es.listSerialize(buffer, position, items);
+            } else {
+                writeHeader(buffer, meta, hasItems);
+            }
+            
+            return position;
         }
         
         protected int serialize(Buffer buffer, int offset, 
                 ItemList il) throws UnsupportedEncodingException {
+            ItemListSerializer is = new ItemListSerializer();
+            int position = offset;
             
+            position = is.serialize(buffer, position, il.getUid(), 
+                    il.getArchetypeNodeId(), il.getName(), 
+                    il.getArchetypeDetails(), il.getFeederAudit(),
+                    il.getLinks(), il.getItems());
+            
+            return position;
         }
         
         protected ItemList deserialize(Buffer buffer, int offset){
+            int position = offset;
             
+            UIDBasedIDSerializer us = new UIDBasedIDSerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+            FeederAuditSerializer fas = new FeederAuditSerializer();
+            ArchetypedSerializer as = new ArchetypedSerializer();
+            LinkSerializer ls = new LinkSerializer();
+            ElementSerializer es = new ElementSerializer();
+            
+            boolean hasUId = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            UIDBasedID uid = null;
+            if(hasUId){
+                int uidPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                uid = us.deserialize(buffer, uidPosition);
+            }
+            
+            int archetypeNodeIdPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String archetypeNodeId = valueStringDeserialization(
+                    buffer, archetypeNodeIdPosition);
+            
+            int namePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            DvText name = dts.deserialize(buffer, namePosition);
+            
+            boolean hasArchetypeDetails = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            Archetyped archetypeDetails = null;
+            if(hasArchetypeDetails){
+                int archetypeDetailsPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                archetypeDetails = as.deserialize(
+                        buffer, archetypeDetailsPosition);
+            }
+            
+            boolean hasFeederAudit = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            FeederAudit feederAudit = null;
+            if(hasFeederAudit){
+                int feederAuditPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                feederAudit = fas.deserialize(buffer, feederAuditPosition);
+            }
+            
+            boolean hasLinks = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            Set<Link> links = null;
+            if(hasLinks){
+                int linksPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                links = ls.setDeserializer(buffer, linksPosition);
+            }
+            
+            boolean hasItems = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            List<Element> items = null;
+            if(hasItems){
+                int itemsPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                items = es.deserializeList(buffer, itemsPosition);
+            }
+            
+            return RMObjectFactory.newItemList(uid, archetypeNodeId, name, 
+                    archetypeDetails, feederAudit, links, items);
         }
+    }
+    
+    public static class ItemStructureSerializer {
+        protected int serialize(Buffer buffer, int offset, 
+                DataStructure ds) throws UnsupportedEncodingException {
+            int position = offset;
+            DataStructureSerializer dss = new DataStructureSerializer();
+            position = dss.serialize(buffer, position, ds);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                ItemStructure is) throws UnsupportedEncodingException {
+            int position = offset;
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            position = iss.serialize(buffer, position, is.getDataStructure());
+            
+            return position;
+        }
+        
+        protected ItemStructure deserialize(Buffer buffer, int offset){
+            int position = offset;
+            DataStructureSerializer dss = new DataStructureSerializer();
+            
+            DataStructure ds = dss.deserialize(buffer, position);
+            return RMObjectFactory.newItemStructure(ds);
+        }
+        
     }
 
     /**

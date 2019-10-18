@@ -333,4 +333,10 @@ public interface Deserializer {
      * @return nova instância de ItemList
      */
     ItemList deserializeItemList();
+    
+    /**
+     * Deserializador de ItemStructure
+     * @return nova instância de ItemStructure
+     */
+    ItemStructure deserializeItemStructure();
 }

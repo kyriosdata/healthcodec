@@ -286,4 +286,8 @@ public class RMObjectFactory {
         return new ItemList(uid, archetypeNodeId, name, archetypeDetails,
                 feederAudit, links, items);
     }
+    
+    public static ItemStructure newItemStructure(DataStructure ds){
+        return new ItemStructure(ds);
+    }
 }
