@@ -3864,6 +3864,45 @@ public class RMObjectSerialization {
             
             return RMObjectFactory.newRole(party, capabilities, performer);
         }
+        
+        protected int setSerializer(Buffer buffer, int offset,
+                Set<Role> roles) throws UnsupportedEncodingException {
+            int setSize = roles.size();
+            int position = offset + (setSize * INT.getSize()) + INT.getSize();
+            int meta = offset;
+            RoleSerializer rs = new RoleSerializer();
+
+            meta = writeHeader(buffer, meta, setSize);
+            Iterator<Role> it = roles.iterator();
+
+            while (it.hasNext()) {
+                Role role = it.next();
+                int linkPosition = position;
+                meta = writeHeader(buffer, meta, linkPosition);
+                position = rs.serialize(buffer, position, role);
+            }
+
+            return position;
+        }
+
+        protected Set<Role> setDeserializer(Buffer buffer, int offset) {
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += INT.getSize();
+
+            RoleSerializer rs = new RoleSerializer();
+            Set<Role> roles = new HashSet<>();
+
+            for (int i = 0; i < listSize; i++) {
+                int rPosition = buffer.readInteger(position);
+                position += INT.getSize();
+
+                Role role = rs.deserialize(buffer, rPosition);
+                roles.add(role);
+            }
+
+            return roles;
+        }
     }
 
     /**
