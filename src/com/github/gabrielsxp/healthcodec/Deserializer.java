@@ -327,4 +327,10 @@ public interface Deserializer {
      * @return nova instância de DataStructure
      */
     DataStructure deserializeDataStructure();
+    
+    /**
+     * Deserializador de ItemList
+     * @return nova instância de ItemList
+     */
+    ItemList deserializeItemList();
 }

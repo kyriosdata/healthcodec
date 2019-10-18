@@ -279,4 +279,11 @@ public class RMObjectFactory {
     public static DataStructure newDataStructure(Locatable locatable){
         return new DataStructure(locatable);
     }
+    
+    public static ItemList newItemList(UIDBasedID uid, String archetypeNodeId, 
+            DvText name, Archetyped archetypeDetails, FeederAudit feederAudit, 
+            Set<Link> links, List<Element> items){
+        return new ItemList(uid, archetypeNodeId, name, archetypeDetails,
+                feederAudit, links, items);
+    }
 }

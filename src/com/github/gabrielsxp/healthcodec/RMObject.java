@@ -43,7 +43,8 @@ public class RMObject {
         private final String id;
         private final String type;
 
-        protected DvIdentifier(String issuer, String assigner, String id, String type) {
+        protected DvIdentifier(String issuer, String assigner, String id, 
+                String type) {
             this.issuer = issuer;
             this.assigner = assigner;
             this.id = id;
@@ -453,7 +454,8 @@ public class RMObject {
         private final String value;
         private final String formalism;
 
-        protected DvParsable(CodePhrase charset, CodePhrase language, String value, String formalism) {
+        protected DvParsable(CodePhrase charset, CodePhrase language, 
+                String value, String formalism) {
             this.charset = charset;
             this.language = language;
             this.value = value;
@@ -976,7 +978,9 @@ public class RMObject {
         private final String accreditation;
         private final Map<String, String> otherDetails;
 
-        public TranslationDetails(CodePhrase language, Map<String, String> author, String accreditation, Map<String, String> otherDetails) {
+        public TranslationDetails(CodePhrase language, Map<String, 
+                String> author, String accreditation, 
+                Map<String, String> otherDetails) {
             this.language = language;
             this.author = author;
             this.accreditation = accreditation;
@@ -1057,6 +1061,56 @@ public class RMObject {
 
         public Locatable getLocatable() {
             return locatable;
+        }
+    }
+    
+    public static class ItemList {
+        private final UIDBasedID uid;
+        private final String archetypeNodeId;
+        private final DvText name;
+        private final Archetyped archetypeDetails;
+        private final FeederAudit feederAudit;
+        private final Set<Link> links;
+        private final List<Element> items;
+
+        public ItemList(UIDBasedID uid, String archetypeNodeId, DvText name, 
+                Archetyped archetypeDetails, FeederAudit feederAudit, 
+                Set<Link> links, List<Element> items) {
+            this.uid = uid;
+            this.archetypeNodeId = archetypeNodeId;
+            this.name = name;
+            this.archetypeDetails = archetypeDetails;
+            this.feederAudit = feederAudit;
+            this.links = links;
+            this.items = items;
+        }
+
+        public UIDBasedID getUid() {
+            return uid;
+        }
+
+        public String getArchetypeNodeId() {
+            return archetypeNodeId;
+        }
+
+        public DvText getName() {
+            return name;
+        }
+
+        public Archetyped getArchetypeDetails() {
+            return archetypeDetails;
+        }
+
+        public FeederAudit getFeederAudit() {
+            return feederAudit;
+        }
+
+        public Set<Link> getLinks() {
+            return links;
+        }
+
+        public List<Element> getItems() {
+            return items;
         }
     }
 }

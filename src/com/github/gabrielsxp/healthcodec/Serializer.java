@@ -34,6 +34,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.Element;
 import com.github.gabrielsxp.healthcodec.RMObject.FeederAudit;
 import com.github.gabrielsxp.healthcodec.RMObject.FeederAuditDetails;
 import com.github.gabrielsxp.healthcodec.RMObject.Item;
+import com.github.gabrielsxp.healthcodec.RMObject.ItemList;
 import com.github.gabrielsxp.healthcodec.RMObject.Link;
 import com.github.gabrielsxp.healthcodec.RMObject.Locatable;
 import com.github.gabrielsxp.healthcodec.RMObject.Match;
@@ -709,4 +710,13 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeDataStructure(
             DataStructure ds) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de ItemList
+     * @param il
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeItemList(
+            ItemList il) throws UnsupportedEncodingException;
 }

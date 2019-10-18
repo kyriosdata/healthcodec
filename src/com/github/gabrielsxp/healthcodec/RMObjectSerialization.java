@@ -867,6 +867,16 @@ public class RMObjectSerialization {
                 throws UnsupportedEncodingException {
             return valueStringSerialization(buffer, offset, value);
         }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                UIDBasedID uid) throws UnsupportedEncodingException{
+            int position = offset;
+            UIDBasedIDSerializer us = new UIDBasedIDSerializer();
+            
+            position = us.serialize(buffer, position, uid.getValue());
+            
+            return position;
+        }
 
         protected UIDBasedID deserialize(Buffer buffer, int offset) {
             int valueLength = buffer.readInteger(offset);
@@ -2845,6 +2855,37 @@ public class RMObjectSerialization {
             Locatable locatable = ls.deserialize(buffer, position);
             
             return RMObjectFactory.newDataStructure(locatable);
+        }
+    }
+    
+    public static class ItemListSerializer {
+        protected int serialize(Buffer buffer, int offset, UIDBasedID uid, 
+                String archetypeNodeId, DvText name, 
+                Archetyped archetypeDetails, FeederAudit feederAudit,
+                Set<Link> links, 
+                List<Element> items) throws UnsupportedEncodingException{
+            int meta = offset;
+            int position = offset + (7 * INT.getSize()) + 5 * BOOLEAN.getSize();
+            
+            UIDBasedIDSerializer us = new UIDBasedIDSerializer();
+            ArchetypedSerializer as = new ArchetypedSerializer();
+            LinkSerializer ls = new LinkSerializer();
+            ElementSerializer es = new ElementSerializer();
+            
+            boolean hasUid = uid != null;
+            if(hasUid){
+                meta = writeHeader(buffer, meta, hasUid, position);
+                position = us.serialize(buffer, offset, archetypeNodeId)
+            }
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                ItemList il) throws UnsupportedEncodingException {
+            
+        }
+        
+        protected ItemList deserialize(Buffer buffer, int offset){
+            
         }
     }
 

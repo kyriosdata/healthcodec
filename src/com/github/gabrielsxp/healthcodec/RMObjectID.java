@@ -63,7 +63,8 @@ public enum RMObjectID {
     ITEM(42),
     CLUSTER(43),
     ELEMENT(44),
-    DATASTRUCTURE(45);
+    DATASTRUCTURE(45),
+    ITEMLIST(46);
     
     
 
