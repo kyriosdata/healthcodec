@@ -335,4 +335,9 @@ public class RMObjectFactory {
             ItemStructure credentials){
         return new Capability(locatable, credentials);
     }
+    
+    public static Role newRole(Party party, List<Capability> capabilities, 
+            PartyRef performer){
+        return new Role(party, capabilities, performer);
+    }
 }

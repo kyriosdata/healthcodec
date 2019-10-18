@@ -394,4 +394,10 @@ public interface Deserializer {
      * @return nova instância de Capability
      */
     Capability deserializeCapability();
+    
+    /**
+     * Deserializador de Role
+     * @return nova instância de Role
+     */
+    Role deserializeRole();
 }

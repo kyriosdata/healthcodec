@@ -74,7 +74,8 @@ public enum RMObjectID {
     ADDRESS(53),
     CONTACT(54),
     PARTY(55),
-    CAPABILITY(56);
+    CAPABILITY(56),
+    ROLE(57);
     
     private final int value;
 

@@ -1325,4 +1325,30 @@ public class RMObject {
             return credentials;
         }
     }
+     
+     public static class Role {
+         private final Party party;
+         private final List<Capability> capabilities;
+         //private final DvInterval<DvDate> timeValidity todo
+         private final PartyRef performer;
+
+        public Role(Party party, List<Capability> capabilities, 
+                PartyRef performer) {
+            this.party = party;
+            this.capabilities = capabilities;
+            this.performer = performer;
+        }
+
+        public Party getParty() {
+            return party;
+        }
+
+        public List<Capability> getCapabilities() {
+            return capabilities;
+        }
+
+        public PartyRef getPerformer() {
+            return performer;
+        }
+     }
 }

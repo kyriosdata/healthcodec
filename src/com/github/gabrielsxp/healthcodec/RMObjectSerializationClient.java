@@ -1915,6 +1915,28 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
     
     /**
+     * Serializador de Role
+     * @param r
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeRole(
+            Role r) throws UnsupportedEncodingException {
+        RoleSerializer s = new RoleSerializer();
+        register(ROLE, offset);
+        setOffset(s.serialize(buffer, offset, r));
+        
+        return this;
+    }
+
+    @Override
+    public Role deserializeRole() {
+        RoleSerializer d = new RoleSerializer();
+        return d.deserialize(buffer, getOffsetFromID(ROLE));
+    }
+    
+    /**
      * Método para registrar um determinado objeto no índice
      * @param id
      * @param offset

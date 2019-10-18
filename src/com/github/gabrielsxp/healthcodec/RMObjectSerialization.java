@@ -3796,6 +3796,75 @@ public class RMObjectSerialization {
             return list;
         }
     }
+    
+    public static class RoleSerializer {
+        protected int serialize(Buffer buffer, int offset, Party party, 
+                List<Capability> capabilities, 
+                PartyRef performer) throws UnsupportedEncodingException{
+            int meta = offset;
+            int position = offset + 4 * INT.getSize() + 2 * BOOLEAN.getSize();
+            
+            PartySerializer ps = new PartySerializer();
+            CapabilitySerializer cs = new CapabilitySerializer();
+            PartyRefSerializer prs = new PartyRefSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = ps.serialize(buffer, position, party);
+            
+            boolean hasCapabilities = capabilities != null;
+            if(hasCapabilities){
+                meta = writeHeader(buffer, meta, hasCapabilities, position);
+                position = cs.listSerialize(buffer, position, capabilities);
+            } else {
+                meta = writeHeader(buffer, meta, hasCapabilities);
+            }
+            
+            //TODO DvInterval<DvDate> timeValidity
+            
+            writeHeader(buffer, meta, position);
+            position = prs.serialize(buffer, position, performer);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                Role r) throws UnsupportedEncodingException {
+            int position = offset;
+            RoleSerializer rs = new RoleSerializer();
+            
+            position = rs.serialize(buffer, position, r);
+            
+            return position;
+        }
+        
+        protected Role deserialize(Buffer buffer, int offset){
+            int position = offset;
+            PartySerializer ps = new PartySerializer();
+            CapabilitySerializer cs = new CapabilitySerializer();
+            PartyRefSerializer prs = new PartyRefSerializer();
+            
+            int partyPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Party party = ps.deserialize(buffer, partyPosition);
+            
+            boolean hasCapabilities = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            List<Capability> capabilities = null;
+            if(hasCapabilities){
+                int capabilitiesPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                capabilities = cs.deserializeList(buffer, capabilitiesPosition);
+            }
+            
+            //TODO DvInterval<DvDate> timeValidity
+            
+            int performerPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            PartyRef performer = prs.deserialize(buffer, performerPosition);
+            
+            return RMObjectFactory.newRole(party, capabilities, performer);
+        }
+    }
 
     /**
      * Serializa uma única String value
