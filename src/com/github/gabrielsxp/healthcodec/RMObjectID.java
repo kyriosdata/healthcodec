@@ -66,7 +66,8 @@ public enum RMObjectID {
     DATASTRUCTURE(45),
     ITEMLIST(46),
     ITEMSTRUCTURE(47),
-    ITEMSINGLE(48);
+    ITEMSINGLE(48),
+    ITEMTABLE(49);
     
     
 

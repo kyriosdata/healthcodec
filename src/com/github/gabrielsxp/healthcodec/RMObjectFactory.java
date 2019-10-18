@@ -294,4 +294,8 @@ public class RMObjectFactory {
     public static ItemSingle newItemSingle(ItemStructure is, Element item){
         return new ItemSingle(is, item);
     }
+    
+    public static ItemTable newItemTable(ItemStructure is, List<Cluster> rows){
+        return new ItemTable(is, rows);
+    }
 }

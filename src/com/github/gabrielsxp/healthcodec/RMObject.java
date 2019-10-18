@@ -1143,4 +1143,22 @@ public class RMObject {
             return item;
         }
     }
+    
+    public static class ItemTable {
+        private final ItemStructure itemStructure;
+        private final List<Cluster> rows;
+
+        public ItemTable(ItemStructure itemStructure, List<Cluster> rows) {
+            this.itemStructure = itemStructure;
+            this.rows = rows;
+        }
+
+        public ItemStructure getItemStructure() {
+            return itemStructure;
+        }
+
+        public List<Cluster> getRows() {
+            return rows;
+        }
+    }
 }

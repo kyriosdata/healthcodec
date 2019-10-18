@@ -345,5 +345,11 @@ public interface Deserializer {
      * Deserializador de ItemSingle
      * @return nova instância de ItemSingle
      */
-    ItemSingle deserializaeItemSingle();
+    ItemSingle deserializeItemSingle();
+    
+    /**
+     * Deserializador de ItemTable
+     * @return nova instância de ItemTable
+     */
+    ItemTable deserializeItemTable();
 }

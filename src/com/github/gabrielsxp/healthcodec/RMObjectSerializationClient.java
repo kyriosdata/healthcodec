@@ -1704,9 +1704,31 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * @return nova instância de ItemSingle
      */
     @Override
-    public ItemSingle deserializaeItemSingle() {
+    public ItemSingle deserializeItemSingle() {
         ItemSingleSerializer d = new ItemSingleSerializer();
         return d.deserialize(buffer, getOffsetFromID(ITEMSINGLE));
+    }
+    
+    /**
+     * Serializador de ItemTable
+     * @param it
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeItemTable(
+            ItemTable it) throws UnsupportedEncodingException {
+        ItemTableSerializer s = new ItemTableSerializer();
+        register(ITEMTABLE, offset);
+        setOffset(s.serialize(buffer, offset, it));
+        
+        return this;
+    }
+
+    @Override
+    public ItemTable deserializeItemTable() {
+        ItemTableSerializer d = new ItemTableSerializer();
+        return d.deserialize(buffer, getOffsetFromID(ITEMTABLE));
     }
     
     /**

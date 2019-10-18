@@ -3080,6 +3080,51 @@ public class RMObjectSerialization {
             return RMObjectFactory.newItemSingle(is, item);
         }
     }
+    
+    public static class ItemTableSerializer {
+        protected int serialize(Buffer buffer, int offset, ItemStructure is, 
+                List<Cluster> rows) throws UnsupportedEncodingException{
+            int meta = offset;
+            int position = offset + 2 * INT.getSize();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            ClusterSerializer cs = new ClusterSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, is);
+            
+            writeHeader(buffer, meta, position);
+            position = cs.listSerialize(buffer, position, rows);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                ItemTable it) throws UnsupportedEncodingException{
+            int position = offset;
+            ItemTableSerializer its = new ItemTableSerializer();
+            
+            position = its.serialize(buffer, position, 
+                    it.getItemStructure(), it.getRows());
+            
+            return position;
+        }
+        
+        protected ItemTable deserialize(Buffer buffer, int offset){
+            int position = offset;
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            ClusterSerializer cs = new ClusterSerializer();
+            
+            int itemStructurePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            ItemStructure is = iss.deserialize(buffer, itemStructurePosition);
+            
+            int rowsPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            List<Cluster> rows = cs.deserializeList(buffer, rowsPosition);
+            
+            return RMObjectFactory.newItemTable(is, rows);
+        }
+    }
 
     /**
      * Serializa uma única String value
