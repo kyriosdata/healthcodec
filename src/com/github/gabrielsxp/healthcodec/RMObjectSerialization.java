@@ -2698,6 +2698,42 @@ public class RMObjectSerialization {
             
             return RMObjectFactory.newCluster(item, items);
         }
+        
+        protected int listSerialize(
+                Buffer buffer, int offset, List<Cluster> items)
+                throws UnsupportedEncodingException {
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize * INT.getSize()) + INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            ClusterSerializer cs = new ClusterSerializer();
+
+            for (Cluster d : items) {
+                meta = writeHeader(buffer, meta, position);
+                position = cs.serialize(buffer, position, d);
+            }
+
+            return position;
+        }
+        
+        protected List<Cluster> deserializeList(Buffer buffer, int offset) {
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += INT.getSize();
+
+            List<Cluster> list = new ArrayList<>();
+            ClusterSerializer es = new ClusterSerializer();
+
+            for (int i = 0; i < listSize; i++) {
+                int clusterPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                Cluster t = es.deserialize(buffer, clusterPosition);
+                list.add(t);
+            }
+
+            return list;
+        }
     }
     
     public static class ElementSerializer {
