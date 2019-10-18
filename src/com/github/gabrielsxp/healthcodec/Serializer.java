@@ -29,6 +29,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.DvParagraph;
 import com.github.gabrielsxp.healthcodec.RMObject.DvParsable;
 import com.github.gabrielsxp.healthcodec.RMObject.DvState;
 import com.github.gabrielsxp.healthcodec.RMObject.DvText;
+import com.github.gabrielsxp.healthcodec.RMObject.Element;
 import com.github.gabrielsxp.healthcodec.RMObject.FeederAudit;
 import com.github.gabrielsxp.healthcodec.RMObject.FeederAuditDetails;
 import com.github.gabrielsxp.healthcodec.RMObject.Item;
@@ -684,9 +685,18 @@ public interface Serializer {
     /**
      * Serializador de Cluster
      * @param cluster
-     * @return Instância de RMObjectSerializationClient para 
+     * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeCluster(
             Cluster cluster) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de Element
+     * @param element
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeElement(
+            Element element) throws UnsupportedEncodingException;
 }

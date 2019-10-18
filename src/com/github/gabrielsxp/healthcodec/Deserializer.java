@@ -315,4 +315,10 @@ public interface Deserializer {
      * @return nova instância de Cluster
      */
     Cluster deserializeCluster();
+    
+    /**
+     * Deserializador de Element
+     * @return nova instância de Element
+     */
+    Element deserializeElement();
 }

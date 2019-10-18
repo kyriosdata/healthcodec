@@ -1029,4 +1029,22 @@ public class RMObject {
             return items;
         }
     }
+    
+    public static class Element {
+        private final Item item;
+        private final DvCodedText nullFlavour;
+
+        public Element(Item item, DvCodedText nullFlavour) {
+            this.item = item;
+            this.nullFlavour = nullFlavour;
+        }
+
+        public Item getItem() {
+            return item;
+        }
+
+        public DvCodedText getNullFlavour() {
+            return nullFlavour;
+        }
+    }
 }

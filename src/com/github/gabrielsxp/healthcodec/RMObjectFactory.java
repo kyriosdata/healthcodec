@@ -271,4 +271,8 @@ public class RMObjectFactory {
     public static Cluster newCluster(Item item, List<Item> items){
         return new Cluster(item, items);
     }
+    
+    public static Element newElement(Item item, DvCodedText nullFlavour){
+        return new Element(item, nullFlavour);
+    }
 }

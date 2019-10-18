@@ -2699,6 +2699,51 @@ public class RMObjectSerialization {
             return RMObjectFactory.newCluster(item, items);
         }
     }
+    
+    public static class ElementSerializer {
+        protected int serialize(Buffer buffer, int offset, Item item, 
+                DvCodedText nullFlavour) throws UnsupportedEncodingException {
+            int meta = offset;
+            int position = offset + 2 * INT.getSize();
+            ItemSerializer is = new ItemSerializer();
+            DvCodedTextSerializer dts = new DvCodedTextSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = is.serialize(buffer, position, item);
+            
+            writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, nullFlavour);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                Element element) throws UnsupportedEncodingException {
+            int position = offset;
+            ElementSerializer es = new ElementSerializer();
+            
+            position = es.serialize(buffer, position, element);
+            
+            return position;
+        }
+        
+        protected Element deserialize(Buffer buffer, int offset){
+            int position = offset;
+            ItemSerializer is = new ItemSerializer();
+            DvCodedTextSerializer dts = new DvCodedTextSerializer();
+            
+            int itemPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Item item = is.deserialize(buffer, itemPosition);
+            
+            int nullFlavourPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            DvCodedText nullFlavour = dts.deserialize(
+                    buffer, nullFlavourPosition);
+            
+            return RMObjectFactory.newElement(item, nullFlavour);
+        }
+    }
 
     /**
      * Serializa uma única String value

@@ -1579,6 +1579,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
     
     /**
+     * Serializador de Element
+     * @param element
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeElement(
+            Element element) throws UnsupportedEncodingException {
+        ElementSerializer s = new ElementSerializer();
+        register(ELEMENT, offset);
+        setOffset(s.serialize(buffer, offset, element));
+        
+        return this;
+    }
+
+    /**
+     * Deserializador de Element
+     * @return nova instância de Element
+     */
+    @Override
+    public Element deserializeElement() {
+        ElementSerializer d = new ElementSerializer();
+        return d.deserialize(buffer, getOffsetFromID(ELEMENT));
+    }
+    
+    /**
      * Método para registrar um determinado objeto no índice
      * @param id
      * @param offset

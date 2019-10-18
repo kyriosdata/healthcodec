@@ -61,7 +61,8 @@ public enum RMObjectID {
     RESOURCEDESCRIPTIONITEM(40),
     TRANSLATIONDETAILS(41),
     ITEM(42),
-    CLUSTER(43);
+    CLUSTER(43),
+    ELEMENT(44);
     
     
 
