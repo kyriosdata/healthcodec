@@ -3759,6 +3759,42 @@ public class RMObjectSerialization {
 
             return RMObjectFactory.newCapability(locatable, credentials);
         }
+        
+        protected int listSerialize(
+                Buffer buffer, int offset, List<Capability> items)
+                throws UnsupportedEncodingException {
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize * INT.getSize()) + INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            CapabilitySerializer cs = new CapabilitySerializer();
+
+            for (Capability c : items) {
+                meta = writeHeader(buffer, meta, position);
+                position = cs.serialize(buffer, position, c);
+            }
+
+            return position;
+        }
+
+        protected List<Capability> deserializeList(Buffer buffer, int offset) {
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += INT.getSize();
+
+            List<Capability> list = new ArrayList<>();
+            CapabilitySerializer cs = new CapabilitySerializer();
+
+            for (int i = 0; i < listSize; i++) {
+                int capabilityPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                Capability c = cs.deserialize(buffer, capabilityPosition);
+                list.add(c);
+            }
+
+            return list;
+        }
     }
 
     /**
