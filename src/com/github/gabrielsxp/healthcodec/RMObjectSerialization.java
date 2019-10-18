@@ -3435,6 +3435,42 @@ public class RMObjectSerialization {
             
             return RMObjectFactory.newAddress(locatable, details);
         }
+        
+        protected int listSerialize(
+                Buffer buffer, int offset, List<Address> items)
+                throws UnsupportedEncodingException {
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize * INT.getSize()) + INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            AddressSerializer dis = new AddressSerializer();
+
+            for (Address d : items) {
+                meta = writeHeader(buffer, meta, position);
+                position = dis.serialize(buffer, position, d);
+            }
+
+            return position;
+        }
+
+        protected List<Address> deserializeList(Buffer buffer, int offset) {
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += INT.getSize();
+
+            List<Address> list = new ArrayList<>();
+            AddressSerializer as = new AddressSerializer();
+
+            for (int i = 0; i < listSize; i++) {
+                int addressPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                Address a = as.deserialize(buffer, addressPosition);
+                list.add(a);
+            }
+
+            return list;
+        }
     }
     
     /**
