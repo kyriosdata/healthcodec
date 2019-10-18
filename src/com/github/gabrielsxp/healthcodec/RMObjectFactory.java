@@ -298,4 +298,8 @@ public class RMObjectFactory {
     public static ItemTable newItemTable(ItemStructure is, List<Cluster> rows){
         return new ItemTable(is, rows);
     }
+    
+    public static ItemTree newItemTree(ItemStructure is, List<Item> items){
+        return new ItemTree(is, items);
+    }
 }

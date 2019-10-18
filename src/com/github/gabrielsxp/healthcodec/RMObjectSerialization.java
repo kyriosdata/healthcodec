@@ -22,6 +22,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.*;
 import static com.github.gabrielsxp.healthcodec.PrimitiveTypeSize.*;
 import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
 import com.github.gabrielsxp.healthcodec.RMObject.TermMapping;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -3123,6 +3124,59 @@ public class RMObjectSerialization {
             List<Cluster> rows = cs.deserializeList(buffer, rowsPosition);
             
             return RMObjectFactory.newItemTable(is, rows);
+        }
+    }
+    
+    public static class ItemTreeSerializer {
+        protected int serialize(Buffer buffer, int offset, ItemStructure is, 
+                List<Item> items) throws UnsupportedEncodingException {
+            int meta = offset;
+            int position = offset + 2 * INT.getSize() + BOOLEAN.getSize();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            ItemSerializer isr = new ItemSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, is);
+            
+            boolean hasItems = items != null;
+            if(hasItems){
+                writeHeader(buffer, meta, hasItems, position);
+                position = isr.listSerialize(buffer, position, items);
+            } else {
+                writeHeader(buffer, meta, hasItems);
+            }
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                ItemTree it) throws UnsupportedCharsetException {
+            int position = offset;
+            ItemTreeSerializer its = new ItemTreeSerializer();
+            
+            position = its.serialize(buffer, position, it);
+            
+            return position;
+        }
+        
+        protected ItemTree deserialize(Buffer buffer, int offset){
+            int position = offset;
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            ItemSerializer isr = new ItemSerializer();
+            
+            int itemStructurePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            ItemStructure is = iss.deserialize(buffer, itemStructurePosition);
+            
+            boolean hasItems = buffer.readBoolean(position);
+            List<Item> items = null;
+            if(hasItems){
+                int itemsPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                items = isr.deserializeList(buffer, itemsPosition);
+            }
+            
+            return RMObjectFactory.newItemTree(is, items);
         }
     }
 

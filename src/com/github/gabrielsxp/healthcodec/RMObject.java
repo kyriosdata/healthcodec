@@ -1161,4 +1161,22 @@ public class RMObject {
             return rows;
         }
     }
+    
+    public static class ItemTree {
+        private final ItemStructure itemStructure;
+        private final List<Item> items;
+
+        public ItemTree(ItemStructure itemStructure, List<Item> items) {
+            this.itemStructure = itemStructure;
+            this.items = items;
+        }
+
+        public ItemStructure getItemStructure() {
+            return itemStructure;
+        }
+
+        public List<Item> getItems() {
+            return items;
+        }
+    }
 }

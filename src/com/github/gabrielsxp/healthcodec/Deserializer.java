@@ -352,4 +352,10 @@ public interface Deserializer {
      * @return nova instância de ItemTable
      */
     ItemTable deserializeItemTable();
+    
+    /**
+     * Deserializador de ItemTree
+     * @return nova instância de ItemTree
+     */
+    ItemTree deserializeItemTree();
 }

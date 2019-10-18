@@ -1724,11 +1724,41 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         
         return this;
     }
-
+    
+    /**
+     * Deserializador de ItemTable
+     * @return nova instância de ItemTable
+     */
     @Override
     public ItemTable deserializeItemTable() {
         ItemTableSerializer d = new ItemTableSerializer();
         return d.deserialize(buffer, getOffsetFromID(ITEMTABLE));
+    }
+    
+    /**
+     * Serializador de ItemTree
+     * @param it
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeItemTree(
+            ItemTree it) throws UnsupportedEncodingException {
+        ItemTreeSerializer s = new ItemTreeSerializer();
+        register(ITEMTREE, offset);
+        s.serialize(buffer, offset, it);
+        
+        return this;
+    }
+    
+    /**
+     * Deserilizador de ItemTree
+     * @return nova instância de ItemTree
+     */
+    @Override
+    public ItemTree deserializeItemTree() {
+        ItemTreeSerializer d = new ItemTreeSerializer();
+        return d.deserialize(buffer, getOffsetFromID(ITEMTREE));
     }
     
     /**
