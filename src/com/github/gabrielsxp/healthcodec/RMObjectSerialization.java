@@ -2743,6 +2743,42 @@ public class RMObjectSerialization {
             
             return RMObjectFactory.newElement(item, nullFlavour);
         }
+        
+        protected int listSerialize(
+                Buffer buffer, int offset, List<Element> items)
+                throws UnsupportedEncodingException {
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize * INT.getSize()) + INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            ElementSerializer is = new ElementSerializer();
+
+            for (Element d : items) {
+                meta = writeHeader(buffer, meta, position);
+                position = is.serialize(buffer, position, d);
+            }
+
+            return position;
+        }
+        
+        protected List<Element> deserializeList(Buffer buffer, int offset) {
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += INT.getSize();
+
+            List<Element> list = new ArrayList<>();
+            ElementSerializer es = new ElementSerializer();
+
+            for (int i = 0; i < listSize; i++) {
+                int elementPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                Element t = es.deserialize(buffer, elementPosition);
+                list.add(t);
+            }
+
+            return list;
+        }
     }
 
     /**
