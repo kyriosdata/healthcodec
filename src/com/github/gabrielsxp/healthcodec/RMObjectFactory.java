@@ -275,4 +275,8 @@ public class RMObjectFactory {
     public static Element newElement(Item item, DvCodedText nullFlavour){
         return new Element(item, nullFlavour);
     }
+    
+    public static DataStructure newDataStructure(Locatable locatable){
+        return new DataStructure(locatable);
+    }
 }

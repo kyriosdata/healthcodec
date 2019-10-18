@@ -1047,4 +1047,16 @@ public class RMObject {
             return nullFlavour;
         }
     }
+    
+    public static class DataStructure {
+        private final Locatable locatable;
+
+        public DataStructure(Locatable locatable) {
+            this.locatable = locatable;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+    }
 }

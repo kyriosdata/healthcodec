@@ -1605,6 +1605,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
     
     /**
+     * Serializador de DataStructure
+     * @param ds
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeDataStructure(
+            DataStructure ds) throws UnsupportedEncodingException {
+        DataStructureSerializer s = new DataStructureSerializer();
+        register(DATASTRUCTURE, offset);
+        setOffset(s.serialize(buffer, offset, ds));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de DataStructure
+     * @return nova instância de DataStructure
+     */
+    @Override
+    public DataStructure deserializeDataStructure() {
+        DataStructureSerializer d = new DataStructureSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DATASTRUCTURE));
+    }
+    
+    /**
      * Método para registrar um determinado objeto no índice
      * @param id
      * @param offset

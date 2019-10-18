@@ -321,4 +321,10 @@ public interface Deserializer {
      * @return nova instância de Element
      */
     Element deserializeElement();
+    
+    /**
+     * Deserializador de DataStructure
+     * @return nova instância de DataStructure
+     */
+    DataStructure deserializeDataStructure();
 }

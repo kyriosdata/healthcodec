@@ -62,7 +62,8 @@ public enum RMObjectID {
     TRANSLATIONDETAILS(41),
     ITEM(42),
     CLUSTER(43),
-    ELEMENT(44);
+    ELEMENT(44),
+    DATASTRUCTURE(45);
     
     
 

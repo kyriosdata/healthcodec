@@ -2816,6 +2816,37 @@ public class RMObjectSerialization {
             return list;
         }
     }
+    
+    public static class DataStructureSerializer {
+        protected int serialize(Buffer buffer, int offset, 
+                Locatable locatable) throws UnsupportedEncodingException{
+            int position = offset;
+            LocatableSerializer ls = new LocatableSerializer();
+            
+            position = ls.serialize(buffer, position, locatable);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                DataStructure ds) throws UnsupportedEncodingException {
+            int position = offset;
+            DataStructureSerializer dss = new DataStructureSerializer();
+            
+            position = dss.serialize(buffer, position, ds.getLocatable());
+            
+            return position;
+        }
+        
+        protected DataStructure deserialize(Buffer buffer, int offset) {
+            int position = offset;
+            LocatableSerializer ls = new LocatableSerializer();
+            
+            Locatable locatable = ls.deserialize(buffer, position);
+            
+            return RMObjectFactory.newDataStructure(locatable);
+        }
+    }
 
     /**
      * Serializa uma única String value

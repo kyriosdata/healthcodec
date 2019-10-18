@@ -19,6 +19,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.Cluster;
 import com.github.gabrielsxp.healthcodec.RMObject.CodePhrase;
 import com.github.gabrielsxp.healthcodec.RMObject.DVEHRURI;
 import com.github.gabrielsxp.healthcodec.RMObject.DVURI;
+import com.github.gabrielsxp.healthcodec.RMObject.DataStructure;
 import com.github.gabrielsxp.healthcodec.RMObject.DvCodedText;
 import com.github.gabrielsxp.healthcodec.RMObject.DvEncapsulated;
 import java.io.UnsupportedEncodingException;
@@ -699,4 +700,13 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeElement(
             Element element) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de DataStructure
+     * @param ds
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeDataStructure(
+            DataStructure ds) throws UnsupportedEncodingException;
 }
