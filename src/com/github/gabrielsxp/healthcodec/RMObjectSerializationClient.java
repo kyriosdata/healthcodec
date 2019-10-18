@@ -1762,6 +1762,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
     
     /**
+     * Serializador de Partyidentitty
+     * @param pi
+     * @return nova instância de Partyidentity
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializePartyIdentity(
+            PartyIdentity pi) throws UnsupportedEncodingException {
+        PartyIdentitySerializer s = new PartyIdentitySerializer();
+        register(PARTYIDENTITY, offset);
+        setOffset(s.serialize(buffer, offset, pi));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de PartyIdentity
+     * @return nova instância de PartyIdentity
+     */
+    @Override
+    public PartyIdentity deserializePartyIdentity() {
+        PartyIdentitySerializer d = new PartyIdentitySerializer();
+        return d.deserialize(buffer, getOffsetFromID(PARTYIDENTITY));
+    }
+    
+    /**
      * Método para registrar um determinado objeto no índice
      * @param id
      * @param offset

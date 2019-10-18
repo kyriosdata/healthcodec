@@ -3150,7 +3150,7 @@ public class RMObjectSerialization {
         }
         
         protected int serialize(Buffer buffer, int offset, 
-                ItemTree it) throws UnsupportedCharsetException {
+                ItemTree it) throws UnsupportedEncodingException {
             int position = offset;
             ItemTreeSerializer its = new ItemTreeSerializer();
             
@@ -3177,6 +3177,52 @@ public class RMObjectSerialization {
             }
             
             return RMObjectFactory.newItemTree(is, items);
+        }
+    }
+    
+    public static class PartyIdentitySerializer {
+        protected int serialize(Buffer buffer, int offset, Locatable locatable, 
+                ItemStructure details) throws UnsupportedEncodingException {
+            int meta = offset;
+            int position = offset + 2 * INT.getSize();
+            
+            LocatableSerializer ls = new LocatableSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = ls.serialize(buffer, position, locatable);
+            
+            writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, details);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                PartyIdentity pi) throws UnsupportedEncodingException {
+            int position = offset;
+            PartyIdentitySerializer pis = new PartyIdentitySerializer();
+             
+             position = pis.serialize(buffer, position, 
+                     pi.getLocatable(), pi.getDetails());
+             
+             return position;
+        }
+        
+        protected PartyIdentity deserialize(Buffer buffer, int offset){
+            int position = offset;
+            LocatableSerializer ls = new LocatableSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            
+            int locatablePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Locatable locatable = ls.deserialize(buffer, locatablePosition);
+            
+            int detailsPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            ItemStructure details = iss.deserialize(buffer, detailsPosition);
+            
+            return RMObjectFactory.newPartyIdentity(locatable, details);
         }
     }
 

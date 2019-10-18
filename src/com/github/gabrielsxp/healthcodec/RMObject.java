@@ -1179,4 +1179,22 @@ public class RMObject {
             return items;
         }
     }
+    
+    public static class PartyIdentity {
+        private final Locatable locatable;
+        private final ItemStructure details;
+
+        public PartyIdentity(Locatable locatable, ItemStructure details) {
+            this.locatable = locatable;
+            this.details = details;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public ItemStructure getDetails() {
+            return details;
+        }
+    }
 }

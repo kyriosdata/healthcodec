@@ -302,4 +302,9 @@ public class RMObjectFactory {
     public static ItemTree newItemTree(ItemStructure is, List<Item> items){
         return new ItemTree(is, items);
     }
+    
+    public static PartyIdentity newPartyIdentity(Locatable locatable, 
+            ItemStructure details){
+        return new PartyIdentity(locatable, details);
+    }
 }
