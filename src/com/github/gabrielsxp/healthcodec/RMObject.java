@@ -999,4 +999,16 @@ public class RMObject {
             return otherDetails;
         }
     }
+    
+    public static class Item {
+        private final Locatable locatable;
+
+        public Item(Locatable locatable) {
+            this.locatable = locatable;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+    }
 }

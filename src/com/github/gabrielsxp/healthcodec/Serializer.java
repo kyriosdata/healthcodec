@@ -30,6 +30,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.DvState;
 import com.github.gabrielsxp.healthcodec.RMObject.DvText;
 import com.github.gabrielsxp.healthcodec.RMObject.FeederAudit;
 import com.github.gabrielsxp.healthcodec.RMObject.FeederAuditDetails;
+import com.github.gabrielsxp.healthcodec.RMObject.Item;
 import com.github.gabrielsxp.healthcodec.RMObject.Link;
 import com.github.gabrielsxp.healthcodec.RMObject.Locatable;
 import com.github.gabrielsxp.healthcodec.RMObject.Match;
@@ -668,5 +669,14 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeTranslationDetails(
-            TranslationDetails td) throws UnsupportedEncodingException;;
+            TranslationDetails td) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de Item
+     * @param item
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeItem(
+            Item item) throws UnsupportedEncodingException;
 }

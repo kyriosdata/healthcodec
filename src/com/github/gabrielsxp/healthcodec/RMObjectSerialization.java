@@ -2588,6 +2588,37 @@ public class RMObjectSerialization {
             return map;
         }
     }
+    
+    public static class ItemSerializer {
+        protected int serialize(Buffer buffer, int offset, 
+                Locatable locatable) throws UnsupportedEncodingException {
+            int position = offset;
+            LocatableSerializer ls = new LocatableSerializer();
+            
+            position = ls.serialize(buffer, position, locatable);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                Item item) throws UnsupportedEncodingException {
+            int position = offset;
+            ItemSerializer is = new ItemSerializer();
+            
+            position = is.serialize(buffer, position, item.getLocatable());
+            
+            return position;
+        }
+        
+        protected Item deserialize(Buffer buffer, int offset){
+            int position = offset;
+            LocatableSerializer ls = new LocatableSerializer();
+            
+            Locatable locatable = ls.deserialize(buffer, position);
+            
+            return RMObjectFactory.newItem(locatable);
+        }
+    }
 
     /**
      * Serializa uma única String value

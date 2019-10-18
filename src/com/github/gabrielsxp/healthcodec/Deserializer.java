@@ -303,4 +303,10 @@ public interface Deserializer {
      * @return nova instância de TranslationDetails
      */
     TranslationDetails deserializeTranslationDetails();
+    
+    /**
+     * Deserializador de Item
+     * @return nova instância de Item
+     */
+    Item deserializeItem();
 }

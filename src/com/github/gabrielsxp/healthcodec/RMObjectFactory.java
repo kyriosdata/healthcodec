@@ -263,4 +263,8 @@ public class RMObjectFactory {
         return new TranslationDetails(language, author, 
                 accreditation, otherDetails);
     }
+    
+    public static Item newItem(Locatable locatable){
+        return new Item(locatable);
+    }
 }

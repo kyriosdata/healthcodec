@@ -1517,7 +1517,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
 
     /**
      * Deserializador de TranslationDetails
-     * @return 
+     * @return nova instância de TranslationDetails
      */
     @Override
     public TranslationDetails deserializeTranslationDetails() {
@@ -1528,8 +1528,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
     
     /**
+     * Serializador de Item
+     * @param item
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeItem(Item item) throws UnsupportedEncodingException {
+        ItemSerializer s = new ItemSerializer();
+        register(ITEM, offset);
+        setOffset(s.serialize(buffer, offset, item));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de Item
+     * @return nova instância de Item
+     */
+    @Override
+    public Item deserializeItem() {
+        ItemSerializer d = new ItemSerializer();
+        return d.deserialize(buffer, getOffsetFromID(ITEM));
+    }
+    
+    /**
      * Método para registrar um determinado objeto no índice
-     *
      * @param id
      * @param offset
      */
