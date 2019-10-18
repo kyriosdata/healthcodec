@@ -1197,4 +1197,36 @@ public class RMObject {
             return details;
         }
     }
+    
+    public static class PartyRelationship {
+        private final Locatable locatable;
+        private final ItemStructure details;
+        //private final DvInterval<DvDate> timeValidity todo;
+        private final ObjectRef source;
+        private final ObjectRef target;
+
+        public PartyRelationship(Locatable locatable, 
+                ItemStructure details, ObjectRef source, ObjectRef target) {
+            this.locatable = locatable;
+            this.details = details;
+            this.source = source;
+            this.target = target;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public ItemStructure getDetails() {
+            return details;
+        }
+
+        public ObjectRef getSource() {
+            return source;
+        }
+
+        public ObjectRef getTarget() {
+            return target;
+        }
+    }
 }

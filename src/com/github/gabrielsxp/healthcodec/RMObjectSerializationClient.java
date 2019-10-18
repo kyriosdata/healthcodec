@@ -1764,7 +1764,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     /**
      * Serializador de Partyidentitty
      * @param pi
-     * @return nova instância de Partyidentity
+     * @return instância de RMObjectSerializationClient atual 
      * @throws UnsupportedEncodingException 
      */
     @Override
@@ -1785,6 +1785,28 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     public PartyIdentity deserializePartyIdentity() {
         PartyIdentitySerializer d = new PartyIdentitySerializer();
         return d.deserialize(buffer, getOffsetFromID(PARTYIDENTITY));
+    }
+    
+    /**
+     * Serializador de PartyRelationship
+     * @param pr
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializePartyRelationship(
+            PartyRelationship pr) throws UnsupportedEncodingException {
+        PartyRelationshipSerializer s = new PartyRelationshipSerializer();
+        register(PARTYRELATIONSHIP, offset);
+        setOffset(s.serialize(buffer, offset, pr));
+        
+        return this;
+    }
+
+    @Override
+    public PartyRelationship deserializePartyRelationship() {
+        PartyRelationshipSerializer d = new PartyRelationshipSerializer();
+        return d.deserialize(buffer, getOffsetFromID(PARTYRELATIONSHIP));
     }
     
     /**

@@ -502,6 +502,14 @@ public class RMObjectSerialization {
                     + namespaceLength
                     + typeLength;
         }
+        
+        protected int serialize(Buffer buffer, int offset, ObjectRef or){
+            int position = offset;
+            ObjectRefSerializer ors = new ObjectRefSerializer();
+            position = ors.serialize(buffer, position, or);
+            
+            return position;
+        }
 
         protected ObjectRef deserialize(Buffer buffer, int offset) {
             int oidValueLength = buffer.readInteger(offset);
@@ -3316,7 +3324,72 @@ public class RMObjectSerialization {
             return piSet;
         }
     }
-
+    
+    public static class PartyRelationshipSerializer {
+        protected int serialize(Buffer buffer, int offset, Locatable locatable, 
+                ItemStructure details, ObjectRef source, 
+                ObjectRef target) throws UnsupportedEncodingException{
+            int meta = offset;
+            int position = offset + 3 * INT.getSize();
+            
+            LocatableSerializer ls = new LocatableSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            ObjectRefSerializer ors = new ObjectRefSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = ls.serialize(buffer, position, locatable);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, details);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = ors.serialize(buffer, position, source);
+            
+            writeHeader(buffer, meta, position);
+            position = ors.serialize(buffer, position, target);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                PartyRelationship pr) throws UnsupportedEncodingException {
+            PartyRelationshipSerializer prs = new PartyRelationshipSerializer();
+            int position = offset;
+            position = prs.serialize(buffer, position, pr);
+            
+            return position;
+        }
+        
+        protected PartyRelationship deserialize(Buffer buffer, int offset){
+            
+            int position = offset;
+            
+            LocatableSerializer ls = new LocatableSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            ObjectRefSerializer ors = new ObjectRefSerializer();
+            
+            int locatablePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Locatable locatable = ls.deserialize(buffer, locatablePosition);
+            
+            int detailsPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            ItemStructure details = iss.deserialize(buffer, detailsPosition);
+            
+            //DvInterval - TODO
+            
+            int sourcePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            ObjectRef source = ors.deserialize(buffer, sourcePosition);
+            
+            int targetPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            ObjectRef target = ors.deserialize(buffer, targetPosition);
+            
+            return RMObjectFactory.newPartyRelationship(locatable, details, 
+                    source, target);
+        }
+    }   
     /**
      * Serializa uma única String value
      *

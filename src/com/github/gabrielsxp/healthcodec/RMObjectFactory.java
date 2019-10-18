@@ -307,4 +307,9 @@ public class RMObjectFactory {
             ItemStructure details){
         return new PartyIdentity(locatable, details);
     }
+    
+    public static PartyRelationship newPartyRelationship(Locatable locatable, 
+            ItemStructure details, ObjectRef source, ObjectRef target ){
+        return new PartyRelationship(locatable, details, source, target);
+    }
 }

@@ -364,4 +364,10 @@ public interface Deserializer {
      * @return nova instância de PartyIdentity
      */
     PartyIdentity deserializePartyIdentity();
+    
+    /**
+     * Deserializador de PartyRelationship
+     * @return nova instância de PartyRelationship
+     */
+    PartyRelationship deserializePartyRelationship();
 }
