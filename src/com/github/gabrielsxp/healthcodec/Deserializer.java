@@ -309,4 +309,10 @@ public interface Deserializer {
      * @return nova instância de Item
      */
     Item deserializeItem();
+    
+    /**
+     * Deserializador de Cluster
+     * @return nova instância de Cluster
+     */
+    Cluster deserializeCluster();
 }

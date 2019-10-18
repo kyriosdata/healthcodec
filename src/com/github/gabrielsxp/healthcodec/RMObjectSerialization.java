@@ -2646,13 +2646,57 @@ public class RMObjectSerialization {
             ItemSerializer is = new ItemSerializer();
 
             for (int i = 0; i < listSize; i++) {
-                int dvIdentifierPosition = buffer.readInteger(position);
+                int dvItemPosition = buffer.readInteger(position);
                 position += INT.getSize();
-                Item t = is.deserialize(buffer, dvIdentifierPosition);
+                Item t = is.deserialize(buffer, dvItemPosition);
                 list.add(t);
             }
 
             return list;
+        }
+    }
+    
+    public static class ClusterSerializer {
+        protected int serialize(Buffer buffer, int offset, Item item, 
+                List<Item> items) throws UnsupportedEncodingException{
+            int meta = offset;
+            int position = offset + 2 * INT.getSize();
+            ItemSerializer is = new ItemSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = is.serialize(buffer, position, item);
+            
+            writeHeader(buffer, meta, position);
+            position = is.listSerialize(buffer, position, items);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                Cluster cluster) throws UnsupportedEncodingException {
+            int position = offset;
+            ClusterSerializer cs = new ClusterSerializer();
+            
+            position = cs.serialize(buffer, position, cluster);
+            
+            return position;
+        }
+        
+        protected Cluster deserialize(Buffer buffer, int offset){
+            int position = offset;
+            ItemSerializer is = new ItemSerializer();
+            
+            int itemPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            
+            Item item = is.deserialize(buffer, itemPosition);
+            
+            int itemsPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            
+            List<Item> items = is.deserializeList(buffer, itemsPosition);
+            
+            return RMObjectFactory.newCluster(item, items);
         }
     }
 

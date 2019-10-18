@@ -267,4 +267,8 @@ public class RMObjectFactory {
     public static Item newItem(Locatable locatable){
         return new Item(locatable);
     }
+    
+    public static Cluster newCluster(Item item, List<Item> items){
+        return new Cluster(item, items);
+    }
 }

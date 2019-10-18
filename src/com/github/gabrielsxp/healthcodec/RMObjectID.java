@@ -60,7 +60,8 @@ public enum RMObjectID {
     PARTYSELF(39),
     RESOURCEDESCRIPTIONITEM(40),
     TRANSLATIONDETAILS(41),
-    ITEM(42);
+    ITEM(42),
+    CLUSTER(43);
     
     
 

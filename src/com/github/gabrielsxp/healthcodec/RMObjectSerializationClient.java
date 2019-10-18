@@ -1553,6 +1553,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
     
     /**
+     * Serializador de Cluster
+     * @param cluster
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeCluster(
+            Cluster cluster) throws UnsupportedEncodingException {
+        ClusterSerializer s = new ClusterSerializer();
+        register(CLUSTER, offset);
+        setOffset(s.serialize(buffer, offset, cluster));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de Cluster
+     * @return nova instância de Cluster
+     */
+    @Override
+    public Cluster deserializeCluster() {
+        ClusterSerializer d = new ClusterSerializer();
+        return d.deserialize(buffer, getOffsetFromID(CLUSTER));
+    }
+    
+    /**
      * Método para registrar um determinado objeto no índice
      * @param id
      * @param offset

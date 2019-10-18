@@ -1011,4 +1011,22 @@ public class RMObject {
             return locatable;
         }
     }
+    
+    public static class Cluster {
+        private final Item item;
+        private final List<Item> items;
+
+        public Cluster(Item item, List<Item> items) {
+            this.item = item;
+            this.items = items;
+        }
+
+        public Item getItem() {
+            return item;
+        }
+
+        public List<Item> getItems() {
+            return items;
+        }
+    }
 }
