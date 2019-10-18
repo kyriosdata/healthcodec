@@ -3224,6 +3224,46 @@ public class RMObjectSerialization {
             
             return RMObjectFactory.newPartyIdentity(locatable, details);
         }
+        
+        protected int setSerializer(Buffer buffer, int offset,
+                Set<PartyIdentity> piSet) throws UnsupportedEncodingException {
+            int setSize = piSet.size();
+            int position = offset + (setSize * INT.getSize()) + INT.getSize();
+            int meta = offset;
+            PartyIdentitySerializer pis = new PartyIdentitySerializer();
+
+            meta = writeHeader(buffer, meta, setSize);
+            Iterator<PartyIdentity> it = piSet.iterator();
+
+            while (it.hasNext()) {
+                PartyIdentity pi = it.next();
+                int linkPosition = position;
+                meta = writeHeader(buffer, meta, linkPosition);
+                position = pis.serialize(buffer, position, pi);
+            }
+
+            return position;
+        }
+
+        protected Set<PartyIdentity> setDeserializer(Buffer buffer, 
+                int offset) {
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += INT.getSize();
+
+            PartyIdentitySerializer pis = new PartyIdentitySerializer();
+            Set<PartyIdentity> piSet = new HashSet<>();
+
+            for (int i = 0; i < listSize; i++) {
+                int piPosition = buffer.readInteger(position);
+                position += INT.getSize();
+
+                PartyIdentity pi = pis.deserialize(buffer, piPosition);
+                piSet.add(pi);
+            }
+
+            return piSet;
+        }
     }
 
     /**
