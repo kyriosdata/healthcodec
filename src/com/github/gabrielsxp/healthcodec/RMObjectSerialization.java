@@ -3522,6 +3522,45 @@ public class RMObjectSerialization {
             
             return RMObjectFactory.newContact(locatable, addresses);
         }
+        
+        protected int setSerializer(Buffer buffer, int offset,
+                Set<Contact> contacts) throws UnsupportedEncodingException {
+            int setSize = contacts.size();
+            int position = offset + (setSize * INT.getSize()) + INT.getSize();
+            int meta = offset;
+            ContactSerializer cs = new ContactSerializer();
+
+            meta = writeHeader(buffer, meta, setSize);
+            Iterator<Contact> it = contacts.iterator();
+
+            while (it.hasNext()) {
+                Contact c = it.next();
+                int linkPosition = position;
+                meta = writeHeader(buffer, meta, linkPosition);
+                position = cs.serialize(buffer, position, c);
+            }
+
+            return position;
+        }
+
+        protected Set<Contact> setDeserializer(Buffer buffer, int offset) {
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += INT.getSize();
+
+            ContactSerializer cs = new ContactSerializer();
+            Set<Contact> contacts = new HashSet<>();
+
+            for (int i = 0; i < listSize; i++) {
+                int prPosition = buffer.readInteger(position);
+                position += INT.getSize();
+
+                Contact c = cs.deserialize(buffer, prPosition);
+                contacts.add(c);
+            }
+
+            return contacts;
+        }
     }
     
     /**
