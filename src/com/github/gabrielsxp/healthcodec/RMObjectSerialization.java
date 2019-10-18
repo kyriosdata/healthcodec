@@ -566,6 +566,17 @@ public class RMObjectSerialization {
             }
             return dataPositionStart;
         }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                LocatableRef lr) throws UnsupportedEncodingException {
+            int position = offset;
+            LocatableRefSerializer lrs = new LocatableRefSerializer();
+            
+            position = lrs.serialize(buffer, position, 
+                    lr.getId(), lr.getNamespace(), lr.getType(), lr.getPath());
+            
+            return position;
+        }
 
         protected LocatableRef deserialize(Buffer buffer, int offset) {
             boolean hasPath = buffer.readByte(offset) == 1;
@@ -601,6 +612,46 @@ public class RMObjectSerialization {
                     hasPath ? path : null
             );
         }
+        
+        protected int setSerializer(Buffer buffer, int offset,
+                Set<LocatableRef> lrefs) throws UnsupportedEncodingException {
+            int setSize = lrefs.size();
+            int position = offset + (setSize * INT.getSize()) + INT.getSize();
+            int meta = offset;
+            LocatableRefSerializer lrs = new LocatableRefSerializer();
+
+            meta = writeHeader(buffer, meta, setSize);
+            Iterator<LocatableRef> it = lrefs.iterator();
+
+            while (it.hasNext()) {
+                LocatableRef lr = it.next();
+                int linkPosition = position;
+                meta = writeHeader(buffer, meta, linkPosition);
+                position = lrs.serialize(buffer, position, lr);
+            }
+
+            return position;
+        }
+
+        protected Set<LocatableRef> setDeserializer(Buffer buffer, int offset) {
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += INT.getSize();
+
+            LocatableRefSerializer lrs = new LocatableRefSerializer();
+            Set<LocatableRef> lrefs = new HashSet<>();
+
+            for (int i = 0; i < listSize; i++) {
+                int prPosition = buffer.readInteger(position);
+                position += INT.getSize();
+
+                LocatableRef lr = lrs.deserialize(buffer, prPosition);
+                lrefs.add(lr);
+            }
+
+            return lrefs;
+        }
+        
     }
 
     static class ProportionKindSerializer {
@@ -730,7 +781,7 @@ public class RMObjectSerialization {
             int position = offset;
             ArchetypedSerializer as = new ArchetypedSerializer();
 
-            position = as.serialize(buffer, offset,
+            position = as.serialize(buffer, position,
                     a.getArchetypeId(), a.getTemplateId(), a.getRmVersion());
 
             return position;
