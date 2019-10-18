@@ -17,12 +17,9 @@ import com.github.gabrielsxp.healthcodec.RMObjectSerialization.*;
 import static com.github.gabrielsxp.healthcodec.RMObjectID.*;
 import com.github.gabrielsxp.healthcodec.RMObject.*;
 import java.io.UnsupportedEncodingException;
-import java.nio.ReadOnlyBufferException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -1863,6 +1860,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     public Contact deserializeContact() {
         ContactSerializer d = new ContactSerializer();
         return d.deserialize(buffer, getOffsetFromID(CONTACT));
+    }
+    
+    /**
+     * Serializador de Party
+     * @param p
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeParty(
+            Party p) throws UnsupportedEncodingException {
+        PartySerializer s = new PartySerializer();
+        register(PARTY, offset);
+        setOffset(s.serialize(buffer, offset, p));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de Party
+     * @return nova instância de Party
+     */
+    @Override
+    public Party deserializeParty() {
+        PartySerializer d = new PartySerializer();
+        return d.deserialize(buffer, getOffsetFromID(PARTY));
     }
     
     /**

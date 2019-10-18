@@ -502,12 +502,12 @@ public class RMObjectSerialization {
                     + namespaceLength
                     + typeLength;
         }
-        
-        protected int serialize(Buffer buffer, int offset, ObjectRef or){
+
+        protected int serialize(Buffer buffer, int offset, ObjectRef or) {
             int position = offset;
             ObjectRefSerializer ors = new ObjectRefSerializer();
             position = ors.serialize(buffer, position, or);
-            
+
             return position;
         }
 
@@ -574,15 +574,15 @@ public class RMObjectSerialization {
             }
             return dataPositionStart;
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
+
+        protected int serialize(Buffer buffer, int offset,
                 LocatableRef lr) throws UnsupportedEncodingException {
             int position = offset;
             LocatableRefSerializer lrs = new LocatableRefSerializer();
-            
-            position = lrs.serialize(buffer, position, 
+
+            position = lrs.serialize(buffer, position,
                     lr.getId(), lr.getNamespace(), lr.getType(), lr.getPath());
-            
+
             return position;
         }
 
@@ -620,7 +620,7 @@ public class RMObjectSerialization {
                     hasPath ? path : null
             );
         }
-        
+
         protected int setSerializer(Buffer buffer, int offset,
                 Set<LocatableRef> lrefs) throws UnsupportedEncodingException {
             int setSize = lrefs.size();
@@ -659,7 +659,7 @@ public class RMObjectSerialization {
 
             return lrefs;
         }
-        
+
     }
 
     static class ProportionKindSerializer {
@@ -927,14 +927,14 @@ public class RMObjectSerialization {
                 throws UnsupportedEncodingException {
             return valueStringSerialization(buffer, offset, value);
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
-                UIDBasedID uid) throws UnsupportedEncodingException{
+
+        protected int serialize(Buffer buffer, int offset,
+                UIDBasedID uid) throws UnsupportedEncodingException {
             int position = offset;
             UIDBasedIDSerializer us = new UIDBasedIDSerializer();
-            
+
             position = us.serialize(buffer, position, uid.getValue());
-            
+
             return position;
         }
 
@@ -2602,9 +2602,9 @@ public class RMObjectSerialization {
                     accreditation, otherDetails);
         }
 
-        protected int mapSerialization(Buffer buffer, int offset, 
-                Map<String, TranslationDetails> map) 
-                    throws UnsupportedEncodingException {
+        protected int mapSerialization(Buffer buffer, int offset,
+                Map<String, TranslationDetails> map)
+                throws UnsupportedEncodingException {
             int meta = offset;
             int mapSize = map.size();
             int position = offset
@@ -2635,7 +2635,7 @@ public class RMObjectSerialization {
             int position = offset;
             int mapSize = buffer.readInteger(position);
             position += INT.getSize();
-            
+
             TranslationDetailsSerializer tdss
                     = new TranslationDetailsSerializer();
             Map<String, TranslationDetails> map = new HashMap<>();
@@ -2658,37 +2658,38 @@ public class RMObjectSerialization {
             return map;
         }
     }
-    
+
     public static class ItemSerializer {
-        protected int serialize(Buffer buffer, int offset, 
+
+        protected int serialize(Buffer buffer, int offset,
                 Locatable locatable) throws UnsupportedEncodingException {
             int position = offset;
             LocatableSerializer ls = new LocatableSerializer();
-            
+
             position = ls.serialize(buffer, position, locatable);
-            
+
             return position;
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
+
+        protected int serialize(Buffer buffer, int offset,
                 Item item) throws UnsupportedEncodingException {
             int position = offset;
             ItemSerializer is = new ItemSerializer();
-            
+
             position = is.serialize(buffer, position, item.getLocatable());
-            
+
             return position;
         }
-        
-        protected Item deserialize(Buffer buffer, int offset){
+
+        protected Item deserialize(Buffer buffer, int offset) {
             int position = offset;
             LocatableSerializer ls = new LocatableSerializer();
-            
+
             Locatable locatable = ls.deserialize(buffer, position);
-            
+
             return RMObjectFactory.newItem(locatable);
         }
-        
+
         protected int listSerialize(
                 Buffer buffer, int offset, List<Item> items)
                 throws UnsupportedEncodingException {
@@ -2706,7 +2707,7 @@ public class RMObjectSerialization {
 
             return position;
         }
-        
+
         protected List<Item> deserializeList(Buffer buffer, int offset) {
             int position = offset;
             int listSize = buffer.readInteger(position);
@@ -2725,50 +2726,51 @@ public class RMObjectSerialization {
             return list;
         }
     }
-    
+
     public static class ClusterSerializer {
-        protected int serialize(Buffer buffer, int offset, Item item, 
-                List<Item> items) throws UnsupportedEncodingException{
+
+        protected int serialize(Buffer buffer, int offset, Item item,
+                List<Item> items) throws UnsupportedEncodingException {
             int meta = offset;
             int position = offset + 2 * INT.getSize();
             ItemSerializer is = new ItemSerializer();
-            
+
             meta = writeHeader(buffer, meta, position);
             position = is.serialize(buffer, position, item);
-            
+
             writeHeader(buffer, meta, position);
             position = is.listSerialize(buffer, position, items);
-            
+
             return position;
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
+
+        protected int serialize(Buffer buffer, int offset,
                 Cluster cluster) throws UnsupportedEncodingException {
             int position = offset;
             ClusterSerializer cs = new ClusterSerializer();
-            
+
             position = cs.serialize(buffer, position, cluster);
-            
+
             return position;
         }
-        
-        protected Cluster deserialize(Buffer buffer, int offset){
+
+        protected Cluster deserialize(Buffer buffer, int offset) {
             int position = offset;
             ItemSerializer is = new ItemSerializer();
-            
+
             int itemPosition = buffer.readInteger(position);
             position += INT.getSize();
-            
+
             Item item = is.deserialize(buffer, itemPosition);
-            
+
             int itemsPosition = buffer.readInteger(position);
             position += INT.getSize();
-            
+
             List<Item> items = is.deserializeList(buffer, itemsPosition);
-            
+
             return RMObjectFactory.newCluster(item, items);
         }
-        
+
         protected int listSerialize(
                 Buffer buffer, int offset, List<Cluster> items)
                 throws UnsupportedEncodingException {
@@ -2786,7 +2788,7 @@ public class RMObjectSerialization {
 
             return position;
         }
-        
+
         protected List<Cluster> deserializeList(Buffer buffer, int offset) {
             int position = offset;
             int listSize = buffer.readInteger(position);
@@ -2805,51 +2807,52 @@ public class RMObjectSerialization {
             return list;
         }
     }
-    
+
     public static class ElementSerializer {
-        protected int serialize(Buffer buffer, int offset, Item item, 
+
+        protected int serialize(Buffer buffer, int offset, Item item,
                 DvCodedText nullFlavour) throws UnsupportedEncodingException {
             int meta = offset;
             int position = offset + 2 * INT.getSize();
             ItemSerializer is = new ItemSerializer();
             DvCodedTextSerializer dts = new DvCodedTextSerializer();
-            
+
             meta = writeHeader(buffer, meta, position);
             position = is.serialize(buffer, position, item);
-            
+
             writeHeader(buffer, meta, position);
             position = dts.serialize(buffer, position, nullFlavour);
-            
+
             return position;
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
+
+        protected int serialize(Buffer buffer, int offset,
                 Element element) throws UnsupportedEncodingException {
             int position = offset;
             ElementSerializer es = new ElementSerializer();
-            
+
             position = es.serialize(buffer, position, element);
-            
+
             return position;
         }
-        
-        protected Element deserialize(Buffer buffer, int offset){
+
+        protected Element deserialize(Buffer buffer, int offset) {
             int position = offset;
             ItemSerializer is = new ItemSerializer();
             DvCodedTextSerializer dts = new DvCodedTextSerializer();
-            
+
             int itemPosition = buffer.readInteger(position);
             position += INT.getSize();
             Item item = is.deserialize(buffer, itemPosition);
-            
+
             int nullFlavourPosition = buffer.readInteger(position);
             position += INT.getSize();
             DvCodedText nullFlavour = dts.deserialize(
                     buffer, nullFlavourPosition);
-            
+
             return RMObjectFactory.newElement(item, nullFlavour);
         }
-        
+
         protected int listSerialize(
                 Buffer buffer, int offset, List<Element> items)
                 throws UnsupportedEncodingException {
@@ -2867,7 +2870,7 @@ public class RMObjectSerialization {
 
             return position;
         }
-        
+
         protected List<Element> deserializeList(Buffer buffer, int offset) {
             int position = offset;
             int listSize = buffer.readInteger(position);
@@ -2886,404 +2889,411 @@ public class RMObjectSerialization {
             return list;
         }
     }
-    
+
     public static class DataStructureSerializer {
-        protected int serialize(Buffer buffer, int offset, 
-                Locatable locatable) throws UnsupportedEncodingException{
+
+        protected int serialize(Buffer buffer, int offset,
+                Locatable locatable) throws UnsupportedEncodingException {
             int position = offset;
             LocatableSerializer ls = new LocatableSerializer();
-            
+
             position = ls.serialize(buffer, position, locatable);
-            
+
             return position;
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
+
+        protected int serialize(Buffer buffer, int offset,
                 DataStructure ds) throws UnsupportedEncodingException {
             int position = offset;
             DataStructureSerializer dss = new DataStructureSerializer();
-            
+
             position = dss.serialize(buffer, position, ds.getLocatable());
-            
+
             return position;
         }
-        
+
         protected DataStructure deserialize(Buffer buffer, int offset) {
             int position = offset;
             LocatableSerializer ls = new LocatableSerializer();
-            
+
             Locatable locatable = ls.deserialize(buffer, position);
-            
+
             return RMObjectFactory.newDataStructure(locatable);
         }
     }
-    
+
     public static class ItemListSerializer {
-        protected int serialize(Buffer buffer, int offset, UIDBasedID uid, 
-                String archetypeNodeId, DvText name, 
+
+        protected int serialize(Buffer buffer, int offset, UIDBasedID uid,
+                String archetypeNodeId, DvText name,
                 Archetyped archetypeDetails, FeederAudit feederAudit,
-                Set<Link> links, 
-                List<Element> items) throws UnsupportedEncodingException{
+                Set<Link> links,
+                List<Element> items) throws UnsupportedEncodingException {
             int meta = offset;
             int position = offset + (7 * INT.getSize()) + 5 * BOOLEAN.getSize();
-            
+
             UIDBasedIDSerializer us = new UIDBasedIDSerializer();
             DvTextSerializer dts = new DvTextSerializer();
             FeederAuditSerializer fas = new FeederAuditSerializer();
             ArchetypedSerializer as = new ArchetypedSerializer();
             LinkSerializer ls = new LinkSerializer();
             ElementSerializer es = new ElementSerializer();
-            
+
             boolean hasUid = uid != null;
-            if(hasUid){
+            if (hasUid) {
                 meta = writeHeader(buffer, meta, hasUid, position);
                 position = us.serialize(buffer, position, uid);
             } else {
                 meta = writeHeader(buffer, meta, hasUid);
             }
-            
+
             meta = writeHeader(buffer, meta, position);
             position = valueStringSerialization(
                     buffer, position, archetypeNodeId);
-            
+
             meta = writeHeader(buffer, meta, position);
             position = dts.serialize(buffer, position, name);
-            
+
             boolean hasArchetypeDetails = archetypeDetails != null;
-            if(hasArchetypeDetails){
+            if (hasArchetypeDetails) {
                 meta = writeHeader(buffer, meta, hasArchetypeDetails, position);
                 position = as.serialize(buffer, position, archetypeDetails);
             } else {
                 meta = writeHeader(buffer, meta, hasArchetypeDetails);
             }
-            
+
             boolean hasFeederAudit = feederAudit != null;
-            if(hasFeederAudit){
+            if (hasFeederAudit) {
                 meta = writeHeader(buffer, meta, hasFeederAudit, position);
                 position = fas.serialize(buffer, position, feederAudit);
             } else {
                 meta = writeHeader(buffer, meta, hasFeederAudit);
             }
-            
+
             boolean hasLinks = links != null;
-            if(hasLinks){
+            if (hasLinks) {
                 meta = writeHeader(buffer, meta, hasLinks, position);
                 position = ls.setSerializer(buffer, position, links);
             } else {
                 meta = writeHeader(buffer, meta, hasLinks);
             }
-            
+
             boolean hasItems = items != null;
-            if(hasItems){
+            if (hasItems) {
                 writeHeader(buffer, meta, hasItems, position);
                 position = es.listSerialize(buffer, position, items);
             } else {
                 writeHeader(buffer, meta, hasItems);
             }
-            
+
             return position;
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
+
+        protected int serialize(Buffer buffer, int offset,
                 ItemList il) throws UnsupportedEncodingException {
             ItemListSerializer is = new ItemListSerializer();
             int position = offset;
-            
-            position = is.serialize(buffer, position, il.getUid(), 
-                    il.getArchetypeNodeId(), il.getName(), 
+
+            position = is.serialize(buffer, position, il.getUid(),
+                    il.getArchetypeNodeId(), il.getName(),
                     il.getArchetypeDetails(), il.getFeederAudit(),
                     il.getLinks(), il.getItems());
-            
+
             return position;
         }
-        
-        protected ItemList deserialize(Buffer buffer, int offset){
+
+        protected ItemList deserialize(Buffer buffer, int offset) {
             int position = offset;
-            
+
             UIDBasedIDSerializer us = new UIDBasedIDSerializer();
             DvTextSerializer dts = new DvTextSerializer();
             FeederAuditSerializer fas = new FeederAuditSerializer();
             ArchetypedSerializer as = new ArchetypedSerializer();
             LinkSerializer ls = new LinkSerializer();
             ElementSerializer es = new ElementSerializer();
-            
+
             boolean hasUId = buffer.readBoolean(position);
             position += BOOLEAN.getSize();
             UIDBasedID uid = null;
-            if(hasUId){
+            if (hasUId) {
                 int uidPosition = buffer.readInteger(position);
                 position += INT.getSize();
                 uid = us.deserialize(buffer, uidPosition);
             }
-            
+
             int archetypeNodeIdPosition = buffer.readInteger(position);
             position += INT.getSize();
             String archetypeNodeId = valueStringDeserialization(
                     buffer, archetypeNodeIdPosition);
-            
+
             int namePosition = buffer.readInteger(position);
             position += INT.getSize();
             DvText name = dts.deserialize(buffer, namePosition);
-            
+
             boolean hasArchetypeDetails = buffer.readBoolean(position);
             position += BOOLEAN.getSize();
             Archetyped archetypeDetails = null;
-            if(hasArchetypeDetails){
+            if (hasArchetypeDetails) {
                 int archetypeDetailsPosition = buffer.readInteger(position);
                 position += INT.getSize();
                 archetypeDetails = as.deserialize(
                         buffer, archetypeDetailsPosition);
             }
-            
+
             boolean hasFeederAudit = buffer.readBoolean(position);
             position += BOOLEAN.getSize();
             FeederAudit feederAudit = null;
-            if(hasFeederAudit){
+            if (hasFeederAudit) {
                 int feederAuditPosition = buffer.readInteger(position);
                 position += INT.getSize();
                 feederAudit = fas.deserialize(buffer, feederAuditPosition);
             }
-            
+
             boolean hasLinks = buffer.readBoolean(position);
             position += BOOLEAN.getSize();
             Set<Link> links = null;
-            if(hasLinks){
+            if (hasLinks) {
                 int linksPosition = buffer.readInteger(position);
                 position += INT.getSize();
                 links = ls.setDeserializer(buffer, linksPosition);
             }
-            
+
             boolean hasItems = buffer.readBoolean(position);
             position += BOOLEAN.getSize();
             List<Element> items = null;
-            if(hasItems){
+            if (hasItems) {
                 int itemsPosition = buffer.readInteger(position);
                 position += INT.getSize();
                 items = es.deserializeList(buffer, itemsPosition);
             }
-            
-            return RMObjectFactory.newItemList(uid, archetypeNodeId, name, 
+
+            return RMObjectFactory.newItemList(uid, archetypeNodeId, name,
                     archetypeDetails, feederAudit, links, items);
         }
     }
-    
+
     public static class ItemStructureSerializer {
-        protected int serialize(Buffer buffer, int offset, 
+
+        protected int serialize(Buffer buffer, int offset,
                 DataStructure ds) throws UnsupportedEncodingException {
             int position = offset;
             DataStructureSerializer dss = new DataStructureSerializer();
             position = dss.serialize(buffer, position, ds);
-            
+
             return position;
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
+
+        protected int serialize(Buffer buffer, int offset,
                 ItemStructure is) throws UnsupportedEncodingException {
             int position = offset;
             ItemStructureSerializer iss = new ItemStructureSerializer();
             position = iss.serialize(buffer, position, is.getDataStructure());
-            
+
             return position;
         }
-        
-        protected ItemStructure deserialize(Buffer buffer, int offset){
+
+        protected ItemStructure deserialize(Buffer buffer, int offset) {
             int position = offset;
             DataStructureSerializer dss = new DataStructureSerializer();
-            
+
             DataStructure ds = dss.deserialize(buffer, position);
             return RMObjectFactory.newItemStructure(ds);
-        }   
+        }
     }
-    
+
     public static class ItemSingleSerializer {
-        protected int serialize(Buffer buffer, int offset, ItemStructure is, 
-                Element item) throws UnsupportedEncodingException{
+
+        protected int serialize(Buffer buffer, int offset, ItemStructure is,
+                Element item) throws UnsupportedEncodingException {
             int meta = offset;
             int position = offset + 2 * INT.getSize();
-            
+
             ItemStructureSerializer iss = new ItemStructureSerializer();
             ElementSerializer es = new ElementSerializer();
-            
+
             meta = writeHeader(buffer, meta, position);
             position = iss.serialize(buffer, position, is);
-            
+
             writeHeader(buffer, meta, position);
             position = es.serialize(buffer, position, item);
-            
+
             return position;
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
-                ItemSingle is) throws UnsupportedEncodingException{
+
+        protected int serialize(Buffer buffer, int offset,
+                ItemSingle is) throws UnsupportedEncodingException {
             int position = offset;
             ItemSingleSerializer iss = new ItemSingleSerializer();
-            
+
             position = iss.serialize(buffer, position, is);
-            
+
             return position;
         }
-        
-        protected ItemSingle deserialize(Buffer buffer, int offset){
+
+        protected ItemSingle deserialize(Buffer buffer, int offset) {
             int position = offset;
-            
+
             ItemStructureSerializer iss = new ItemStructureSerializer();
             ElementSerializer es = new ElementSerializer();
-            
+
             int itemStructurePosition = buffer.readInteger(position);
             ItemStructure is = iss.deserialize(buffer, itemStructurePosition);
             position += INT.getSize();
-            
+
             int itemPosition = buffer.readInteger(position);
             Element item = es.deserialize(buffer, itemPosition);
             position += INT.getSize();
-            
+
             return RMObjectFactory.newItemSingle(is, item);
         }
     }
-    
+
     public static class ItemTableSerializer {
-        protected int serialize(Buffer buffer, int offset, ItemStructure is, 
-                List<Cluster> rows) throws UnsupportedEncodingException{
+
+        protected int serialize(Buffer buffer, int offset, ItemStructure is,
+                List<Cluster> rows) throws UnsupportedEncodingException {
             int meta = offset;
             int position = offset + 2 * INT.getSize();
             ItemStructureSerializer iss = new ItemStructureSerializer();
             ClusterSerializer cs = new ClusterSerializer();
-            
+
             meta = writeHeader(buffer, meta, position);
             position = iss.serialize(buffer, position, is);
-            
+
             writeHeader(buffer, meta, position);
             position = cs.listSerialize(buffer, position, rows);
-            
+
             return position;
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
-                ItemTable it) throws UnsupportedEncodingException{
+
+        protected int serialize(Buffer buffer, int offset,
+                ItemTable it) throws UnsupportedEncodingException {
             int position = offset;
             ItemTableSerializer its = new ItemTableSerializer();
-            
-            position = its.serialize(buffer, position, 
+
+            position = its.serialize(buffer, position,
                     it.getItemStructure(), it.getRows());
-            
+
             return position;
         }
-        
-        protected ItemTable deserialize(Buffer buffer, int offset){
+
+        protected ItemTable deserialize(Buffer buffer, int offset) {
             int position = offset;
             ItemStructureSerializer iss = new ItemStructureSerializer();
             ClusterSerializer cs = new ClusterSerializer();
-            
+
             int itemStructurePosition = buffer.readInteger(position);
             position += INT.getSize();
             ItemStructure is = iss.deserialize(buffer, itemStructurePosition);
-            
+
             int rowsPosition = buffer.readInteger(position);
             position += INT.getSize();
             List<Cluster> rows = cs.deserializeList(buffer, rowsPosition);
-            
+
             return RMObjectFactory.newItemTable(is, rows);
         }
     }
-    
+
     public static class ItemTreeSerializer {
-        protected int serialize(Buffer buffer, int offset, ItemStructure is, 
+
+        protected int serialize(Buffer buffer, int offset, ItemStructure is,
                 List<Item> items) throws UnsupportedEncodingException {
             int meta = offset;
             int position = offset + 2 * INT.getSize() + BOOLEAN.getSize();
             ItemStructureSerializer iss = new ItemStructureSerializer();
             ItemSerializer isr = new ItemSerializer();
-            
+
             meta = writeHeader(buffer, meta, position);
             position = iss.serialize(buffer, position, is);
-            
+
             boolean hasItems = items != null;
-            if(hasItems){
+            if (hasItems) {
                 writeHeader(buffer, meta, hasItems, position);
                 position = isr.listSerialize(buffer, position, items);
             } else {
                 writeHeader(buffer, meta, hasItems);
             }
-            
+
             return position;
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
+
+        protected int serialize(Buffer buffer, int offset,
                 ItemTree it) throws UnsupportedEncodingException {
             int position = offset;
             ItemTreeSerializer its = new ItemTreeSerializer();
-            
+
             position = its.serialize(buffer, position, it);
-            
+
             return position;
         }
-        
-        protected ItemTree deserialize(Buffer buffer, int offset){
+
+        protected ItemTree deserialize(Buffer buffer, int offset) {
             int position = offset;
             ItemStructureSerializer iss = new ItemStructureSerializer();
             ItemSerializer isr = new ItemSerializer();
-            
+
             int itemStructurePosition = buffer.readInteger(position);
             position += INT.getSize();
             ItemStructure is = iss.deserialize(buffer, itemStructurePosition);
-            
+
             boolean hasItems = buffer.readBoolean(position);
             List<Item> items = null;
-            if(hasItems){
+            if (hasItems) {
                 int itemsPosition = buffer.readInteger(position);
                 position += INT.getSize();
                 items = isr.deserializeList(buffer, itemsPosition);
             }
-            
+
             return RMObjectFactory.newItemTree(is, items);
         }
     }
-    
+
     public static class PartyIdentitySerializer {
-        protected int serialize(Buffer buffer, int offset, Locatable locatable, 
+
+        protected int serialize(Buffer buffer, int offset, Locatable locatable,
                 ItemStructure details) throws UnsupportedEncodingException {
             int meta = offset;
             int position = offset + 2 * INT.getSize();
-            
+
             LocatableSerializer ls = new LocatableSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
-            
+
             meta = writeHeader(buffer, meta, position);
             position = ls.serialize(buffer, position, locatable);
-            
+
             writeHeader(buffer, meta, position);
             position = iss.serialize(buffer, position, details);
-            
+
             return position;
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
+
+        protected int serialize(Buffer buffer, int offset,
                 PartyIdentity pi) throws UnsupportedEncodingException {
             int position = offset;
             PartyIdentitySerializer pis = new PartyIdentitySerializer();
-             
-             position = pis.serialize(buffer, position, 
-                     pi.getLocatable(), pi.getDetails());
-             
-             return position;
+
+            position = pis.serialize(buffer, position,
+                    pi.getLocatable(), pi.getDetails());
+
+            return position;
         }
-        
-        protected PartyIdentity deserialize(Buffer buffer, int offset){
+
+        protected PartyIdentity deserialize(Buffer buffer, int offset) {
             int position = offset;
             LocatableSerializer ls = new LocatableSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
-            
+
             int locatablePosition = buffer.readInteger(position);
             position += INT.getSize();
             Locatable locatable = ls.deserialize(buffer, locatablePosition);
-            
+
             int detailsPosition = buffer.readInteger(position);
             position += INT.getSize();
             ItemStructure details = iss.deserialize(buffer, detailsPosition);
-            
+
             return RMObjectFactory.newPartyIdentity(locatable, details);
         }
-        
+
         protected int setSerializer(Buffer buffer, int offset,
                 Set<PartyIdentity> piSet) throws UnsupportedEncodingException {
             int setSize = piSet.size();
@@ -3304,7 +3314,7 @@ public class RMObjectSerialization {
             return position;
         }
 
-        protected Set<PartyIdentity> setDeserializer(Buffer buffer, 
+        protected Set<PartyIdentity> setDeserializer(Buffer buffer,
                 int offset) {
             int position = offset;
             int listSize = buffer.readInteger(position);
@@ -3324,118 +3334,160 @@ public class RMObjectSerialization {
             return piSet;
         }
     }
-    
+
     public static class PartyRelationshipSerializer {
-        protected int serialize(Buffer buffer, int offset, Locatable locatable, 
-                ItemStructure details, ObjectRef source, 
-                ObjectRef target) throws UnsupportedEncodingException{
+
+        protected int serialize(Buffer buffer, int offset, Locatable locatable,
+                ItemStructure details, ObjectRef source,
+                ObjectRef target) throws UnsupportedEncodingException {
             int meta = offset;
             int position = offset + 3 * INT.getSize();
-            
+
             LocatableSerializer ls = new LocatableSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
             ObjectRefSerializer ors = new ObjectRefSerializer();
-            
+
             meta = writeHeader(buffer, meta, position);
             position = ls.serialize(buffer, position, locatable);
-            
+
             meta = writeHeader(buffer, meta, position);
             position = iss.serialize(buffer, position, details);
-            
+
             meta = writeHeader(buffer, meta, position);
             position = ors.serialize(buffer, position, source);
-            
+
             writeHeader(buffer, meta, position);
             position = ors.serialize(buffer, position, target);
-            
+
             return position;
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
+
+        protected int serialize(Buffer buffer, int offset,
                 PartyRelationship pr) throws UnsupportedEncodingException {
             PartyRelationshipSerializer prs = new PartyRelationshipSerializer();
             int position = offset;
             position = prs.serialize(buffer, position, pr);
-            
+
             return position;
         }
-        
-        protected PartyRelationship deserialize(Buffer buffer, int offset){
-            
+
+        protected PartyRelationship deserialize(Buffer buffer, int offset) {
+
             int position = offset;
-            
+
             LocatableSerializer ls = new LocatableSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
             ObjectRefSerializer ors = new ObjectRefSerializer();
-            
+
             int locatablePosition = buffer.readInteger(position);
             position += INT.getSize();
             Locatable locatable = ls.deserialize(buffer, locatablePosition);
-            
+
             int detailsPosition = buffer.readInteger(position);
             position += INT.getSize();
             ItemStructure details = iss.deserialize(buffer, detailsPosition);
-            
+
             //DvInterval - TODO
-            
             int sourcePosition = buffer.readInteger(position);
             position += INT.getSize();
             ObjectRef source = ors.deserialize(buffer, sourcePosition);
-            
+
             int targetPosition = buffer.readInteger(position);
             position += INT.getSize();
             ObjectRef target = ors.deserialize(buffer, targetPosition);
-            
-            return RMObjectFactory.newPartyRelationship(locatable, details, 
+
+            return RMObjectFactory.newPartyRelationship(locatable, details,
                     source, target);
         }
-    }
-    
-    public static class AddressSerializer {
-        protected int serialize(Buffer buffer, int offset, Locatable locatable, 
-                ItemStructure details) throws UnsupportedEncodingException{
+
+        protected int setSerializer(Buffer buffer, int offset,
+                Set<PartyRelationship> prSet)
+                throws UnsupportedEncodingException {
+            int setSize = prSet.size();
+            int position = offset + (setSize * INT.getSize()) + INT.getSize();
             int meta = offset;
-            int position = offset + 2 * INT.getSize();
-            
-            LocatableSerializer ls = new LocatableSerializer();
-            ItemStructureSerializer iss = new ItemStructureSerializer();
-            
-            meta = writeHeader(buffer, meta, position);
-            position = ls.serialize(buffer, position, locatable);
-            
-            writeHeader(buffer, meta, position);
-            position = iss.serialize(buffer, position, details);
-            
+            PartyRelationshipSerializer pis = new PartyRelationshipSerializer();
+
+            meta = writeHeader(buffer, meta, setSize);
+            Iterator<PartyRelationship> it = prSet.iterator();
+
+            while (it.hasNext()) {
+                PartyRelationship pr = it.next();
+                int linkPosition = position;
+                meta = writeHeader(buffer, meta, linkPosition);
+                position = pis.serialize(buffer, position, pr);
+            }
+
             return position;
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
+
+        protected Set<PartyRelationship> setDeserializer(Buffer buffer,
+                int offset) {
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += INT.getSize();
+
+            PartyRelationshipSerializer prs = new PartyRelationshipSerializer();
+            Set<PartyRelationship> prSet = new HashSet<>();
+
+            for (int i = 0; i < listSize; i++) {
+                int prPosition = buffer.readInteger(position);
+                position += INT.getSize();
+
+                PartyRelationship pr = prs.deserialize(buffer, prPosition);
+                prSet.add(pr);
+            }
+
+            return prSet;
+        }
+    }
+
+    public static class AddressSerializer {
+
+        protected int serialize(Buffer buffer, int offset, Locatable locatable,
+                ItemStructure details) throws UnsupportedEncodingException {
+            int meta = offset;
+            int position = offset + 2 * INT.getSize();
+
+            LocatableSerializer ls = new LocatableSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = ls.serialize(buffer, position, locatable);
+
+            writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, details);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
                 Address a) throws UnsupportedEncodingException {
             int position = offset;
             AddressSerializer as = new AddressSerializer();
-            
+
             position = as.serialize(buffer, position, a);
-            
+
             return position;
         }
-        
-        protected Address deserialize(Buffer buffer, int offset){
+
+        protected Address deserialize(Buffer buffer, int offset) {
             int position = offset;
-            
+
             LocatableSerializer ls = new LocatableSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
-            
+
             int locatablePosition = buffer.readInteger(position);
             position += INT.getSize();
             Locatable locatable = ls.deserialize(buffer, locatablePosition);
-            
+
             int detailsPosition = buffer.readInteger(position);
             position += INT.getSize();
             ItemStructure details = iss.deserialize(buffer, detailsPosition);
-            
+
             return RMObjectFactory.newAddress(locatable, details);
         }
-        
+
         protected int listSerialize(
                 Buffer buffer, int offset, List<Address> items)
                 throws UnsupportedEncodingException {
@@ -3472,57 +3524,55 @@ public class RMObjectSerialization {
             return list;
         }
     }
-    
+
     public static class ContactSerializer {
-        protected int serialize(Buffer buffer, int offset, Locatable locatable, 
+
+        protected int serialize(Buffer buffer, int offset, Locatable locatable,
                 List<Address> addresses) throws UnsupportedEncodingException {
             int meta = offset;
             int position = offset + 2 * INT.getSize();
-            
+
             LocatableSerializer ls = new LocatableSerializer();
             AddressSerializer as = new AddressSerializer();
-            
+
             meta = writeHeader(buffer, meta, position);
             position = ls.serialize(buffer, position, locatable);
-            
+
             //DvInterval<DvDate> timeValidity todo
-            
             writeHeader(buffer, meta, position);
             position = as.listSerialize(buffer, position, addresses);
-            
+
             return position;
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
+
+        protected int serialize(Buffer buffer, int offset,
                 Contact c) throws UnsupportedEncodingException {
             int position = offset;
             ContactSerializer cs = new ContactSerializer();
-            
+
             position = cs.serialize(buffer, position, c);
-            
+
             return position;
         }
-        
+
         protected Contact deserialize(Buffer buffer, int offset) {
             int position = offset;
             LocatableSerializer ls = new LocatableSerializer();
             AddressSerializer as = new AddressSerializer();
-            
+
             int locatablePosition = buffer.readInteger(position);
             position += INT.getSize();
             Locatable locatable = ls.deserialize(buffer, locatablePosition);
-            
+
             //DvInterval<DvDate> timeValidity,
-            
             int addressesPosition = buffer.readInteger(position);
             position += INT.getSize();
             List<Address> addresses = as.deserializeList(
                     buffer, addressesPosition);
-            
-            
+
             return RMObjectFactory.newContact(locatable, addresses);
         }
-        
+
         protected int setSerializer(Buffer buffer, int offset,
                 Set<Contact> contacts) throws UnsupportedEncodingException {
             int setSize = contacts.size();
@@ -3562,7 +3612,107 @@ public class RMObjectSerialization {
             return contacts;
         }
     }
-    
+
+    public static class PartySerializer {
+
+        protected int serialize(Buffer buffer, int offset, Locatable locatable,
+                Set<PartyIdentity> identities, Set<Contact> contacts,
+                Set<PartyRelationship> relationships,
+                Set<LocatableRef> reverseRelationships,
+                ItemStructure details) throws UnsupportedEncodingException {
+            int meta = offset;
+            int position = offset + 6 * INT.getSize() + BOOLEAN.getSize();
+
+            LocatableSerializer ls = new LocatableSerializer();
+            ContactSerializer cs = new ContactSerializer();
+            PartyIdentitySerializer pis = new PartyIdentitySerializer();
+            LocatableRefSerializer lrs = new LocatableRefSerializer();
+            PartyRelationshipSerializer prs = new PartyRelationshipSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = ls.serialize(buffer, position, locatable);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = pis.setSerializer(buffer, position, identities);
+
+            meta = writeHeader(buffer, meta, position);
+            position = cs.setSerializer(buffer, position, contacts);
+
+            meta = writeHeader(buffer, meta, position);
+            position = prs.setSerializer(buffer, position, relationships);
+
+            meta = writeHeader(buffer, meta, position);
+            position = lrs.setSerializer(
+                    buffer, position, reverseRelationships);
+
+            boolean hasDetails = details != null;
+            if (hasDetails) {
+                writeHeader(buffer, meta, hasDetails, position);
+                position = iss.serialize(buffer, position, details);
+            } else {
+                writeHeader(buffer, meta, hasDetails);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                Party p) throws UnsupportedEncodingException {
+            int position = offset;
+            PartySerializer ps = new PartySerializer();
+
+            position = ps.serialize(buffer, position, p);
+            return position;
+        }
+
+        protected Party deserialize(Buffer buffer, int offset) {
+            int position = offset;
+            LocatableSerializer ls = new LocatableSerializer();
+            ContactSerializer cs = new ContactSerializer();
+            PartyIdentitySerializer pis = new PartyIdentitySerializer();
+            LocatableRefSerializer lrs = new LocatableRefSerializer();
+            PartyRelationshipSerializer prs = new PartyRelationshipSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            
+            int locatablePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Locatable locatable = ls.deserialize(buffer, locatablePosition);
+            
+            int identitiesPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Set<PartyIdentity> identities = pis.setDeserializer(
+                    buffer, identitiesPosition);
+            
+            int contactsPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Set<Contact > contacts = cs.setDeserializer(
+                    buffer, contactsPosition);
+            
+            int relationshipsPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Set<PartyRelationship> relationships = prs.setDeserializer(
+                    buffer, relationshipsPosition);
+            
+            int reverseRelationshipsPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Set<LocatableRef> reverseRelationships = lrs.setDeserializer(
+                    buffer, reverseRelationshipsPosition);
+            
+            boolean hasDetails = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            ItemStructure details = null;
+            if(hasDetails){
+                int detailsPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                details = iss.deserialize(buffer, detailsPosition);
+            }
+            
+            return RMObjectFactory.newParty(locatable, identities, 
+                    contacts, relationships, reverseRelationships, details);
+        }
+    }
+
     /**
      * Serializa uma única String value
      *

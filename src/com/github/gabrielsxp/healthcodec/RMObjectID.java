@@ -72,11 +72,9 @@ public enum RMObjectID {
     PARTYIDENTITY(51),
     PARTYRELATIONSHIP(52),
     ADDRESS(53),
-    CONTACT(54);
+    CONTACT(54),
+    PARTY(55);
     
-    
-    
-
     private final int value;
 
     private RMObjectID(int value) {

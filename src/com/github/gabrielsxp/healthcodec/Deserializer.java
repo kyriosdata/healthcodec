@@ -382,4 +382,10 @@ public interface Deserializer {
      * @return nova instância de Contact
      */
     Contact deserializeContact();
+    
+    /**
+     * Deserializador de Party
+     * @return nova instância de Party
+     */
+    Party deserializeParty();
 }

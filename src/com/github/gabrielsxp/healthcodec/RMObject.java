@@ -1266,4 +1266,45 @@ public class RMObject {
             return addresses;
         }
     }
+    
+    public static class Party {
+
+        private final Locatable locatable;
+        private final Set<PartyIdentity> identities;
+        private final Set<Contact> contacts;
+        private final Set<PartyRelationship> relationships;
+        private final Set<LocatableRef> reverseRelationships;
+        private final ItemStructure details;
+
+        public Party(Locatable locatable, Set<PartyIdentity> identities, 
+                Set<Contact> contacts, Set<PartyRelationship> relationships, 
+                Set<LocatableRef> reverseRelationships, ItemStructure details) {
+            this.locatable = locatable;
+            this.identities = identities;
+            this.contacts = contacts;
+            this.relationships = relationships;
+            this.reverseRelationships = reverseRelationships;
+            this.details = details;
+        }
+        
+        public Set<PartyIdentity> getIdentities() {
+            return identities;
+        }
+
+        public Set<Contact> getContacts() {
+            return contacts;
+        }
+
+        public Set<PartyRelationship> getRelationships() {
+            return relationships;
+        }
+
+        public Set<LocatableRef> getReverseRelationships() {
+            return reverseRelationships;
+        }
+
+        public ItemStructure getDetails() {
+            return details;
+        }
+    }
 }

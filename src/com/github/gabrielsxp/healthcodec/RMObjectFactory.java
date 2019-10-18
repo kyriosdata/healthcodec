@@ -322,4 +322,12 @@ public class RMObjectFactory {
             List<Address> addresses){
         return new Contact(locatable, addresses);
     }
+    
+    public static Party newParty(Locatable locatable, 
+            Set<PartyIdentity> identities, Set<Contact> contacts, 
+            Set<PartyRelationship> relationships, 
+            Set<LocatableRef> reverseRelationships, ItemStructure details) {
+        return new Party(locatable, identities, contacts, relationships, 
+                reverseRelationships, details);
+    }
 }
