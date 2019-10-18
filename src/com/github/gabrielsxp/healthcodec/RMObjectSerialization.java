@@ -3473,6 +3473,57 @@ public class RMObjectSerialization {
         }
     }
     
+    public static class ContactSerializer {
+        protected int serialize(Buffer buffer, int offset, Locatable locatable, 
+                List<Address> addresses) throws UnsupportedEncodingException {
+            int meta = offset;
+            int position = offset + 2 * INT.getSize();
+            
+            LocatableSerializer ls = new LocatableSerializer();
+            AddressSerializer as = new AddressSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = ls.serialize(buffer, position, locatable);
+            
+            //DvInterval<DvDate> timeValidity todo
+            
+            writeHeader(buffer, meta, position);
+            position = as.listSerialize(buffer, position, addresses);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                Contact c) throws UnsupportedEncodingException {
+            int position = offset;
+            ContactSerializer cs = new ContactSerializer();
+            
+            position = cs.serialize(buffer, position, c);
+            
+            return position;
+        }
+        
+        protected Contact deserialize(Buffer buffer, int offset) {
+            int position = offset;
+            LocatableSerializer ls = new LocatableSerializer();
+            AddressSerializer as = new AddressSerializer();
+            
+            int locatablePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Locatable locatable = ls.deserialize(buffer, locatablePosition);
+            
+            //DvInterval<DvDate> timeValidity,
+            
+            int addressesPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            List<Address> addresses = as.deserializeList(
+                    buffer, addressesPosition);
+            
+            
+            return RMObjectFactory.newContact(locatable, addresses);
+        }
+    }
+    
     /**
      * Serializa uma única String value
      *

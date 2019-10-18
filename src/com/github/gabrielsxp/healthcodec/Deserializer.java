@@ -376,4 +376,10 @@ public interface Deserializer {
      * @return nova instância de Address
      */
     Address deserializeAddress();
+    
+    /**
+     * Deserializador de Contact
+     * @return nova instância de Contact
+     */
+    Contact deserializeContact();
 }

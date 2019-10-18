@@ -317,4 +317,9 @@ public class RMObjectFactory {
             ItemStructure details){
         return new Address(locatable, details);
     }
+    
+    public static Contact newContact(Locatable locatable, 
+            List<Address> addresses){
+        return new Contact(locatable, addresses);
+    }
 }

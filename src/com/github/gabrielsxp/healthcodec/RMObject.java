@@ -1247,4 +1247,23 @@ public class RMObject {
             return details;
         }
     }
+    
+    public static class Contact {
+        private final Locatable locatable;
+        //private final DvInterval<DvDate> timeValidity todo;
+        private final List<Address> addresses;
+
+        public Contact(Locatable locatable, List<Address> addresses) {
+            this.locatable = locatable;
+            this.addresses = addresses;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public List<Address> getAddresses() {
+            return addresses;
+        }
+    }
 }

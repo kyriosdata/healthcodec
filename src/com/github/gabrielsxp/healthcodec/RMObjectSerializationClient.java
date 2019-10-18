@@ -1828,11 +1828,41 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         
         return this;
     }
-
+    
+    /**
+     * Deserializador de Address
+     * @return nova instância de Address
+     */
     @Override
     public Address deserializeAddress() {
         AddressSerializer d = new AddressSerializer();
         return d.deserialize(buffer, getOffsetFromID(ADDRESS));
+    }
+    
+    /**
+     * Serializador de Contact
+     * @param c
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeContact(
+            Contact c) throws UnsupportedEncodingException {
+        ContactSerializer s = new ContactSerializer();
+        register(CONTACT, offset);
+        setOffset(s.serialize(buffer, offset, c));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de Contact
+     * @return nova instância de Contact
+     */
+    @Override
+    public Contact deserializeContact() {
+        ContactSerializer d = new ContactSerializer();
+        return d.deserialize(buffer, getOffsetFromID(CONTACT));
     }
     
     /**
