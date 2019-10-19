@@ -647,37 +647,29 @@ public class RMObjectSerialization {
                 String namespace,
                 String type,
                 String path) throws UnsupportedEncodingException {
+            int meta = offset;
+            int position = offset + 4 * INT.getSize() + BOOLEAN.getSize();
+            
+            ObjectVersionIDSerializer os = new ObjectVersionIDSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = os.serialize(buffer, position, id);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, namespace);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, type);
+            
             boolean hasPath = path != null;
-            int dataPositionStart = 0;
-
-            int ovidValueLength = id.getValue().length();
-            int namespaceLength = namespace.length();
-            int typeLength = type.length();
-            int pathLength = hasPath ? path.length() : 0;
-
-            buffer.writeByte(offset, hasPath ? (byte) 1 : (byte) 0);
-            buffer.writeInteger(offset + BYTE.getSize(), ovidValueLength);
-            buffer.writeInteger(offset + INT.getSize()
-                    + BYTE.getSize(), namespaceLength);
-            buffer.writeInteger(offset + 2 * INT.getSize()
-                    + BYTE.getSize(), typeLength);
-            dataPositionStart = offset + 3 * INT.getSize() + BYTE.getSize();
-            if (hasPath) {
-                buffer.writeInteger(offset
-                        + 3 * INT.getSize() + BYTE.getSize(), pathLength);
-                dataPositionStart = offset + 4 * INT.getSize() + BYTE.getSize();
+            if(hasPath){
+                writeHeader(buffer, meta, hasPath, position);
+                position = valueStringSerialization(buffer, position, path);
+            } else {
+                writeHeader(buffer, meta, hasPath);
             }
-            buffer.writeString(dataPositionStart, id.getValue());
-            dataPositionStart += ovidValueLength;
-            buffer.writeString(dataPositionStart, namespace);
-            dataPositionStart += namespaceLength;
-            buffer.writeString(dataPositionStart, type);
-            dataPositionStart += typeLength;
-            if (hasPath) {
-                buffer.writeString(dataPositionStart, path);
-                return dataPositionStart + pathLength;
-            }
-            return dataPositionStart;
+            
+            return position;
         }
 
         protected int serialize(Buffer buffer, int offset,
@@ -692,38 +684,31 @@ public class RMObjectSerialization {
         }
 
         protected LocatableRef deserialize(Buffer buffer, int offset) {
-            boolean hasPath = buffer.readByte(offset) == 1;
-            int ovidValueLength = buffer.readInteger(offset + BYTE.getSize());
-            int namespaceLength = buffer.readInteger(offset
-                    + INT.getSize() + BYTE.getSize());
-            int typeLength = buffer.readInteger(offset
-                    + 2 * INT.getSize() + BYTE.getSize());
-            int pathLength = hasPath ? buffer.readInteger(offset
-                    + 3 * INT.getSize() + BYTE.getSize()) : 0;
-            int dataPositionStart = hasPath
-                    ? offset + 4 * INT.getSize() + BYTE.getSize()
-                    : offset + 3 * INT.getSize() + BYTE.getSize();
-            String ovidValue = buffer.readString(
-                    dataPositionStart, ovidValueLength);
-            dataPositionStart += ovidValueLength;
-            String namespace = buffer.readString(
-                    dataPositionStart, namespaceLength);
-            dataPositionStart += namespaceLength;
-            String type = buffer.readString(
-                    dataPositionStart, typeLength);
-            dataPositionStart += typeLength;
-
-            String path = "";
-            if (hasPath) {
-                path = buffer.readString(dataPositionStart, pathLength);
+            int position = offset;
+            ObjectVersionIDSerializer os = new ObjectVersionIDSerializer();
+            
+            int idPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            ObjectVersionID id = os.deserialize(buffer, idPosition);
+            
+            int namespacePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String namespace = valueStringDeserialization(
+                    buffer, namespacePosition);
+            
+            int typePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String type = valueStringDeserialization(buffer, typePosition);
+            
+            boolean hasPath = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            String path = null;
+            if(hasPath){
+                int pathPosition = buffer.readInteger(position);
+                path = valueStringDeserialization(buffer, pathPosition);
             }
-            ObjectVersionID id = RMObjectFactory.newObjectVersionID(ovidValue);
-            return RMObjectFactory.newLocatableRef(
-                    id,
-                    namespace,
-                    type,
-                    hasPath ? path : null
-            );
+            
+            return RMObjectFactory.newLocatableRef(id, namespace, type, path);
         }
 
         protected int setSerializer(Buffer buffer, int offset,
