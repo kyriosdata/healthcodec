@@ -545,16 +545,17 @@ public class RMObjectSerialization {
                 int offset,
                 ObjectID id,
                 String value) throws UnsupportedEncodingException {
-            int oidValueLength = id.getValue().length();
-            int valueLength = value.length();
-            buffer.writeInteger(offset, oidValueLength);
-            buffer.writeInteger(offset + INT.getSize(), valueLength);
-            buffer.writeString(offset + 2 * INT.getSize(), id.getValue());
-            buffer.writeString(offset
-                    + 2 * INT.getSize()
-                    + oidValueLength, value);
-
-            return offset + 2 * INT.getSize() + valueLength + oidValueLength;
+            int meta = offset;
+            int position = offset + 2 * INT.getSize();
+            ObjectIDSerializer os = new ObjectIDSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = os.serialize(buffer, position, id);
+            
+            writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, value);
+            
+            return position;
         }
 
         protected int serialize(Buffer buffer, int offset,
@@ -563,21 +564,22 @@ public class RMObjectSerialization {
             PartyRefSerializer prs = new PartyRefSerializer();
 
             position
-                    = prs.serialize(buffer, position, pr.getId(), pr.getValue());
+                    = prs.serialize(buffer, position, 
+                            pr.getId(), pr.getValue());
 
             return position;
         }
 
         protected PartyRef deserialize(Buffer buffer, int offset) {
-            int oidValueLength = buffer.readInteger(offset);
-            int valueLength = buffer.readInteger(offset + INT.getSize());
-            String oidValue = buffer.readString(
-                    offset + 2 * INT.getSize(),
-                    oidValueLength);
-            String value = buffer.readString(
-                    offset + 2 * INT.getSize() + oidValueLength,
-                    valueLength);
-            ObjectID id = RMObjectFactory.newObjectID(oidValue);
+            int position = offset;
+            ObjectIDSerializer os = new ObjectIDSerializer();
+            
+            int idPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            ObjectID id = os.deserialize(buffer, idPosition);
+            
+            int valuePosition = buffer.readInteger(position);
+            String value = valueStringDeserialization(buffer, valuePosition);
 
             return RMObjectFactory.newPartyRef(id, value);
         }
