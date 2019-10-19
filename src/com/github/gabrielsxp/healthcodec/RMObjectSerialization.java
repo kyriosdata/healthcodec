@@ -183,11 +183,21 @@ public class RMObjectSerialization {
                 throws UnsupportedEncodingException {
             return valueStringSerialization(buffer, offset, value);
         }
-
+        
+        protected int serialize(Buffer buffer, int offset, 
+                ISO_OID iso) throws UnsupportedEncodingException {
+            int position = offset;
+            ISOOIDSerialilzer isos = new ISOOIDSerialilzer();
+            
+            position = isos.serialize(buffer, position, iso.getValue());
+            
+            return position;
+        }
+        
         protected ISO_OID deserialize(Buffer buffer, int offset) {
             int valueLength = buffer.readInteger(offset);
             String value = buffer.readString(offset + INT.getSize(), valueLength);
-
+            
             return RMObjectFactory.newISOOID(value);
         }
     }
