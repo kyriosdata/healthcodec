@@ -755,8 +755,21 @@ public class RMObjectSerialization {
     static class ProportionKindSerializer {
 
         protected int serialize(Buffer buffer, int offset, int value) {
-            buffer.writeInteger(offset, value);
-            return offset + INT.getSize();
+            int position = offset;
+            
+            buffer.writeInteger(position, value);
+            position += INT.getSize();
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, ProportionKind p) {
+            int position = offset;
+            ProportionKindSerializer ps = new ProportionKindSerializer();
+            
+            position = ps.serialize(buffer, position, p.getValue());
+            
+            return position;
         }
 
         protected ProportionKind deserialize(Buffer buffer, int offset) {
