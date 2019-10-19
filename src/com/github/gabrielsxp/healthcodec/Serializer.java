@@ -847,4 +847,13 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeISMTransition(
             ISMTransition ism) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de Activity
+     * @param a
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeActivity(
+            Activity a) throws UnsupportedEncodingException;
 }

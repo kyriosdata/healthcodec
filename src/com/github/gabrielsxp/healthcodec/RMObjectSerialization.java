@@ -988,6 +988,17 @@ public class RMObjectSerialization {
 
             return dataPosition;
         }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                DvParsable dp) throws UnsupportedEncodingException{
+            int position = offset;
+            DvParsableSerializer dps = new DvParsableSerializer();
+            
+            position = dps.serialize(buffer, position, dp.getCharset(), 
+                    dp.getLanguage(), dp.getValue(), dp.getFormalism());
+            
+            return position;
+        }
 
         protected DvParsable deserialize(Buffer buffer, int offset) {
             int cpCharsetTerminologyIDValueLength = buffer.readInteger(offset);
@@ -4262,6 +4273,72 @@ public class RMObjectSerialization {
             
             return RMObjectFactory.newISMTransition(currentState, transition, 
                     careflowStep);
+        }
+    }
+    
+    public static class ActivitySerializer {
+        protected int serialize(Buffer buffer, int offset, Locatable locatable, 
+                ItemStructure description, DvParsable timing, 
+                String actionArchetypeId) throws UnsupportedEncodingException{
+            int meta = offset;
+            int position = offset + 3 * INT.getSize();
+            
+            LocatableSerializer ls = new LocatableSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            DvParsableSerializer dps = new DvParsableSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = ls.serialize(buffer, position, locatable);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, description);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = dps.serialize(buffer, position, timing);
+            
+            writeHeader(buffer, meta, position);
+            position = valueStringSerialization(
+                    buffer, position, actionArchetypeId);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                Activity a) throws UnsupportedEncodingException{
+            int position = offset;
+            ActivitySerializer as = new ActivitySerializer();
+            
+            position = as.serialize(buffer, position, a);
+            
+            return position;
+        }
+        
+        protected Activity deserialize(Buffer buffer, int offset){
+            int position = offset;
+            LocatableSerializer ls = new LocatableSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            DvParsableSerializer dps = new DvParsableSerializer();
+            
+            int locatablePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Locatable locatable = ls.deserialize(buffer, locatablePosition);
+            
+            int descriptionPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            ItemStructure description = iss.deserialize(
+                    buffer, descriptionPosition);
+            
+            int timingPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            DvParsable timing = dps.deserialize(buffer, timingPosition);
+            
+            int actionArchetypeIdPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String actionArchetypeId = valueStringDeserialization(
+                    buffer, actionArchetypeIdPosition);
+            
+            return RMObjectFactory.newActivity(locatable, description, 
+                    timing, actionArchetypeId);
         }
     }
     

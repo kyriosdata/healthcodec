@@ -372,4 +372,10 @@ public class RMObjectFactory {
                     DvCodedText transition, DvCodedText careflowStep){
         return new ISMTransition(currentState, transition, careflowStep);
     }
+    
+    public static Activity newActivity(Locatable locatable, 
+            ItemStructure description, DvParsable timing, 
+            String actionArchetypeId){
+        return new Activity(locatable, description, timing, actionArchetypeId);
+    }
 }

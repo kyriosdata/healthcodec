@@ -2098,7 +2098,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     /**
      * Serializador de ISMTransition
      * @param ism
-     * @return
+     * @return instância de RMObjectSerializationClient atual
      * @throws UnsupportedEncodingException 
      */
     @Override
@@ -2111,10 +2111,40 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         return this;
     }
     
+    /**
+     * Deserilizador de ISMTransition
+     * @return nova instância de ISMTransition
+     */
     @Override
     public ISMTransition deserializeISMTransition() {
         ISMTransitionSerializer d = new ISMTransitionSerializer();
         return d.deserialize(buffer, getOffsetFromID(ISMTRANSITION));
+    }
+    
+    /**
+     * Serializador de Activity
+     * @param a
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeActivity(
+            Activity a) throws UnsupportedEncodingException {
+        ActivitySerializer s = new ActivitySerializer();
+        register(ACTIVITY, offset);
+        setOffset(s.serialize(buffer, offset, a));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de Activity
+     * @return nova instância de Activity
+     */
+    @Override
+    public Activity deserializeActivity() {
+        ActivitySerializer d = new ActivitySerializer();
+        return d.deserialize(buffer, getOffsetFromID(ACTIVITY));
     }
     
     /**

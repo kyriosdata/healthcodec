@@ -1505,4 +1505,35 @@ public class RMObject {
             return careflowStep;
         }
     }
+    
+    public static class Activity {
+        private final Locatable locatable;
+        private final ItemStructure description;
+        private final DvParsable timing;
+        private final String actionArchetypeId;
+
+        public Activity(Locatable locatable, ItemStructure description, 
+                DvParsable timing, String actionArchetypeId) {
+            this.locatable = locatable;
+            this.description = description;
+            this.timing = timing;
+            this.actionArchetypeId = actionArchetypeId;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public ItemStructure getDescription() {
+            return description;
+        }
+
+        public DvParsable getTiming() {
+            return timing;
+        }
+
+        public String getActionArchetypeId() {
+            return actionArchetypeId;
+        }
+    }
 }

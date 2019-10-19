@@ -442,4 +442,10 @@ public interface Deserializer {
      * @return nova instância de ISMTransition
      */
     ISMTransition deserializeISMTransition();
+    
+    /**
+     * Deserializador de Activity
+     * @return nova instância de Activity
+     */
+    Activity deserializeActivity();
 }
