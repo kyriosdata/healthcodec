@@ -2044,6 +2044,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
     
     /**
+     * Serializador de Person
+     * @param p
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializePerson(
+            Person p) throws UnsupportedEncodingException {
+        PersonSerializer s = new PersonSerializer();
+        register(PERSON, offset);
+        setOffset(s.serialize(buffer, offset, p));
+        
+        return this;
+    }
+
+    /**
+     * Deserializador de Person
+     * @return nova instância de Person
+     */
+    @Override
+    public Person deserializePerson() {
+        PersonSerializer d = new PersonSerializer();
+        return d.deserialize(buffer, getOffsetFromID(PERSON));
+    }
+    
+    /**
      * Método para registrar um determinado objeto no índice
      * @param id
      * @param offset

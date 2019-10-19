@@ -79,7 +79,8 @@ public enum RMObjectID {
     ACTOR(58),
     AGENT(59),
     GROUP(60),
-    ORGANISATION(61);
+    ORGANISATION(61),
+    PERSON(62);
     
     private final int value;
 

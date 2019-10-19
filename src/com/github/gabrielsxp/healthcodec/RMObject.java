@@ -1440,4 +1440,16 @@ public class RMObject {
             return actor;
         }
     }
+    
+    public static class Person {
+        private final Actor actor;
+
+        public Person(Actor actor) {
+            this.actor = actor;
+        }
+
+        public Actor getActor() {
+            return actor;
+        }
+    }
 }

@@ -357,4 +357,8 @@ public class RMObjectFactory {
     public static Organisation newOrganisation(Actor actor){
         return new Organisation(actor);
     }
+    
+    public static Person newPerson(Actor a){
+        return new Person(a);
+    }
 }

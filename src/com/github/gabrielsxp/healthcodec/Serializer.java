@@ -58,6 +58,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.PartyRef;
 import com.github.gabrielsxp.healthcodec.RMObject.PartyRelated;
 import com.github.gabrielsxp.healthcodec.RMObject.PartyRelationship;
 import com.github.gabrielsxp.healthcodec.RMObject.PartySelf;
+import com.github.gabrielsxp.healthcodec.RMObject.Person;
 import com.github.gabrielsxp.healthcodec.RMObject.ResourceDescriptionItem;
 import com.github.gabrielsxp.healthcodec.RMObject.Role;
 import com.github.gabrielsxp.healthcodec.RMObject.TemplateID;
@@ -868,4 +869,13 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeOrganisation(
             Organisation o) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de Person
+     * @param p
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializePerson(Person p)
+                throws UnsupportedEncodingException;
 }

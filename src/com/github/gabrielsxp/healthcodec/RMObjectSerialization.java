@@ -4093,6 +4093,39 @@ public class RMObjectSerialization {
             return RMObjectFactory.newOrganisation(actor);
         } 
     }
+    
+    public static class PersonSerializer {
+        protected int serialize(Buffer buffer, int offset, 
+                Actor a) throws UnsupportedEncodingException {
+            int position = offset;
+            ActorSerializer as = new ActorSerializer();
+            
+            position = as.serialize(buffer, position, a);
+            
+            return position;
+        }
+        
+         protected int serialize(Buffer buffer, int offset, 
+                Person p) throws UnsupportedEncodingException {
+            int position = offset;
+            PersonSerializer ps = new PersonSerializer();
+            
+            position = ps.serialize(buffer, position, p);
+            
+            return position;
+        }
+         
+         protected Person deserialize(Buffer buffer, int offset){
+             int position = offset;
+             ActorSerializer as = new ActorSerializer();
+             
+             int actorPosition = buffer.readInteger(position);
+             
+             Actor a = as.deserialize(buffer, actorPosition);
+             
+             return RMObjectFactory.newPerson(a);
+         }
+    }
 
     /**
      * Serializa uma única String value

@@ -424,4 +424,10 @@ public interface Deserializer {
      * @return nova instância de Organisation
      */
     Organisation deserializeOrganisation();
+    
+    /**
+     * Deserializador de Person
+     * @return nova instância de Person
+     */
+    Person deserializePerson();
 }
