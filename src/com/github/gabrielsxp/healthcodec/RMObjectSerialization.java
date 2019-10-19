@@ -157,6 +157,16 @@ public class RMObjectSerialization {
                 throws UnsupportedEncodingException {
             return valueStringSerialization(buffer, offset, value);
         }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                InternetID id) throws UnsupportedEncodingException {
+            int position = offset;
+            InternetIDSerializer s = new InternetIDSerializer();
+            
+            position = s.serialize(buffer, position, id.getValue());
+            
+            return position;
+        }
 
         protected InternetID deserialize(Buffer buffer, int offset) {
             int valueLength = buffer.readInteger(offset);
