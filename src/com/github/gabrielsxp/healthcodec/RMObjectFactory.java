@@ -340,4 +340,9 @@ public class RMObjectFactory {
             PartyRef performer){
         return new Role(party, capabilities, performer);
     }
+    
+    public static Actor newActor(Party party, Set<Role> roles, 
+            Set<DvText> languages){
+        return new Actor(party, roles, languages);
+    }
 }

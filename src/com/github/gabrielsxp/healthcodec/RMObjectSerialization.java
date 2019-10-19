@@ -1438,6 +1438,45 @@ public class RMObjectSerialization {
 
             return list;
         }
+        
+        protected int setSerializer(Buffer buffer, int offset,
+                Set<DvText> items) throws UnsupportedEncodingException {
+            int setSize = items.size();
+            int position = offset + (setSize * INT.getSize()) + INT.getSize();
+            int meta = offset;
+            DvTextSerializer dts = new DvTextSerializer();
+
+            meta = writeHeader(buffer, meta, setSize);
+            Iterator<DvText> it = items.iterator();
+
+            while (it.hasNext()) {
+                DvText d = it.next();
+                int linkPosition = position;
+                meta = writeHeader(buffer, meta, linkPosition);
+                position = dts.serialize(buffer, position, d);
+            }
+
+            return position;
+        }
+
+        protected Set<DvText> setDeserializer(Buffer buffer, int offset) {
+            int position = offset;
+            int setSize = buffer.readInteger(position);
+            position += INT.getSize();
+
+            DvTextSerializer dts = new DvTextSerializer();
+            Set<DvText> items = new HashSet<>();
+
+            for (int i = 0; i < setSize; i++) {
+                int dPosition = buffer.readInteger(position);
+                position += INT.getSize();
+
+                DvText d = dts.deserialize(buffer, dPosition);
+                items.add(d);
+            }
+
+            return items;
+        }
     }
 
     public static class DvCodedTextSerializer {
@@ -3902,6 +3941,63 @@ public class RMObjectSerialization {
             }
 
             return roles;
+        }
+    }
+    
+    public static class ActorSerializer {
+        protected int serialize(Buffer buffer, int offset, Party party, 
+                Set<Role> roles, 
+                Set<DvText> languages) throws UnsupportedEncodingException{
+            int meta = offset;
+            int position = offset + 3 * INT.getSize();
+            
+            PartySerializer ps = new PartySerializer();
+            RoleSerializer rs = new RoleSerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = ps.serialize(buffer, position, party);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = rs.setSerializer(buffer, position, roles);
+            
+            writeHeader(buffer, meta, position);
+            position = dts.setSerializer(buffer, position, languages);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                Actor a) throws UnsupportedEncodingException {
+            int position = offset;
+            ActorSerializer as = new ActorSerializer();
+            
+            position = as.serialize(buffer, position, a);
+            
+            return position;
+        }
+        
+        protected Actor deserialize(Buffer buffer, int offset){
+            int position = offset;
+            
+            PartySerializer ps = new PartySerializer();
+            RoleSerializer rs = new RoleSerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+            
+            int partyPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Party party = ps.deserialize(buffer, partyPosition);
+            
+            int rolesPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Set<Role> roles = rs.setDeserializer(buffer, rolesPosition);
+            
+            int languagesPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            Set<DvText> languages = dts.setDeserializer(
+                    buffer, languagesPosition);
+            
+            return RMObjectFactory.newActor(party, roles, languages);
         }
     }
 

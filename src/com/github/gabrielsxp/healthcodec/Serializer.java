@@ -13,6 +13,7 @@
  */
 package com.github.gabrielsxp.healthcodec;
 
+import com.github.gabrielsxp.healthcodec.RMObject.Actor;
 import com.github.gabrielsxp.healthcodec.RMObject.Address;
 import com.github.gabrielsxp.healthcodec.RMObject.ArchetypeID;
 import com.github.gabrielsxp.healthcodec.RMObject.Archetyped;
@@ -828,4 +829,13 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeRole(
             Role r) throws UnsupportedEncodingException; 
+    
+    /**
+     * Serializador de Actor
+     * @param a
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeActor(
+            Actor a) throws UnsupportedEncodingException; 
 }

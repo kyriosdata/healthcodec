@@ -400,4 +400,10 @@ public interface Deserializer {
      * @return nova instância de Role
      */
     Role deserializeRole();
+    
+    /**
+     * Deserializador de Actor
+     * @return nova instância de Actor
+     */
+    Actor deserializeActor();
 }

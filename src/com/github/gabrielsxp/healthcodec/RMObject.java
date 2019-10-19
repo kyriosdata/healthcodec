@@ -1351,4 +1351,28 @@ public class RMObject {
             return performer;
         }
      }
+     
+     public static class Actor {
+         private final Party party;
+         private final Set<Role> roles;
+         private final Set<DvText> languages;
+
+        public Actor(Party party, Set<Role> roles, Set<DvText> languages) {
+            this.party = party;
+            this.roles = roles;
+            this.languages = languages;
+        }
+
+        public Party getParty() {
+            return party;
+        }
+
+        public Set<Role> getRoles() {
+            return roles;
+        }
+
+        public Set<DvText> getLanguages() {
+            return languages;
+        }
+     }
 }
