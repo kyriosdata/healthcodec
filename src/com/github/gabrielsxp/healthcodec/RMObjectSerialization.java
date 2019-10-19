@@ -417,13 +417,23 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            return valueStringSerialization(buffer, offset, value);
+            int position = offset;
+            return valueStringSerialization(buffer, position, value);
+        }
+        
+        protected int serialize(Buffer buffer, int offset, VersionTreeID vti)
+                throws UnsupportedEncodingException {
+            int position = offset;
+            VersionTreeIDSerializer vs = new VersionTreeIDSerializer();
+            position = vs.serialize(buffer, position, vti.getValue());
+            
+            return position;
         }
 
         protected VersionTreeID deserialize(Buffer buffer, int offset) {
-            int valueLength = buffer.readInteger(offset);
-            String value = buffer.readString(offset + INT.getSize(), valueLength);
-
+            int position = offset;
+            String value = valueStringDeserialization(buffer, position);
+            
             return RMObjectFactory.newVersionTreeID(value);
         }
     }
