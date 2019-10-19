@@ -208,10 +208,19 @@ public class RMObjectSerialization {
                 throws UnsupportedEncodingException {
             return valueStringSerialization(buffer, offset, value);
         }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                UUID uuid) throws UnsupportedEncodingException{
+            int position = offset;
+            UUIDSerializer us = new UUIDSerializer();
+            position = us.serialize(buffer, position, uuid.getValue());
+            
+            return position;
+        }
 
         protected UUID deserialize(Buffer buffer, int offset) {
-            int valueLength = buffer.readInteger(offset);
-            String value = buffer.readString(offset + INT.getSize(), valueLength);
+            int position = offset;
+            String value = valueStringDeserialization(buffer, position);
 
             return RMObjectFactory.newUUID(value);
         }
