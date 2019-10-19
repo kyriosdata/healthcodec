@@ -593,27 +593,21 @@ public class RMObjectSerialization {
                 ObjectID id,
                 String namespace,
                 String type) throws UnsupportedEncodingException {
-            int oidValueLength = id.getValue().length();
-            int namespaceLength = namespace.length();
-            int typeLength = type.length();
-            buffer.writeInteger(offset, oidValueLength);
-            buffer.writeInteger(offset + INT.getSize(), namespaceLength);
-            buffer.writeInteger(offset + 2 * INT.getSize(), typeLength);
-
-            buffer.writeString(offset + 3 * INT.getSize(), id.getValue());
-            buffer.writeString(
-                    offset + 3 * INT.getSize() + oidValueLength, namespace);
-            buffer.writeString(
-                    offset + 3 * INT.getSize()
-                    + oidValueLength
-                    + namespaceLength,
-                    type);
-
-            return offset
-                    + 3 * INT.getSize()
-                    + oidValueLength
-                    + namespaceLength
-                    + typeLength;
+            int meta = offset;
+            int position = offset + 3 * INT.getSize();
+            
+            ObjectIDSerializer os = new ObjectIDSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = os.serialize(buffer, position, id);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, namespace);
+            
+            writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, type);
+            
+            return position;
         }
 
         protected int serialize(Buffer buffer, int offset, ObjectRef or) {
@@ -625,23 +619,21 @@ public class RMObjectSerialization {
         }
 
         protected ObjectRef deserialize(Buffer buffer, int offset) {
-            int oidValueLength = buffer.readInteger(offset);
-            int namespaceLength = buffer.readInteger(offset + INT.getSize());
-            int typeLength = buffer.readInteger(offset + 2 * INT.getSize());
-
-            String oidValue = buffer.readString(
-                    offset + 3 * INT.getSize(), oidValueLength);
-            String namespace = buffer.readString(
-                    offset + 3 * INT.getSize()
-                    + oidValueLength,
-                    namespaceLength);
-            String type = buffer.readString(
-                    offset + 3 * INT.getSize()
-                    + oidValueLength
-                    + namespaceLength,
-                    typeLength);
-
-            ObjectID id = RMObjectFactory.newObjectID(oidValue);
+            int position = offset;
+            ObjectIDSerializer os = new ObjectIDSerializer();
+            
+            int idPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            ObjectID id = os.deserialize(buffer, idPosition);
+            
+            int namespacePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String namespace = valueStringDeserialization(
+                    buffer, namespacePosition);
+            
+            int typePosition = buffer.readInteger(position);
+            String type = valueStringDeserialization(buffer, typePosition);
+            
             return RMObjectFactory.newObjectRef(id, namespace, type);
         }
     }
