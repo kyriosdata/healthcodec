@@ -1452,4 +1452,29 @@ public class RMObject {
             return actor;
         }
     }
+    
+    public static class InstructionDetails { 
+        private final LocatableRef instructionId;
+        private final String activityId;
+        private final ItemStructure wfDetails;
+
+        public InstructionDetails(LocatableRef instructionId, 
+                String activityId, ItemStructure wfDetails) {
+            this.instructionId = instructionId;
+            this.activityId = activityId;
+            this.wfDetails = wfDetails;
+        }
+
+        public LocatableRef getInstructionId() {
+            return instructionId;
+        }
+
+        public String getActivityId() {
+            return activityId;
+        }
+
+        public ItemStructure getWfDetails() {
+            return wfDetails;
+        }
+    }
 }

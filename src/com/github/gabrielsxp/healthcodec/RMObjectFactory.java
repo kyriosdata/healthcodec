@@ -361,4 +361,10 @@ public class RMObjectFactory {
     public static Person newPerson(Actor a){
         return new Person(a);
     }
+    
+    public static InstructionDetails newInstructionDetails(
+            LocatableRef instructionId, String activityId, 
+            ItemStructure wfDetails){
+        return new InstructionDetails(instructionId, activityId, wfDetails);
+    }
 }

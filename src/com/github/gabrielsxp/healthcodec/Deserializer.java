@@ -430,4 +430,10 @@ public interface Deserializer {
      * @return nova instância de Person
      */
     Person deserializePerson();
+    
+    /**
+     * Deserializador de InstructionDetails
+     * @return nova instância de InstructionDetails
+     */
+    InstructionDetails deserializeInstructionDetails();
 }

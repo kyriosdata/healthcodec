@@ -39,6 +39,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.Element;
 import com.github.gabrielsxp.healthcodec.RMObject.FeederAudit;
 import com.github.gabrielsxp.healthcodec.RMObject.FeederAuditDetails;
 import com.github.gabrielsxp.healthcodec.RMObject.Group;
+import com.github.gabrielsxp.healthcodec.RMObject.InstructionDetails;
 import com.github.gabrielsxp.healthcodec.RMObject.Item;
 import com.github.gabrielsxp.healthcodec.RMObject.ItemList;
 import com.github.gabrielsxp.healthcodec.RMObject.ItemSingle;
@@ -878,4 +879,13 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializePerson(Person p)
                 throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de InstructionDetails
+     * @param id
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeinstructionDetails(
+            InstructionDetails id) throws UnsupportedEncodingException;
 }

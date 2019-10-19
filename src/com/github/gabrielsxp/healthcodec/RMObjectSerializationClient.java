@@ -2070,6 +2070,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
     
     /**
+     * Serializador de InstructionDetails
+     * @param id
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeinstructionDetails(
+            InstructionDetails id) throws UnsupportedEncodingException {
+        InstructionDetailsSerializer s = new InstructionDetailsSerializer();
+        register(INSTRUCTIONDETAILS, offset);
+        setOffset(s.serialize(buffer, offset, id));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de InstructionDetails
+     * @return nova instância de InstructionDetails
+     */
+    @Override
+    public InstructionDetails deserializeInstructionDetails() {
+        InstructionDetailsSerializer d = new InstructionDetailsSerializer();
+        return d.deserialize(buffer, getOffsetFromID(INSTRUCTIONDETAILS));
+    }
+    
+    /**
      * Método para registrar um determinado objeto no índice
      * @param id
      * @param offset

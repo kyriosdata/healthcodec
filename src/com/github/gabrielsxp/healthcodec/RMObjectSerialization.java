@@ -4126,7 +4126,75 @@ public class RMObjectSerialization {
              return RMObjectFactory.newPerson(a);
          }
     }
-
+    
+    public static class InstructionDetailsSerializer {
+        protected int serialize(Buffer buffer, int offset, 
+                LocatableRef instructionId, String activityId, 
+                ItemStructure wfDetails)  throws UnsupportedEncodingException{
+            int meta = offset;
+            int position = offset + 3 * INT.getSize() + BOOLEAN.getSize();
+            
+            LocatableRefSerializer lrs = new LocatableRefSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = lrs.serialize(buffer, position, instructionId);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, activityId);
+            
+            boolean hasWfDetails = wfDetails != null;
+            if(hasWfDetails){
+                writeHeader(buffer, meta, hasWfDetails, position);
+                position = iss.serialize(buffer, position, wfDetails);
+            } else {
+                 writeHeader(buffer, meta, hasWfDetails);
+            }
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                InstructionDetails id)  throws UnsupportedEncodingException{
+            int position = offset;
+            InstructionDetailsSerializer ids = 
+                    new InstructionDetailsSerializer();
+            
+            position = ids.serialize(buffer, position, 
+                    id.getInstructionId(), id.getActivityId(), 
+                    id.getWfDetails());
+            
+            return position;
+        }
+        
+        protected InstructionDetails deserialize(Buffer buffer, int offset){
+            int position = offset;
+            LocatableRefSerializer lrs = new LocatableRefSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            
+            int instructionIdPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            LocatableRef instructionId = lrs.deserialize(
+                    buffer, instructionIdPosition);
+            
+            int activityIdPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String activityId = valueStringDeserialization(
+                    buffer, activityIdPosition);
+            
+            boolean hasWfDetails = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            ItemStructure wfDetails = null;
+            if(hasWfDetails){
+                int wfDetailsPosition = buffer.readInteger(position);
+                wfDetails = iss.deserialize(buffer, wfDetailsPosition);
+            }
+            
+            return RMObjectFactory.newInstructionDetails(instructionId, 
+                    activityId, wfDetails);
+        }
+    }
+    
     /**
      * Serializa uma única String value
      *
