@@ -231,27 +231,38 @@ public class RMObjectSerialization {
         protected int serialize(
                 Buffer buffer, int offset, String value, String scheme)
                 throws UnsupportedEncodingException {
-            int valueLength = value.length();
-            int schemeLength = scheme.length();
-            buffer.writeInteger(offset, valueLength);
-            buffer.writeInteger(offset + INT.getSize(), schemeLength);
-            buffer.writeString(offset + 2 * INT.getSize(), value);
-            buffer.writeString(
-                    offset + 2 * INT.getSize() + valueLength, scheme);
-
-            return offset + 2 * INT.getSize() + valueLength + schemeLength;
+            int meta = offset;
+            int position = offset + 2 * INT.getSize();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, value);
+            
+            writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, scheme);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                GenericID gid) throws UnsupportedEncodingException {
+            int position = offset;
+            GenericIDSerializer gids = new GenericIDSerializer();
+            position = gids.serialize(buffer, position, 
+                    gid.getValue(), gid.getScheme());
+            
+            return position;
         }
 
         protected GenericID deserialize(Buffer buffer, int offset) {
-            int valueLength = buffer.readInteger(offset);
-            int schemeLength = buffer.readInteger(offset + INT.getSize());
-            String value = buffer.readString(
-                    offset + 2 * INT.getSize(), valueLength);
-            String scheme = buffer.readString(
-                    offset + 2
-                    * INT.getSize()
-                    + valueLength, schemeLength);
-
+            int position = offset;
+            
+            int valuePositon = buffer.readInteger(position);
+            position += INT.getSize();
+            String value = valueStringDeserialization(buffer, valuePositon);
+            
+            int schemePosition = buffer.readInteger(position);
+            String scheme = valueStringDeserialization(buffer, schemePosition);
+            
             return RMObjectFactory.newGenericID(value, scheme);
         }
     }
