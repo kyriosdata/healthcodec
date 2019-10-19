@@ -195,9 +195,9 @@ public class RMObjectSerialization {
         }
         
         protected ISO_OID deserialize(Buffer buffer, int offset) {
-            int valueLength = buffer.readInteger(offset);
-            String value = buffer.readString(offset + INT.getSize(), valueLength);
-            
+            int position = offset;
+            String value = valueStringDeserialization(buffer, position);
+
             return RMObjectFactory.newISOOID(value);
         }
     }
