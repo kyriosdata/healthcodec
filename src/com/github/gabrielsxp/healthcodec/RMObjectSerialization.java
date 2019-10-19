@@ -517,12 +517,22 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            return valueStringSerialization(buffer, offset, value);
+            int position = offset;
+            return valueStringSerialization(buffer, position, value);
         }
-
+        
+        protected int serialize(Buffer buffer, int offset, ObjectID o)
+                throws UnsupportedEncodingException {
+            int position = offset;
+            ObjectIDSerializer os = new ObjectIDSerializer();
+            position = os.serialize(buffer, position, o.getValue());
+            
+            return position;
+        }
+        
         protected ObjectID deserialize(Buffer buffer, int offset) {
-            int valueLength = buffer.readInteger(offset);
-            String value = buffer.readString(offset + INT.getSize(), valueLength);
+            int position = offset;
+            String value = valueStringDeserialization(buffer, position);
 
             return RMObjectFactory.newObjectID(value);
         }
