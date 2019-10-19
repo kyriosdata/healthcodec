@@ -321,20 +321,18 @@ public class RMObjectSerialization {
                 Buffer buffer, int offset,
                 TerminologyID terminologyId, String value)
                 throws UnsupportedEncodingException {
-            int terminologyIDValueLength = terminologyId.getValue().length();
-            int valueLength = value.length();
-            buffer.writeInteger(offset, terminologyIDValueLength);
-            buffer.writeInteger(offset + INT.getSize(), valueLength);
-            buffer.writeString(
-                    offset + 2 * INT.getSize(), terminologyId.getValue());
-            buffer.writeString(
-                    offset + 2 * INT.getSize() + terminologyIDValueLength,
-                    value);
-
-            return offset
-                    + 2 * INT.getSize()
-                    + valueLength
-                    + terminologyIDValueLength;
+            int meta = offset;
+            int position = offset + 2 * INT.getSize(); 
+            
+            TerminologyIDSerializer ts = new TerminologyIDSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = ts.serialize(buffer, position, terminologyId);
+            
+            writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, value);
+            
+            return position;
         }
 
         protected int serialize(Buffer buffer, int offset,
@@ -349,21 +347,18 @@ public class RMObjectSerialization {
 
         protected CodePhrase deserialize(
                 Buffer buffer, int offset) {
-            int terminologyIDValueLength = buffer.readInteger(offset);
-            int valueLength = buffer.readInteger(offset + INT.getSize());
-            String terminologyIDValue = buffer.readString(
-                    offset + 2 * INT.getSize(), terminologyIDValueLength);
-
-            String value = buffer.readString(
-                    offset + 2 * INT.getSize() + terminologyIDValueLength,
-                    valueLength
-            );
-
-            TerminologyID t = RMObjectFactory.newTerminologyID(
-                    terminologyIDValue
-            );
-
-            return RMObjectFactory.newCodePhrase(t, value);
+            int position = offset;
+            TerminologyIDSerializer ts = new TerminologyIDSerializer();
+            
+            int terminologyIDPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            TerminologyID terminologyID = ts.deserialize(
+                    buffer, terminologyIDPosition);
+            
+            int valuePosition = buffer.readInteger(position);
+            String value = valueStringDeserialization(buffer, valuePosition);
+            
+            return RMObjectFactory.newCodePhrase(terminologyID, value);
         }
     }
 
