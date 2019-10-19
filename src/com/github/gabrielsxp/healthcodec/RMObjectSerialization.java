@@ -271,12 +271,22 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            return valueStringSerialization(buffer, offset, value);
+            int position = offset;
+            return valueStringSerialization(buffer, position, value);
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                TemplateID tid) throws UnsupportedEncodingException {
+            int position = offset;
+            TemplateIDSerializer ts = new TemplateIDSerializer();
+            position = ts.serialize(buffer, position, tid.getValue());
+            
+            return position;
         }
 
         protected TemplateID deserialize(Buffer buffer, int offset) {
-            int valueLength = buffer.readInteger(offset);
-            String value = buffer.readString(offset + INT.getSize(), valueLength);
+            int position = offset;
+            String value = valueStringDeserialization(buffer, position);
 
             return RMObjectFactory.newTemplateID(value);
         }
