@@ -978,7 +978,7 @@ public class RMObject {
         private final String accreditation;
         private final Map<String, String> otherDetails;
 
-        public TranslationDetails(CodePhrase language, Map<String, 
+        protected TranslationDetails(CodePhrase language, Map<String, 
                 String> author, String accreditation, 
                 Map<String, String> otherDetails) {
             this.language = language;
@@ -1007,7 +1007,7 @@ public class RMObject {
     public static class Item {
         private final Locatable locatable;
 
-        public Item(Locatable locatable) {
+        protected Item(Locatable locatable) {
             this.locatable = locatable;
         }
 
@@ -1020,7 +1020,7 @@ public class RMObject {
         private final Item item;
         private final List<Item> items;
 
-        public Cluster(Item item, List<Item> items) {
+        protected Cluster(Item item, List<Item> items) {
             this.item = item;
             this.items = items;
         }
@@ -1038,7 +1038,7 @@ public class RMObject {
         private final Item item;
         private final DvCodedText nullFlavour;
 
-        public Element(Item item, DvCodedText nullFlavour) {
+        protected Element(Item item, DvCodedText nullFlavour) {
             this.item = item;
             this.nullFlavour = nullFlavour;
         }
@@ -1055,7 +1055,7 @@ public class RMObject {
     public static class DataStructure {
         private final Locatable locatable;
 
-        public DataStructure(Locatable locatable) {
+        protected DataStructure(Locatable locatable) {
             this.locatable = locatable;
         }
 
@@ -1073,7 +1073,7 @@ public class RMObject {
         private final Set<Link> links;
         private final List<Element> items;
 
-        public ItemList(UIDBasedID uid, String archetypeNodeId, DvText name, 
+        protected ItemList(UIDBasedID uid, String archetypeNodeId, DvText name, 
                 Archetyped archetypeDetails, FeederAudit feederAudit, 
                 Set<Link> links, List<Element> items) {
             this.uid = uid;
@@ -1117,7 +1117,7 @@ public class RMObject {
     public static class ItemStructure {
         private final DataStructure dataStructure;
 
-        public ItemStructure(DataStructure dataStructure) {
+        protected ItemStructure(DataStructure dataStructure) {
             this.dataStructure = dataStructure;
         }
 
@@ -1130,7 +1130,7 @@ public class RMObject {
         private final ItemStructure itemStructure;
         private final Element item;
 
-        public ItemSingle(ItemStructure itemStructure, Element item) {
+        protected ItemSingle(ItemStructure itemStructure, Element item) {
             this.itemStructure = itemStructure;
             this.item = item;
         }
@@ -1148,7 +1148,7 @@ public class RMObject {
         private final ItemStructure itemStructure;
         private final List<Cluster> rows;
 
-        public ItemTable(ItemStructure itemStructure, List<Cluster> rows) {
+        protected ItemTable(ItemStructure itemStructure, List<Cluster> rows) {
             this.itemStructure = itemStructure;
             this.rows = rows;
         }
@@ -1166,7 +1166,7 @@ public class RMObject {
         private final ItemStructure itemStructure;
         private final List<Item> items;
 
-        public ItemTree(ItemStructure itemStructure, List<Item> items) {
+        protected ItemTree(ItemStructure itemStructure, List<Item> items) {
             this.itemStructure = itemStructure;
             this.items = items;
         }
@@ -1184,7 +1184,7 @@ public class RMObject {
         private final Locatable locatable;
         private final ItemStructure details;
 
-        public PartyIdentity(Locatable locatable, ItemStructure details) {
+        protected PartyIdentity(Locatable locatable, ItemStructure details) {
             this.locatable = locatable;
             this.details = details;
         }
@@ -1205,7 +1205,7 @@ public class RMObject {
         private final ObjectRef source;
         private final ObjectRef target;
 
-        public PartyRelationship(Locatable locatable, 
+        protected PartyRelationship(Locatable locatable, 
                 ItemStructure details, ObjectRef source, ObjectRef target) {
             this.locatable = locatable;
             this.details = details;
@@ -1234,7 +1234,7 @@ public class RMObject {
         private final Locatable locatable;
         private final ItemStructure details;
 
-        public Address(Locatable locatable, ItemStructure details) {
+        protected Address(Locatable locatable, ItemStructure details) {
             this.locatable = locatable;
             this.details = details;
         }
@@ -1253,7 +1253,7 @@ public class RMObject {
         //private final DvInterval<DvDate> timeValidity todo;
         private final List<Address> addresses;
 
-        public Contact(Locatable locatable, List<Address> addresses) {
+        protected Contact(Locatable locatable, List<Address> addresses) {
             this.locatable = locatable;
             this.addresses = addresses;
         }
@@ -1276,7 +1276,7 @@ public class RMObject {
         private final Set<LocatableRef> reverseRelationships;
         private final ItemStructure details;
 
-        public Party(Locatable locatable, Set<PartyIdentity> identities, 
+        protected Party(Locatable locatable, Set<PartyIdentity> identities, 
                 Set<Contact> contacts, Set<PartyRelationship> relationships, 
                 Set<LocatableRef> reverseRelationships, ItemStructure details) {
             this.locatable = locatable;
@@ -1312,7 +1312,7 @@ public class RMObject {
         private final Locatable locatable;
         private final ItemStructure credentials;
 
-        public Capability(Locatable locatable, ItemStructure credentials) {
+        protected Capability(Locatable locatable, ItemStructure credentials) {
             this.locatable = locatable;
             this.credentials = credentials;
         }
@@ -1332,7 +1332,7 @@ public class RMObject {
          //private final DvInterval<DvDate> timeValidity todo
          private final PartyRef performer;
 
-        public Role(Party party, List<Capability> capabilities, 
+        protected Role(Party party, List<Capability> capabilities, 
                 PartyRef performer) {
             this.party = party;
             this.capabilities = capabilities;
@@ -1357,7 +1357,7 @@ public class RMObject {
          private final Set<Role> roles;
          private final Set<DvText> languages;
 
-        public Actor(Party party, Set<Role> roles, Set<DvText> languages) {
+        protected Actor(Party party, Set<Role> roles, Set<DvText> languages) {
             this.party = party;
             this.roles = roles;
             this.languages = languages;
@@ -1375,4 +1375,16 @@ public class RMObject {
             return languages;
         }
      }
+     
+     public static class Agent {
+         private final Actor actor;
+
+        protected Agent(Actor actor) {
+            this.actor = actor;
+        }
+
+        public Actor getActor() {
+            return actor;
+        }
+    }   
 }

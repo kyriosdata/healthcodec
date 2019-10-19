@@ -406,4 +406,10 @@ public interface Deserializer {
      * @return nova instância de Actor
      */
     Actor deserializeActor();
+    
+    /**
+     * Deserializador de Agent
+     * @return nova instância de Agent
+     */
+    Agent deserializeAgent();
 }

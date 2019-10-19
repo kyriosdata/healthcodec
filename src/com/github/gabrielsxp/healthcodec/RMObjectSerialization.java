@@ -4000,6 +4000,37 @@ public class RMObjectSerialization {
             return RMObjectFactory.newActor(party, roles, languages);
         }
     }
+    
+    public static class AgentSerializer {
+        protected int serialize(Buffer buffer, int offset, 
+                Actor actor) throws UnsupportedEncodingException {
+            int position = offset;
+            ActorSerializer as = new ActorSerializer();
+            
+            position = as.serialize(buffer, position, actor);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                Agent agent) throws UnsupportedEncodingException {
+            int position = offset;
+            AgentSerializer as = new AgentSerializer();
+            
+            position = as.serialize(buffer, position, agent);
+            
+            return position;
+        }
+        
+        protected Agent deserialize(Buffer buffer, int offset){
+            int position = offset;
+            ActorSerializer as = new ActorSerializer();
+            
+            Actor actor = as.deserialize(buffer, position);
+            
+            return RMObjectFactory.newAgent(actor);
+        }
+    }
 
     /**
      * Serializa uma única String value

@@ -1967,6 +1967,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
     
     /**
+     * Serializador de Agent
+     * @param a
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeAgent(
+            Agent a) throws UnsupportedEncodingException {
+        AgentSerializer s = new AgentSerializer();
+        register(AGENT, offset);
+        setOffset(s.serialize(buffer, offset, a));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de Agent
+     * @return nova instância de Agentt
+     */
+    @Override
+    public Agent deserializeAgent() {
+        AgentSerializer d = new AgentSerializer();
+        return d.deserialize(buffer, getOffsetFromID(AGENT));
+    }
+    
+    /**
      * Método para registrar um determinado objeto no índice
      * @param id
      * @param offset

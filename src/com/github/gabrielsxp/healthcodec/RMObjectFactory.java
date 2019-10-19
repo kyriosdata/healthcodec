@@ -345,4 +345,8 @@ public class RMObjectFactory {
             Set<DvText> languages){
         return new Actor(party, roles, languages);
     }
+    
+    public static Agent newAgent(Actor actor){
+        return new Agent(actor);
+    }
 }
