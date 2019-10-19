@@ -1427,7 +1427,7 @@ public class RMObject {
             return actor;
         }
     }
-    
+
     public static class Organisation {
 
         private final Actor actor;
@@ -1440,8 +1440,9 @@ public class RMObject {
             return actor;
         }
     }
-    
+
     public static class Person {
+
         private final Actor actor;
 
         public Person(Actor actor) {
@@ -1452,13 +1453,14 @@ public class RMObject {
             return actor;
         }
     }
-    
-    public static class InstructionDetails { 
+
+    public static class InstructionDetails {
+
         private final LocatableRef instructionId;
         private final String activityId;
         private final ItemStructure wfDetails;
 
-        public InstructionDetails(LocatableRef instructionId, 
+        public InstructionDetails(LocatableRef instructionId,
                 String activityId, ItemStructure wfDetails) {
             this.instructionId = instructionId;
             this.activityId = activityId;
@@ -1475,6 +1477,32 @@ public class RMObject {
 
         public ItemStructure getWfDetails() {
             return wfDetails;
+        }
+    }
+
+    public static class ISMTransition {
+
+        private final DvCodedText currentState;
+        private final DvCodedText transition;
+        private final DvCodedText careflowStep;
+
+        public ISMTransition(DvCodedText currentState,
+                DvCodedText transition, DvCodedText careflowStep) {
+            this.currentState = currentState;
+            this.transition = transition;
+            this.careflowStep = careflowStep;
+        }
+
+        public DvCodedText getCurrentState() {
+            return currentState;
+        }
+
+        public DvCodedText getTransition() {
+            return transition;
+        }
+
+        public DvCodedText getCareflowStep() {
+            return careflowStep;
         }
     }
 }

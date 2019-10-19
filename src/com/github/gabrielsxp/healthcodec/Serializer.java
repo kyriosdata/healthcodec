@@ -13,59 +13,9 @@
  */
 package com.github.gabrielsxp.healthcodec;
 
-import com.github.gabrielsxp.healthcodec.RMObject.Actor;
-import com.github.gabrielsxp.healthcodec.RMObject.Address;
-import com.github.gabrielsxp.healthcodec.RMObject.Agent;
-import com.github.gabrielsxp.healthcodec.RMObject.ArchetypeID;
-import com.github.gabrielsxp.healthcodec.RMObject.Archetyped;
-import com.github.gabrielsxp.healthcodec.RMObject.Capability;
-import com.github.gabrielsxp.healthcodec.RMObject.Cluster;
-import com.github.gabrielsxp.healthcodec.RMObject.CodePhrase;
-import com.github.gabrielsxp.healthcodec.RMObject.Contact;
-import com.github.gabrielsxp.healthcodec.RMObject.DVEHRURI;
-import com.github.gabrielsxp.healthcodec.RMObject.DVURI;
-import com.github.gabrielsxp.healthcodec.RMObject.DataStructure;
-import com.github.gabrielsxp.healthcodec.RMObject.DvCodedText;
-import com.github.gabrielsxp.healthcodec.RMObject.DvEncapsulated;
+import com.github.gabrielsxp.healthcodec.RMObject.*;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
-import com.github.gabrielsxp.healthcodec.RMObject.DvMultimedia;
-import com.github.gabrielsxp.healthcodec.RMObject.DvParagraph;
-import com.github.gabrielsxp.healthcodec.RMObject.DvParsable;
-import com.github.gabrielsxp.healthcodec.RMObject.DvState;
-import com.github.gabrielsxp.healthcodec.RMObject.DvText;
-import com.github.gabrielsxp.healthcodec.RMObject.Element;
-import com.github.gabrielsxp.healthcodec.RMObject.FeederAudit;
-import com.github.gabrielsxp.healthcodec.RMObject.FeederAuditDetails;
-import com.github.gabrielsxp.healthcodec.RMObject.Group;
-import com.github.gabrielsxp.healthcodec.RMObject.InstructionDetails;
-import com.github.gabrielsxp.healthcodec.RMObject.Item;
-import com.github.gabrielsxp.healthcodec.RMObject.ItemList;
-import com.github.gabrielsxp.healthcodec.RMObject.ItemSingle;
-import com.github.gabrielsxp.healthcodec.RMObject.ItemTable;
-import com.github.gabrielsxp.healthcodec.RMObject.ItemTree;
-import com.github.gabrielsxp.healthcodec.RMObject.Link;
-import com.github.gabrielsxp.healthcodec.RMObject.Locatable;
-import com.github.gabrielsxp.healthcodec.RMObject.Match;
-import com.github.gabrielsxp.healthcodec.RMObject.ObjectID;
-import com.github.gabrielsxp.healthcodec.RMObject.ObjectVersionID;
-import com.github.gabrielsxp.healthcodec.RMObject.Organisation;
-import com.github.gabrielsxp.healthcodec.RMObject.Party;
-import com.github.gabrielsxp.healthcodec.RMObject.PartyIdentified;
-import com.github.gabrielsxp.healthcodec.RMObject.PartyIdentity;
-import com.github.gabrielsxp.healthcodec.RMObject.PartyProxy;
-import com.github.gabrielsxp.healthcodec.RMObject.PartyRef;
-import com.github.gabrielsxp.healthcodec.RMObject.PartyRelated;
-import com.github.gabrielsxp.healthcodec.RMObject.PartyRelationship;
-import com.github.gabrielsxp.healthcodec.RMObject.PartySelf;
-import com.github.gabrielsxp.healthcodec.RMObject.Person;
-import com.github.gabrielsxp.healthcodec.RMObject.ResourceDescriptionItem;
-import com.github.gabrielsxp.healthcodec.RMObject.Role;
-import com.github.gabrielsxp.healthcodec.RMObject.TemplateID;
-import com.github.gabrielsxp.healthcodec.RMObject.TerminologyID;
-import com.github.gabrielsxp.healthcodec.RMObject.TranslationDetails;
-import com.github.gabrielsxp.healthcodec.RMObject.UIDBasedID;
 import java.util.Map;
 import java.util.Set;
 
@@ -888,4 +838,13 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeinstructionDetails(
             InstructionDetails id) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de ISMTransition
+     * @param ism
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeISMTransition(
+            ISMTransition ism) throws UnsupportedEncodingException;
 }

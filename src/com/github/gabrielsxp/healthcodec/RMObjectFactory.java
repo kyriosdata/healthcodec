@@ -367,4 +367,9 @@ public class RMObjectFactory {
             ItemStructure wfDetails){
         return new InstructionDetails(instructionId, activityId, wfDetails);
     }
+    
+    public static ISMTransition newISMTransition(DvCodedText currentState, 
+                    DvCodedText transition, DvCodedText careflowStep){
+        return new ISMTransition(currentState, transition, careflowStep);
+    }
 }

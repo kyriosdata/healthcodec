@@ -81,7 +81,8 @@ public enum RMObjectID {
     GROUP(60),
     ORGANISATION(61),
     PERSON(62),
-    INSTRUCTIONDETAILS(63);
+    INSTRUCTIONDETAILS(63),
+    ISMTRANSITION(64);
     
     private final int value;
 

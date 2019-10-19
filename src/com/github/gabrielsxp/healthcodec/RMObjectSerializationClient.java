@@ -2096,6 +2096,28 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
     
     /**
+     * Serializador de ISMTransition
+     * @param ism
+     * @return
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeISMTransition(
+            ISMTransition ism) throws UnsupportedEncodingException {
+        ISMTransitionSerializer s = new ISMTransitionSerializer();
+        register(ISMTRANSITION, offset);
+        setOffset(s.serialize(buffer, offset, ism));
+        
+        return this;
+    }
+    
+    @Override
+    public ISMTransition deserializeISMTransition() {
+        ISMTransitionSerializer d = new ISMTransitionSerializer();
+        return d.deserialize(buffer, getOffsetFromID(ISMTRANSITION));
+    }
+    
+    /**
      * Método para registrar um determinado objeto no índice
      * @param id
      * @param offset

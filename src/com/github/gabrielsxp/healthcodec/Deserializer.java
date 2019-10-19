@@ -436,4 +436,10 @@ public interface Deserializer {
      * @return nova instância de InstructionDetails
      */
     InstructionDetails deserializeInstructionDetails();
+    
+    /**
+     * Deserializador de ISMTransition
+     * @return nova instância de ISMTransition
+     */
+    ISMTransition deserializeISMTransition();
 }

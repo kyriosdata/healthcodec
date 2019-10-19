@@ -14,15 +14,11 @@
 package com.github.gabrielsxp.healthcodec;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.ReadOnlyBufferException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import com.github.gabrielsxp.healthcodec.RMObject.*;
 import static com.github.gabrielsxp.healthcodec.PrimitiveTypeSize.*;
-import com.github.gabrielsxp.healthcodec.RMObject.DvIdentifier;
-import com.github.gabrielsxp.healthcodec.RMObject.TermMapping;
-import java.nio.charset.UnsupportedCharsetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -4192,6 +4188,80 @@ public class RMObjectSerialization {
             
             return RMObjectFactory.newInstructionDetails(instructionId, 
                     activityId, wfDetails);
+        }
+    }
+    
+    public static class ISMTransitionSerializer {
+        protected int serialize(Buffer buffer, int offset, 
+                DvCodedText currentState, DvCodedText transition, 
+                DvCodedText careflowStep) throws UnsupportedEncodingException{
+            int meta = offset;
+            int position = offset + 3 * INT.getSize() + 2 * BOOLEAN.getSize();
+            
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = dcs.serialize(buffer, position, currentState);
+            
+            boolean hasTransition = transition != null;
+            if(hasTransition){
+                meta = writeHeader(buffer, meta, hasTransition, position);
+                position = dcs.serialize(buffer, position, transition);
+            } else {
+                meta = writeHeader(buffer, meta, hasTransition);
+            }
+            
+            boolean hasCareflowStep = careflowStep != null;
+            if(hasCareflowStep){
+                writeHeader(buffer, meta, hasCareflowStep, position);
+                position = dcs.serialize(buffer, position, careflowStep);
+            } else {
+                 writeHeader(buffer, meta, hasCareflowStep);
+            }
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                ISMTransition ism) throws UnsupportedEncodingException{
+            int position = offset;
+            ISMTransitionSerializer is = new ISMTransitionSerializer();
+            
+            position = is.serialize(buffer, position, ism.getCurrentState(), 
+                    ism.getTransition(), ism.getCareflowStep());
+            
+            return position;
+        }
+        
+        protected ISMTransition deserialize(Buffer buffer, int offset){
+            int position = offset;
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+            
+            int currentStatePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            DvCodedText currentState = dcs.deserialize(
+                    buffer, currentStatePosition);
+            
+            boolean hasTransition = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            DvCodedText transition = null;
+            if(hasTransition){
+                int transitionPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                transition = dcs.deserialize(buffer, transitionPosition);
+            }
+            
+            boolean hasCareflowStep = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            DvCodedText careflowStep = null;
+            if(hasCareflowStep){
+                int careflowStepPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                careflowStep = dcs.deserialize(buffer, careflowStepPosition);
+            }
+            
+            return RMObjectFactory.newISMTransition(currentState, transition, 
+                    careflowStep);
         }
     }
     
