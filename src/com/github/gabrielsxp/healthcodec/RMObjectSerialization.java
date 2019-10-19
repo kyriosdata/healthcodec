@@ -23,8 +23,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -37,6 +35,14 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, boolean value) {
             buffer.writeBoolean(offset, value);
             return offset + BOOLEAN.getSize();
+        }
+        
+        protected int serialize(Buffer buffer, int offset, DvBoolean d) {
+            int position = offset;
+            DvBooleanSerializer dbs = new DvBooleanSerializer();
+            position = dbs.serialize(buffer, position, d.getValue());
+            
+            return position;
         }
 
         protected DvBoolean deserialize(Buffer buffer, int offset) {
@@ -1606,7 +1612,7 @@ public class RMObjectSerialization {
             try {
                 match = ms.deserialize(buffer, matchPosition);
             } catch (IllegalAccessException ex) {
-                Logger.getLogger(RMObjectSerialization.class.getName()).log(Level.SEVERE, null, ex);
+                //
             }
             position += INT.getSize();
 
