@@ -639,12 +639,14 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param id
      * @return instância de RMObjectSerializationClient atual
+     * @throws java.io.UnsupportedEncodingException
      */
     @Override
-    public RMObjectSerializationClient serializeAccessGroupRef(ObjectID id) {
+    public RMObjectSerializationClient serializeAccessGroupRef(
+            ObjectID id) throws UnsupportedEncodingException{
         AccessGroupRefSerializer s = new AccessGroupRefSerializer();
         register(ACCESSGROUPREF, offset);
-        setOffset(s.serializer(buffer, offset, id));
+        setOffset(s.serialize(buffer, offset, id));
 
         return this;
     }

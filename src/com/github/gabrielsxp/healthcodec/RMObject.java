@@ -352,15 +352,16 @@ public class RMObject {
     }
 
     public static class AccessGroupRef {
-
-        private final ObjectID id;
+        
+        private final ObjectRef objectRef;
 
         protected AccessGroupRef(ObjectID id) {
-            this.id = id;
+            this.objectRef = RMObjectFactory.newObjectRef(id, 
+                    "ACCESS_CONTROL", "ACCESS_GROUP");
         }
 
-        public ObjectID getId() {
-            return id;
+        public ObjectRef getObjectRef() {
+            return objectRef;
         }
     }
 

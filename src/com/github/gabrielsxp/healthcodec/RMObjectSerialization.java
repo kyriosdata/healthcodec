@@ -780,20 +780,34 @@ public class RMObjectSerialization {
 
     static class AccessGroupRefSerializer {
 
-        protected int serializer(Buffer buffer, int offset, ObjectID id) {
-            int oidValueLength = id.getValue().length();
-            buffer.writeInteger(offset, oidValueLength);
-            buffer.writeString(offset + INT.getSize(), id.getValue());
-
-            return offset + INT.getSize() + oidValueLength;
+        protected int serialize(Buffer buffer, int offset, 
+                ObjectID id) throws UnsupportedEncodingException {
+            int position = offset;
+            
+            ObjectIDSerializer os = new ObjectIDSerializer();
+            
+            position = os.serialize(buffer, position, id);
+            
+            return position;
         }
-
+        
+        protected int serialize(Buffer buffer, int offset, 
+                AccessGroupRef agr) throws UnsupportedEncodingException {
+            int position = offset;
+            
+            AccessGroupRefSerializer agrs = new AccessGroupRefSerializer();
+            
+            position = agrs.serialize(
+                    buffer, position, agr.getObjectRef().getId());
+            
+            return position;
+        }
+        
         protected AccessGroupRef deserialize(Buffer buffer, int offset) {
-            int oidValueLength = buffer.readInteger(offset);
-            String oidValue = buffer.readString(
-                    offset + INT.getSize(),
-                    oidValueLength);
-            ObjectID id = new ObjectID(oidValue);
+            int position = offset;
+            
+            ObjectIDSerializer os = new ObjectIDSerializer();
+            ObjectID id = os.deserialize(buffer, position);
 
             return RMObjectFactory.newAccessGroupRef(id);
         }

@@ -250,7 +250,8 @@ public interface Serializer {
      * @param id
      * @return Instância de RMObjectSerializationClient para chaining
      */
-    RMObjectSerializationClient serializeAccessGroupRef(ObjectID id);
+    RMObjectSerializationClient serializeAccessGroupRef(
+            ObjectID id) throws UnsupportedEncodingException;
 
     /**
      * Serializador de PartyIdentified
