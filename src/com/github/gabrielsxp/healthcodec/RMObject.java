@@ -1427,4 +1427,17 @@ public class RMObject {
             return actor;
         }
     }
+    
+    public static class Organisation {
+
+        private final Actor actor;
+
+        protected Organisation(Actor actor) {
+            this.actor = actor;
+        }
+
+        public Actor getActor() {
+            return actor;
+        }
+    }
 }

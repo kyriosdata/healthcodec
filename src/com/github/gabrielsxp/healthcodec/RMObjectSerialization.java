@@ -4044,11 +4044,11 @@ public class RMObjectSerialization {
         }
         
         protected int serialize(Buffer buffer, int offset, 
-                Agent agent) throws UnsupportedEncodingException {
+                Group group) throws UnsupportedEncodingException {
             int position = offset;
             GroupSerializer gs = new GroupSerializer();
             
-            position = gs.serialize(buffer, position, agent);
+            position = gs.serialize(buffer, position, group);
             
             return position;
         }
@@ -4057,9 +4057,40 @@ public class RMObjectSerialization {
             int position = offset;
             ActorSerializer as = new ActorSerializer();
             
+            Actor a = as.deserialize(buffer, position);
+            
+            return RMObjectFactory.newGroup(a);
+        } 
+    }
+    
+    public static class OrganisationSerializer {
+        protected int serialize(Buffer buffer, int offset, 
+                Actor actor) throws UnsupportedEncodingException {
+            int position = offset;
+            ActorSerializer as = new ActorSerializer();
+            
+            position = as.serialize(buffer, position, actor);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                Organisation organisation) throws UnsupportedEncodingException {
+            int position = offset;
+            OrganisationSerializer os = new OrganisationSerializer();
+            
+            position = os.serialize(buffer, position, organisation);
+            
+            return position;
+        }
+        
+        protected Organisation deserialize(Buffer buffer, int offset){
+            int position = offset;
+            ActorSerializer as = new ActorSerializer();
+            
             Actor actor = as.deserialize(buffer, position);
             
-            return RMObjectFactory.newGroup(actor);
+            return RMObjectFactory.newOrganisation(actor);
         } 
     }
 

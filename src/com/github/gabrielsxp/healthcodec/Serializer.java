@@ -38,6 +38,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.DvText;
 import com.github.gabrielsxp.healthcodec.RMObject.Element;
 import com.github.gabrielsxp.healthcodec.RMObject.FeederAudit;
 import com.github.gabrielsxp.healthcodec.RMObject.FeederAuditDetails;
+import com.github.gabrielsxp.healthcodec.RMObject.Group;
 import com.github.gabrielsxp.healthcodec.RMObject.Item;
 import com.github.gabrielsxp.healthcodec.RMObject.ItemList;
 import com.github.gabrielsxp.healthcodec.RMObject.ItemSingle;
@@ -48,6 +49,7 @@ import com.github.gabrielsxp.healthcodec.RMObject.Locatable;
 import com.github.gabrielsxp.healthcodec.RMObject.Match;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectID;
 import com.github.gabrielsxp.healthcodec.RMObject.ObjectVersionID;
+import com.github.gabrielsxp.healthcodec.RMObject.Organisation;
 import com.github.gabrielsxp.healthcodec.RMObject.Party;
 import com.github.gabrielsxp.healthcodec.RMObject.PartyIdentified;
 import com.github.gabrielsxp.healthcodec.RMObject.PartyIdentity;
@@ -851,10 +853,19 @@ public interface Serializer {
     
     /**
      * Serializador de Group
-     * @param a
+     * @param g
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeGroup(
-            Agent a) throws UnsupportedEncodingException;
+            Group g) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de Organisation
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeOrganisation(
+            Organisation o) throws UnsupportedEncodingException;
 }

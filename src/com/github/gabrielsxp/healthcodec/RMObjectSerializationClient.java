@@ -1994,24 +1994,53 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     
     /**
      * Serializador de Group
-     * @param a
      * @return instância de RMObjectSerializationClient atual
      * @throws UnsupportedEncodingException 
      */
     @Override
     public RMObjectSerializationClient serializeGroup(
-            Agent a) throws UnsupportedEncodingException {
+            Group g) throws UnsupportedEncodingException {
         GroupSerializer s = new GroupSerializer();
         register(GROUP, offset);
-        setOffset(s.serialize(buffer, offset, a));
+        setOffset(s.serialize(buffer, offset, g));
         
         return this;
     }
-
+    
+    /**
+     * Deserializador de Group
+     * @return nova instância de Group
+     */
     @Override
     public Group deserializeGroup() {
         GroupSerializer d = new GroupSerializer();
         return d.deserialize(buffer, getOffsetFromID(GROUP));
+    }
+    
+    /**
+     * Serializador de Organisation
+     * @param o
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeOrganisation(
+            Organisation o) throws UnsupportedEncodingException {
+        OrganisationSerializer s = new OrganisationSerializer();
+        register(ORGANISATION, offset);
+        setOffset(s.serialize(buffer, offset, o));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de Organisation
+     * @return nova instância de Organisation
+     */
+    @Override
+    public Organisation deserializeOrganisation() {
+        OrganisationSerializer d = new OrganisationSerializer();
+        return d.deserialize(buffer, getOffsetFromID(ORGANISATION));
     }
     
     /**

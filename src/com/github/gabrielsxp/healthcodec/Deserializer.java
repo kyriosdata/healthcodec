@@ -418,4 +418,10 @@ public interface Deserializer {
      * @return nova instância de Group
      */
     Group deserializeGroup();
+    
+    /**
+     * Deserializador de Organisation
+     * @return nova instância de Organisation
+     */
+    Organisation deserializeOrganisation();
 }
