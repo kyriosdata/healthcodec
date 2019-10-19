@@ -412,4 +412,10 @@ public interface Deserializer {
      * @return nova instância de Agent
      */
     Agent deserializeAgent();
+    
+    /**
+     * Deserializador de Group
+     * @return nova instância de Group
+     */
+    Group deserializeGroup();
 }

@@ -1993,6 +1993,28 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
     
     /**
+     * Serializador de Group
+     * @param a
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeGroup(
+            Agent a) throws UnsupportedEncodingException {
+        GroupSerializer s = new GroupSerializer();
+        register(GROUP, offset);
+        setOffset(s.serialize(buffer, offset, a));
+        
+        return this;
+    }
+
+    @Override
+    public Group deserializeGroup() {
+        GroupSerializer d = new GroupSerializer();
+        return d.deserialize(buffer, getOffsetFromID(GROUP));
+    }
+    
+    /**
      * Método para registrar um determinado objeto no índice
      * @param id
      * @param offset

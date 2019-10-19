@@ -43,7 +43,7 @@ public class RMObject {
         private final String id;
         private final String type;
 
-        protected DvIdentifier(String issuer, String assigner, String id, 
+        protected DvIdentifier(String issuer, String assigner, String id,
                 String type) {
             this.issuer = issuer;
             this.assigner = assigner;
@@ -454,7 +454,7 @@ public class RMObject {
         private final String value;
         private final String formalism;
 
-        protected DvParsable(CodePhrase charset, CodePhrase language, 
+        protected DvParsable(CodePhrase charset, CodePhrase language,
                 String value, String formalism) {
             this.charset = charset;
             this.language = language;
@@ -572,7 +572,7 @@ public class RMObject {
             this.value = value;
         }
 
-        public static Match fromValue(String value){
+        public static Match fromValue(String value) {
             if (value != null) {
                 for (Match match : values()) {
                     if (match.value.equals(value)) {
@@ -583,8 +583,8 @@ public class RMObject {
 
             return getDefault();
         }
-        
-        public static Match getDefault(){
+
+        public static Match getDefault() {
             return UNKNOWN;
         }
 
@@ -685,10 +685,11 @@ public class RMObject {
             return definingCode;
         }
     }
-    
+
     public static class Link {
-        private final DvText meaning; 
-        private final DvText type; 
+
+        private final DvText meaning;
+        private final DvText type;
         private final DVEHRURI target;
 
         protected Link(DvText meaning, DvText type, DVEHRURI target) {
@@ -709,8 +710,9 @@ public class RMObject {
             return target;
         }
     }
-    
+
     public static class DvState {
+
         private final DvCodedText value;
         private final String terminal;
 
@@ -727,8 +729,9 @@ public class RMObject {
             return terminal;
         }
     }
-    
+
     public static class DvParagraph {
+
         private final List<DvText> items;
 
         protected DvParagraph(List<DvText> items) {
@@ -739,8 +742,9 @@ public class RMObject {
             return items;
         }
     }
-    
+
     public static class PartyProxy {
+
         private final PartyRef externalRef;
 
         protected PartyProxy(PartyRef externalRef) {
@@ -751,8 +755,9 @@ public class RMObject {
             return externalRef;
         }
     }
-    
+
     public static class FeederAuditDetails {
+
         private final String systemID;
         private final PartyIdentified provider;
         private final PartyIdentified location;
@@ -761,11 +766,11 @@ public class RMObject {
         private final String versionID;
 
         protected FeederAuditDetails(
-                String systemID, 
-                PartyIdentified provider, 
+                String systemID,
+                PartyIdentified provider,
                 PartyIdentified location,
                 //DateTime time, TODO
-                PartyProxy subject, 
+                PartyProxy subject,
                 String versionID) {
             this.systemID = systemID;
             this.provider = provider;
@@ -794,19 +799,20 @@ public class RMObject {
             return versionID;
         }
     }
-    
+
     public static class FeederAudit {
+
         private final FeederAuditDetails originatingSystemAudit;
         private final List<DvIdentifier> originatingSystemItemIDs;
-    	private final FeederAuditDetails feederSystemAudit;
-    	private final List<DvIdentifier> feederSystemItemIDs;
-    	private final DvEncapsulated originalContent;
+        private final FeederAuditDetails feederSystemAudit;
+        private final List<DvIdentifier> feederSystemItemIDs;
+        private final DvEncapsulated originalContent;
 
         protected FeederAudit(
-                FeederAuditDetails originatingSystemAudit, 
-                List<DvIdentifier> originatingSystemItemIDs, 
-                FeederAuditDetails feederSystemAudit, 
-                List<DvIdentifier> feederSystemItemIDs, 
+                FeederAuditDetails originatingSystemAudit,
+                List<DvIdentifier> originatingSystemItemIDs,
+                FeederAuditDetails feederSystemAudit,
+                List<DvIdentifier> feederSystemItemIDs,
                 DvEncapsulated originalContent) {
             this.originatingSystemAudit = originatingSystemAudit;
             this.originatingSystemItemIDs = originatingSystemItemIDs;
@@ -835,8 +841,9 @@ public class RMObject {
             return originalContent;
         }
     }
-    
+
     public static class Locatable {
+
         private final UIDBasedID uid;
         private final String archetypeNodeId;
         private final DvText name;
@@ -845,11 +852,11 @@ public class RMObject {
         private final Set<Link> links;
 
         protected Locatable(
-                UIDBasedID uid, 
-                String archetypeNodeId, 
-                DvText name, 
-                Archetyped archetypeDetails, 
-                FeederAudit feederAudit, 
+                UIDBasedID uid,
+                String archetypeNodeId,
+                DvText name,
+                Archetyped archetypeDetails,
+                FeederAudit feederAudit,
                 Set<Link> links) {
             this.uid = uid;
             this.archetypeNodeId = archetypeNodeId;
@@ -883,8 +890,9 @@ public class RMObject {
             return links;
         }
     }
-    
+
     public static class PartyRelated {
+
         private final PartyIdentified pi;
         private final DvCodedText relationship;
 
@@ -901,8 +909,9 @@ public class RMObject {
             return relationship;
         }
     }
-    
+
     public static class PartySelf {
+
         private final PartyRef externalRef;
 
         protected PartySelf(PartyRef externalRef) {
@@ -913,8 +922,9 @@ public class RMObject {
             return externalRef;
         }
     }
-    
+
     public static class ResourceDescriptionItem {
+
         private final CodePhrase language;
         private final String purpose;
         private final List<String> keywords;
@@ -925,9 +935,9 @@ public class RMObject {
         private final Map<String, String> otherDetails;
 
         protected ResourceDescriptionItem(
-                CodePhrase language, String purpose, List<String> keywords, 
-                String use, String misuse, String copyright, 
-                Map<String, String> originalResourceUri, 
+                CodePhrase language, String purpose, List<String> keywords,
+                String use, String misuse, String copyright,
+                Map<String, String> originalResourceUri,
                 Map<String, String> otherDetails) {
             this.language = language;
             this.purpose = purpose;
@@ -971,15 +981,15 @@ public class RMObject {
             return otherDetails;
         }
     }
-    
+
     public static class TranslationDetails {
+
         private final CodePhrase language;
         private final Map<String, String> author;
         private final String accreditation;
         private final Map<String, String> otherDetails;
 
-        protected TranslationDetails(CodePhrase language, Map<String, 
-                String> author, String accreditation, 
+        protected TranslationDetails(CodePhrase language, Map<String, String> author, String accreditation,
                 Map<String, String> otherDetails) {
             this.language = language;
             this.author = author;
@@ -1003,8 +1013,9 @@ public class RMObject {
             return otherDetails;
         }
     }
-    
+
     public static class Item {
+
         private final Locatable locatable;
 
         protected Item(Locatable locatable) {
@@ -1015,8 +1026,9 @@ public class RMObject {
             return locatable;
         }
     }
-    
+
     public static class Cluster {
+
         private final Item item;
         private final List<Item> items;
 
@@ -1033,8 +1045,9 @@ public class RMObject {
             return items;
         }
     }
-    
+
     public static class Element {
+
         private final Item item;
         private final DvCodedText nullFlavour;
 
@@ -1051,8 +1064,9 @@ public class RMObject {
             return nullFlavour;
         }
     }
-    
+
     public static class DataStructure {
+
         private final Locatable locatable;
 
         protected DataStructure(Locatable locatable) {
@@ -1063,8 +1077,9 @@ public class RMObject {
             return locatable;
         }
     }
-    
+
     public static class ItemList {
+
         private final UIDBasedID uid;
         private final String archetypeNodeId;
         private final DvText name;
@@ -1073,8 +1088,8 @@ public class RMObject {
         private final Set<Link> links;
         private final List<Element> items;
 
-        protected ItemList(UIDBasedID uid, String archetypeNodeId, DvText name, 
-                Archetyped archetypeDetails, FeederAudit feederAudit, 
+        protected ItemList(UIDBasedID uid, String archetypeNodeId, DvText name,
+                Archetyped archetypeDetails, FeederAudit feederAudit,
                 Set<Link> links, List<Element> items) {
             this.uid = uid;
             this.archetypeNodeId = archetypeNodeId;
@@ -1113,8 +1128,9 @@ public class RMObject {
             return items;
         }
     }
-    
+
     public static class ItemStructure {
+
         private final DataStructure dataStructure;
 
         protected ItemStructure(DataStructure dataStructure) {
@@ -1125,8 +1141,9 @@ public class RMObject {
             return dataStructure;
         }
     }
-    
+
     public static class ItemSingle {
+
         private final ItemStructure itemStructure;
         private final Element item;
 
@@ -1143,8 +1160,9 @@ public class RMObject {
             return item;
         }
     }
-    
+
     public static class ItemTable {
+
         private final ItemStructure itemStructure;
         private final List<Cluster> rows;
 
@@ -1161,8 +1179,9 @@ public class RMObject {
             return rows;
         }
     }
-    
+
     public static class ItemTree {
+
         private final ItemStructure itemStructure;
         private final List<Item> items;
 
@@ -1179,8 +1198,9 @@ public class RMObject {
             return items;
         }
     }
-    
+
     public static class PartyIdentity {
+
         private final Locatable locatable;
         private final ItemStructure details;
 
@@ -1197,15 +1217,16 @@ public class RMObject {
             return details;
         }
     }
-    
+
     public static class PartyRelationship {
+
         private final Locatable locatable;
         private final ItemStructure details;
         //private final DvInterval<DvDate> timeValidity todo;
         private final ObjectRef source;
         private final ObjectRef target;
 
-        protected PartyRelationship(Locatable locatable, 
+        protected PartyRelationship(Locatable locatable,
                 ItemStructure details, ObjectRef source, ObjectRef target) {
             this.locatable = locatable;
             this.details = details;
@@ -1229,8 +1250,9 @@ public class RMObject {
             return target;
         }
     }
-    
+
     public static class Address {
+
         private final Locatable locatable;
         private final ItemStructure details;
 
@@ -1247,8 +1269,9 @@ public class RMObject {
             return details;
         }
     }
-    
+
     public static class Contact {
+
         private final Locatable locatable;
         //private final DvInterval<DvDate> timeValidity todo;
         private final List<Address> addresses;
@@ -1266,7 +1289,7 @@ public class RMObject {
             return addresses;
         }
     }
-    
+
     public static class Party {
 
         private final Locatable locatable;
@@ -1276,8 +1299,8 @@ public class RMObject {
         private final Set<LocatableRef> reverseRelationships;
         private final ItemStructure details;
 
-        protected Party(Locatable locatable, Set<PartyIdentity> identities, 
-                Set<Contact> contacts, Set<PartyRelationship> relationships, 
+        protected Party(Locatable locatable, Set<PartyIdentity> identities,
+                Set<Contact> contacts, Set<PartyRelationship> relationships,
                 Set<LocatableRef> reverseRelationships, ItemStructure details) {
             this.locatable = locatable;
             this.identities = identities;
@@ -1286,7 +1309,7 @@ public class RMObject {
             this.reverseRelationships = reverseRelationships;
             this.details = details;
         }
-        
+
         public Set<PartyIdentity> getIdentities() {
             return identities;
         }
@@ -1307,8 +1330,9 @@ public class RMObject {
             return details;
         }
     }
-    
-     public static class Capability {
+
+    public static class Capability {
+
         private final Locatable locatable;
         private final ItemStructure credentials;
 
@@ -1325,14 +1349,15 @@ public class RMObject {
             return credentials;
         }
     }
-     
-     public static class Role {
-         private final Party party;
-         private final List<Capability> capabilities;
-         //private final DvInterval<DvDate> timeValidity todo
-         private final PartyRef performer;
 
-        protected Role(Party party, List<Capability> capabilities, 
+    public static class Role {
+
+        private final Party party;
+        private final List<Capability> capabilities;
+        //private final DvInterval<DvDate> timeValidity todo
+        private final PartyRef performer;
+
+        protected Role(Party party, List<Capability> capabilities,
                 PartyRef performer) {
             this.party = party;
             this.capabilities = capabilities;
@@ -1350,12 +1375,13 @@ public class RMObject {
         public PartyRef getPerformer() {
             return performer;
         }
-     }
-     
-     public static class Actor {
-         private final Party party;
-         private final Set<Role> roles;
-         private final Set<DvText> languages;
+    }
+
+    public static class Actor {
+
+        private final Party party;
+        private final Set<Role> roles;
+        private final Set<DvText> languages;
 
         protected Actor(Party party, Set<Role> roles, Set<DvText> languages) {
             this.party = party;
@@ -1374,10 +1400,11 @@ public class RMObject {
         public Set<DvText> getLanguages() {
             return languages;
         }
-     }
-     
-     public static class Agent {
-         private final Actor actor;
+    }
+
+    public static class Agent {
+
+        private final Actor actor;
 
         protected Agent(Actor actor) {
             this.actor = actor;
@@ -1386,5 +1413,18 @@ public class RMObject {
         public Actor getActor() {
             return actor;
         }
-    }   
+    }
+
+    public static class Group {
+
+        private final Actor actor;
+
+        protected Group(Actor actor) {
+            this.actor = actor;
+        }
+
+        public Actor getActor() {
+            return actor;
+        }
+    }
 }

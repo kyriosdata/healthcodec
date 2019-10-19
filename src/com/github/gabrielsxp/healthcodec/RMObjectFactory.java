@@ -349,4 +349,8 @@ public class RMObjectFactory {
     public static Agent newAgent(Actor actor){
         return new Agent(actor);
     }
+    
+    public static Group newGroup(Actor actor){
+        return new Group(actor);
+    }
 }

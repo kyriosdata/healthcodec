@@ -848,4 +848,13 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeAgent(
             Agent a) throws UnsupportedEncodingException;
+    
+    /**
+     * Serializador de Group
+     * @param a
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException 
+     */
+    RMObjectSerializationClient serializeGroup(
+            Agent a) throws UnsupportedEncodingException;
 }

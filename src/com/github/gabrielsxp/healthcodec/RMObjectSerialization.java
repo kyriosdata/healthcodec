@@ -4031,6 +4031,37 @@ public class RMObjectSerialization {
             return RMObjectFactory.newAgent(actor);
         }
     }
+    
+    public static class GroupSerializer {
+        protected int serialize(Buffer buffer, int offset, 
+                Actor actor) throws UnsupportedEncodingException {
+            int position = offset;
+            ActorSerializer as = new ActorSerializer();
+            
+            position = as.serialize(buffer, position, actor);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                Agent agent) throws UnsupportedEncodingException {
+            int position = offset;
+            GroupSerializer gs = new GroupSerializer();
+            
+            position = gs.serialize(buffer, position, agent);
+            
+            return position;
+        }
+        
+        protected Group deserialize(Buffer buffer, int offset){
+            int position = offset;
+            ActorSerializer as = new ActorSerializer();
+            
+            Actor actor = as.deserialize(buffer, position);
+            
+            return RMObjectFactory.newGroup(actor);
+        } 
+    }
 
     /**
      * Serializa uma única String value
