@@ -56,33 +56,23 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer,
                 int offset, String issuer, String assigner, String id,
-                String type
-        ) throws UnsupportedEncodingException {
-            int issuerLength = issuer.length();
-            int assignerLength = assigner.length();
-            int idLength = id.length();
-            int typeLength = type.length();
-            buffer.writeInteger(offset, issuerLength);
-            buffer.writeInteger(offset + INT.getSize(), assignerLength);
-            buffer.writeInteger(offset + 2 * INT.getSize(), idLength);
-            buffer.writeInteger(offset + 3 * INT.getSize(), typeLength);
-            buffer.writeString(offset + 4 * INT.getSize(), issuer);
-            buffer.writeString(offset + 4 * INT.getSize()
-                    + issuerLength, assigner
-            );
-            buffer.writeString(offset + 4 * INT.getSize()
-                    + +issuerLength + assignerLength, id
-            );
-            buffer.writeString(offset + 4 * INT.getSize()
-                    + issuerLength + assignerLength + idLength, type
-            );
-
-            return offset
-                    + 4 * INT.getSize()
-                    + issuerLength
-                    + assignerLength
-                    + idLength
-                    + typeLength;
+                String type) throws UnsupportedEncodingException {
+            int meta = offset;
+            int position = offset + 4 * INT.getSize();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, issuer);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, assigner);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, id);
+            
+            writeHeader(buffer, meta, position);
+            position = valueStringSerialization(buffer, position, type);
+            
+            return position;
         }
 
         protected int serialize(Buffer buffer, int offset,
@@ -102,20 +92,25 @@ public class RMObjectSerialization {
         }
 
         protected DvIdentifier deserialize(Buffer buffer, int offset) {
-            int issuerLength = buffer.readInteger(offset);
-            int assignerLength = buffer.readInteger(offset + INT.getSize());
-            int idLength = buffer.readInteger(offset + 2 * INT.getSize());
-            int typeLength = buffer.readInteger(offset + 3 * INT.getSize());
-
-            int stringsPosition = offset + 4 * INT.getSize();
-            String issuer = buffer.readString(stringsPosition, issuerLength);
-            stringsPosition += issuerLength;
-            String assigner = buffer.readString(stringsPosition, assignerLength);
-            stringsPosition += assignerLength;
-            String id = buffer.readString(stringsPosition, idLength);
-            stringsPosition += idLength;
-            String type = buffer.readString(stringsPosition, typeLength);
-
+            int position = offset;
+            
+            int issuerPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String issuer = valueStringDeserialization(buffer, issuerPosition);
+            
+            int assignerPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String assigner = valueStringDeserialization(
+                    buffer, assignerPosition);
+            
+            int idPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String id = valueStringDeserialization(buffer, idPosition);
+            
+            int typePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String type = valueStringDeserialization(buffer, typePosition);
+            
             return RMObjectFactory.newDvIdentifier(issuer, assigner, id, type);
         }
 
