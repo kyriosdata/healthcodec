@@ -61,16 +61,16 @@ public class RMObjectSerialization {
             int position = offset + 4 * INT.getSize();
             
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, issuer);
+            position = stringSerialization(buffer, position, issuer);
             
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, assigner);
+            position = stringSerialization(buffer, position, assigner);
             
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, id);
+            position = stringSerialization(buffer, position, id);
             
             writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, type);
+            position = stringSerialization(buffer, position, type);
             
             return position;
         }
@@ -96,20 +96,20 @@ public class RMObjectSerialization {
             
             int issuerPosition = buffer.readInteger(position);
             position += INT.getSize();
-            String issuer = valueStringDeserialization(buffer, issuerPosition);
+            String issuer = stringDeserialization(buffer, issuerPosition);
             
             int assignerPosition = buffer.readInteger(position);
             position += INT.getSize();
-            String assigner = valueStringDeserialization(
+            String assigner = stringDeserialization(
                     buffer, assignerPosition);
             
             int idPosition = buffer.readInteger(position);
             position += INT.getSize();
-            String id = valueStringDeserialization(buffer, idPosition);
+            String id = stringDeserialization(buffer, idPosition);
             
             int typePosition = buffer.readInteger(position);
             position += INT.getSize();
-            String type = valueStringDeserialization(buffer, typePosition);
+            String type = stringDeserialization(buffer, typePosition);
             
             return RMObjectFactory.newDvIdentifier(issuer, assigner, id, type);
         }
@@ -155,7 +155,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            return valueStringSerialization(buffer, offset, value);
+            return stringSerialization(buffer, offset, value);
         }
         
         protected int serialize(Buffer buffer, int offset, 
@@ -181,7 +181,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            return valueStringSerialization(buffer, offset, value);
+            return stringSerialization(buffer, offset, value);
         }
         
         protected int serialize(Buffer buffer, int offset, 
@@ -196,7 +196,7 @@ public class RMObjectSerialization {
         
         protected ISO_OID deserialize(Buffer buffer, int offset) {
             int position = offset;
-            String value = valueStringDeserialization(buffer, position);
+            String value = stringDeserialization(buffer, position);
 
             return RMObjectFactory.newISOOID(value);
         }
@@ -206,7 +206,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            return valueStringSerialization(buffer, offset, value);
+            return stringSerialization(buffer, offset, value);
         }
         
         protected int serialize(Buffer buffer, int offset, 
@@ -220,7 +220,7 @@ public class RMObjectSerialization {
 
         protected UUID deserialize(Buffer buffer, int offset) {
             int position = offset;
-            String value = valueStringDeserialization(buffer, position);
+            String value = stringDeserialization(buffer, position);
 
             return RMObjectFactory.newUUID(value);
         }
@@ -235,10 +235,10 @@ public class RMObjectSerialization {
             int position = offset + 2 * INT.getSize();
             
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, value);
+            position = stringSerialization(buffer, position, value);
             
             writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, scheme);
+            position = stringSerialization(buffer, position, scheme);
             
             return position;
         }
@@ -258,10 +258,10 @@ public class RMObjectSerialization {
             
             int valuePositon = buffer.readInteger(position);
             position += INT.getSize();
-            String value = valueStringDeserialization(buffer, valuePositon);
+            String value = stringDeserialization(buffer, valuePositon);
             
             int schemePosition = buffer.readInteger(position);
-            String scheme = valueStringDeserialization(buffer, schemePosition);
+            String scheme = stringDeserialization(buffer, schemePosition);
             
             return RMObjectFactory.newGenericID(value, scheme);
         }
@@ -272,7 +272,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
             int position = offset;
-            return valueStringSerialization(buffer, position, value);
+            return stringSerialization(buffer, position, value);
         }
         
         protected int serialize(Buffer buffer, int offset, 
@@ -286,7 +286,7 @@ public class RMObjectSerialization {
 
         protected TemplateID deserialize(Buffer buffer, int offset) {
             int position = offset;
-            String value = valueStringDeserialization(buffer, position);
+            String value = stringDeserialization(buffer, position);
 
             return RMObjectFactory.newTemplateID(value);
         }
@@ -297,19 +297,19 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
             int position = offset;
-            return valueStringSerialization(buffer, position, value);
+            return stringSerialization(buffer, position, value);
         }
         
         protected int serialize(Buffer buffer, int offset, TerminologyID tid)
                 throws UnsupportedEncodingException {
             int position = offset;
             TerminologyIDSerializer tids = new TerminologyIDSerializer();
-            return valueStringSerialization(buffer, position, tid.getValue());
+            return stringSerialization(buffer, position, tid.getValue());
         }
 
         protected TerminologyID deserialize(Buffer buffer, int offset) {
             int position = offset;
-            String value = valueStringDeserialization(buffer, position);
+            String value = stringDeserialization(buffer, position);
 
             return RMObjectFactory.newTerminologyID(value);
         }
@@ -330,7 +330,7 @@ public class RMObjectSerialization {
             position = ts.serialize(buffer, position, terminologyId);
             
             writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, value);
+            position = stringSerialization(buffer, position, value);
             
             return position;
         }
@@ -356,7 +356,7 @@ public class RMObjectSerialization {
                     buffer, terminologyIDPosition);
             
             int valuePosition = buffer.readInteger(position);
-            String value = valueStringDeserialization(buffer, valuePosition);
+            String value = stringDeserialization(buffer, valuePosition);
             
             return RMObjectFactory.newCodePhrase(terminologyID, value);
         }
@@ -367,7 +367,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
             int position = offset;
-            return valueStringSerialization(buffer, position, value);
+            return stringSerialization(buffer, position, value);
         }
         
         protected int serialize(Buffer buffer, int offset, 
@@ -381,7 +381,7 @@ public class RMObjectSerialization {
 
         protected DVURI deserialize(Buffer buffer, int offset) {
             int position = offset;
-            String value = valueStringDeserialization(buffer, position);
+            String value = stringDeserialization(buffer, position);
 
             return RMObjectFactory.newDVURI(value);
         }
@@ -392,7 +392,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
             int position = offset;
-            return valueStringSerialization(buffer, position, value);
+            return stringSerialization(buffer, position, value);
         }
 
         protected int serialize(Buffer buffer, int offset,
@@ -407,7 +407,7 @@ public class RMObjectSerialization {
 
         protected DVEHRURI deserialize(Buffer buffer, int offset) {
             int position = offset;
-            String value = valueStringDeserialization(buffer, position);
+            String value = stringDeserialization(buffer, position);
 
             return RMObjectFactory.newDVEHRURI(value);
         }
@@ -418,7 +418,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
             int position = offset;
-            return valueStringSerialization(buffer, position, value);
+            return stringSerialization(buffer, position, value);
         }
         
         protected int serialize(Buffer buffer, int offset, VersionTreeID vti)
@@ -432,7 +432,7 @@ public class RMObjectSerialization {
 
         protected VersionTreeID deserialize(Buffer buffer, int offset) {
             int position = offset;
-            String value = valueStringDeserialization(buffer, position);
+            String value = stringDeserialization(buffer, position);
             
             return RMObjectFactory.newVersionTreeID(value);
         }
@@ -443,7 +443,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
             int position = offset;
-            return valueStringSerialization(buffer, position, value);
+            return stringSerialization(buffer, position, value);
         }
         
         protected int serialize(Buffer buffer, int offset, ArchetypeID a)
@@ -457,7 +457,7 @@ public class RMObjectSerialization {
 
         protected ArchetypeID deserialize(Buffer buffer, int offset) {
             int position = offset;
-            String value = valueStringDeserialization(buffer, position);
+            String value = stringDeserialization(buffer, position);
 
             return RMObjectFactory.newArchetypeID(value);
         }
@@ -468,7 +468,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
             int position = offset;
-            return valueStringSerialization(buffer, position, value);
+            return stringSerialization(buffer, position, value);
         }
         
         protected int serialize(Buffer buffer, int offset, ObjectVersionID o)
@@ -482,7 +482,7 @@ public class RMObjectSerialization {
 
         protected ObjectVersionID deserialize(Buffer buffer, int offset) {
             int position = offset;
-            String value = valueStringDeserialization(buffer, position);
+            String value = stringDeserialization(buffer, position);
 
             return RMObjectFactory.newObjectVersionID(value);
         }
@@ -493,7 +493,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
             int position = offset;
-            return valueStringSerialization(buffer, position, value);
+            return stringSerialization(buffer, position, value);
         }
         
         protected int serialize(Buffer buffer, int offset, HierObjectID h)
@@ -507,7 +507,7 @@ public class RMObjectSerialization {
         
         protected HierObjectID deserialize(Buffer buffer, int offset) {
             int position = offset;
-            String value = valueStringDeserialization(buffer, position);
+            String value = stringDeserialization(buffer, position);
 
             return RMObjectFactory.newHierObjectID(value);
         }
@@ -518,7 +518,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
             int position = offset;
-            return valueStringSerialization(buffer, position, value);
+            return stringSerialization(buffer, position, value);
         }
         
         protected int serialize(Buffer buffer, int offset, ObjectID o)
@@ -532,7 +532,7 @@ public class RMObjectSerialization {
         
         protected ObjectID deserialize(Buffer buffer, int offset) {
             int position = offset;
-            String value = valueStringDeserialization(buffer, position);
+            String value = stringDeserialization(buffer, position);
 
             return RMObjectFactory.newObjectID(value);
         }
@@ -553,7 +553,7 @@ public class RMObjectSerialization {
             position = os.serialize(buffer, position, id);
             
             writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, value);
+            position = stringSerialization(buffer, position, value);
             
             return position;
         }
@@ -579,7 +579,7 @@ public class RMObjectSerialization {
             ObjectID id = os.deserialize(buffer, idPosition);
             
             int valuePosition = buffer.readInteger(position);
-            String value = valueStringDeserialization(buffer, valuePosition);
+            String value = stringDeserialization(buffer, valuePosition);
 
             return RMObjectFactory.newPartyRef(id, value);
         }
@@ -602,10 +602,10 @@ public class RMObjectSerialization {
             position = os.serialize(buffer, position, id);
             
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, namespace);
+            position = stringSerialization(buffer, position, namespace);
             
             writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, type);
+            position = stringSerialization(buffer, position, type);
             
             return position;
         }
@@ -628,11 +628,11 @@ public class RMObjectSerialization {
             
             int namespacePosition = buffer.readInteger(position);
             position += INT.getSize();
-            String namespace = valueStringDeserialization(
+            String namespace = stringDeserialization(
                     buffer, namespacePosition);
             
             int typePosition = buffer.readInteger(position);
-            String type = valueStringDeserialization(buffer, typePosition);
+            String type = stringDeserialization(buffer, typePosition);
             
             return RMObjectFactory.newObjectRef(id, namespace, type);
         }
@@ -656,15 +656,15 @@ public class RMObjectSerialization {
             position = os.serialize(buffer, position, id);
             
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, namespace);
+            position = stringSerialization(buffer, position, namespace);
             
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, type);
+            position = stringSerialization(buffer, position, type);
             
             boolean hasPath = path != null;
             if(hasPath){
                 writeHeader(buffer, meta, hasPath, position);
-                position = valueStringSerialization(buffer, position, path);
+                position = stringSerialization(buffer, position, path);
             } else {
                 writeHeader(buffer, meta, hasPath);
             }
@@ -693,19 +693,19 @@ public class RMObjectSerialization {
             
             int namespacePosition = buffer.readInteger(position);
             position += INT.getSize();
-            String namespace = valueStringDeserialization(
+            String namespace = stringDeserialization(
                     buffer, namespacePosition);
             
             int typePosition = buffer.readInteger(position);
             position += INT.getSize();
-            String type = valueStringDeserialization(buffer, typePosition);
+            String type = stringDeserialization(buffer, typePosition);
             
             boolean hasPath = buffer.readBoolean(position);
             position += BOOLEAN.getSize();
             String path = null;
             if(hasPath){
                 int pathPosition = buffer.readInteger(position);
-                path = valueStringDeserialization(buffer, pathPosition);
+                path = stringDeserialization(buffer, pathPosition);
             }
             
             return RMObjectFactory.newLocatableRef(id, namespace, type, path);
@@ -830,7 +830,7 @@ public class RMObjectSerialization {
             position = prs.serialize(buffer, position, externalRef);
 
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, name);
+            position = stringSerialization(buffer, position, name);
 
             meta = writeHeader(buffer, meta, position);
             position = dis.listSerialize(buffer, position, identifiers);
@@ -862,7 +862,7 @@ public class RMObjectSerialization {
 
             int namePosition = buffer.readInteger(position);
             position += INT.getSize();
-            String name = valueStringDeserialization(buffer, namePosition);
+            String name = stringDeserialization(buffer, namePosition);
 
             int identifiersPosition = buffer.readInteger(position);
             position += INT.getSize();
@@ -1042,7 +1042,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            return valueStringSerialization(buffer, offset, value);
+            return stringSerialization(buffer, offset, value);
         }
 
         protected int serialize(Buffer buffer, int offset,
@@ -1247,7 +1247,7 @@ public class RMObjectSerialization {
                     dvMultimediaDvEncapsulated.getCharset(),
                     dvMultimediaDvEncapsulated.getLanguage());
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(
+            position = stringSerialization(
                     buffer, position, alternateText);
 
             meta = writeHeader(buffer, meta, position);
@@ -1332,7 +1332,7 @@ public class RMObjectSerialization {
 
             int alternateTextPosition = buffer.readInteger(meta);
             String alternateText
-                    = valueStringDeserialization(buffer, alternateTextPosition);
+                    = stringDeserialization(buffer, alternateTextPosition);
             meta += INT.getSize();
 
             int mediaTypePosition = buffer.readInteger(meta);
@@ -1429,7 +1429,7 @@ public class RMObjectSerialization {
             int position = offset + 6 * INT.getSize() + 3 * BOOLEAN.getSize();
 
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, value);
+            position = stringSerialization(buffer, position, value);
             if (hasMappings) {
 
                 meta = writeHeader(buffer, meta, hasMappings, position);
@@ -1441,7 +1441,7 @@ public class RMObjectSerialization {
             if (hasFormatting) {
                 meta = writeHeader(buffer, meta, hasFormatting, position);
                 position
-                        = valueStringSerialization(buffer, position, formatting);
+                        = stringSerialization(buffer, position, formatting);
             } else {
                 meta = writeHeader(buffer, meta, hasFormatting);
             }
@@ -1487,7 +1487,7 @@ public class RMObjectSerialization {
             DVURISerializer dvu = new DVURISerializer();
 
             int valuePosition = buffer.readInteger(position);
-            String value = valueStringDeserialization(buffer, valuePosition);
+            String value = stringDeserialization(buffer, valuePosition);
             position += INT.getSize();
 
             boolean hasMappings = buffer.readBoolean(position);
@@ -1507,7 +1507,7 @@ public class RMObjectSerialization {
             if (hasFormatting) {
                 formattingPosition = buffer.readInteger(position);
                 formatting
-                        = valueStringDeserialization(buffer, formattingPosition);
+                        = stringDeserialization(buffer, formattingPosition);
                 position += INT.getSize();
             }
             boolean hasHyperlink = buffer.readBoolean(position);
@@ -1667,7 +1667,7 @@ public class RMObjectSerialization {
                 throws UnsupportedEncodingException {
             int position = offset;
             String value = match.getValue();
-            position = valueStringSerialization(buffer, position, value);
+            position = stringSerialization(buffer, position, value);
 
             return position;
         }
@@ -1675,7 +1675,7 @@ public class RMObjectSerialization {
         protected Match deserialize(Buffer buffer, int offset)
                 throws IllegalAccessException {
             int position = offset;
-            String value = valueStringDeserialization(buffer, position);
+            String value = stringDeserialization(buffer, position);
 
             Match match = Match.fromValue(value);
 
@@ -1896,7 +1896,7 @@ public class RMObjectSerialization {
 
             if (hasTerminal) {
                 meta = writeHeader(buffer, meta, hasTerminal, position);
-                position = valueStringSerialization(buffer, position, terminal);
+                position = stringSerialization(buffer, position, terminal);
             } else {
                 meta = writeHeader(buffer, meta, hasTerminal);
             }
@@ -1929,7 +1929,7 @@ public class RMObjectSerialization {
             String terminal = null;
             if (hasTerminal) {
                 int terminalPosition = buffer.readInteger(position);
-                terminal = valueStringDeserialization(buffer, terminalPosition);
+                terminal = stringDeserialization(buffer, terminalPosition);
             }
 
             return RMObjectFactory.newDvState(value, terminal);
@@ -2011,7 +2011,7 @@ public class RMObjectSerialization {
             PartyProxySerializer pps = new PartyProxySerializer();
 
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, systemID);
+            position = stringSerialization(buffer, position, systemID);
 
             boolean hasProvider = provider != null;
             if (hasProvider) {
@@ -2047,7 +2047,7 @@ public class RMObjectSerialization {
             boolean hasVersionID = versionID != null;
             if (hasVersionID) {
                 writeHeader(buffer, meta, hasVersionID, position);
-                position = valueStringSerialization(buffer, position, versionID);
+                position = stringSerialization(buffer, position, versionID);
             } else {
                 writeHeader(buffer, meta, hasVersionID);
             }
@@ -2082,7 +2082,7 @@ public class RMObjectSerialization {
             int systemIDPosition = buffer.readInteger(position);
             position += INT.getSize();
             String systemID
-                    = valueStringDeserialization(buffer, systemIDPosition);
+                    = stringDeserialization(buffer, systemIDPosition);
 
             boolean hasProvider = buffer.readBoolean(position);
             position += BOOLEAN.getSize();
@@ -2124,7 +2124,7 @@ public class RMObjectSerialization {
                 int versionIDPosition = buffer.readInteger(position);
                 position += INT.getSize();
                 versionID
-                        = valueStringDeserialization(buffer, versionIDPosition);
+                        = stringDeserialization(buffer, versionIDPosition);
             }
 
             return RMObjectFactory.newFeederAuditDetails(
@@ -2291,7 +2291,7 @@ public class RMObjectSerialization {
 
             meta = writeHeader(buffer, meta, position);
             position
-                    = valueStringSerialization(buffer, position, archetypeNodeId);
+                    = stringSerialization(buffer, position, archetypeNodeId);
 
             meta = writeHeader(buffer, meta, position);
             position = dts.serialize(buffer, position, name);
@@ -2352,7 +2352,7 @@ public class RMObjectSerialization {
 
             int archetypeNodeIdPosition = buffer.readInteger(position);
             position += INT.getSize();
-            String archetypeNodeId = valueStringDeserialization(
+            String archetypeNodeId = stringDeserialization(
                     buffer, archetypeNodeIdPosition);
 
             int namePosition = buffer.readInteger(position);
@@ -2513,7 +2513,7 @@ public class RMObjectSerialization {
             position = cps.serialize(buffer, position, language);
 
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, purpose);
+            position = stringSerialization(buffer, position, purpose);
 
             boolean hasKeywords = keywords != null;
             if (hasKeywords) {
@@ -2524,13 +2524,13 @@ public class RMObjectSerialization {
             }
 
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, use);
+            position = stringSerialization(buffer, position, use);
 
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, misuse);
+            position = stringSerialization(buffer, position, misuse);
 
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, copyright);
+            position = stringSerialization(buffer, position, copyright);
 
             boolean hasOriginalResourceUri = originalResourceUri != null;
             if (hasOriginalResourceUri) {
@@ -2582,7 +2582,7 @@ public class RMObjectSerialization {
 
             int purposePosition = buffer.readInteger(position);
             position += INT.getSize();
-            String purpose = valueStringDeserialization(
+            String purpose = stringDeserialization(
                     buffer, purposePosition);
 
             boolean hasKeywords = buffer.readBoolean(position);
@@ -2596,15 +2596,15 @@ public class RMObjectSerialization {
 
             int usePosition = buffer.readInteger(position);
             position += INT.getSize();
-            String use = valueStringDeserialization(buffer, usePosition);
+            String use = stringDeserialization(buffer, usePosition);
 
             int misusePosition = buffer.readInteger(position);
             position += INT.getSize();
-            String misuse = valueStringDeserialization(buffer, misusePosition);
+            String misuse = stringDeserialization(buffer, misusePosition);
 
             int copyrightPosition = buffer.readInteger(position);
             position += INT.getSize();
-            String copyright = valueStringDeserialization(
+            String copyright = stringDeserialization(
                     buffer, copyrightPosition);
 
             boolean hasOriginalResourceUri = buffer.readBoolean(position);
@@ -2700,7 +2700,7 @@ public class RMObjectSerialization {
             boolean hasAccreditation = accreditation != null;
             if (hasAccreditation) {
                 meta = writeHeader(buffer, meta, hasAccreditation, position);
-                position = valueStringSerialization(
+                position = stringSerialization(
                         buffer, position, accreditation);
             } else {
                 meta = writeHeader(buffer, meta, hasAccreditation);
@@ -2750,7 +2750,7 @@ public class RMObjectSerialization {
             if (hasAccreditation) {
                 int accreditationPosition = buffer.readInteger(position);
                 position += INT.getSize();
-                accreditation = valueStringDeserialization(
+                accreditation = stringDeserialization(
                         buffer, accreditationPosition);
             }
 
@@ -2789,7 +2789,7 @@ public class RMObjectSerialization {
                 TranslationDetails value = entry.getValue();
 
                 meta = writeHeader(buffer, meta, position);
-                position = valueStringSerialization(buffer, position, key);
+                position = stringSerialization(buffer, position, key);
                 meta = writeHeader(buffer, meta, position);
                 position = tdss.serialize(buffer, position, value);
             }
@@ -2815,7 +2815,7 @@ public class RMObjectSerialization {
                 position += INT.getSize();
                 int valuePosition = buffer.readInteger(position);
                 position += INT.getSize();
-                String key = valueStringDeserialization(buffer, keyPosition);
+                String key = stringDeserialization(buffer, keyPosition);
                 TranslationDetails value = tdss.deserialize(
                         buffer, valuePosition);
 
@@ -3115,7 +3115,7 @@ public class RMObjectSerialization {
             }
 
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(
+            position = stringSerialization(
                     buffer, position, archetypeNodeId);
 
             meta = writeHeader(buffer, meta, position);
@@ -3190,7 +3190,7 @@ public class RMObjectSerialization {
 
             int archetypeNodeIdPosition = buffer.readInteger(position);
             position += INT.getSize();
-            String archetypeNodeId = valueStringDeserialization(
+            String archetypeNodeId = stringDeserialization(
                     buffer, archetypeNodeIdPosition);
 
             int namePosition = buffer.readInteger(position);
@@ -4269,7 +4269,7 @@ public class RMObjectSerialization {
             position = lrs.serialize(buffer, position, instructionId);
             
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, activityId);
+            position = stringSerialization(buffer, position, activityId);
             
             boolean hasWfDetails = wfDetails != null;
             if(hasWfDetails){
@@ -4307,7 +4307,7 @@ public class RMObjectSerialization {
             
             int activityIdPosition = buffer.readInteger(position);
             position += INT.getSize();
-            String activityId = valueStringDeserialization(
+            String activityId = stringDeserialization(
                     buffer, activityIdPosition);
             
             boolean hasWfDetails = buffer.readBoolean(position);
@@ -4418,7 +4418,7 @@ public class RMObjectSerialization {
             position = dps.serialize(buffer, position, timing);
             
             writeHeader(buffer, meta, position);
-            position = valueStringSerialization(
+            position = stringSerialization(
                     buffer, position, actionArchetypeId);
             
             return position;
@@ -4455,7 +4455,7 @@ public class RMObjectSerialization {
             
             int actionArchetypeIdPosition = buffer.readInteger(position);
             position += INT.getSize();
-            String actionArchetypeId = valueStringDeserialization(
+            String actionArchetypeId = stringDeserialization(
                     buffer, actionArchetypeIdPosition);
             
             return RMObjectFactory.newActivity(locatable, description, 
@@ -4471,7 +4471,7 @@ public class RMObjectSerialization {
      * @param value
      * @return posição final após a serialização da String no buffer
      */
-    private static int valueStringSerialization(
+    private static int stringSerialization(
             Buffer buffer,
             int offset, String value) throws UnsupportedEncodingException {
         int valueLength = value.length();
@@ -4488,7 +4488,7 @@ public class RMObjectSerialization {
      * @param offset
      * @return String deserializada
      */
-    private static String valueStringDeserialization(Buffer buffer,
+    private static String stringDeserialization(Buffer buffer,
             int offset) {
         int position = offset;
         int length = buffer.readInteger(position);
@@ -4521,7 +4521,7 @@ public class RMObjectSerialization {
         while (it.hasNext()) {
             String value = it.next();
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, value);
+            position = stringSerialization(buffer, position, value);
         }
 
         return position;
@@ -4549,7 +4549,7 @@ public class RMObjectSerialization {
             int valuePosition = buffer.readInteger(position);
             position += INT.getSize();
 
-            String value = valueStringDeserialization(buffer, valuePosition);
+            String value = stringDeserialization(buffer, valuePosition);
             list.add(value);
         }
 
@@ -4582,9 +4582,9 @@ public class RMObjectSerialization {
             String value = entry.getValue();
 
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, key);
+            position = stringSerialization(buffer, position, key);
             meta = writeHeader(buffer, meta, position);
-            position = valueStringSerialization(buffer, position, value);
+            position = stringSerialization(buffer, position, value);
         }
 
         return position;
@@ -4613,8 +4613,8 @@ public class RMObjectSerialization {
             position += INT.getSize();
             int valuePosition = buffer.readInteger(position);
             position += INT.getSize();
-            String key = valueStringDeserialization(buffer, keyPosition);
-            String value = valueStringDeserialization(buffer, valuePosition);
+            String key = stringDeserialization(buffer, keyPosition);
+            String value = stringDeserialization(buffer, valuePosition);
 
             map.put(key, value);
         }
