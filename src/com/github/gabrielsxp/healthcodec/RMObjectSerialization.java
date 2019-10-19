@@ -488,16 +488,26 @@ public class RMObjectSerialization {
         }
     }
 
-    static class HierObjectIDSerialilzer {
+    static class HierObjectIDSerializer {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            return valueStringSerialization(buffer, offset, value);
+            int position = offset;
+            return valueStringSerialization(buffer, position, value);
         }
-
+        
+        protected int serialize(Buffer buffer, int offset, HierObjectID h)
+                throws UnsupportedEncodingException {
+            int position = offset;
+            HierObjectIDSerializer os = new HierObjectIDSerializer();
+            position = os.serialize(buffer, position, h.getValue());
+            
+            return position;
+        }
+        
         protected HierObjectID deserialize(Buffer buffer, int offset) {
-            int valueLength = buffer.readInteger(offset);
-            String value = buffer.readString(offset + INT.getSize(), valueLength);
+            int position = offset;
+            String value = valueStringDeserialization(buffer, position);
 
             return RMObjectFactory.newHierObjectID(value);
         }

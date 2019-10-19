@@ -467,7 +467,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     @Override
     public RMObjectSerializationClient serializeHierObjectID(String value)
             throws UnsupportedEncodingException {
-        HierObjectIDSerialilzer s = new HierObjectIDSerialilzer();
+        HierObjectIDSerializer s = new HierObjectIDSerializer();
         register(HIEROBJECTID, offset);
         setOffset(s.serialize(buffer, offset, value));
 
@@ -481,7 +481,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public HierObjectID deserializeHierObjectID() {
-        HierObjectIDSerialilzer d = new HierObjectIDSerialilzer();
+        HierObjectIDSerializer d = new HierObjectIDSerializer();
         return d.deserialize(buffer, getOffsetFromID(HIEROBJECTID));
     }
 
