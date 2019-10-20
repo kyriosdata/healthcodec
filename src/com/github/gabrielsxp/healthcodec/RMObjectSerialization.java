@@ -1066,25 +1066,31 @@ public class RMObjectSerialization {
 
     public static class DvTimeSpecificationSerializer {
 
-        protected int serialize(
-                Buffer buffer,
-                int offset,
+        protected int serialize(Buffer buffer, int offset,
                 DvParsable value) throws UnsupportedEncodingException {
-            int endPosition = offset;
+            int position = offset;
             DvParsableSerializer s = new DvParsableSerializer();
-            endPosition += s.serialize(buffer,
-                    offset,
-                    value.getCharset(),
-                    value.getLanguage(),
-                    value.getValue(),
-                    value.getFormalism());
+            position = s.serialize(buffer, position, value.getDvEncapsulated(), 
+                    value.getValue(), value.getFormalism());
 
-            return endPosition;
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                DvTimeSpecification d) throws UnsupportedEncodingException {
+            int position = offset;
+            DvTimeSpecificationSerializer dtss = 
+                    new DvTimeSpecificationSerializer();
+            position = dtss.serialize(buffer, position, d.getValue());
+            
+            return position;
         }
 
         protected DvTimeSpecification deserialize(Buffer buffer, int offset) {
-            DvParsableSerializer d = new DvParsableSerializer();
-            DvParsable value = d.deserialize(buffer, offset);
+            int position = offset;
+            
+            DvParsableSerializer dps = new DvParsableSerializer();
+            DvParsable value = dps.deserialize(buffer, position);
 
             return RMObjectFactory.newDvTimeSpecification(value);
         }
