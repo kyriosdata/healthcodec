@@ -832,7 +832,7 @@ public class RMObjectSerialization {
             meta = writeHeader(buffer, meta, position);
             position = stringSerialization(buffer, position, name);
 
-            meta = writeHeader(buffer, meta, position);
+            writeHeader(buffer, meta, position);
             position = dis.listSerialize(buffer, position, identifiers);
 
             return position;
@@ -843,10 +843,8 @@ public class RMObjectSerialization {
             PartyIdentifiedSerializer pis = new PartyIdentifiedSerializer();
             int position = offset;
 
-            position
-                    = pis.serialize(buffer, position,
-                            pi.getExternalRef(), pi.getName(),
-                            pi.getIdentifiers());
+            position = pis.serialize(buffer, position,
+                    pi.getExternalRef(), pi.getName(), pi.getIdentifiers());
 
             return position;
         }
