@@ -489,7 +489,7 @@ public class RMObject {
 
     public static class DvMultimedia {
 
-        private final DvEncapsulated DvMultimediaDvEncapsulated;
+        private final DvEncapsulated dvEncapsulated;
         private final String alternateText;
         private final CodePhrase mediaType;
         private final CodePhrase compressionAlgorithm;
@@ -500,7 +500,7 @@ public class RMObject {
         private final byte[] data;
 
         protected DvMultimedia(
-                DvEncapsulated DvMultimediaDvEncapsulated,
+                DvEncapsulated dvEncapsulated,
                 String alternateText,
                 CodePhrase mediaType,
                 CodePhrase compressionAlgorithm,
@@ -509,7 +509,7 @@ public class RMObject {
                 DvMultimedia thumbnail,
                 DVURI uri,
                 byte[] data) {
-            this.DvMultimediaDvEncapsulated = DvMultimediaDvEncapsulated;
+            this.dvEncapsulated = dvEncapsulated;
             this.alternateText = alternateText;
             this.mediaType = mediaType;
             this.compressionAlgorithm = compressionAlgorithm;
@@ -520,8 +520,8 @@ public class RMObject {
             this.data = data;
         }
 
-        public DvEncapsulated getDvMultimediaDvEncapsulated() {
-            return DvMultimediaDvEncapsulated;
+        public DvEncapsulated getDvEncapsulated() {
+            return dvEncapsulated;
         }
 
         public String getAlternateText() {

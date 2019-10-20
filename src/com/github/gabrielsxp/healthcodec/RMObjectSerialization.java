@@ -1098,19 +1098,12 @@ public class RMObjectSerialization {
 
     public static class DvMultimediaSerializer {
 
-        protected int serialize(
-                Buffer buffer,
-                int offset,
-                DvEncapsulated dvMultimediaDvEncapsulated,
-                String alternateText,
-                CodePhrase mediaType,
-                CodePhrase compressionAlgorithm,
-                byte[] integrityCheck,
-                CodePhrase integrityCheckAlgorithm,
-                DvMultimedia thumbnail,
-                DVURI uri,
-                byte[] data) throws
-                UnsupportedEncodingException, IllegalArgumentException {
+        protected int serialize(Buffer buffer, int offset,
+                DvEncapsulated dvEncapsulated, String alternateText,
+                CodePhrase mediaType, CodePhrase compressionAlgorithm,
+                byte[] integrityCheck, CodePhrase integrityCheckAlgorithm,
+                DvMultimedia thumbnail, DVURI uri, 
+                byte[] data) throws UnsupportedEncodingException {
 
             boolean hasCompressionAlgorithm = compressionAlgorithm != null;
             boolean hasIntegrityCheck = integrityCheck != null;
@@ -1127,21 +1120,16 @@ public class RMObjectSerialization {
             int meta = offset;
 
             meta = writeHeader(buffer, meta, position);
-            position = dve.serialize(
-                    buffer,
-                    position,
-                    dvMultimediaDvEncapsulated.getCharset(),
-                    dvMultimediaDvEncapsulated.getLanguage());
+            position = dve.serialize(buffer, position,
+                    dvEncapsulated.getCharset(),
+                    dvEncapsulated.getLanguage());
             meta = writeHeader(buffer, meta, position);
             position = stringSerialization(
                     buffer, position, alternateText);
 
             meta = writeHeader(buffer, meta, position);
-            position = cps.serialize(
-                    buffer,
-                    position,
-                    mediaType.getTerminologyID(),
-                    mediaType.getValue());
+            position = cps.serialize(buffer, position,
+                    mediaType.getTerminologyID(), mediaType.getValue());
 
             if (hasCompressionAlgorithm) {
                 meta = writeHeader(
@@ -1176,7 +1164,7 @@ public class RMObjectSerialization {
                 position = dvm.serialize(
                         buffer,
                         position,
-                        thumbnail.getDvMultimediaDvEncapsulated(),
+                        thumbnail.getDvEncapsulated(),
                         thumbnail.getAlternateText(),
                         thumbnail.getMediaType(),
                         thumbnail.getCompressionAlgorithm(),
@@ -1190,16 +1178,27 @@ public class RMObjectSerialization {
             }
 
             meta = writeHeader(buffer, meta, position);
-            position = dvu.serialize(
-                    buffer,
-                    position,
-                    uri.getValue());
+            position = dvu.serialize(buffer, position, uri.getValue());
 
             meta = writeHeader(buffer, meta, position);
-            meta = writeHeader(buffer, meta, data.length);
+            writeHeader(buffer, meta, data.length);
             buffer.writeByteArray(position, data);
             position += data.length;
 
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                DvMultimedia d) throws UnsupportedEncodingException {
+            int position = offset;
+            DvMultimediaSerializer dms = new DvMultimediaSerializer();
+            
+            position = dms.serialize(buffer, position, 
+                    d.getDvEncapsulated(), d.getAlternateText(),
+                    d.getMediaType(), d.getCompressionAlgorithm(),
+                    d.getIntegrityCheck(), d.getIntegrityCheckAlgorithm(),
+                    d.getThumbnail(), d.getUri(), d.getData());
+            
             return position;
         }
 
