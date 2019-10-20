@@ -985,7 +985,10 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            return stringSerialization(buffer, offset, value);
+            int position = offset;
+            position = stringSerialization(buffer, position, value);
+            
+            return position;
         }
 
         protected int serialize(Buffer buffer, int offset,
@@ -999,9 +1002,9 @@ public class RMObjectSerialization {
         }
 
         protected UIDBasedID deserialize(Buffer buffer, int offset) {
-            int valueLength = buffer.readInteger(offset);
-            String value = buffer.readString(offset + INT.getSize(), valueLength);
-
+            int position = offset;
+            String value = stringDeserialization(buffer, position);
+            
             return RMObjectFactory.newUIDBasedID(value);
         }
     }
