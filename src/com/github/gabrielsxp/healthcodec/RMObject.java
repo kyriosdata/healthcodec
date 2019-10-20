@@ -450,27 +450,21 @@ public class RMObject {
 
     public static class DvParsable {
 
-        private final CodePhrase charset;
-        private final CodePhrase language;
+        private final DvEncapsulated dvEncapsulated;
         private final String value;
         private final String formalism;
 
-        protected DvParsable(CodePhrase charset, CodePhrase language,
-                String value, String formalism) {
-            this.charset = charset;
-            this.language = language;
+        protected DvParsable(DvEncapsulated dvEncapsulated, String value, 
+                String formalism) {
+            this.dvEncapsulated = dvEncapsulated;
             this.value = value;
             this.formalism = formalism;
         }
 
-        public CodePhrase getCharset() {
-            return charset;
+        public DvEncapsulated getDvEncapsulated() {
+            return dvEncapsulated;
         }
-
-        public CodePhrase getLanguage() {
-            return language;
-        }
-
+        
         public String getValue() {
             return value;
         }

@@ -1011,49 +1011,24 @@ public class RMObjectSerialization {
 
     public static class DvParsableSerializer {
 
-        protected int serialize(Buffer buffer, int offset,
-                CodePhrase charset,
-                CodePhrase language,
-                String value,
+        protected int serialize(Buffer buffer, int offset, 
+                DvEncapsulated dvEncapsulated, String value,
                 String formalism) throws UnsupportedEncodingException {
-            int cpCharsetTerminologyIDValueLength
-                    = charset.getTerminologyID().getValue().length();
-            int charsetCodeStringLength = charset.getValue().length();
-            int cpLanguageTerminologyIDValueLength
-                    = language.getTerminologyID().getValue().length();
-            int languageCodeStringLength = language.getValue().length();
-            int valueLength = value.length();
-            int formalismLength = formalism.length();
+            int meta = offset;
+            int position = offset + 4 * INT.getSize();
+            
+            DvEncapsulatedSerializer des = new DvEncapsulatedSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = des.serialize(buffer, position, dvEncapsulated);
+            
+            meta = writeHeader(buffer, meta, position);
+            position = stringSerialization(buffer, position, value);
+            
+            writeHeader(buffer, meta, position);
+            position = stringSerialization(buffer, position, formalism);
 
-            buffer.writeInteger(offset, cpCharsetTerminologyIDValueLength);
-            buffer.writeInteger(
-                    offset + INT.getSize(), charsetCodeStringLength);
-            buffer.writeInteger(
-                    offset + 2 * INT.getSize(),
-                    cpLanguageTerminologyIDValueLength);
-            buffer.writeInteger(
-                    offset + 3 * INT.getSize(), languageCodeStringLength);
-            buffer.writeInteger(offset + 4 * INT.getSize(), valueLength);
-            buffer.writeInteger(offset + 5 * INT.getSize(), formalismLength);
-
-            int dataPosition = offset + INT.getSize() * 6;
-            buffer.writeString(
-                    dataPosition, charset.getTerminologyID().getValue());
-            dataPosition += cpCharsetTerminologyIDValueLength;
-            buffer.writeString(dataPosition, charset.getValue());
-            dataPosition += charsetCodeStringLength;
-            buffer.writeString(
-                    dataPosition, language.getTerminologyID().getValue());
-            dataPosition += cpLanguageTerminologyIDValueLength;
-            buffer.writeString(dataPosition, language.getValue());
-            dataPosition += languageCodeStringLength;
-
-            buffer.writeString(dataPosition, value);
-            dataPosition += valueLength;
-            buffer.writeString(dataPosition, formalism);
-            dataPosition += formalismLength;
-
-            return dataPosition;
+            return position;
         }
         
         protected int serialize(Buffer buffer, int offset, 
@@ -1061,72 +1036,31 @@ public class RMObjectSerialization {
             int position = offset;
             DvParsableSerializer dps = new DvParsableSerializer();
             
-            position = dps.serialize(buffer, position, dp.getCharset(), 
-                    dp.getLanguage(), dp.getValue(), dp.getFormalism());
+            position = dps.serialize(buffer, position, 
+                    dp.getDvEncapsulated(), dp.getValue(), dp.getFormalism());
             
             return position;
         }
 
         protected DvParsable deserialize(Buffer buffer, int offset) {
-            int cpCharsetTerminologyIDValueLength = buffer.readInteger(offset);
-            int charsetCodeStringLength
-                    = buffer.readInteger(offset + INT.getSize());
-            int cpLanguageTerminologyIDValueLength
-                    = buffer.readInteger(offset + 2 * INT.getSize());
-            int languageCodeStringLength
-                    = buffer.readInteger(offset + 3 * INT.getSize());
-            int valueLength = buffer.readInteger(offset + 4 * INT.getSize());
-            int formalismLength
-                    = buffer.readInteger(offset + 5 * INT.getSize());
+            int position = offset;
+            
+            DvEncapsulatedSerializer des = new DvEncapsulatedSerializer();
+            
+            int dvEncapsulatedPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            DvEncapsulated dvEncapsulated = des.deserialize(buffer, 
+                    dvEncapsulatedPosition);
+            
+            int valuePosition = buffer.readInteger(position);
+            position += INT.getSize();
+            String value = stringDeserialization(buffer, valuePosition);
+            
+            int formalismPosition = buffer.readInteger(position);
+            String formalism = stringDeserialization(buffer, formalismPosition);
 
-            int dataPosition = offset + 6 * INT.getSize();
-
-            String codePhraseCharsetTerminologyIDValue
-                    = buffer.readString(
-                            dataPosition,
-                            cpCharsetTerminologyIDValueLength);
-            dataPosition += cpCharsetTerminologyIDValueLength;
-
-            String charsetCodeString
-                    = buffer.readString(dataPosition, charsetCodeStringLength);
-            dataPosition += charsetCodeStringLength;
-
-            String cpLanguageTerminologyIDValue
-                    = buffer.readString(
-                            dataPosition,
-                            cpLanguageTerminologyIDValueLength);
-            dataPosition += cpLanguageTerminologyIDValueLength;
-
-            String languageCodeString
-                    = buffer.readString(dataPosition, languageCodeStringLength);
-            dataPosition += languageCodeStringLength;
-
-            String value = buffer.readString(dataPosition, valueLength);
-            dataPosition += valueLength;
-
-            String formalism = buffer.readString(dataPosition, formalismLength);
-
-            TerminologyID terminologyIDCharset
-                    = RMObjectFactory.newTerminologyID(
-                            codePhraseCharsetTerminologyIDValue);
-
-            CodePhrase charset
-                    = RMObjectFactory.newCodePhrase(
-                            terminologyIDCharset,
-                            charsetCodeString);
-
-            TerminologyID terminologyIDLanguage
-                    = RMObjectFactory.newTerminologyID(
-                            cpLanguageTerminologyIDValue);
-
-            CodePhrase language
-                    = RMObjectFactory.newCodePhrase(
-                            terminologyIDLanguage, languageCodeString);
-
-            return RMObjectFactory.newDvParsable(
-                    charset,
-                    language,
-                    value, formalism);
+            return RMObjectFactory.newDvParsable(dvEncapsulated, value, 
+                    formalism);
         }
     }
 

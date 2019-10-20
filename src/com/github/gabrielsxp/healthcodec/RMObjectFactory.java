@@ -141,9 +141,9 @@ public class RMObjectFactory {
         return new UIDBasedID(value);
     }
 
-    public static DvParsable newDvParsable(CodePhrase charset,
-            CodePhrase language, String value, String formalism) {
-        return new DvParsable(charset, language, value, formalism);
+    public static DvParsable newDvParsable(DvEncapsulated dvEncapsulated, 
+            String value, String formalism) {
+        return new DvParsable(dvEncapsulated, value, formalism);
     }
 
     public static DvTimeSpecification newDvTimeSpecification(DvParsable value) {
