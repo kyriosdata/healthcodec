@@ -1570,11 +1570,8 @@ public class RMObjectSerialization {
 
     public static class TermMappingSerializer {
 
-        protected int serialize(
-                Buffer buffer,
-                int offset,
-                CodePhrase target,
-                Match match,
+        protected int serialize(Buffer buffer, int offset, CodePhrase target,
+                Match match, 
                 DvCodedText purpose) throws UnsupportedEncodingException {
             int meta = offset;
             int position = offset + 3 * INT.getSize() + BOOLEAN.getSize();
@@ -1588,15 +1585,26 @@ public class RMObjectSerialization {
             meta = writeHeader(buffer, meta, position);
             position = ms.serialize(buffer, position, match);
             if (hasPurpose) {
-                meta = writeHeader(buffer, meta, hasPurpose, position);
+                writeHeader(buffer, meta, hasPurpose, position);
                 position = dct.serialize(buffer, position,
                         purpose.getDvText(), purpose.getDefiningCode());
             } else {
-                meta = writeHeader(buffer, meta, hasPurpose);
+                writeHeader(buffer, meta, hasPurpose);
             }
             return position;
         }
-
+        
+        protected int serialize(Buffer buffer, int offset, 
+                TermMapping t) throws UnsupportedEncodingException {
+            int position = offset;
+            TermMappingSerializer tms = new TermMappingSerializer();
+            
+            position = tms.serialize(buffer, position, 
+                    t.getTarget(), t.getMatch(), t.getPurpose());
+            
+            return position;
+        }
+        
         protected TermMapping deserialize(Buffer buffer, int offset) {
             int position = offset;
             CodePhraseSerializer cps = new CodePhraseSerializer();
@@ -1604,24 +1612,23 @@ public class RMObjectSerialization {
             DvCodedTextSerializer dct = new DvCodedTextSerializer();
 
             int targetPosition = buffer.readInteger(position);
-            CodePhrase target = cps.deserialize(buffer, targetPosition);
             position += INT.getSize();
+            CodePhrase target = cps.deserialize(buffer, targetPosition);
 
             int matchPosition = buffer.readInteger(position);
+            position += INT.getSize();
             Match match = null;
             try {
                 match = ms.deserialize(buffer, matchPosition);
             } catch (IllegalAccessException ex) {
                 //
             }
-            position += INT.getSize();
 
             boolean hasPurpose = buffer.readBoolean(position);
             position += BOOLEAN.getSize();
-            int purposePosition = 0;
             DvCodedText purpose = null;
             if (hasPurpose) {
-                purposePosition = buffer.readInteger(position);
+                int purposePosition = buffer.readInteger(position);
                 purpose = dct.deserialize(buffer, purposePosition);
                 position += INT.getSize();
             }
