@@ -940,41 +940,20 @@ public class RMObjectSerialization {
 
     public static class DvEncapsulatedSerializer {
 
-        protected int serialize(Buffer buffer,
-                int offset,
-                CodePhrase charset,
+        protected int serialize(Buffer buffer, int offset, CodePhrase charset, 
                 CodePhrase language) throws UnsupportedEncodingException {
-            int cpCharsetTerminologyIDValueLength
-                    = charset.getTerminologyID().getValue().length();
-            int charsetCodeStringLength
-                    = charset.getValue().length();
-            int cpLanguageTerminologyIDValueLength
-                    = language.getTerminologyID().getValue().length();
-            int languageCodeStringLength
-                    = language.getValue().length();
-
-            buffer.writeInteger(offset, cpCharsetTerminologyIDValueLength);
-            buffer.writeInteger(
-                    offset + INT.getSize(), charsetCodeStringLength);
-            buffer.writeInteger(
-                    offset + 2 * INT.getSize(),
-                    cpLanguageTerminologyIDValueLength);
-            buffer.writeInteger(
-                    offset + 3 * INT.getSize(), languageCodeStringLength);
-
-            int dataPosition = offset + INT.getSize() * 4;
-            buffer.writeString(
-                    dataPosition, charset.getTerminologyID().getValue());
-            dataPosition += cpCharsetTerminologyIDValueLength;
-            buffer.writeString(dataPosition, charset.getValue());
-            dataPosition += charsetCodeStringLength;
-            buffer.writeString(
-                    dataPosition, language.getTerminologyID().getValue());
-            dataPosition += cpLanguageTerminologyIDValueLength;
-            buffer.writeString(dataPosition, language.getValue());
-            dataPosition += languageCodeStringLength;
-
-            return dataPosition;
+            int meta = offset;
+            int position = offset + 2 * INT.getSize();
+            
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = cps.serialize(buffer, position, charset);
+            
+            writeHeader(buffer, meta, position);
+            position = cps.serialize(buffer, position, language);
+            
+            return position;
         }
 
         protected int serialize(Buffer buffer, int offset,
@@ -988,47 +967,15 @@ public class RMObjectSerialization {
         }
 
         protected DvEncapsulated deserialize(Buffer buffer, int offset) {
-            int cpCharsetTerminologyIDValueLength = buffer.readInteger(offset);
-            int charsetCodeStringLength
-                    = buffer.readInteger(offset + INT.getSize());
-            int cpLanguageTerminologyIDValueLength
-                    = buffer.readInteger(offset + 2 * INT.getSize());
-            int languageCodeStringLength
-                    = buffer.readInteger(offset + 3 * INT.getSize());
-
-            int dataPosition = offset + 4 * INT.getSize();
-
-            String codePhraseCharsetTerminologyIDValue
-                    = buffer.readString(
-                            dataPosition,
-                            cpCharsetTerminologyIDValueLength);
-            dataPosition += cpCharsetTerminologyIDValueLength;
-            String charsetCodeString
-                    = buffer.readString(dataPosition, charsetCodeStringLength);
-            dataPosition += charsetCodeStringLength;
-            String cpLanguageTerminologyIDValue
-                    = buffer.readString(
-                            dataPosition,
-                            cpLanguageTerminologyIDValueLength);
-            dataPosition += cpLanguageTerminologyIDValueLength;
-            String languageCodeString
-                    = buffer.readString(dataPosition, languageCodeStringLength);
-            TerminologyID terminologyIDCharset
-                    = RMObjectFactory.newTerminologyID(
-                            codePhraseCharsetTerminologyIDValue);
-
-            CodePhrase charset
-                    = RMObjectFactory.newCodePhrase(
-                            terminologyIDCharset,
-                            charsetCodeString);
-
-            TerminologyID terminologyIDLanguage
-                    = RMObjectFactory.newTerminologyID(
-                            cpLanguageTerminologyIDValue);
-
-            CodePhrase language
-                    = RMObjectFactory.newCodePhrase(
-                            terminologyIDLanguage, languageCodeString);
+            int position = offset;
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            
+            int charsetPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            CodePhrase charset = cps.deserialize(buffer, charsetPosition);
+            
+            int languagePosition = buffer.readInteger(position);
+            CodePhrase language = cps.deserialize(buffer, languagePosition);
 
             return RMObjectFactory.newDvEncapsulated(charset, language);
         }
