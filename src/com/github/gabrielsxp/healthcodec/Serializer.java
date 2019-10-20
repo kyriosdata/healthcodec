@@ -15,9 +15,6 @@ package com.github.gabrielsxp.healthcodec;
 
 import com.github.gabrielsxp.healthcodec.RMObject.*;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -28,721 +25,533 @@ public interface Serializer {
     /**
      * Serializador de DvBoolean
      *
-     * @param value
+     * @param d
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeDvBoolean(boolean value)
-            throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeDvBoolean(DvBoolean d);
 
     /**
      * Serializador de DvIdentifier
      *
-     * @param issuer
-     * @param assigner
-     * @param id
-     * @param type
+     * @param d
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvIdentifier(
-            String issuer,
-            String assigner,
-            String id,
-            String type) throws UnsupportedEncodingException;
+            DvIdentifier d) throws UnsupportedEncodingException;
 
     /**
      * Serializador de InternetID
      *
-     * @param value
+     * @param i
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeInternetID(String value)
-            throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeInternetID(
+            InternetID i) throws UnsupportedEncodingException;
 
     /**
      * Serializador de ISO_OID
      *
-     * @param value
+     * @param i
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeISOOID(String value)
-            throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeISOOID(
+            ISO_OID i) throws UnsupportedEncodingException;
 
     /**
      * Serializador de UUID
      *
-     * @param value
+     * @param u
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeUUID(String value)
-            throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeUUID(
+            UUID u) throws UnsupportedEncodingException;
 
     /**
      * Serializador de TerminologyID
      *
-     * @param value
+     * @param t
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeTerminologyID(String value)
-            throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeTerminologyID(
+            TerminologyID t) throws UnsupportedEncodingException;
 
     /**
      * Serializador de GenericID
      *
-     * @param value
-     * @param scheme
+     * @param g
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeGenericID(
-            String value,
-            String scheme) throws UnsupportedEncodingException;
+            GenericID g) throws UnsupportedEncodingException;
 
     /**
      * Serializador de TemplateID
      *
-     * @param value
+     * @param t
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeTemplateID(String value)
-            throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeTemplateID(
+            TemplateID t) throws UnsupportedEncodingException;
 
     /**
      * Serializador de CodePhrase
      *
-     * @param terminologyId
-     * @param codeString
+     * @param c
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeCodePhrase(
-            TerminologyID terminologyId,
-            String codeString) throws UnsupportedEncodingException;
+            CodePhrase c) throws UnsupportedEncodingException;
 
     /**
      * Serializador de DVURI
      *
-     * @param value
+     * @param d
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeDVURI(String value)
-            throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeDVURI(
+            DVURI d) throws UnsupportedEncodingException;
 
     /**
      * Serializador de DVEHRURI
      *
-     * @param value
+     * @param d
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeDVEHRURI(String value)
-            throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeDVEHRURI(
+            DVEHRURI d) throws UnsupportedEncodingException;
 
     /**
      * Serializador de VersionTreeID
      *
-     * @param value
+     * @param v
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeVersionTreeID(String value)
-            throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeVersionTreeID(
+            VersionTreeID v) throws UnsupportedEncodingException;
 
     /**
      * Serializador de ArchetypeID
      *
-     * @param value
+     * @param a
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeArchetypeID(String value)
-            throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeArchetypeID(
+            ArchetypeID a) throws UnsupportedEncodingException;
 
     /**
      * Serializador de ObjectVersionID
      *
-     * @param value
+     * @param o
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeObjectVersionID(String value)
-            throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeObjectVersionID(
+            ObjectVersionID o) throws UnsupportedEncodingException;
+
+    /**
+     * Serializador de HierObjectID
+     *
+     * @param h
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeHierObjectID(
+            HierObjectID h) throws UnsupportedEncodingException;
 
     /**
      * Serializador de ObjectID
      *
-     * @param value
-     * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
-     */
-    RMObjectSerializationClient serializeHierObjectID(String value)
-            throws UnsupportedEncodingException;
-
-    /**
-     * Serializador de ObjectID
-     *
-     * @param value
+     * @param o
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeObjectID(String value)
-            throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeObjectID(
+            ObjectID o) throws UnsupportedEncodingException;
 
     /**
      * Serializador de PartyRef
      *
-     * @param id
-     * @param value
+     * @param p
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializePartyRef(ObjectID id, String value)
-            throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializePartyRef(
+            PartyRef p) throws UnsupportedEncodingException;
 
     /**
      * Serializador de ObjectRef
      *
-     * @param id
-     * @param namespace
-     * @param type
+     * @param o
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeObjectRef(
-            ObjectID id,
-            String namespace,
-            String type) throws UnsupportedEncodingException;
+            ObjectRef o) throws UnsupportedEncodingException;
 
     /**
      * Serializador de LocatableRef
      *
-     * @param id
-     * @param namespace
-     * @param type
-     * @param path (opcional)
+     * @param l
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeLocatableRef(
-            ObjectVersionID id,
-            String namespace,
-            String type,
-            String path) throws UnsupportedEncodingException;
+            LocatableRef l) throws UnsupportedEncodingException;
 
     /**
-     * Serializador de LocatableRef
+     * Serializador de ProportionKind
      *
-     * @param value
+     * @param p
      * @return Instância de RMObjectSerializationClient para chaining
      */
-    RMObjectSerializationClient serializeProportionKind(int value);
+    RMObjectSerializationClient serializeProportionKind(ProportionKind p);
 
     /**
      * Serializador de AccessGroupRef
      *
-     * @param id
+     * @param a
      * @return Instância de RMObjectSerializationClient para chaining
      */
     RMObjectSerializationClient serializeAccessGroupRef(
-            ObjectID id) throws UnsupportedEncodingException;
+            AccessGroupRef a) throws UnsupportedEncodingException;
 
     /**
      * Serializador de PartyIdentified
      *
-     * @param id
-     * @param value
-     * @param name
-     * @param identifiers
+     * @param p
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializePartyIdentified(
-            PartyRef externalRef,
-            String name,
-            List<DvIdentifier> identifiers)
-            throws UnsupportedEncodingException;
+            PartyIdentified p) throws UnsupportedEncodingException;
 
     /**
      * Serializador de Archetyped
      *
-     * @param archetypedId
-     * @param rmVersionLength
-     * @param templateId
+     * @param a
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeArchetyped(ArchetypeID archetypedId,
-            TemplateID templateId,
-            String rmVersionLength) throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeArchetyped(
+            Archetyped a) throws UnsupportedEncodingException;
 
     /**
      * Serializador de DvEncapsulated
      *
-     * @param charset
-     * @param language
+     * @param d
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvEncapsulated(
-            CodePhrase charset,
-            CodePhrase language) throws UnsupportedEncodingException;
+            DvEncapsulated d) throws UnsupportedEncodingException;
 
     /**
      * Serializador de UIDBasedID
      *
-     * @param value
+     * @param u
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeUIDBasedID(
-            String value) throws UnsupportedEncodingException;
+            UIDBasedID u) throws UnsupportedEncodingException;
 
     /**
      * Serializador de DvParsable
      *
-     * @param charset
-     * @param language
-     * @param value
-     * @param formalism
+     * @param d
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvParsable(
-            CodePhrase charset,
-            CodePhrase language,
-            String value,
-            String formalism) throws UnsupportedEncodingException;
+            DvParsable d) throws UnsupportedEncodingException;
 
     /**
      * Serializador de DvTimeSpecification
      *
-     * @param value
+     * @param d
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvTimeSpecification(
-            DvParsable value) throws UnsupportedEncodingException;
+            DvTimeSpecification d) throws UnsupportedEncodingException;
 
     /**
-     * Serializador de Multimedia
+     * Serializador de DvMultimedia
      *
-     * @param dvMultimediaDvEncapsulated
-     * @param alternateText
-     * @param mediaType
-     * @param compressionAlgorithm
-     * @param integrityCheck
-     * @param integrityCheckAlgorithm
-     * @param thumbnail
-     * @param uri
-     * @param data
+     * @param d
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvMultimedia(
-            DvEncapsulated dvMultimediaDvEncapsulated,
-            String alternateText,
-            CodePhrase mediaType,
-            CodePhrase compressionAlgorithm,
-            byte[] integrityCheck,
-            CodePhrase integrityCheckAlgorithm,
-            DvMultimedia thumbnail,
-            DVURI uri,
-            byte[] data) throws UnsupportedEncodingException;
+            DvMultimedia d) throws UnsupportedEncodingException;
 
     /**
      * Serializador de DvText
      *
-     * @param value
-     * @param mappings
-     * @param formatting
-     * @param hyperlink
-     * @param language
-     * @param charset
+     * @param d
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeDvText(String value,
-            List<RMObject.TermMapping> mappings,
-            String formatting,
-            DVURI hyperlink,
-            CodePhrase language,
-            CodePhrase charset) throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeDvText(
+            DvText d) throws UnsupportedEncodingException;
 
     /**
      * Serilizador de DvCodedText
      *
-     * @param dvText
-     * @param definingCode
+     * @param d
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeDvCodedText(DvText dvText,
-            CodePhrase definingCode) throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeDvCodedText(
+            DvCodedText d) throws UnsupportedEncodingException;
 
     /**
      * Serializador de TermMapping
      *
-     * @param target
-     * @param match
-     * @param purpose
+     * @param t
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeTermMapping(CodePhrase target,
-            Match match,
-            DvCodedText purpose) throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeTermMapping(
+            TermMapping t) throws UnsupportedEncodingException;
 
     /**
      * Serializador de Link
      *
-     * @param meaning
-     * @param type
-     * @param target
-     * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
-     */
-    RMObjectSerializationClient serializeLink(DvText meaning, DvText type,
-            DVEHRURI target) throws UnsupportedEncodingException;
-
-    /**
-     * Serializador de Link
-     *
-     * @param link
+     * @param l
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeLink(
-            Link link) throws UnsupportedEncodingException;
+            Link l) throws UnsupportedEncodingException;
 
     /**
      * Serializador de DvState
      *
-     * @param value
-     * @param terminal
+     * @param d
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvState(
-            DvCodedText value,
-            String terminal) throws UnsupportedEncodingException;
-
-    /**
-     * Serializador de DvState
-     *
-     * @param dvState
-     * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
-     */
-    RMObjectSerializationClient serializeDvState(
-            DvState dvState) throws UnsupportedEncodingException;
+            DvState d) throws UnsupportedEncodingException;
 
     /**
      * Serializador de DvParagraph
      *
-     * @param items
+     * @param d
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvParagraph(
-            List<DvText> items) throws UnsupportedEncodingException;
-
-    /**
-     * Serializador de DvParagraph
-     *
-     * @param dvparagraph
-     * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
-     */
-    RMObjectSerializationClient serializeDvParagraph(
-            DvParagraph dvparagraph) throws UnsupportedEncodingException;
-
-    /**
-     * Serializador de PartyProxy
-     *
-     * @param externalRef
-     * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
-     */
-    RMObjectSerializationClient serializePartyProxy(
-            PartyRef externalRef) throws UnsupportedEncodingException;
+            DvParagraph d) throws UnsupportedEncodingException;
 
     /**
      * *
      * Serializador de PartyProxy
      *
-     * @param partyProxy
+     * @param p
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializePartyProxy(
-            PartyProxy partyProxy) throws UnsupportedEncodingException;
+            PartyProxy p) throws UnsupportedEncodingException;
+
 
     /**
      * Serializador de FeederAuditDetails
      *
-     * @param systemID
-     * @param provider
-     * @param location
-     * @param subject
-     * @param versionID
-     * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
-     */
-    RMObjectSerializationClient serializeFeederAuditDetails(String systemID,
-            PartyIdentified provider, PartyIdentified location,
-            /*DvDateTime time,*/ PartyProxy subject,
-            String versionID) throws UnsupportedEncodingException;
-
-    /**
-     * Serializador de FeederAuditDetails
-     *
-     * @param fad
+     * @param f
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeFeederAuditDetails(
-            FeederAuditDetails fad) throws UnsupportedEncodingException;
-    
+            FeederAuditDetails f) throws UnsupportedEncodingException;
+        
     /**
      * Serializador de FeederAudit
      * 
-     * @param originatingSystemAudit
-     * @param originatingSystemItemIDs
-     * @param feederSystemAudit
-     * @param feederSystemItemIDs
-     * @param originalContent
+     * @param f
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeFeederAudit(
-            FeederAuditDetails originatingSystemAudit,
-            List<DvIdentifier> originatingSystemItemIDs,
-            FeederAuditDetails feederSystemAudit,
-            List<DvIdentifier> feederSystemItemIDs,
-            DvEncapsulated originalContent) throws UnsupportedEncodingException;
-    
-    /**
-     * Serializador de FeederAudit
-     * @param fa
-     * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
-     */
-    RMObjectSerializationClient serializeFeederAudit(
-            FeederAudit fa) throws UnsupportedEncodingException;
-    
-    /**
-     * Serializador de Locatable
-     * @param uid
-     * @param archetypeNodeId
-     * @param name
-     * @param archetypeDetails
-     * @param feederAudit
-     * @param links
-     * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
-     */
-    RMObjectSerializationClient serializeLocatable(UIDBasedID uid, 
-            String archetypeNodeId, DvText name, Archetyped archetypeDetails,
-            FeederAudit feederAudit, 
-            Set<Link> links) throws UnsupportedEncodingException;
+            FeederAudit f) throws UnsupportedEncodingException;
     
     /**
      * Serializador de Locatable
      * 
-     * @param locatable
-     * @return
+     * @param l
+     * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeLocatable(
-            Locatable locatable) throws UnsupportedEncodingException;
+            Locatable l) throws UnsupportedEncodingException;
     
     /**
      * Serilizador de PartyRelated
-     * @param pr
+     * 
+     * @param p
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializePartyRelated(
-            PartyRelated pr) throws UnsupportedEncodingException;
-    
-    /**
-     * Serializador de PartyRelated
-     * 
-     * @param pi
-     * @param relationship
-     * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
-     */
-    RMObjectSerializationClient serializePartyRelated(
-            PartyIdentified pi, 
-            DvCodedText relationship) throws UnsupportedEncodingException;
+            PartyRelated p) throws UnsupportedEncodingException;
     
     /**
      * Serializador de PartySelf
      * 
-     * @param externalRef
+     * @param p
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializePartySelf(
-            PartyRef externalRef) throws UnsupportedEncodingException;
+            PartySelf p) throws UnsupportedEncodingException;
+    
     
     /**
-     * Serializador de PartySelf
+     * Serializador de ResourceDescriptionItem
      * 
-     * @param ps
-     * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
-     */
-    RMObjectSerializationClient serializePartySelf(
-            PartySelf ps) throws UnsupportedEncodingException;
-    
-    /**
-     * Serializador de ResourceDescriptionItem
-     * @param language
-     * @param purpose
-     * @param keywords
-     * @param use
-     * @param misuse
-     * @param copyright
-     * @param originalResourceUri
-     * @param otherDetails
+     * @param r
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeResourceDescriptionItem(
-            CodePhrase language, String purpose, List<String> keywords, 
-            String use, String misuse, String copyright, 
-            Map<String, String> originalResourceUri, 
-            Map<String, String> otherDetails) 
-                throws UnsupportedEncodingException;
-    
-    /**
-     * Serializador de ResourceDescriptionItem
-     * @param rdi
-     * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException 
-     */
-    RMObjectSerializationClient serializeResourceDescriptionItem(
-            ResourceDescriptionItem rdi) throws UnsupportedEncodingException;
+            ResourceDescriptionItem r) throws UnsupportedEncodingException;
     
     /**
      * Serializador de TranslationDetails
-     * @param td
+     * 
+     * @param t
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeTranslationDetails(
-            TranslationDetails td) throws UnsupportedEncodingException;
+            TranslationDetails t) throws UnsupportedEncodingException;
     
     /**
      * Serializador de Item
-     * @param item
+     * 
+     * @param i
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeItem(
-            Item item) throws UnsupportedEncodingException;
+            Item i) throws UnsupportedEncodingException;
     
     /**
      * Serializador de Cluster
-     * @param cluster
+     * 
+     * @param c
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeCluster(
-            Cluster cluster) throws UnsupportedEncodingException;
+            Cluster c) throws UnsupportedEncodingException;
     
     /**
      * Serializador de Element
-     * @param element
+     * 
+     * @param e
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeElement(
-            Element element) throws UnsupportedEncodingException;
+            Element e) throws UnsupportedEncodingException;
     
     /**
      * Serializador de DataStructure
-     * @param ds
+     * 
+     * @param d
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeDataStructure(
-            DataStructure ds) throws UnsupportedEncodingException;
+            DataStructure d) throws UnsupportedEncodingException;
     
     /**
      * Serializador de ItemList
-     * @param il
+     * 
+     * @param i
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeItemList(
-            ItemList il) throws UnsupportedEncodingException;
+            ItemList i) throws UnsupportedEncodingException;
     
     /**
      * Serializador de ItemStructure
-     * @param ds
+     * @param i
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeItemStructure(
-            DataStructure ds) throws UnsupportedEncodingException;
+            ItemStructure i) throws UnsupportedEncodingException;
     
     /**
      * Serializador de ItemSingle
-     * @param is
+     * 
+     * @param i
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeItemSingle(
-            ItemSingle is) throws UnsupportedEncodingException;
+            ItemSingle i) throws UnsupportedEncodingException;
     
     /**
      * Serializador de ItemTable
-     * @param it
+     * 
+     * @param i
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeItemTable(
-            ItemTable it) throws UnsupportedEncodingException; 
+            ItemTable i) throws UnsupportedEncodingException; 
     
     /**
      * Serializador de ItemTree
-     * @param it
+     * 
+     * @param i
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeItemTree(
-            ItemTree it) throws UnsupportedEncodingException; 
+            ItemTree i) throws UnsupportedEncodingException; 
     
     /**
      * Serializador de PartyIdentity
-     * @param pi
+     * 
+     * @param p
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
-    RMObjectSerializationClient serializePartyIdentity(PartyIdentity pi)
+    RMObjectSerializationClient serializePartyIdentity(PartyIdentity p)
                 throws UnsupportedEncodingException; 
     
     /**
      * Serializador de PartyRelationship
-     * @param pr
+     * 
+     * @param p
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializePartyRelationship(
-            PartyRelationship pr) throws UnsupportedEncodingException; 
+            PartyRelationship p) throws UnsupportedEncodingException; 
     
     /**
      * Serializador de Address
+     * 
      * @param a
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
@@ -752,6 +561,7 @@ public interface Serializer {
     
     /**
      * Serializador de Contact
+     * 
      * @param c
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
@@ -761,6 +571,7 @@ public interface Serializer {
     
     /**
      * Serializador de Party
+     * 
      * @param p
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
@@ -770,6 +581,7 @@ public interface Serializer {
     
     /**
      * Serializador de Capability
+     * 
      * @param c
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
@@ -779,6 +591,7 @@ public interface Serializer {
     
     /**
      * Serializador de Role
+     * 
      * @param r
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
@@ -788,6 +601,7 @@ public interface Serializer {
     
     /**
      * Serializador de Actor
+     * 
      * @param a
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
@@ -797,6 +611,7 @@ public interface Serializer {
     
     /**
      * Serializador de Agent
+     * 
      * @param a
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
@@ -806,6 +621,7 @@ public interface Serializer {
     
     /**
      * Serializador de Group
+     * 
      * @param g
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
@@ -815,6 +631,7 @@ public interface Serializer {
     
     /**
      * Serializador de Organisation
+     * 
      * @param o
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
@@ -824,6 +641,7 @@ public interface Serializer {
     
     /**
      * Serializador de Person
+     * 
      * @param p
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
@@ -833,6 +651,7 @@ public interface Serializer {
     
     /**
      * Serializador de InstructionDetails
+     * 
      * @param id
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
@@ -842,6 +661,7 @@ public interface Serializer {
     
     /**
      * Serializador de ISMTransition
+     * 
      * @param ism
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
@@ -851,6 +671,7 @@ public interface Serializer {
     
     /**
      * Serializador de Activity
+     * 
      * @param a
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
