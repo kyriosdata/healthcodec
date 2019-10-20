@@ -874,29 +874,30 @@ public class RMObjectSerialization {
 
     static class ArchetypedSerializer {
 
-        protected int serialize(
-                Buffer buffer,
-                int offset,
-                ArchetypeID archetypeId,
-                TemplateID templateId,
+        protected int serialize(Buffer buffer, int offset,
+                ArchetypeID archetypeId,TemplateID templateId,
                 String rmVersion) throws UnsupportedEncodingException {
-            int archetypeIDValueLength = archetypeId.getValue().length();
-            int templateIDValueLength = templateId.getValue().length();
-            int rmVersionLength = rmVersion.length();
-
-            buffer.writeInteger(offset, archetypeIDValueLength);
-            buffer.writeInteger(offset + INT.getSize(), templateIDValueLength);
-            buffer.writeInteger(offset + 2 * INT.getSize(), rmVersionLength);
-
-            int dataPosition = offset + 3 * INT.getSize();
-            buffer.writeString(dataPosition, archetypeId.getValue());
-            dataPosition += archetypeIDValueLength;
-            buffer.writeString(dataPosition, templateId.getValue());
-            dataPosition += templateIDValueLength;
-            buffer.writeString(dataPosition, rmVersion);
-            dataPosition += rmVersionLength;
-
-            return dataPosition;
+            int meta = offset;
+            int position = offset + 3 * INT.getSize() + BOOLEAN.getSize();
+            
+            ArchetypeIDSerializer ais = new ArchetypeIDSerializer();
+            TemplateIDSerializer tis = new TemplateIDSerializer();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = ais.serialize(buffer, position, archetypeId);
+            
+            boolean hasTemplateId = templateId != null;
+            if(hasTemplateId){
+                meta = writeHeader(buffer, meta, hasTemplateId, position);
+                position = tis.serialize(buffer, position, templateId);
+            } else {
+                meta = writeHeader(buffer, meta, hasTemplateId);
+            }
+            
+            writeHeader(buffer, meta, position);
+            position = stringSerialization(buffer, position, rmVersion);
+            
+            return position;
         }
 
         protected int serialize(Buffer buffer, int offset,
@@ -911,30 +912,27 @@ public class RMObjectSerialization {
         }
 
         protected Archetyped deserialize(Buffer buffer, int offset) {
-            int archetypeIDValueLength = buffer.readInteger(offset);
-            int templateIDValueLength = buffer.readInteger(
-                    offset + INT.getSize());
-            int rmVersionLength = buffer.readInteger(offset + 2 * INT.getSize());
-
-            int dataPosition = offset + 3 * INT.getSize();
-
-            String archetypeIDValue = buffer.readString(
-                    dataPosition, archetypeIDValueLength);
-
-            dataPosition += archetypeIDValueLength;
-
-            String templateIDValue = buffer.readString(
-                    dataPosition, templateIDValueLength);
-
-            dataPosition += templateIDValueLength;
-
-            String rmVersion = buffer.readString(dataPosition, rmVersionLength);
-
-            ArchetypeID archetypeId = RMObjectFactory.
-                    newArchetypeID(archetypeIDValue);
-            TemplateID templateId = RMObjectFactory.
-                    newTemplateID(templateIDValue);
-
+            int position = offset;
+            ArchetypeIDSerializer ais = new ArchetypeIDSerializer();
+            TemplateIDSerializer tis = new TemplateIDSerializer();
+            
+            int archetypeIdPosition = buffer.readInteger(position);
+            position += INT.getSize();
+            ArchetypeID archetypeId = ais.deserialize(
+                    buffer, archetypeIdPosition);
+            
+            boolean hasTemplateId = buffer.readBoolean(position);
+            position += BOOLEAN.getSize();
+            TemplateID templateId = null;
+            if(hasTemplateId){
+                int templateIdPosition = buffer.readInteger(position);
+                position += INT.getSize();
+                templateId = tis.deserialize(buffer, templateIdPosition);
+            }
+            
+            int rmVersionPosition = buffer.readInteger(position);
+            String rmVersion = stringDeserialization(buffer, rmVersionPosition);
+            
             return RMObjectFactory.
                     newArchetyped(archetypeId, templateId, rmVersion);
         }
