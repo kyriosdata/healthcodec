@@ -736,7 +736,10 @@ public class RMObjectSerialization {
             LocatableRefSerializer lrs = new LocatableRefSerializer();
 
             position = lrs.serialize(buffer, position,
-                    lr.getId(), lr.getNamespace(), lr.getType(), lr.getPath());
+                    RMObjectFactory.newObjectVersionID(
+                            lr.getObjectRef().getId().getValue()), 
+                    lr.getObjectRef().getNamespace(), 
+                    lr.getObjectRef().getType(), lr.getPath());
 
             return position;
         }

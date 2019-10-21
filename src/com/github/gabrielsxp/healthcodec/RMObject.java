@@ -330,33 +330,23 @@ public class RMObject {
 
     public static class LocatableRef {
 
-        private final ObjectVersionID id;
-        private final String namespace;
-        private final String type;
+        private final ObjectRef objectRef;
         private final String path;
-
-        public ObjectVersionID getId() {
-            return id;
-        }
-
-        public String getNamespace() {
-            return namespace;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public String getPath() {
-            return path;
-        }
-
+        
         protected LocatableRef(ObjectVersionID id, String namespace, String type,
                 String path) {
-            this.id = id;
-            this.namespace = namespace;
-            this.type = type;
+            this.objectRef = RMObjectFactory.newObjectRef(
+                    RMObjectFactory.newObjectID(id.getUIDBasedID().getValue()), 
+                    namespace, type);
             this.path = path;
+        }
+        
+        public ObjectRef getObjectRef() {
+            return objectRef;
+        }
+        
+        public String getPath() {
+            return path;
         }
     }
 
