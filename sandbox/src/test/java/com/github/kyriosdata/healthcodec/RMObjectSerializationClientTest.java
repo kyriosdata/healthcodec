@@ -64,7 +64,9 @@ class RMObjectSerializationClientTest {
         String id = "id";
         String type = "type";
 
-        s.serializeDvIdentifier(issuer, assigner, id, type);
+        RMObject.DvIdentifier dvi = new RMObject.DvIdentifier(issuer,
+                assigner, id, type);
+        s.serializeDvIdentifier(dvi);
         RMObject.DvIdentifier di = s.deserializeDvIdentifier();
 
         assertEquals(issuer, di.getIssuer());

@@ -22,9 +22,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Classe Responsável por primeiramente encapsular o
- * * buffer de dados e fornecer as operações de E/S sobre o mesmo.
- *
- * @author Gabriel
+ * buffer de dados e fornecer as operações de E/S sobre o mesmo.
  */
 public class Buffer {
 
@@ -39,9 +37,10 @@ public class Buffer {
      */
     private ByteBuffer buffer;
 
-    //Impede a criação desnecessária da instância
-    Buffer() {
-
+    /**
+     * Evita criação desnecessária de instância.
+     */
+    private Buffer() {
     }
 
     /**
@@ -49,10 +48,6 @@ public class Buffer {
      * recebido com entrada em um ByteBuffer que será armazenado
      * no atributo da classe
      *
-     * @param data array de bytes que é recebido como entrada
-     *             contendo os headers (metadados e informações importantes
-     *             como o tamanho de uma string, por exemplo) e os conteúdos
-     *             associado a cada header presente no array
      * @return Retorna uma instância com o buffer encapsulado e pronto para
      * as operações de E/S
      */
@@ -108,7 +103,7 @@ public class Buffer {
      * @throws IndexOutOfBoundsException no caso de uma posição maior que o
      *                                   tamanho do array
      * @throws ReadOnlyBufferException   no caso do buffer ser apenas para
-     * escrita
+     *                                   escrita
      */
     public void writeInteger(int position, int i) {
         buffer.position(position);
@@ -170,6 +165,8 @@ public class Buffer {
     }
 
     /**
+     * TODO Não é o caso de usar System.arraycopy?
+     *
      * Função responsável por escrever um array de bytes do buffer a partir de
      * uma posição inicial e da quantidade de bytes que serão lidos a partir
      * desta posição
@@ -264,7 +261,7 @@ public class Buffer {
      * @throws IndexOutOfBoundsException no caso de uma posição maior que o
      *                                   tamanho do array
      * @throws ReadOnlyBufferException   no caso do buffer ser apenas para
-     * escrita
+     *                                   escrita
      */
     public void writeBoolean(int position, boolean b)
             throws IndexOutOfBoundsException,
