@@ -213,14 +213,14 @@ public class RMObject {
 
     public static class DVEHRURI {
 
-        private final String value;
+        private final DVURI dvuri;
 
         protected DVEHRURI(String value) {
-            this.value = value;
+            this.dvuri = RMObjectFactory.newDVURI(value);
         }
 
-        public String getValue() {
-            return value;
+        public DVURI getDvuri() {
+            return dvuri;
         }
     }
 

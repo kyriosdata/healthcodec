@@ -451,7 +451,8 @@ public class RMObjectSerialization {
             DVEHRURISerializer des = new DVEHRURISerializer();
             int position = offset;
 
-            position = des.serialize(buffer, position, dvehruri.getValue());
+            position = des.serialize(buffer, position, 
+                    dvehruri.getDvuri().getValue());
 
             return position;
         }
