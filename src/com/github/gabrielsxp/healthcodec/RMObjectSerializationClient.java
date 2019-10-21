@@ -20,7 +20,8 @@ import java.io.UnsupportedEncodingException;
 
 /**
  *
- * @author Gabriel Classe responsável por fornecer os métodos necessários para o
+ * @author Gabriel 
+ * Classe responsável por fornecer os métodos necessários para o
  * cliente serializar e deserializar os atributos das classes do modelo de
  * referência
  */
@@ -106,7 +107,35 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         DvIdentifierSerializer d = new DvIdentifierSerializer();
         return d.deserialize(buffer, getOffsetFromID(DVIDENTIFIER));
     }
-
+    
+    /**
+     * Serializador de UID
+     * 
+     * @param u
+     * @return instância de RMObjectSerializationClient atual
+     * @throws UnsupportedEncodingException 
+     */
+    @Override
+    public RMObjectSerializationClient serializeUID(
+            UID u) throws UnsupportedEncodingException {
+        UIDSerializer s = new UIDSerializer();
+        register(UID, offset);
+        setOffset(s.serialize(buffer, offset, u));
+        
+        return this;
+    }
+    
+    /**
+     * Deserializador de UID
+     * 
+     * @return nova instância de UID
+     */
+    @Override
+    public UID deserializeUID() {
+        UIDSerializer d = new UIDSerializer();
+        return d.deserialize(buffer, getOffsetFromID(UID));
+    }
+    
     /**
      * Serializador de InternetID
      *

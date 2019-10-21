@@ -34,7 +34,14 @@ public interface Deserializer {
      * @return Instância de DvIdentifier
      */
     DvIdentifier deserializeDvIdentifier();
-
+    
+    /**
+     * Deserializador de UID;
+     * 
+     * @return Instância de UID
+     */
+    UID deserializeUID();
+    
     /**
      * Deserializador de InternetID
      *

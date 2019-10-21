@@ -67,6 +67,18 @@ public class RMObject {
             return type;
         }
     }
+    
+    public static class UID {
+        private final String value;
+
+        public UID(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
 
     public static class InternetID {
 

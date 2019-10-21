@@ -49,7 +49,17 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeInternetID(
             InternetID i) throws UnsupportedEncodingException;
-
+    
+    /**
+     * Serializador de UID
+     *
+     * @param u
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws java.io.UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeUID(
+            UID u) throws UnsupportedEncodingException;
+    
     /**
      * Serializador de ISO_OID
      *

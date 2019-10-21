@@ -150,7 +150,33 @@ public class RMObjectSerialization {
             return list;
         }
     }
-
+    
+    static class UIDSerializer {
+        protected int serialize(Buffer buffer, int offset, 
+                String value) throws UnsupportedEncodingException {
+            int position = offset;
+            position = stringSerialization(buffer, position, value);
+            
+            return position;
+        }
+        
+        protected int serialize(Buffer buffer, int offset, 
+                UID u) throws UnsupportedEncodingException {
+            int position = offset;
+            UIDSerializer us = new UIDSerializer();
+            position = us.serialize(buffer, position, u.getValue());
+            
+            return position;
+        }
+        
+        protected UID deserialize(Buffer buffer, int offset){
+            int position = offset;
+            String value = stringDeserialization(buffer, position);
+            
+            return RMObjectFactory.newUID(value);
+        }
+    }
+    
     static class InternetIDSerializer {
 
         protected int serialize(Buffer buffer, int offset, String value)

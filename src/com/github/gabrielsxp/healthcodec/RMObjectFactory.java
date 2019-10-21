@@ -28,12 +28,15 @@ public class RMObjectFactory {
         return new DvBoolean(value);
     }
 
-    public static DvIdentifier newDvIdentifier(
-            String issuer, String assigner, String id, String type
-    ) {
+    public static DvIdentifier newDvIdentifier(String issuer, String assigner, 
+            String id, String type) {
         return new DvIdentifier(issuer, assigner, id, type);
     }
-
+    
+    public static UID newUID(String value){
+        return new UID(value);
+    }
+    
     public static InternetID newInternetID(String value) {
         return new InternetID(value);
     }
@@ -62,7 +65,7 @@ public class RMObjectFactory {
             TerminologyID terminologyID, String value) {
         return new CodePhrase(terminologyID, value);
     }
-
+    
     public static DVURI newDVURI(String value) {
         return new DVURI(value);
     }
