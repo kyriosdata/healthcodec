@@ -39,12 +39,27 @@ public enum PrimitiveTypeID {
      */
     private final int size;
 
-    private PrimitiveTypeID(int codigo, int tamanho) {
+    PrimitiveTypeID(int codigo, int tamanho) {
         id = codigo;
         size = tamanho;
     }
 
-    public int getValue() {
+    /**
+     * Recupera o identificador único do tipo.
+     *
+     * @return O identificador único do tipo.
+     */
+    public int getId() {
         return id;
+    }
+
+    /**
+     * Retorna o tamanho em bytes necessário para armazenar um valor do tipo
+     * primitivo em questão.
+     *
+     * @return O tamanho em bytes para armazenar um valor do tipo em questão.
+     */
+    public int getTamanho() {
+        return size;
     }
 }
