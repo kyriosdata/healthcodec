@@ -252,14 +252,14 @@ public class RMObject {
 
     public static class ObjectVersionID {
 
-        private final String value;
+        private final UIDBasedID uidBasedID;
 
         protected ObjectVersionID(String value) {
-            this.value = value;
+            this.uidBasedID = RMObjectFactory.newUIDBasedID(value);
         }
 
-        public String getValue() {
-            return value;
+        public UIDBasedID getUidbasedid() {
+            return uidBasedID;
         }
     }
 

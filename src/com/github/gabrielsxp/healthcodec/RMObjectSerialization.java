@@ -530,7 +530,8 @@ public class RMObjectSerialization {
                 throws UnsupportedEncodingException {
             int position = offset;
             ObjectVersionIDSerializer os = new ObjectVersionIDSerializer();
-            position = os.serialize(buffer, position, o.getValue());
+            position = os.serialize(buffer, position, 
+                    o.getUidbasedid().getValue());
             
             return position;
         }
