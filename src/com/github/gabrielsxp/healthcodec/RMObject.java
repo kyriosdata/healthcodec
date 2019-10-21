@@ -108,14 +108,14 @@ public class RMObject {
 
     public static class UUID {
 
-        private final String value;
+        private final UID uid;
 
         protected UUID(String value) {
-            this.value = value;
+            this.uid = RMObjectFactory.newUID(value);
         }
 
-        public String getValue() {
-            return value;
+        public UID getUid() {
+            return uid;
         }
     }
 

@@ -238,14 +238,17 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            return stringSerialization(buffer, offset, value);
+            int position = offset;
+            position = stringSerialization(buffer, position, value);
+            
+            return position;
         }
         
         protected int serialize(Buffer buffer, int offset, 
                 UUID uuid) throws UnsupportedEncodingException{
             int position = offset;
             UUIDSerializer us = new UUIDSerializer();
-            position = us.serialize(buffer, position, uuid.getValue());
+            position = us.serialize(buffer, position, uuid.getUid().getValue());
             
             return position;
         }
