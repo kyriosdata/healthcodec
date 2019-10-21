@@ -21,8 +21,18 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Classe Responsável por primeiramente encapsular o
- * buffer de dados e fornecer as operações de E/S sobre o mesmo.
+ * Classe responsável por encapsular operações de leitura e escrita de
+ * valores de tipos "primitivos", empregados pelo modelo de referência do
+ * openEHR, em um vetor de bytes.
+ *
+ * <p>Cada um dos tipos primitivos conta com uma operação de leitura e outra
+ * de escrita. Além dos tipos primitivos "clássicos", a saber, <em>byte</em>,
+ * <em>int</em> e <em>boolean</em>, também há as operações de leitura e
+ * escrita para sequências de caracteres (<em>String</em>) e vetor de bytes
+ * (<em>byte[]</em>.
+ *
+ * TODO não localizei o double??!!!
+ * </p>
  */
 public class Buffer {
 
@@ -75,6 +85,32 @@ public class Buffer {
     }
 
     /**
+     * Função responsável por ler 1 byte do buffer e retorná-lo
+     *
+     * @param position Posição do array
+     * @return byteValue correspondente
+     * @throws BufferUnderflowException no caso de não conseguir ler 4 bytes
+     *                                  do buffer
+     */
+    public byte readByte(int position) throws BufferUnderflowException {
+        return buffer.get(position);
+    }
+
+    /**
+     * Função responsável por escrever um único byte no buffer
+     *
+     * @param position Posição do array
+     * @param b byte que será escrito
+     * @throws IndexOutOfBoundsException no caso de uma posição maior que o
+     * tamanho do array
+     * @throws ReadOnlyBufferException no caso do buffer ser apenas para escrita
+     */
+    public void writeByte(int position, byte b) {
+        buffer.position(position);
+        buffer.put(position, b);
+    }
+
+    /**
      * Função responsável por ler 4 bytes sequenciais do buffer, a partir da
      * posição indicada, e retornar o número inteiro correspondente.
      *
@@ -104,32 +140,6 @@ public class Buffer {
     public void writeInteger(int position, int valor) {
         buffer.position(position); // TODO se não puder remove, documente!
         buffer.putInt(position, valor);
-    }
-
-    /**
-     * Função responsável por ler 1 byte do buffer e retorná-lo
-     *
-     * @param position Posição do array
-     * @return byteValue correspondente
-     * @throws BufferUnderflowException no caso de não conseguir ler 4 bytes
-     *                                  do buffer
-     */
-    public byte readByte(int position) throws BufferUnderflowException {
-        return buffer.get(position);
-    }
-
-    /**
-     * Função responsável por escrever um único byte no buffer
-     *
-     * @param position Posição do array
-     * @param b byte que será escrito
-     * @throws IndexOutOfBoundsException no caso de uma posição maior que o
-     * tamanho do array
-     * @throws ReadOnlyBufferException no caso do buffer ser apenas para escrita
-     */
-    public void writeByte(int position, byte b) {
-        buffer.position(position);
-        buffer.put(position, b);
     }
 
     /**
