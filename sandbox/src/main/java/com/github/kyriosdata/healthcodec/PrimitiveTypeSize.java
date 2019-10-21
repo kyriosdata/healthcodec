@@ -15,7 +15,7 @@
 package com.github.kyriosdata.healthcodec;
 
 /**
- *
+ * TODO veja como o tamanho foi incorporado em PrimitiveTypeID
  * @author Gabriel
  */
 public enum PrimitiveTypeSize {

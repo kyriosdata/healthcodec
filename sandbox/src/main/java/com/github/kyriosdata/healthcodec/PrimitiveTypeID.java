@@ -15,21 +15,33 @@
 package com.github.kyriosdata.healthcodec;
 
 /**
+ * Identificador de tipo primitivo.
  *
- * @author Gabriel
+ * TODO não está faltando vetor de byte e boolean?
  */
 public enum PrimitiveTypeID {
         
-    INT(0),
-    DOUBLE(1),
-    BYTE(2),
-    CHAR(3),
-    STRING(4);
-        
+    INT(0,4),
+    DOUBLE(1,8),
+    BYTE(2,1),
+    CHAR(3,2),
+    STRING(4, -1);
+
+    /**
+     * Código que identifica unicamente o tipo primitivo.
+     */
     private final int id;
 
-    private PrimitiveTypeID(int id) {
-        this.id = id;
+    /**
+     * Tamanho em bytes necessário para armazenar um valor do tipo em questão.
+     * O valor {@code -1} é empregado para tipo de tamanho variável, a saber,
+     * sequências de caracteres e vetores de bytes.
+     */
+    private final int size;
+
+    private PrimitiveTypeID(int codigo, int tamanho) {
+        id = codigo;
+        size = tamanho;
     }
 
     public int getValue() {
