@@ -32,8 +32,7 @@ public class Buffer {
     private static final int MAX_SIZE_BUFFER = 1024;
 
     /**
-     * Buffer que será utilizado para armazenar os headers e os dados passados
-     * como argumento na função serialize. Veja {@link #serialize(byte[])}
+     * Estrutura empregada para armazenamento.
      */
     private ByteBuffer buffer;
 
@@ -65,10 +64,6 @@ public class Buffer {
      * recebido com entrada em um ByteBuffer que será armazenado
      * no atributo da classe
      *
-     * @param data array de bytes que é recebido como entrada
-     *             contendo os headers (metadados e informações importantes
-     *             como o tamanho de uma string, por exemplo) e os conteúdos
-     *             associado a cada header presente no array
      * @return Retorna uma instância com o buffer encapsulado e pronto para
      * as operações de E/S
      */
@@ -80,34 +75,35 @@ public class Buffer {
     }
 
     /**
-     * Função responsável por ler 4 bytes do buffer e retornar o número
-     * inteiro que corresponde a sequência de bytes lida.
+     * Função responsável por ler 4 bytes sequenciais do buffer, a partir da
+     * posição indicada, e retornar o número inteiro correspondente.
      *
-     * @param position Posição do array
-     * @return intValue Valor inteiro correspondente aos 4 btyes lidos na
-     * operação
+     * @param position Posição inicial de leitura no <em>buffer</em>.
+     * @return Valor inteiro correspondente aos 4 btyes lidos a partir da
+     * posição indicada.
+     *
      * @throws BufferUnderflowException no caso de não conseguir ler 4 bytes do
      *                                  buffer
      */
     public int readInteger(int position) throws BufferUnderflowException {
-        int intValue;
-        intValue = buffer.getInt(position);
-        return intValue;
+        return buffer.getInt(position);
     }
 
     /**
-     * Função responsável por escrever um número inteiro (4 bytes) no buffer
+     * Função responsável por armazenar o valor do inteiro fornecido a partir
+     * da posição indicada.
      *
-     * @param position Posição do array
-     * @param i        Número inteiro que será escrito
+     * @param position A posição inicial da escrita do valor inteiro no
+     *                 <em>buffer</em>.
+     * @param valor        Valor a ser armazenado no <em>buffer</em>.
      * @throws IndexOutOfBoundsException no caso de uma posição maior que o
      *                                   tamanho do array
      * @throws ReadOnlyBufferException   no caso do buffer ser apenas para
      *                                   escrita
      */
-    public void writeInteger(int position, int i) {
-        buffer.position(position);
-        buffer.putInt(position, i);
+    public void writeInteger(int position, int valor) {
+        buffer.position(position); // TODO se não puder remove, documente!
+        buffer.putInt(position, valor);
     }
 
     /**
@@ -119,12 +115,10 @@ public class Buffer {
      *                                  do buffer
      */
     public byte readByte(int position) throws BufferUnderflowException {
-        byte byteValue;
-        byteValue = buffer.get(position);
-        return byteValue;
+        return buffer.get(position);
     }
 
-    /*
+    /**
      * Função responsável por escrever um único byte no buffer
      *
      * @param position Posição do array
@@ -246,11 +240,8 @@ public class Buffer {
      *                                  buffer
      */
     public boolean readBoolean(int position) throws BufferUnderflowException {
-        boolean booleanValue;
-        byte byteValue;
-        byteValue = buffer.get(position);
-        booleanValue = byteValue == 1;
-        return booleanValue;
+        byte byteValue = buffer.get(position);
+        return byteValue == 1;
     }
 
     /**
