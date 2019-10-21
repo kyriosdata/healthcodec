@@ -332,24 +332,37 @@ public class RMObjectSerialization {
 
     static class TerminologyIDSerializer {
 
-        protected int serialize(Buffer buffer, int offset, String value)
-                throws UnsupportedEncodingException {
-            int position = offset;
-            return stringSerialization(buffer, position, value);
+        protected int serialize(Buffer buffer, int offset, String name, 
+                String version) throws UnsupportedEncodingException {
+            int meta = offset;
+            int position = offset + 2 * INT.getSize();
+            
+            meta = writeHeader(buffer, meta, position);
+            position = stringSerialization(buffer, position, name);
+            
+            writeHeader(buffer, meta, position);
+            position = stringSerialization(buffer, position, version);
+            
+            return position;
         }
         
         protected int serialize(Buffer buffer, int offset, TerminologyID tid)
                 throws UnsupportedEncodingException {
             int position = offset;
             TerminologyIDSerializer tids = new TerminologyIDSerializer();
-            return stringSerialization(buffer, position, tid.getValue());
+            position = tids.serialize(buffer, position, 
+                    tid.getName(), tid.getVersion());
+            
+            return position;
         }
 
         protected TerminologyID deserialize(Buffer buffer, int offset) {
             int position = offset;
-            String value = stringDeserialization(buffer, position);
+            String name = stringDeserialization(buffer, position);
+            position += INT.getSize();
+            String version = stringDeserialization(buffer, position);
 
-            return RMObjectFactory.newTerminologyID(value);
+            return RMObjectFactory.newTerminologyID(name, version);
         }
     }
 

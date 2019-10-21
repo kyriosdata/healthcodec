@@ -153,14 +153,29 @@ public class RMObject {
 
     public static class TerminologyID {
 
-        private final String value;
+        private final String name;
+        private final String version;
+        private final ObjectID objectID;
 
-        protected TerminologyID(String value) {
-            this.value = value;
+        protected TerminologyID(String name, String version) {
+            String nameVersion = name + ( version == null ?
+                "" : "(" + version + ")" );
+            
+            this.name = name;
+            this.version = version;
+            this.objectID = RMObjectFactory.newObjectID(nameVersion);
         }
 
-        public String getValue() {
-            return this.value;
+        public String getName() {
+            return name;
+        }
+
+        public String getVersion() {
+            return version;
+        }
+
+        public ObjectID getObjectID() {
+            return objectID;
         }
     }
 

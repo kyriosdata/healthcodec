@@ -57,8 +57,8 @@ public class RMObjectFactory {
         return new TemplateID(value);
     }
 
-    public static TerminologyID newTerminologyID(String value) {
-        return new TerminologyID(value);
+    public static TerminologyID newTerminologyID(String name, String value) {
+        return new TerminologyID(name, value);
     }
 
     public static CodePhrase newCodePhrase(
