@@ -209,7 +209,10 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
-            return stringSerialization(buffer, offset, value);
+            int position = offset;
+            position = stringSerialization(buffer, position, value);
+            
+            return position;
         }
         
         protected int serialize(Buffer buffer, int offset, 
@@ -217,7 +220,8 @@ public class RMObjectSerialization {
             int position = offset;
             ISOOIDSerialilzer isos = new ISOOIDSerialilzer();
             
-            position = isos.serialize(buffer, position, iso.getValue());
+            position = isos.serialize(buffer, position, 
+                    iso.getUid().getValue());
             
             return position;
         }

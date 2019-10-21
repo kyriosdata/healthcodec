@@ -95,14 +95,14 @@ public class RMObject {
 
     public static class ISO_OID {
 
-        private final String value;
+        private final UID uid;
 
         protected ISO_OID(String value) {
-            this.value = value;
+            this.uid = RMObjectFactory.newUID(value);
         }
 
-        public String getValue() {
-            return this.value;
+        public UID getUid() {
+            return uid;
         }
     }
 
