@@ -20,9 +20,10 @@ import java.util.List;
 
 /**
  *
- * @author Gabriel
+ * TODO remover ou converter para teste reaplicável e verificável
+ * automaticamente
  */
-public class Test {
+public class ApplicationTest {
     public static void main(String[] args) throws UnsupportedEncodingException{
         String oidValue = "OBJECTID";
         String value = "VALUE";
@@ -49,15 +50,16 @@ public class Test {
         RMObject.DVURI hyperlink =  RMObjectFactory.newDVURI(hyperlinkValue);
         
         String languageTIDValue = "Language Terminology ID";
-        RMObject.TerminologyID languageTID = RMObjectFactory.newTerminologyID(languageTIDValue);
         String languageValue = "Language value";
-        RMObject.CodePhrase language = RMObjectFactory.newCodePhrase(languageTID, 
+        RMObject.TerminologyID languageTID =
+                RMObjectFactory.newTerminologyID(languageTIDValue, languageValue);
+        RMObject.CodePhrase language = RMObjectFactory.newCodePhrase(languageTID,
                 languageValue);
         
         String charsetTIDValue = "Charset Terminology ID";
         String charsetValue = "Charset Value";
         RMObject.TerminologyID charsetTID = 
-                RMObjectFactory.newTerminologyID(charsetTIDValue);
+                RMObjectFactory.newTerminologyID(charsetTIDValue, charsetValue);
         RMObject.CodePhrase charset = 
                 RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
         
@@ -66,7 +68,7 @@ public class Test {
         
         String definingCodeTIDValue = "Defining Code Terminology ID Value";
         RMObject.TerminologyID definingCodeTID = 
-                RMObjectFactory.newTerminologyID(definingCodeTIDValue);
+                RMObjectFactory.newTerminologyID(definingCodeTIDValue, definingCodeTIDValue);
         String definingCodeValue = "Defining Code Value";
         RMObject.CodePhrase definingCode = 
                 RMObjectFactory.newCodePhrase(

@@ -14,44 +14,44 @@
  */
 package com.github.kyriosdata.healthcodec;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
-import org.junit.Before;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
  * @author Gabriel
  */
-public class RMObjectSerializationClientTest {
+class RMObjectSerializationClientTest {
 
     /**
      *
      */
-    private RMObjectSerializationClient s;
+    private static RMObjectSerializationClient s;
 
-    @Before
-    public void setUp() {
-        this.s = RMObjectSerializationClient.create();
+    @BeforeEach
+    static void setUp() {
+        s = RMObjectSerializationClient.create();
     }
 
     @Test
-    public void DvBooleanTestTrue() {
-        s.serializeDvBoolean(true);
+    void dvBooleanTestTrue() {
+        s.serializeDvBoolean(new RMObject.DvBoolean(true));
         RMObject.DvBoolean db = s.deserializeDvBoolean();
-        assertEquals(true, db.getValue());
+        assertTrue(db.getValue());
     }
 
     @Test
     public void DvBooleanTestFalse() {
-        s.serializeDvBoolean(false);
+        s.serializeDvBoolean(new RMObject.DvBoolean(false));
         RMObject.DvBoolean db = s.deserializeDvBoolean();
         assertEquals(false, db.getValue());
     }
@@ -1820,4 +1820,4 @@ public class RMObjectSerializationClientTest {
         // .getRelationship().getDvText().getValue());
 
     }
-}}}
+}
