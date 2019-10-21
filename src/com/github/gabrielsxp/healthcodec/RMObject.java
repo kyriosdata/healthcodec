@@ -258,21 +258,21 @@ public class RMObject {
             this.uidBasedID = RMObjectFactory.newUIDBasedID(value);
         }
 
-        public UIDBasedID getUidbasedid() {
+        public UIDBasedID getUIDBasedID() {
             return uidBasedID;
         }
     }
 
     public static class HierObjectID {
 
-        private final String value;
+        private final UIDBasedID uidBasedID;
 
         protected HierObjectID(String value) {
-            this.value = value;
+            this.uidBasedID = RMObjectFactory.newUIDBasedID(value);
         }
 
-        public String getValue() {
-            return value;
+        public UIDBasedID getUIDBasedID() {
+            return uidBasedID;
         }
     }
 

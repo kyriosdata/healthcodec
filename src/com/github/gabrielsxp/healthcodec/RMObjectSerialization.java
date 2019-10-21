@@ -531,7 +531,7 @@ public class RMObjectSerialization {
             int position = offset;
             ObjectVersionIDSerializer os = new ObjectVersionIDSerializer();
             position = os.serialize(buffer, position, 
-                    o.getUidbasedid().getValue());
+                    o.getUIDBasedID().getValue());
             
             return position;
         }
@@ -556,7 +556,8 @@ public class RMObjectSerialization {
                 throws UnsupportedEncodingException {
             int position = offset;
             HierObjectIDSerializer os = new HierObjectIDSerializer();
-            position = os.serialize(buffer, position, h.getValue());
+            position = os.serialize(buffer, position, 
+                    h.getUIDBasedID().getValue());
             
             return position;
         }
