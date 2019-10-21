@@ -307,14 +307,17 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
             int position = offset;
-            return stringSerialization(buffer, position, value);
+            position = stringSerialization(buffer, position, value);
+            
+            return position;
         }
         
         protected int serialize(Buffer buffer, int offset, 
                 TemplateID tid) throws UnsupportedEncodingException {
             int position = offset;
             TemplateIDSerializer ts = new TemplateIDSerializer();
-            position = ts.serialize(buffer, position, tid.getValue());
+            position = ts.serialize(buffer, position, 
+                    tid.getObjectID().getValue());
             
             return position;
         }

@@ -140,14 +140,14 @@ public class RMObject {
 
     public static class TemplateID {
 
-        private final String value;
+        private final ObjectID objectID;
 
         protected TemplateID(String value) {
-            this.value = value;
+            this.objectID = RMObjectFactory.newObjectID(value);
         }
 
-        public String getValue() {
-            return value;
+        public ObjectID getObjectID() {
+            return objectID;
         }
     }
 
