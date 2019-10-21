@@ -239,14 +239,14 @@ public class RMObject {
 
     public static class ArchetypeID {
 
-        private final String value;
+        private final ObjectID objectID;
 
         protected ArchetypeID(String value) {
-            this.value = value;
+            this.objectID = RMObjectFactory.newObjectID(value);
         }
 
-        public String getValue() {
-            return value;
+        public ObjectID getObjectID() {
+            return objectID;
         }
     }
 

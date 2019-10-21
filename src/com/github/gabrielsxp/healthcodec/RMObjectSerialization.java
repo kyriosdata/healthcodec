@@ -495,14 +495,17 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, String value)
                 throws UnsupportedEncodingException {
             int position = offset;
-            return stringSerialization(buffer, position, value);
+            position = stringSerialization(buffer, position, value);
+            
+            return position;
         }
         
         protected int serialize(Buffer buffer, int offset, ArchetypeID a)
                 throws UnsupportedEncodingException {
             int position = offset;
             ArchetypeIDSerializer as = new ArchetypeIDSerializer();
-            position = as.serialize(buffer, position, a.getValue());
+            position = as.serialize(buffer, position, 
+                    a.getObjectID().getValue());
             
             return position;
         }
