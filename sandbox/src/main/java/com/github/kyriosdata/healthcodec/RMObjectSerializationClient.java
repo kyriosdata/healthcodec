@@ -11,11 +11,11 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
  */
-package com.github.gabrielsxp.healthcodec;
+package com.github.kyriosdata.healthcodec;
 
-import com.github.gabrielsxp.healthcodec.RMObjectSerialization.*;
-import static com.github.gabrielsxp.healthcodec.RMObjectID.*;
-import com.github.gabrielsxp.healthcodec.RMObject.*;
+import com.github.kyriosdata.healthcodec.RMObjectSerialization.*;
+import static com.github.kyriosdata.healthcodec.RMObjectID.*;
+import com.github.kyriosdata.healthcodec.RMObject.*;
 import java.io.UnsupportedEncodingException;
 
 /**

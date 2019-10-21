@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.github.gabrielsxp.healthcodec;
+package com.github.kyriosdata.healthcodec;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;

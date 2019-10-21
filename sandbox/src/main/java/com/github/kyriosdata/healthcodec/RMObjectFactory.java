@@ -11,10 +11,10 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.f
  */
-package com.github.gabrielsxp.healthcodec;
+package com.github.kyriosdata.healthcodec;
 
 import java.util.List;
-import com.github.gabrielsxp.healthcodec.RMObject.*;
+import com.github.kyriosdata.healthcodec.RMObject.*;
 import java.util.Map;
 import java.util.Set;
 

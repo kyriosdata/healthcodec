@@ -11,7 +11,7 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.f
  */
-package com.github.gabrielsxp.healthcodec;
+package com.github.kyriosdata.healthcodec;
 
 import java.util.List;
 import java.util.Map;
