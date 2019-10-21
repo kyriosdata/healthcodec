@@ -121,11 +121,11 @@ public class RMObject {
 
     public static class GenericID {
 
-        private final String value;
+        private final ObjectID objectID;
         private final String scheme;
 
         protected GenericID(String value, String scheme) {
-            this.value = value;
+            this.objectID = RMObjectFactory.newObjectID(value);
             this.scheme = scheme;
         }
 
@@ -133,8 +133,8 @@ public class RMObject {
             return scheme;
         }
 
-        public String getValue() {
-            return value;
+        public ObjectID getObjectID() {
+            return objectID;
         }
     }
 

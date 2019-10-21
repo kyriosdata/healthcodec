@@ -283,7 +283,7 @@ public class RMObjectSerialization {
             int position = offset;
             GenericIDSerializer gids = new GenericIDSerializer();
             position = gids.serialize(buffer, position, 
-                    gid.getValue(), gid.getScheme());
+                    gid.getObjectID().getValue(), gid.getScheme());
             
             return position;
         }
