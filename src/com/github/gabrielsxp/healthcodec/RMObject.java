@@ -71,7 +71,7 @@ public class RMObject {
     public static class UID {
         private final String value;
 
-        public UID(String value) {
+        protected UID(String value) {
             this.value = value;
         }
 
@@ -82,14 +82,14 @@ public class RMObject {
 
     public static class InternetID {
 
-        private final String value;
+        private final UID uid;
 
         protected InternetID(String value) {
-            this.value = value;
+            this.uid = RMObjectFactory.newUID(value);
         }
 
-        public String getValue() {
-            return value;
+        public UID getUid() {
+            return uid;
         }
     }
 
