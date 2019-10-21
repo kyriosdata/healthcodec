@@ -621,8 +621,9 @@ public class RMObjectSerialization {
             PartyRefSerializer prs = new PartyRefSerializer();
 
             position
-                    = prs.serialize(buffer, position, 
-                            pr.getId(), pr.getValue());
+                    = prs.serialize(buffer, position,
+                            pr.getObjectRef().getId(), 
+                            pr.getObjectRef().getType());
 
             return position;
         }

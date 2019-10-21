@@ -291,20 +291,15 @@ public class RMObject {
 
     public static class PartyRef {
 
-        private final ObjectID id;
-        private final String value;
+        private final ObjectRef objectRef;
 
         protected PartyRef(ObjectID id, String value) {
-            this.id = id;
-            this.value = value;
+            this.objectRef = RMObjectFactory.newObjectRef(
+                    id, "DEMOGRAPHIC", value);
         }
 
-        public ObjectID getId() {
-            return id;
-        }
-
-        public String getValue() {
-            return value;
+        public ObjectRef getObjectRef() {
+            return objectRef;
         }
     }
 
