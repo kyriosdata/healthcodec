@@ -86,7 +86,7 @@ public class RMObject {
 
         protected UID(String value) {
             if(value.isEmpty()){
-                throw new IllegalArgumentException("empty value");
+                throw new IllegalArgumentException("value vazio");
             }
             this.value = value;
         }
@@ -99,8 +99,12 @@ public class RMObject {
     public static class InternetID {
 
         private final UID uid;
+        private static String PATTERN = "[a-zA-Z]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\\.[a-zA-Z]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*";
 
         protected InternetID(String value) {
+            if (!value.matches(PATTERN)) {
+                throw new IllegalArgumentException("formato incorreto");
+            }
             this.uid = RMObjectFactory.newUID(value);
         }
 
