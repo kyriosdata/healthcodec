@@ -835,6 +835,15 @@ public class RMObject {
         private final DVEHRURI target;
 
         protected Link(DvText meaning, DvText type, DVEHRURI target) {
+            if(meaning == null) {
+                throw new IllegalArgumentException("null meaning");
+            }
+            if(type == null) {
+                throw new IllegalArgumentException("null type");
+            }
+            if(target == null) {
+                throw new IllegalArgumentException("null target");
+            }
             this.meaning = meaning;
             this.type = type;
             this.target = target;
