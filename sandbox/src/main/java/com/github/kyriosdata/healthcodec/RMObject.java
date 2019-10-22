@@ -394,6 +394,18 @@ public class RMObject {
         
         protected LocatableRef(ObjectVersionID id, String namespace, String type,
                 String path) {
+            if (id == null) {
+                throw new IllegalArgumentException("null id");
+            }
+            if (namespace == null) {
+                throw new IllegalArgumentException("null namespace");
+            }
+            if (type == null) {
+                throw new IllegalArgumentException("null type");
+            }
+            if (path != null && path.isEmpty()) {
+                throw new IllegalArgumentException("path vazio");
+            }
             this.objectRef = RMObjectFactory.newObjectRef(
                     RMObjectFactory.newObjectID(id.getUIDBasedID().getValue()), 
                     namespace, type);
