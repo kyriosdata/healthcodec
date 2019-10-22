@@ -1080,6 +1080,9 @@ public class RMObject {
         private final DvCodedText relationship;
 
         protected PartyRelated(PartyIdentified pi, DvCodedText relationship) {
+            if (relationship == null) {
+                throw new IllegalArgumentException("null relationship");
+            }
             this.pi = pi;
             this.relationship = relationship;
         }
