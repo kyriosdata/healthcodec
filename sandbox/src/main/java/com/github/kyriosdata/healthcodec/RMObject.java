@@ -591,6 +591,9 @@ public class RMObject {
         private final DvParsable value;
 
         protected DvTimeSpecification(DvParsable value) {
+            if(value == null) {
+                throw new IllegalArgumentException("null value");
+            }
             this.value = value;
         }
 
