@@ -145,6 +145,9 @@ public class RMObject {
         private final String scheme;
 
         protected GenericID(String value, String scheme) {
+            if(scheme.isEmpty()) {
+                throw new IllegalArgumentException("scheme vazio");
+            }
             this.objectID = RMObjectFactory.newObjectID(value);
             this.scheme = scheme;
         }
