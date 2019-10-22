@@ -248,6 +248,9 @@ public class RMObject {
         private final DVURI dvuri;
 
         protected DVEHRURI(String value) {
+            if (value.isEmpty()) {
+                throw new IllegalArgumentException("value vazio");
+            }
             this.dvuri = RMObjectFactory.newDVURI(value);
         }
 
