@@ -1535,6 +1535,20 @@ public class RMObject {
         protected Party(Locatable locatable, Set<PartyIdentity> identities,
                 Set<Contact> contacts, Set<PartyRelationship> relationships,
                 Set<LocatableRef> reverseRelationships, ItemStructure details) {
+            if (locatable == null) {
+                throw new IllegalArgumentException("null locatable");
+            }
+            if (identities == null || identities.isEmpty()) {
+                throw new IllegalArgumentException("identities null ou vazio");
+            }
+            if (contacts != null && contacts.isEmpty()) {
+                throw new IllegalArgumentException("contacts vazio");
+            }
+            if (relationships != null) {
+                if (relationships.isEmpty()) {
+                    throw new IllegalArgumentException("relationships vazio");
+                }
+            }
             this.locatable = locatable;
             this.identities = identities;
             this.contacts = contacts;
