@@ -1359,6 +1359,9 @@ public class RMObject {
         private final Element item;
 
         protected ItemSingle(ItemStructure itemStructure, Element item) {
+            if(item == null) {
+                throw new IllegalArgumentException("item null");
+            }
             this.itemStructure = itemStructure;
             this.item = item;
         }
