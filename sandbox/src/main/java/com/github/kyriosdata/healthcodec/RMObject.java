@@ -727,6 +727,12 @@ public class RMObject {
 
         protected TermMapping(CodePhrase target,
                 Match match, DvCodedText purpose) {
+            if (target == null) {
+                throw new IllegalArgumentException("null target");
+            }
+            if (match == null) {
+                throw new IllegalArgumentException("null match");
+            }
             this.target = target;
             this.match = match;
             this.purpose = purpose;
