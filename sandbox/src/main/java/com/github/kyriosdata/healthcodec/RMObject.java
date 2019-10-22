@@ -459,6 +459,16 @@ public class RMObject {
 
         protected PartyIdentified(PartyRef externalRef, String name,
                 List<DvIdentifier> identifiers) {
+            if(externalRef == null && name == null && identifiers == null) {
+                throw new IllegalArgumentException(
+                        "externalRef, name, identifiers todos vazios");
+            }
+            if(name != null && name.isEmpty()) {
+                throw new IllegalArgumentException("name vazio");
+            }
+            if(identifiers != null && identifiers.size() == 0) {
+                throw new IllegalArgumentException("identifiers vazios");
+            }
             this.externalRef = externalRef;
             this.name = name;
             this.identifiers = identifiers;
