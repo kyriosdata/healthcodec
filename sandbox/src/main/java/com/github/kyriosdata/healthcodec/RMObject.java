@@ -1445,6 +1445,16 @@ public class RMObject {
 
         protected PartyRelationship(Locatable locatable,
                 ItemStructure details, ObjectRef source, ObjectRef target) {
+            if (locatable == null) {
+                throw new IllegalArgumentException("null locatable");
+            }
+
+            if (source == null) {
+                throw new IllegalArgumentException("null source");
+            }
+            if (target == null) {
+                throw new IllegalArgumentException("null target");
+            }
             this.locatable = locatable;
             this.details = details;
             this.source = source;
