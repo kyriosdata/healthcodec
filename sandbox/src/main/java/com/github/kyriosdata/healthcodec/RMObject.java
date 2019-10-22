@@ -280,6 +280,9 @@ public class RMObject {
         private final ObjectID objectID;
 
         protected ArchetypeID(String value) {
+            if (value.isEmpty()) {
+                throw new IllegalArgumentException("value vazio");
+            }
             this.objectID = RMObjectFactory.newObjectID(value);
         }
 
