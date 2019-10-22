@@ -1484,6 +1484,9 @@ public class RMObject {
         private final ItemStructure details;
 
         protected Address(Locatable locatable, ItemStructure details) {
+            if (details == null) {
+                throw new IllegalArgumentException("null details");
+            }
             this.locatable = locatable;
             this.details = details;
         }
