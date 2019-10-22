@@ -312,6 +312,9 @@ public class RMObject {
         private final UIDBasedID uidBasedID;
 
         protected HierObjectID(String value) {
+            if (value.isEmpty()) {
+                throw new IllegalArgumentException("value vazio");
+            }
             this.uidBasedID = RMObjectFactory.newUIDBasedID(value);
         }
 
