@@ -624,6 +624,20 @@ public class RMObject {
                 DvMultimedia thumbnail,
                 DVURI uri,
                 byte[] data) {
+            if (mediaType == null) {
+                throw new IllegalArgumentException("null mediaType");
+            }
+            if (compressionAlgorithm == null) {
+                throw new IllegalArgumentException("null compressionAlgorithm");
+            }
+            if (integrityCheck != null &&
+                    integrityCheckAlgorithm == null) {
+                throw new IllegalArgumentException(
+                        "null integrity check algorithm");
+            }
+            if (uri == null && data == null) {
+                throw new IllegalArgumentException("null uri e null data");
+            }
             this.dvEncapsulated = dvEncapsulated;
             this.alternateText = alternateText;
             this.mediaType = mediaType;
