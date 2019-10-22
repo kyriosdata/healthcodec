@@ -1032,6 +1032,15 @@ public class RMObject {
                 Archetyped archetypeDetails,
                 FeederAudit feederAudit,
                 Set<Link> links) {
+            if (archetypeNodeId == null) {
+                throw new IllegalArgumentException("null archetypeNodeId");
+            }
+            if (name == null) {
+                throw new IllegalArgumentException("null name");
+            }
+            if (links != null && links.isEmpty()) {
+                throw new IllegalArgumentException("links vazio");
+            }
             this.uid = uid;
             this.archetypeNodeId = archetypeNodeId;
             this.name = name;
