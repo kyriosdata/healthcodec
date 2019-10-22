@@ -930,6 +930,9 @@ public class RMObject {
                 //DateTime time, TODO
                 PartyProxy subject,
                 String versionID) {
+            if (systemID.isEmpty()) {
+                throw new IllegalArgumentException("empty null ou vazio");
+            }
             this.systemID = systemID;
             this.provider = provider;
             this.location = location;
