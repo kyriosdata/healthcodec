@@ -439,6 +439,9 @@ public class RMObject {
         private final ObjectRef objectRef;
 
         protected AccessGroupRef(ObjectID id) {
+            if(id == null){
+                throw new IllegalArgumentException("null id");
+            }
             this.objectRef = RMObjectFactory.newObjectRef(id, 
                     "ACCESS_CONTROL", "ACCESS_GROUP");
         }
