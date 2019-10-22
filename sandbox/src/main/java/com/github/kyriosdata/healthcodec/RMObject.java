@@ -1419,6 +1419,9 @@ public class RMObject {
         private final ItemStructure details;
 
         protected PartyIdentity(Locatable locatable, ItemStructure details) {
+            if (details == null) {
+                throw new IllegalArgumentException("details null");
+            }
             this.locatable = locatable;
             this.details = details;
         }
