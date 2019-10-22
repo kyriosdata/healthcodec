@@ -85,6 +85,9 @@ public class RMObject {
         private final String value;
 
         protected UID(String value) {
+            if(value.isEmpty()){
+                throw new IllegalArgumentException("empty value");
+            }
             this.value = value;
         }
 
