@@ -1125,6 +1125,24 @@ public class RMObject {
                 String use, String misuse, String copyright,
                 Map<String, String> originalResourceUri,
                 Map<String, String> otherDetails) {
+            if (language == null) {
+                language = RMObjectFactory.newCodePhrase(
+                        RMObjectFactory.newTerminologyID(
+                                "language", "ISO_639-1"),
+                        "en");
+            }
+            if (purpose.isEmpty()) {
+                throw new IllegalArgumentException("purpose vazio");
+            }
+            if (use != null && use.isEmpty()) {
+                throw new IllegalArgumentException("use vazio");
+            }
+            if (misuse != null && misuse.isEmpty()) {
+                throw new IllegalArgumentException("misuse vazio");
+            }
+            if (copyright != null && copyright.isEmpty()) {
+                throw new IllegalArgumentException("copyright vazio");
+            }
             this.language = language;
             this.purpose = purpose;
             this.keywords = keywords;
