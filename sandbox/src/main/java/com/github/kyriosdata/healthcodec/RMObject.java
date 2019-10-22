@@ -1584,6 +1584,9 @@ public class RMObject {
         private final ItemStructure credentials;
 
         protected Capability(Locatable locatable, ItemStructure credentials) {
+            if (credentials == null) {
+                throw new IllegalArgumentException("null credentials");
+            }
             this.locatable = locatable;
             this.credentials = credentials;
         }
