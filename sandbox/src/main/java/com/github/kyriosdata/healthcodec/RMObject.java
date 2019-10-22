@@ -1507,6 +1507,9 @@ public class RMObject {
         private final List<Address> addresses;
 
         protected Contact(Locatable locatable, List<Address> addresses) {
+            if (addresses == null || addresses.size() == 0) {
+                throw new IllegalArgumentException("addresses null ou vazio");
+            }
             this.locatable = locatable;
             this.addresses = addresses;
         }
