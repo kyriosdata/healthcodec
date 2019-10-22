@@ -868,6 +868,9 @@ public class RMObject {
         private final String terminal;
 
         protected DvState(DvCodedText value, String terminal) {
+            if (value == null) {
+                throw new IllegalArgumentException("null value");
+            }
             this.value = value;
             this.terminal = terminal;
         }
