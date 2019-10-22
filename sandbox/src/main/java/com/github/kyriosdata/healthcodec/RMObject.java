@@ -296,6 +296,9 @@ public class RMObject {
         private final UIDBasedID uidBasedID;
 
         protected ObjectVersionID(String value) {
+            if (value.isEmpty()) {
+                throw new IllegalArgumentException("value vazio");
+            }
             this.uidBasedID = RMObjectFactory.newUIDBasedID(value);
         }
 
