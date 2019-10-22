@@ -140,25 +140,25 @@ public class Buffer {
     }
 
     /**
-     * Função responsável por ler 4 bytes sequenciais do buffer, a partir da
-     * posição indicada, e retornar o número inteiro correspondente.
+     * Função responsável por ler 8 bytes sequenciais do buffer, a partir da
+     * posição indicada, e retornar o double correspondente.
      *
      * @param position Posição inicial de leitura no <em>buffer</em>.
-     * @return Valor inteiro correspondente aos 4 btyes lidos a partir da
+     * @return double aos 8 btyes lidos a partir da
      * posição indicada.
      *
-     * @throws BufferUnderflowException no caso de não conseguir ler 4 bytes do
+     * @throws BufferUnderflowException no caso de não conseguir ler 8 bytes do
      *                                  buffer
      */
-    public int readInteger(int position) throws BufferUnderflowException {
-        return buffer.getInt(position);
+    public double readDouble(int position) throws BufferUnderflowException {
+        return buffer.getDouble(position);
     }
 
     /**
-     * Função responsável por armazenar o valor do inteiro fornecido a partir
+     * Função responsável por armazenar o double fornecido a partir
      * da posição indicada.
      *
-     * @param position A posição inicial da escrita do valor inteiro no
+     * @param position A posição inicial da escrita do double no
      *                 <em>buffer</em>.
      * @param valor        Valor a ser armazenado no <em>buffer</em>.
      * @throws IndexOutOfBoundsException no caso de uma posição maior que o
@@ -166,8 +166,8 @@ public class Buffer {
      * @throws ReadOnlyBufferException   no caso do buffer ser apenas para
      *                                   escrita
      */
-    public void writeInteger(int position, int valor) {
-        buffer.putInt(position, valor);
+    public void writeDouble(int position, double valor) {
+        buffer.putDouble(position, valor);
     }
 
     /**
