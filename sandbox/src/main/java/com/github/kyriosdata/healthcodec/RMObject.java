@@ -1609,6 +1609,12 @@ public class RMObject {
 
         protected Role(Party party, List<Capability> capabilities,
                 PartyRef performer) {
+            if (capabilities != null && capabilities.size() == 0) {
+                throw new IllegalArgumentException("capabilities vazio");
+            }
+            if (performer == null) {
+                throw new IllegalArgumentException("null performer");
+            }
             this.party = party;
             this.capabilities = capabilities;
             this.performer = performer;
