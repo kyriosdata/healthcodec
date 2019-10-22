@@ -1193,8 +1193,15 @@ public class RMObject {
         private final String accreditation;
         private final Map<String, String> otherDetails;
 
-        protected TranslationDetails(CodePhrase language, Map<String, String> author, String accreditation,
-                Map<String, String> otherDetails) {
+        protected TranslationDetails(CodePhrase language, Map<String,
+                String> author, String accreditation, Map<String,
+                String> otherDetails) {
+            if (language == null) {
+                throw new IllegalArgumentException("null language");
+            }
+            if (author == null) {
+                throw new IllegalArgumentException("null author");
+            }
             this.language = language;
             this.author = author;
             this.accreditation = accreditation;
