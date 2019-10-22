@@ -975,6 +975,19 @@ public class RMObject {
                 FeederAuditDetails feederSystemAudit,
                 List<DvIdentifier> feederSystemItemIDs,
                 DvEncapsulated originalContent) {
+            if (originatingSystemAudit == null) {
+                throw new IllegalArgumentException(
+                        "null originatingSystemAudit");
+            }
+            if (originatingSystemItemIDs != null &&
+                    originatingSystemItemIDs.size() == 0) {
+                throw new IllegalArgumentException(
+                        "originatingSystemItemIds vazio");
+            }
+            if (feederSystemItemIDs != null &&
+                    feederSystemItemIDs.size() == 0) {
+                throw new IllegalArgumentException("feederSystemItemIds vazio");
+            }
             this.originatingSystemAudit = originatingSystemAudit;
             this.originatingSystemItemIDs = originatingSystemItemIDs;
             this.feederSystemAudit = feederSystemAudit;
