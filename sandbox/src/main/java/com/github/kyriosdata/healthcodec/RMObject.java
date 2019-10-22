@@ -562,6 +562,12 @@ public class RMObject {
 
         protected DvParsable(DvEncapsulated dvEncapsulated, String value, 
                 String formalism) {
+            if (value == null) {
+                throw new IllegalArgumentException("null value");
+            }
+            if (formalism.isEmpty()) {
+                throw new IllegalArgumentException("formalism null ou vazio");
+            }
             this.dvEncapsulated = dvEncapsulated;
             this.value = value;
             this.formalism = formalism;
