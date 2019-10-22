@@ -360,6 +360,15 @@ public class RMObject {
         private final String type;
 
         protected ObjectRef(ObjectID id, String namespace, String type) {
+            if (id == null) {
+                throw new IllegalArgumentException("null id");
+            }
+            if (namespace == null) {
+                throw new IllegalArgumentException("null namespace");
+            }
+            if (type == null) {
+                throw new IllegalArgumentException("null type");
+            }
             this.id = id;
             this.namespace = namespace;
             this.type = type;
