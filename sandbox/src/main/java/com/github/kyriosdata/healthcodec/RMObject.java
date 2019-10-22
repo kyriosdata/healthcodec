@@ -493,6 +493,19 @@ public class RMObject {
         private final TemplateID templateId;
         private final String rmVersion;
 
+        public Archetyped(ArchetypeID archetypeId, TemplateID templateId,
+                          String rmVersion) {
+            if (archetypeId == null) {
+                throw new IllegalArgumentException("null archetypeId");
+            }
+            if (rmVersion.isEmpty()) {
+                throw new IllegalArgumentException("rmVersion vazio");
+            }
+            this.archetypeId = archetypeId;
+            this.templateId = templateId;
+            this.rmVersion = rmVersion;
+        }
+
         public ArchetypeID getArchetypeId() {
             return archetypeId;
         }
@@ -503,12 +516,6 @@ public class RMObject {
 
         public String getRmVersion() {
             return rmVersion;
-        }
-
-        public Archetyped(ArchetypeID archetypeId, TemplateID templateId, String rmVersion) {
-            this.archetypeId = archetypeId;
-            this.templateId = templateId;
-            this.rmVersion = rmVersion;
         }
     }
 
