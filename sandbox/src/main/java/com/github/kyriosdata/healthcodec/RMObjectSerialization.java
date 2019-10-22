@@ -14,16 +14,11 @@
  */
 package com.github.kyriosdata.healthcodec;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import com.github.kyriosdata.healthcodec.RMObject.*;
+import com.github.kyriosdata.healthcodec.RMObject.UUID;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 /**
  *
@@ -371,7 +366,7 @@ public class RMObjectSerialization {
 
         protected int serialize(
                 Buffer buffer, int offset,
-                TerminologyID terminologyId, String value)
+                TerminologyID terminologyId, String codeString)
                 throws UnsupportedEncodingException {
             int meta = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
@@ -382,7 +377,7 @@ public class RMObjectSerialization {
             position = ts.serialize(buffer, position, terminologyId);
             
             writeHeader(buffer, meta, position);
-            position = stringSerialization(buffer, position, value);
+            position = stringSerialization(buffer, position, codeString);
             
             return position;
         }
@@ -392,7 +387,7 @@ public class RMObjectSerialization {
             int position = offset;
             CodePhraseSerializer cps = new CodePhraseSerializer();
             position = cps.serialize(buffer,
-                    position, cp.getTerminologyID(), cp.getValue());
+                    position, cp.getTerminologyID(), cp.getCodeString());
 
             return position;
         }
@@ -407,10 +402,11 @@ public class RMObjectSerialization {
             TerminologyID terminologyID = ts.deserialize(
                     buffer, terminologyIDPosition);
             
-            int valuePosition = buffer.readInteger(position);
-            String value = stringDeserialization(buffer, valuePosition);
+            int codeStringPosition = buffer.readInteger(position);
+            String codeString = stringDeserialization(buffer,
+                    codeStringPosition);
             
-            return RMObjectFactory.newCodePhrase(terminologyID, value);
+            return RMObjectFactory.newCodePhrase(terminologyID, codeString);
         }
     }
 
@@ -1191,7 +1187,7 @@ public class RMObjectSerialization {
 
             meta = writeHeader(buffer, meta, position);
             position = cps.serialize(buffer, position,
-                    mediaType.getTerminologyID(), mediaType.getValue());
+                    mediaType.getTerminologyID(), mediaType.getCodeString());
 
             if (hasCompressionAlgorithm) {
                 meta = writeHeader(
@@ -1200,7 +1196,7 @@ public class RMObjectSerialization {
                         buffer,
                         position,
                         compressionAlgorithm.getTerminologyID(),
-                        compressionAlgorithm.getValue());
+                        compressionAlgorithm.getCodeString());
             } else {
                 meta = writeHeader(buffer, meta, false);
             }

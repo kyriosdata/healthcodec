@@ -205,19 +205,25 @@ public class RMObject {
     public static class CodePhrase {
 
         private final TerminologyID terminologyID;
-        private final String value;
+        private final String codeString;
 
-        protected CodePhrase(TerminologyID terminologyID, String value) {
+        protected CodePhrase(TerminologyID terminologyID, String codeString) {
+            if(terminologyID == null) {
+                throw new IllegalArgumentException("null terminologyId");
+            }
+            if(codeString.isEmpty()) {
+                throw new IllegalArgumentException("codeString vazio");
+            }
             this.terminologyID = terminologyID;
-            this.value = value;
+            this.codeString = codeString;
         }
 
         public TerminologyID getTerminologyID() {
             return terminologyID;
         }
 
-        public String getValue() {
-            return value;
+        public String getCodeString() {
+            return codeString;
         }
     }
 
