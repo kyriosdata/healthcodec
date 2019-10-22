@@ -812,6 +812,9 @@ public class RMObject {
         private final CodePhrase definingCode;
 
         protected DvCodedText(DvText dvText, CodePhrase definingCode) {
+            if (definingCode == null) {
+                throw new IllegalArgumentException("null defining code");
+            }
             this.dvText = dvText;
             this.definingCode = definingCode;
         }
