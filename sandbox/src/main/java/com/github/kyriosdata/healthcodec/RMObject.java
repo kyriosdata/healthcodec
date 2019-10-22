@@ -889,6 +889,10 @@ public class RMObject {
         private final List<DvText> items;
 
         protected DvParagraph(List<DvText> items) {
+            if (items == null || items.size() == 0) {
+                throw new IllegalArgumentException(
+                        "null items ou items vazios");
+            }
             this.items = items;
         }
 
