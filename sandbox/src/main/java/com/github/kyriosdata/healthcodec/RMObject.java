@@ -543,6 +543,9 @@ public class RMObject {
         private final String value;
 
         protected UIDBasedID(String value) {
+            if(value.isEmpty()){
+                throw new IllegalArgumentException("value vazio");
+            }
             this.value = value;
         }
 
