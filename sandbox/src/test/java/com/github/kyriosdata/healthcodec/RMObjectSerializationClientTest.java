@@ -109,7 +109,7 @@ class RMObjectSerializationClientTest {
 
     /**
      * Teste sobre ISO_OID
-     * 
+     *
      * @throws UnsupportedEncodingException
      */
     @Test
@@ -119,6 +119,20 @@ class RMObjectSerializationClientTest {
         isooid = s.deserializeISOOID();
 
         assertEquals("value", isooid.getUid().getValue());
+    }
+
+    /**
+     * Teste sobre UUID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void UUID() throws UnsupportedEncodingException {
+        UUID uuid = RMObjectTestHelper.UUID();
+        s.serializeUUID(uuid);
+        uuid = s.deserializeUUID();
+
+        assertEquals("value", uuid.getUid().getValue());
     }
 
 }

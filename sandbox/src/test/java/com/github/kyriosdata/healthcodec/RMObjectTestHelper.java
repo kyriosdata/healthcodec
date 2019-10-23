@@ -60,4 +60,13 @@ public class RMObjectTestHelper {
     public static ISO_OID ISOOID(){
         return RMObjectFactory.newISOOID("value");
     }
+
+    /**
+     * Cria uma instância de UUID com valor fixo
+     *
+     * @return instância de UUID
+     */
+    public static UUID UUID(){
+        return RMObjectFactory.newUUID("value");
+    }
 }
