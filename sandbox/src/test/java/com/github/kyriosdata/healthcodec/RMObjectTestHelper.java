@@ -40,4 +40,15 @@ public class RMObjectTestHelper {
     public static UID UID(boolean forceException){
         return RMObjectFactory.newUID(forceException ? "" : "value");
     }
+
+    /**
+     * Cria uma instância de InternetID com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em InternetID
+     * @return instância de InternetID
+     */
+    public static InternetID InternetID(boolean forceException){
+        return RMObjectFactory.newInternetID(forceException ? "000" : "openehr");
+    }
 }

@@ -22,6 +22,9 @@ class RMObjectSerializationClientTest {
     void tearDown() {
     }
 
+    /**
+     * Testes sobre DvBoolean
+     */
     @Test
     public void DvBooleanTestTrue() {
         DvBoolean dvBoolean = RMObjectTestHelper.DvBoolean(true);
@@ -40,6 +43,10 @@ class RMObjectSerializationClientTest {
         assertFalse(dvBoolean.getValue());
     }
 
+    /**
+     * Testes sobre DvIdentifier
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void DvIdentifier() throws UnsupportedEncodingException {
         DvIdentifier dvIdentifier =
@@ -56,11 +63,14 @@ class RMObjectSerializationClientTest {
     @Test
     public void DvIdentifierException()  {
         assertThrows(IllegalArgumentException.class, () -> {
-            DvIdentifier dvIdentifier =
-                    RMObjectTestHelper.DvIdentifier(true);
+            RMObjectTestHelper.DvIdentifier(true);
         });
     }
 
+    /**
+     * Testes sobre UID
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void UID() throws UnsupportedEncodingException {
         UID uid = RMObjectTestHelper.UID(false);
@@ -73,7 +83,27 @@ class RMObjectSerializationClientTest {
     @Test
     public void UIDException() {
         assertThrows(IllegalArgumentException.class, () -> {
-            UID uid = RMObjectTestHelper.UID(true);
+            RMObjectTestHelper.UID(true);
+        });
+    }
+
+    /**
+     * Testes sobre InternetID
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void InternetID() throws UnsupportedEncodingException {
+        InternetID internetId = RMObjectTestHelper.InternetID(false);
+        s.serializeInternetID(internetId);
+        internetId = s.deserializeInternetID();
+
+        assertEquals("openehr", internetId.getUid().getValue());
+    }
+
+    @Test
+    public void InternetIDException() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.InternetID(true);
         });
     }
 
