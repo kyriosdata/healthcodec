@@ -69,4 +69,16 @@ public class RMObjectTestHelper {
     public static UUID UUID(){
         return RMObjectFactory.newUUID("value");
     }
+
+    /**
+     * Cria uma instância de GenericID com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em GenericID
+     * @return instância de GenericID
+     */
+    public static GenericID GenericID(boolean forceException){
+        return RMObjectFactory.newGenericID(
+                "value", forceException ? "" : "scheme");
+    }
 }

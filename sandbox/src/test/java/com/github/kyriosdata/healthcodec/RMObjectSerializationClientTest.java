@@ -135,4 +135,25 @@ class RMObjectSerializationClientTest {
         assertEquals("value", uuid.getUid().getValue());
     }
 
+    /**
+     * Testes sobre GenericID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void GenericID() throws UnsupportedEncodingException {
+        GenericID genericID = RMObjectTestHelper.GenericID(false);
+        s.serializeGenericID(genericID);
+        genericID = s.deserializeGenericID();
+
+        assertEquals("value", genericID.getObjectID().getValue());
+        assertEquals("scheme", genericID.getScheme());
+    }
+
+    @Test
+    public void GenericIDException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.GenericID(true);
+        });
+    }
 }
