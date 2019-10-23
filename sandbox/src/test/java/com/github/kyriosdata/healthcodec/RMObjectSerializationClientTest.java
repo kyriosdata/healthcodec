@@ -318,4 +318,24 @@ class RMObjectSerializationClientTest {
         });
     }
 
+    /**
+     * Testes para HierObjectID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void HierObjectID() throws UnsupportedEncodingException {
+        HierObjectID hid = RMObjectTestHelper.HierObjectID(false);
+        s.serializeHierObjectID(hid);
+        hid = s.deserializeHierObjectID();
+
+        assertEquals("value", hid.getUIDBasedID().getValue());
+    }
+
+    @Test
+    public void HierObjectIDException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.HierObjectID(true);
+        });
+    }
 }

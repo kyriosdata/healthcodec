@@ -168,4 +168,15 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newObjectVersionID(
                 forceException ? "" : "value");
     }
+
+    /**
+     * Cria uma instância de ObjectVersionID com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em ObjectVersionID
+     * @return instância de ObjectVersionID
+     */
+    public static HierObjectID HierObjectID(boolean forceException){
+        return RMObjectFactory.newHierObjectID(forceException ? "" : "value");
+    }
 }
