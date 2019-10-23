@@ -1640,6 +1640,24 @@ public class RMObject {
         private final Set<DvText> languages;
 
         protected Actor(Party party, Set<Role> roles, Set<DvText> languages) {
+            String LEGAL_IDENTITY = "legal identity";
+            
+            boolean hasLegalIdentity = false;
+            for (PartyIdentity identity : party.getIdentities()) {
+                if (LEGAL_IDENTITY.equals(identity.locatable.name.getValue())) {
+                    hasLegalIdentity = true;
+                    break;
+                }
+            }
+            if (!hasLegalIdentity) {
+                throw new IllegalArgumentException("no legal identity");
+            }
+            if (roles != null && roles.isEmpty()) {
+                throw new IllegalArgumentException("roles vazio");
+            }
+            if (languages != null && languages.isEmpty()) {
+                throw new IllegalArgumentException("languages vazio");
+            }
             this.party = party;
             this.roles = roles;
             this.languages = languages;
