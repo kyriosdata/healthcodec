@@ -51,4 +51,13 @@ public class RMObjectTestHelper {
     public static InternetID InternetID(boolean forceException){
         return RMObjectFactory.newInternetID(forceException ? "000" : "openehr");
     }
+
+    /**
+     * Cria uma instância de ISO_OID com valor fixo
+     *
+     * @return instância de ISO_OID
+     */
+    public static ISO_OID ISOOID(){
+        return RMObjectFactory.newISOOID("value");
+    }
 }
