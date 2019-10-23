@@ -1768,6 +1768,9 @@ public class RMObject {
 
         public ISMTransition(DvCodedText currentState,
                 DvCodedText transition, DvCodedText careflowStep) {
+            if (currentState == null) {
+                throw new IllegalArgumentException("null currentState");
+            }
             this.currentState = currentState;
             this.transition = transition;
             this.careflowStep = careflowStep;
