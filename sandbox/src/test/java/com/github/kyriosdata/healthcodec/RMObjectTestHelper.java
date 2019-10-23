@@ -20,7 +20,7 @@ public class RMObjectTestHelper {
 
     /**
      * Cria uma instância de DvIdentifier com valores fixos
-     * 
+     *
      * @param forceException flag que aciona uma IllegalArgumentException de
      *                       variável null ou vazia em DvIdentifier
      * @return instância de DvIdentifier
@@ -28,5 +28,16 @@ public class RMObjectTestHelper {
     public static DvIdentifier DvIdentifier(boolean forceException){
         return RMObjectFactory.newDvIdentifier(forceException ? "" : "issuer",
                 "assigner", "id", "type");
+    }
+
+    /**
+     * Cria uma instância de UID com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em UID
+     * @return instância de UID
+     */
+    public static UID UID(boolean forceException){
+        return RMObjectFactory.newUID(forceException ? "" : "value");
     }
 }
