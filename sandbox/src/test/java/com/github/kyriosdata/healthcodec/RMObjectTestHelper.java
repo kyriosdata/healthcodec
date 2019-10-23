@@ -81,4 +81,13 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newGenericID(
                 "value", forceException ? "" : "scheme");
     }
+
+    /**
+     * Cria uma instância de TemplateID com valor fixo
+     *
+     * @return instância de TemplateID
+     */
+    public static TemplateID TemplateID(){
+        return RMObjectFactory.newTemplateID("value");
+    }
 }

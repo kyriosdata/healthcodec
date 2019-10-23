@@ -137,7 +137,7 @@ class RMObjectSerializationClientTest {
 
     /**
      * Testes sobre GenericID
-     *
+     *2
      * @throws UnsupportedEncodingException
      */
     @Test
@@ -155,5 +155,14 @@ class RMObjectSerializationClientTest {
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectTestHelper.GenericID(true);
         });
+    }
+
+    @Test
+    public void TemplateID() throws UnsupportedEncodingException {
+        TemplateID templateId = RMObjectTestHelper.TemplateID();
+        s.serializeTemplateID(templateId);
+        templateId = s.deserializeTemplateID();
+
+        assertEquals("value", templateId.getObjectID().getValue());
     }
 }
