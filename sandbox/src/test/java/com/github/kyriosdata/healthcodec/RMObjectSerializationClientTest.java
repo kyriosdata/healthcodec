@@ -234,4 +234,24 @@ class RMObjectSerializationClientTest {
         });
     }
 
+    /**
+     * Testes para DVEHRURI
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void DVEHRURI() throws UnsupportedEncodingException {
+        DVEHRURI dvehruri = RMObjectTestHelper.DVEHRURI(false);
+        s.serializeDVEHRURI(dvehruri);
+        dvehruri = s.deserializeDVEHRURI();
+
+        assertEquals("value", dvehruri.getDvuri().getValue());
+    }
+
+    @Test
+    public void DVEHRURIException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DVEHRURI(true);
+        });
+    }
 }

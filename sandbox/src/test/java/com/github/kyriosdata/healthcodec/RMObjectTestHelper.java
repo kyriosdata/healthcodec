@@ -123,4 +123,8 @@ public class RMObjectTestHelper {
     public static DVURI DVURI(boolean forceException){
         return RMObjectFactory.newDVURI(forceException ? null : "value" );
     }
+
+    public static DVEHRURI DVEHRURI(boolean forceException){
+        return RMObjectFactory.newDVEHRURI(forceException ? "" : "value");
+    }
 }
