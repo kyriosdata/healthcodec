@@ -42,7 +42,8 @@ class RMObjectSerializationClientTest {
 
     @Test
     public void DvIdentifier() throws UnsupportedEncodingException {
-        DvIdentifier dvIdentifier = RMObjectTestHelper.DvIdentifier();
+        DvIdentifier dvIdentifier =
+                RMObjectTestHelper.DvIdentifier(false);
         s.serializeDvIdentifier(dvIdentifier);
         dvIdentifier = s.deserializeDvIdentifier();
 
@@ -51,4 +52,13 @@ class RMObjectSerializationClientTest {
         assertEquals("id", dvIdentifier.getId());
         assertEquals("type", dvIdentifier.getType());
     }
+
+    @Test
+    public void DvIdentifierException() throws UnsupportedEncodingException {
+        assertThrows(IllegalArgumentException.class, () -> {
+            DvIdentifier dvIdentifier =
+                    RMObjectTestHelper.DvIdentifier(true);
+        });
+    }
+
 }

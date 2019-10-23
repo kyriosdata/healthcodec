@@ -20,10 +20,13 @@ public class RMObjectTestHelper {
 
     /**
      * Cria uma instância de DvIdentifier com valores fixos
+     * 
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em DvIdentifier
      * @return instância de DvIdentifier
      */
-    public static DvIdentifier DvIdentifier(){
-        return RMObjectFactory.newDvIdentifier("issuer",
+    public static DvIdentifier DvIdentifier(boolean forceException){
+        return RMObjectFactory.newDvIdentifier(forceException ? "" : "issuer",
                 "assigner", "id", "type");
     }
 }

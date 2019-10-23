@@ -46,17 +46,17 @@ public class RMObject {
 
         protected DvIdentifier(String issuer, String assigner, String id,
                 String type) {
-            if(issuer.isEmpty()){
-                throw new IllegalArgumentException("empty or null issuer");
+            if(issuer == null || issuer.isEmpty()){
+                throw new IllegalArgumentException("issuer vazio ou null");
             }
-            if(assigner.isEmpty()){
-                throw new IllegalArgumentException("empty or null assigner");
+            if(assigner == null || assigner.isEmpty()){
+                throw new IllegalArgumentException("assigner vazio ou null");
             }
-            if(id.isEmpty()){
-                throw new IllegalArgumentException("empty or null id");
+            if(id == null || id.isEmpty()){
+                throw new IllegalArgumentException("id vazio ou null");
             }
-            if(type.isEmpty()){
-                throw new IllegalArgumentException("empty or null type");
+            if(type == null || type.isEmpty()){
+                throw new IllegalArgumentException("type vazio ou null");
             }
             this.issuer = issuer;
             this.assigner = assigner;
