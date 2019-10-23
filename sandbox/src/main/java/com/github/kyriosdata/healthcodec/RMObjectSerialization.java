@@ -670,10 +670,12 @@ public class RMObjectSerialization {
             return position;
         }
 
-        protected int serialize(Buffer buffer, int offset, ObjectRef or) {
+        protected int serialize(Buffer buffer, int offset,
+                                ObjectRef or) throws UnsupportedEncodingException {
             int position = offset;
             ObjectRefSerializer ors = new ObjectRefSerializer();
-            position = ors.serialize(buffer, position, or);
+            position = ors.serialize(buffer, position, or.getId(),
+                    or.getNamespace(), or.getType());
 
             return position;
         }

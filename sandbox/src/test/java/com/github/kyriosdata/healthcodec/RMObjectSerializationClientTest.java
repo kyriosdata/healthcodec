@@ -359,4 +359,43 @@ class RMObjectSerializationClientTest {
             RMObjectTestHelper.ObjectID(true);
         });
     }
+
+    /**
+     * Testes para PartyRef
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void PartyRef() throws UnsupportedEncodingException {
+        PartyRef pr = RMObjectTestHelper.PartyRef();
+        s.serializePartyRef(pr);
+        pr = s.deserializePartyRef();
+
+        assertEquals(pr.getObjectRef().getId().getValue(), "value");
+        assertEquals(pr.getObjectRef().getNamespace(), "DEMOGRAPHIC");
+        assertEquals(pr.getObjectRef().getType(), "type");
+    }
+
+    /**
+     * Testes para ObjectRef
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ObjectRef() throws UnsupportedEncodingException {
+        ObjectRef or = RMObjectTestHelper.ObjectRef(false);
+        s.serializeObjectRef(or);
+        or = s.deserializeObjectRef();
+
+        assertEquals("value", or.getId().getValue());
+        assertEquals("namespace", or.getNamespace());
+        assertEquals("type", or.getType());
+    }
+
+    @Test
+    public void ObjectRefException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ObjectRef(true);
+        });
+    }
 }

@@ -190,4 +190,29 @@ public class RMObjectTestHelper {
     public static ObjectID ObjectID(boolean forceException){
         return RMObjectFactory.newObjectID(forceException ? "" : "value");
     }
+
+    /**
+     * Cria uma instância de PartyRef com valor fixo
+     *
+     * @return instância de PartyRef
+     */
+    public static PartyRef PartyRef(){
+        return RMObjectFactory.newPartyRef(
+                RMObjectTestHelper.ObjectID(false),
+                "type");
+    }
+
+    /**
+     * Cria uma instância de ObjectRef com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em ObjectRef
+     * @return instância de ObjectRef
+     */
+    public static ObjectRef ObjectRef(boolean forceException){
+        return RMObjectFactory.newObjectRef(forceException ? null :
+                RMObjectTestHelper.ObjectID(false),
+                "namespace",
+                "type");
+    }
 }
