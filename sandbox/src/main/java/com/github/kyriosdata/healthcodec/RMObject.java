@@ -1797,6 +1797,15 @@ public class RMObject {
 
         public Activity(Locatable locatable, ItemStructure description, 
                 DvParsable timing, String actionArchetypeId) {
+            if (description == null) {
+                throw new IllegalArgumentException("null description");
+            }
+            if (timing == null) {
+                throw new IllegalArgumentException("null timing");
+            }
+            if(actionArchetypeId.isEmpty()) {
+                throw new IllegalArgumentException("actionArchetypeId vazio");
+            }
             this.locatable = locatable;
             this.description = description;
             this.timing = timing;
