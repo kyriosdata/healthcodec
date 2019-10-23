@@ -124,7 +124,25 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newDVURI(forceException ? null : "value" );
     }
 
+    /**
+     * Cria uma instância de DVEHRURI com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em DVEHRURI
+     * @return instância de DVEHRURI
+     */
     public static DVEHRURI DVEHRURI(boolean forceException){
         return RMObjectFactory.newDVEHRURI(forceException ? "" : "value");
+    }
+
+    /**
+     * Cria uma instância de VersionTreeID com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em VersionTreeID
+     * @return instância de VersionTreeID
+     */
+    public static VersionTreeID VersionTreeID(boolean forceException){
+        return RMObjectFactory.newVersionTreeID(forceException ? "" : "value");
     }
 }

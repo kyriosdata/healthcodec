@@ -254,4 +254,25 @@ class RMObjectSerializationClientTest {
             RMObjectTestHelper.DVEHRURI(true);
         });
     }
+
+    /**
+     * Testes para VersionTreeID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void VersionTreeID() throws UnsupportedEncodingException {
+        VersionTreeID vid = RMObjectTestHelper.VersionTreeID(false);
+        s.serializeVersionTreeID(vid);
+        vid = s.deserializeVersionTreeID();
+
+        assertEquals("value", vid.getValue());
+    }
+
+    @Test
+    public void VersionTreeIDException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.VersionTreeID(true);
+        });
+    }
 }
