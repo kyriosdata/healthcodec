@@ -398,4 +398,28 @@ class RMObjectSerializationClientTest {
             RMObjectTestHelper.ObjectRef(true);
         });
     }
+
+    /**
+     * Testes para LocatableRef
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void LocatableRef() throws UnsupportedEncodingException {
+        LocatableRef lr = RMObjectTestHelper.LocatableRef(false);
+        s.serializeLocatableRef(lr);
+        lr = s.deserializeLocatableRef();
+
+        assertEquals("value", lr.getObjectRef().getId().getValue());
+        assertEquals("namespace", lr.getObjectRef().getNamespace());
+        assertEquals("type", lr.getObjectRef().getType());
+        assertEquals("path", lr.getPath());
+    }
+
+    @Test
+    public void LocatableRefException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.LocatableRef(true);
+        });
+    }
 }

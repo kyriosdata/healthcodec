@@ -215,4 +215,17 @@ public class RMObjectTestHelper {
                 "namespace",
                 "type");
     }
+
+    /**
+     * Cria uma instância de LocatableRef com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em LocatableRef
+     * @return instância de LocatableRef
+     */
+    public static LocatableRef LocatableRef(boolean forceException){
+        return RMObjectFactory.newLocatableRef(forceException ? null :
+                RMObjectTestHelper.ObjectVersionID(false),
+                "namespace","type", "path");
+    }
 }
