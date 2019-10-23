@@ -156,4 +156,16 @@ public class RMObjectTestHelper {
     public static ArchetypeID ArchetypeID(boolean forceException){
         return RMObjectFactory.newArchetypeID(forceException ? "" : "value");
     }
+
+    /**
+     * Cria uma instância de ObjectVersionID com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em ObjectVersionID
+     * @return instância de ObjectVersionID
+     */
+    public static ObjectVersionID ObjectVersionID(boolean forceException){
+        return RMObjectFactory.newObjectVersionID(
+                forceException ? "" : "value");
+    }
 }

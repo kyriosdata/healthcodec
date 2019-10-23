@@ -276,6 +276,11 @@ class RMObjectSerializationClientTest {
         });
     }
 
+    /**
+     * Testes para ArchetypeID
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void ArchetypeID() throws UnsupportedEncodingException {
         ArchetypeID archetypeId = RMObjectTestHelper.ArchetypeID(false);
@@ -291,4 +296,26 @@ class RMObjectSerializationClientTest {
             RMObjectTestHelper.ArchetypeID(true);
         });
     }
+
+    /**
+     * Testes para ObjectVersionID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ObjectVersionID() throws UnsupportedEncodingException {
+        ObjectVersionID oid = RMObjectTestHelper.ObjectVersionID(false);
+        s.serializeObjectVersionID(oid);
+        oid = s.deserializeObjectVersionID();
+
+        assertEquals("value", oid.getUIDBasedID().getValue());
+    }
+
+    @Test
+    public void ObjectVersionIDException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ObjectVersionID(true);
+        });
+    }
+
 }
