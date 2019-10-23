@@ -170,13 +170,24 @@ public class RMObjectTestHelper {
     }
 
     /**
-     * Cria uma instância de ObjectVersionID com valor fixo
+     * Cria uma instância de HierObjectID com valor fixo
      *
      * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em ObjectVersionID
-     * @return instância de ObjectVersionID
+     *                       variável null ou vazia em HierObjectID
+     * @return instância de HierObjectID
      */
     public static HierObjectID HierObjectID(boolean forceException){
         return RMObjectFactory.newHierObjectID(forceException ? "" : "value");
+    }
+
+    /**
+     * Cria uma instância de ObjectID com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em ObjectID
+     * @return instância de ObjectID
+     */
+    public static ObjectID ObjectID(boolean forceException){
+        return RMObjectFactory.newObjectID(forceException ? "" : "value");
     }
 }

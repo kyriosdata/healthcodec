@@ -248,7 +248,7 @@ public class RMObject {
         private final DVURI dvuri;
 
         protected DVEHRURI(String value) {
-            if (value.isEmpty()) {
+            if (value == null || value.isEmpty()) {
                 throw new IllegalArgumentException("value vazio");
             }
             this.dvuri = RMObjectFactory.newDVURI(value);
@@ -264,7 +264,7 @@ public class RMObject {
         private final String value;
 
         protected VersionTreeID(String value) {
-            if (value.isEmpty()) {
+            if (value == null || value.isEmpty()) {
                 throw new IllegalArgumentException("value vazio");
             }
             this.value = value;
@@ -280,7 +280,7 @@ public class RMObject {
         private final ObjectID objectID;
 
         protected ArchetypeID(String value) {
-            if (value.isEmpty()) {
+            if (value == null || value.isEmpty()) {
                 throw new IllegalArgumentException("value vazio");
             }
             this.objectID = RMObjectFactory.newObjectID(value);
@@ -296,7 +296,7 @@ public class RMObject {
         private final UIDBasedID uidBasedID;
 
         protected ObjectVersionID(String value) {
-            if (value.isEmpty()) {
+            if (value == null || value.isEmpty()) {
                 throw new IllegalArgumentException("value vazio");
             }
             this.uidBasedID = RMObjectFactory.newUIDBasedID(value);
@@ -312,7 +312,7 @@ public class RMObject {
         private final UIDBasedID uidBasedID;
 
         protected HierObjectID(String value) {
-            if (value.isEmpty()) {
+            if (value == null || value.isEmpty()) {
                 throw new IllegalArgumentException("value vazio");
             }
             this.uidBasedID = RMObjectFactory.newUIDBasedID(value);
@@ -328,7 +328,7 @@ public class RMObject {
         private final String value;
 
         protected ObjectID(String value) {
-            if (value.isEmpty()) {
+            if (value == null || value.isEmpty()) {
                 throw new IllegalArgumentException("value vazio");
             }
             this.value = value;
