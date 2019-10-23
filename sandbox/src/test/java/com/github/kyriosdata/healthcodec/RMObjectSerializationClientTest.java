@@ -187,4 +187,51 @@ class RMObjectSerializationClientTest {
         assertEquals("name(version)",
                 terminologyID.getObjectID().getValue());
     }
+
+    /**
+     * Testes de CodePhrase
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void CodePhrase() throws UnsupportedEncodingException {
+        CodePhrase codePhrase = RMObjectTestHelper.CodePhrase(false);
+        s.serializeCodePhrase(codePhrase);
+        codePhrase = s.deserializeCodePhrase();
+
+        assertEquals("name", codePhrase.getTerminologyID().getName());
+        assertEquals("version",
+                codePhrase.getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                codePhrase.getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", codePhrase.getCodeString());
+    }
+
+    @Test
+    public void CodePhraseException() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.CodePhrase(true);
+        });
+    }
+
+    /**
+     * Testes para DVURI
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void DVURI() throws UnsupportedEncodingException {
+        DVURI dvuri = RMObjectTestHelper.DVURI(false);
+        s.serializeDVURI(dvuri);
+        dvuri = s.deserializeDVURI();
+
+        assertEquals("value", dvuri.getValue());
+    }
+
+    @Test
+    public void DVURIException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DVURI(true);
+        });
+    }
+
 }

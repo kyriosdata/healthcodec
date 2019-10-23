@@ -99,4 +99,28 @@ public class RMObjectTestHelper {
     public static TerminologyID TerminologyID(){
         return RMObjectFactory.newTerminologyID("name", "version");
     }
+
+    /**
+     * Cria uma instância de CodePhrase com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em CodePhrase
+     * @return instância de CodePhrase
+     */
+    public static CodePhrase CodePhrase(boolean forceException){
+        TerminologyID terminologyID = RMObjectTestHelper.TerminologyID();
+        return RMObjectFactory.newCodePhrase(
+                forceException ? null : terminologyID, "codeString");
+    }
+
+    /**
+     * Cria uma instância de DVURI com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em DVURI
+     * @return instância de DVURI
+     */
+    public static DVURI DVURI(boolean forceException){
+        return RMObjectFactory.newDVURI(forceException ? null : "value" );
+    }
 }

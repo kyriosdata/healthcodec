@@ -232,7 +232,7 @@ public class RMObject {
         private final String value;
 
         protected DVURI(String value) {
-            if(value.isEmpty() || value == null){
+            if(value == null || value.isEmpty()){
                 throw new IllegalArgumentException("codeString null ou vazio");
             }
             this.value = value;
