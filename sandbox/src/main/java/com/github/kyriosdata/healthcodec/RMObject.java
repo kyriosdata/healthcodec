@@ -1641,7 +1641,7 @@ public class RMObject {
 
         protected Actor(Party party, Set<Role> roles, Set<DvText> languages) {
             String LEGAL_IDENTITY = "legal identity";
-            
+
             boolean hasLegalIdentity = false;
             for (PartyIdentity identity : party.getIdentities()) {
                 if (LEGAL_IDENTITY.equals(identity.locatable.name.getValue())) {
@@ -1736,6 +1736,12 @@ public class RMObject {
 
         public InstructionDetails(LocatableRef instructionId,
                 String activityId, ItemStructure wfDetails) {
+            if (instructionId == null) {
+                throw new IllegalArgumentException("null instructionId");
+            }
+            if (activityId.isEmpty()) {
+                throw new IllegalArgumentException("activityId null ou vazio");
+            }
             this.instructionId = instructionId;
             this.activityId = activityId;
             this.wfDetails = wfDetails;
