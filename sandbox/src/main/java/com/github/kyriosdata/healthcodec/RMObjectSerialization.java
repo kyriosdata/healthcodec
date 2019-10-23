@@ -354,9 +354,14 @@ public class RMObjectSerialization {
 
         protected TerminologyID deserialize(Buffer buffer, int offset) {
             int position = offset;
-            String name = stringDeserialization(buffer, position);
+
+            int namePosition = buffer.readInteger(position);
             position += PrimitiveTypeSize.INT.getSize();
-            String version = stringDeserialization(buffer, position);
+            String name = stringDeserialization(buffer, namePosition);
+
+            int versionPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            String version = stringDeserialization(buffer, versionPosition);
 
             return RMObjectFactory.newTerminologyID(name, version);
         }

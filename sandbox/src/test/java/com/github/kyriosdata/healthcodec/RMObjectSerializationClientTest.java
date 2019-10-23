@@ -157,6 +157,11 @@ class RMObjectSerializationClientTest {
         });
     }
 
+    /**
+     * Teste sobre TemplateID
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void TemplateID() throws UnsupportedEncodingException {
         TemplateID templateId = RMObjectTestHelper.TemplateID();
@@ -164,5 +169,22 @@ class RMObjectSerializationClientTest {
         templateId = s.deserializeTemplateID();
 
         assertEquals("value", templateId.getObjectID().getValue());
+    }
+
+    /**
+     * Teste sobre TerminologyID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void TerminologyID() throws UnsupportedEncodingException {
+        TerminologyID terminologyID = RMObjectTestHelper.TerminologyID();
+        s.serializeTerminologyID(terminologyID);
+        terminologyID = s.deserializeTerminologyID();
+
+        assertEquals("name", terminologyID.getName());
+        assertEquals("version", terminologyID.getVersion());
+        assertEquals("name(version)",
+                terminologyID.getObjectID().getValue());
     }
 }

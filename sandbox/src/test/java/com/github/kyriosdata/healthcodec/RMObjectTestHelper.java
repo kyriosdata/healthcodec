@@ -90,4 +90,13 @@ public class RMObjectTestHelper {
     public static TemplateID TemplateID(){
         return RMObjectFactory.newTemplateID("value");
     }
+
+    /**
+     * Cria uma instância de TerminologyID com valor fixo
+     *
+     * @return instância de TerminologyID
+     */
+    public static TerminologyID TerminologyID(){
+        return RMObjectFactory.newTerminologyID("name", "version");
+    }
 }
