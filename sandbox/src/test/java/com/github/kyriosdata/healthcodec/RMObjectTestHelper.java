@@ -300,6 +300,17 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de UIDBasedID com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em UIDBasedID
+     * @return instância de UIDBasedID
+     */
+    public static UIDBasedID UIDBasedID(boolean forceException){
+        return RMObjectFactory.newUIDBasedID(forceException ? "" : "value" );
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia

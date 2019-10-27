@@ -340,7 +340,7 @@ class RMObjectSerializationClientTest {
     }
 
     /**
-     * Testes para HierObjectID
+     * Testes para ObjectID
      *
      * @throws UnsupportedEncodingException
      */
@@ -526,6 +526,11 @@ class RMObjectSerializationClientTest {
         });
     }
 
+    /**
+     * Testes para Archetyped
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void Archetyped() throws UnsupportedEncodingException {
         Archetyped a = RMObjectTestHelper.Archetyped(
@@ -553,6 +558,27 @@ class RMObjectSerializationClientTest {
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectTestHelper.Archetyped(false,
                     true);
+        });
+    }
+
+    /**
+     * Testes para UIDBasedID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void UIDBasedID() throws UnsupportedEncodingException {
+        UIDBasedID uid = RMObjectTestHelper.UIDBasedID(false);
+        s.serializeUIDBasedID(uid);
+        uid = s.deserializeUIDBasedID();
+
+        assertEquals("value", uid.getValue());
+    }
+
+    @Test
+    public void UIDBasedIDException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.UIDBasedID(true);
         });
     }
 }
