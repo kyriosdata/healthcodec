@@ -1,5 +1,8 @@
 package com.github.kyriosdata.healthcodec;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.github.kyriosdata.healthcodec.RMObject.*;
 
 /**
@@ -249,4 +252,54 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newAccessGroupRef(forceException ? null :
                 RMObjectFactory.newObjectID("value"));
     }
+
+
+
+    /**
+     * Cria uma instância de PartyIdentified com valor fixo
+     *
+     * @param forcePartyRefException flag que aciona uma
+     *                               IllegalArgumentException de variável null
+     *                               ou vazia em PartyIdentified
+     * @param forceNameException flag que aciona uma
+     *                           {@link IllegalArgumentException} de
+     *                           variável null ou vazia em PartyIdentified
+     * @param forceListException flag que aciona uma lista vazia
+     *                           em PartyIdentified
+     *
+     * @return instância de PartyIdentified
+     */
+    public static PartyIdentified PartyIdentified(
+            boolean forcePartyRefException, boolean forceNameException,
+            boolean forceListException){
+        return RMObjectFactory.newPartyIdentified(
+                RMObjectFactory.newPartyRef(
+                        forcePartyRefException ? null :
+                        RMObjectFactory.newObjectID("value"),
+                        "value"),
+                forceNameException ? "" : "name",
+                forceListException ? DvIdentifierList(true) :
+                        DvIdentifierList(false));
+    }
+
+    /**
+     * Método que gera uma lista de DvIdentifier
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    private static List<DvIdentifier> DvIdentifierList(boolean emptyList){
+        List<DvIdentifier> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        DvIdentifier id = RMObjectFactory.newDvIdentifier("issuer",
+                "assigner", "id", "type");
+        list.add(id);
+        list.add(id);
+        list.add(id);
+
+        return list;
+    }
+
 }

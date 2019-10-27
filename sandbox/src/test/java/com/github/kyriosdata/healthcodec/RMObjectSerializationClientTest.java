@@ -458,4 +458,71 @@ class RMObjectSerializationClientTest {
             RMObjectTestHelper.AccessGroupRef(true);
         });
     }
+
+    /**
+     * Testes para PartyIdentified
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void PartyIdentified() throws UnsupportedEncodingException {
+        PartyIdentified pi = RMObjectTestHelper.PartyIdentified(
+                false, false,
+                false);
+
+        s.serializePartyIdentified(pi);
+        pi = s.deserializePartyIdentified();
+        //externalRef
+        assertEquals("value", pi.getExternalRef().getObjectRef().
+                getId().getValue());
+        assertEquals("DEMOGRAPHIC", pi.getExternalRef().
+                getObjectRef().getNamespace());
+        assertEquals("value", pi.getExternalRef().
+                getObjectRef().getType());
+        //name
+        assertEquals("name", pi.getName());
+        //identifiers
+        assertEquals("issuer", pi.getIdentifiers().get(0).getIssuer());
+        assertEquals("issuer", pi.getIdentifiers().get(1).getIssuer());
+        assertEquals("issuer", pi.getIdentifiers().get(2).getIssuer());
+
+        assertEquals("assigner", pi.getIdentifiers().
+                get(0).getAssigner());
+        assertEquals("assigner", pi.getIdentifiers().
+                get(1).getAssigner());
+        assertEquals("assigner", pi.getIdentifiers().
+                get(2).getAssigner());
+
+        assertEquals("id", pi.getIdentifiers().get(0).getId());
+        assertEquals("id", pi.getIdentifiers().get(1).getId());
+        assertEquals("id", pi.getIdentifiers().get(2).getId());
+
+        assertEquals("type", pi.getIdentifiers().get(0).getType());
+        assertEquals("type", pi.getIdentifiers().get(1).getType());
+        assertEquals("type", pi.getIdentifiers().get(2).getType());
+    }
+
+    @Test
+    public void PartyIdentifiedPartyRefException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyIdentified(true,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void PartyIdentifiedNameException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyIdentified(false,
+                    true, false);
+        });
+    }
+
+    @Test
+    public void PartyIdentifiedListException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyIdentified(false,
+                    false, true);
+        });
+    }
 }
