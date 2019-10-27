@@ -422,4 +422,16 @@ class RMObjectSerializationClientTest {
             RMObjectTestHelper.LocatableRef(true);
         });
     }
+
+    /**
+     * Testes para PropotionKind
+     */
+    @Test
+    public void ProportionKind(){
+        ProportionKind pk = RMObjectTestHelper.ProportionKind();
+        s.serializeProportionKind(pk);
+        pk = s.deserializeProportionKind();
+
+        assertEquals(1, pk.getValue());
+    }
 }

@@ -228,4 +228,13 @@ public class RMObjectTestHelper {
                 RMObjectTestHelper.ObjectVersionID(false),
                 "namespace","type", "path");
     }
+
+    /**
+     * Cria uma instância de ProportionKind com valor fixo
+     *
+     * @return instância de ProportionKind
+     */
+    public static ProportionKind ProportionKind(){
+        return RMObjectFactory.newPropotionKind(1);
+    }
 }
