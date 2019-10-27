@@ -434,4 +434,28 @@ class RMObjectSerializationClientTest {
 
         assertEquals(1, pk.getValue());
     }
+
+    /**
+     * Testes para AccessGroupRef
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void AccessGroupRef() throws UnsupportedEncodingException {
+        AccessGroupRef ag = RMObjectTestHelper.AccessGroupRef(false);
+        s.serializeAccessGroupRef(ag);
+        ag = s.deserializeAccessGroupRef();
+
+        assertEquals("value", ag.getObjectRef().getId().getValue());
+        assertEquals("ACCESS_CONTROL",
+                ag.getObjectRef().getNamespace());
+        assertEquals("ACCESS_GROUP", ag.getObjectRef().getType());
+    }
+
+    @Test
+    public void AccessGroupRefException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.AccessGroupRef(true);
+        });
+    }
 }

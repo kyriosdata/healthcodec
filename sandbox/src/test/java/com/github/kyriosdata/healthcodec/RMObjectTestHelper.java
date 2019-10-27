@@ -223,10 +223,10 @@ public class RMObjectTestHelper {
      *                       variável null ou vazia em LocatableRef
      * @return instância de LocatableRef
      */
-    public static LocatableRef LocatableRef(boolean forceException){
+    public static LocatableRef LocatableRef(boolean forceException) {
         return RMObjectFactory.newLocatableRef(forceException ? null :
-                RMObjectTestHelper.ObjectVersionID(false),
-                "namespace","type", "path");
+                        RMObjectTestHelper.ObjectVersionID(false),
+                "namespace", "type", "path");
     }
 
     /**
@@ -236,5 +236,17 @@ public class RMObjectTestHelper {
      */
     public static ProportionKind ProportionKind(){
         return RMObjectFactory.newPropotionKind(1);
+    }
+
+    /**
+     * Cria uma instância de AccessGroupRef com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em AccessGroupRef
+     * @return instância de LocatableRef
+     */
+    public static AccessGroupRef AccessGroupRef(boolean forceException){
+        return RMObjectFactory.newAccessGroupRef(forceException ? null :
+                RMObjectFactory.newObjectID("value"));
     }
 }
