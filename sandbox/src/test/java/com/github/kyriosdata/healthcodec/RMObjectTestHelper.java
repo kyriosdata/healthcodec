@@ -275,11 +275,28 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newPartyIdentified(
                 RMObjectFactory.newPartyRef(
                         forcePartyRefException ? null :
-                        RMObjectFactory.newObjectID("value"),
+                                RMObjectFactory.newObjectID("value"),
                         "value"),
                 forceNameException ? "" : "name",
                 forceListException ? DvIdentifierList(true) :
                         DvIdentifierList(false));
+    }
+
+    /**
+     * Cria uma instância de Archetyped com valor fixo
+     *
+     * @param forceArchetypeIdException flag que aciona uma variável nula em
+     *                                  Archetyped
+     * @param forceRmVersionException   flag que aciona uma variável vazia em
+     *                                  Archetyped
+     * @return instância de Archetyped
+     */
+    public static Archetyped Archetyped(boolean forceArchetypeIdException,
+                                        boolean forceRmVersionException){
+        return RMObjectFactory.newArchetyped(forceArchetypeIdException ? null :
+                        RMObjectFactory.newArchetypeID("value"),
+                RMObjectTestHelper.TemplateID(),
+                forceRmVersionException ? "" : "rmVersion");
     }
 
     /**

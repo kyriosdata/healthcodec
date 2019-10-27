@@ -525,4 +525,34 @@ class RMObjectSerializationClientTest {
                     false, true);
         });
     }
+
+    @Test
+    public void Archetyped() throws UnsupportedEncodingException {
+        Archetyped a = RMObjectTestHelper.Archetyped(
+                false, false);
+        s.serializeArchetyped(a);
+        a = s.deserializeArchetyped();
+
+        assertEquals("value", a.getArchetypeId().
+                getObjectID().getValue());
+        assertEquals("value", a.getTemplateId().
+                getObjectID().getValue());
+        assertEquals("rmVersion", a.getRmVersion());
+    }
+
+    @Test
+    public void ArchetypedArchetypeIDException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Archetyped(true,
+                    false);
+        });
+    }
+
+    @Test
+    public void ArchetypedRmVersionException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Archetyped(false,
+                    true);
+        });
+    }
 }
