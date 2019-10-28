@@ -699,6 +699,11 @@ class RMObjectSerializationClientTest {
         });
     }
 
+    /**
+     * Testes para DvMultimedia
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void DvMultimedia() throws UnsupportedEncodingException {
         DvMultimedia dm = RMObjectTestHelper.DvMultimedia(
@@ -794,6 +799,163 @@ class RMObjectSerializationClientTest {
             RMObjectTestHelper.DvMultimedia(false,
                     false,
                     false, true);
+        });
+    }
+
+    /**
+     * Testes para DvText
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void DvText() throws UnsupportedEncodingException {
+        DvText dt = RMObjectTestHelper.DvText(false,
+                false);
+        s.serializeDvText(dt);
+        dt = s.deserializeDvText();
+
+        //value
+        assertEquals("value", dt.getValue());
+
+        //mappings
+
+        //0
+        assertEquals("name", dt.getMappings().get(0).getTarget()
+                .getTerminologyID().getName());
+        assertEquals("version",
+                dt.getMappings().get(0).getTarget().
+                        getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dt.getMappings().get(0).getTarget().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getMappings().get(0).
+                getTarget().getCodeString());
+        assertEquals(">", dt.getMappings().get(0).
+                getMatch().getValue());
+        assertEquals("value", dt.getMappings().get(0).
+                getPurpose().getDvText().getValue());
+        assertEquals(null, dt.getMappings().get(0).getPurpose().
+                getDvText().getMappings());
+        assertEquals("formatting", dt.getMappings().get(0).
+                getPurpose().getDvText().getFormatting());
+        assertEquals("value", dt.getMappings().get(0).getPurpose().
+                getDvText().getHyperlink().getValue());
+        assertEquals("name", dt.getMappings().get(0).getPurpose().
+                getDvText().getCharset().getTerminologyID().getName());
+        assertEquals("version",
+                dt.getMappings().get(0).getPurpose().
+                        getDvText().getCharset().getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dt.getMappings().get(0).getPurpose().
+                        getDvText().getCharset().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getMappings().get(0).getPurpose().
+                getDvText().getCharset().getCodeString());
+
+        //1
+        assertEquals("name", dt.getMappings().get(1).getTarget()
+                .getTerminologyID().getName());
+        assertEquals("version",
+                dt.getMappings().get(1).getTarget().
+                        getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dt.getMappings().get(1).getTarget().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getMappings().get(1).
+                getTarget().getCodeString());
+        assertEquals(">", dt.getMappings().get(1).
+                getMatch().getValue());
+        assertEquals("value", dt.getMappings().get(1).
+                getPurpose().getDvText().getValue());
+        assertEquals(null, dt.getMappings().get(1).getPurpose().
+                getDvText().getMappings());
+        assertEquals("formatting", dt.getMappings().get(1).
+                getPurpose().getDvText().getFormatting());
+        assertEquals("value", dt.getMappings().get(1).getPurpose().
+                getDvText().getHyperlink().getValue());
+        assertEquals("name", dt.getMappings().get(1).getPurpose().
+                getDvText().getCharset().getTerminologyID().getName());
+        assertEquals("version",
+                dt.getMappings().get(1).getPurpose().
+                        getDvText().getCharset().getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dt.getMappings().get(1).getPurpose().
+                        getDvText().getCharset().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getMappings().get(1).getPurpose().
+                getDvText().getCharset().getCodeString());
+
+        //2
+        assertEquals("name", dt.getMappings().get(2).getTarget()
+                .getTerminologyID().getName());
+        assertEquals("version",
+                dt.getMappings().get(2).getTarget().
+                        getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dt.getMappings().get(2).getTarget().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getMappings().get(2).
+                getTarget().getCodeString());
+        assertEquals(">", dt.getMappings().get(2).
+                getMatch().getValue());
+        assertEquals("value", dt.getMappings().get(2).
+                getPurpose().getDvText().getValue());
+        assertEquals(null, dt.getMappings().get(2).getPurpose().
+                getDvText().getMappings());
+        assertEquals("formatting", dt.getMappings().get(2).
+                getPurpose().getDvText().getFormatting());
+        assertEquals("value", dt.getMappings().get(2).getPurpose().
+                getDvText().getHyperlink().getValue());
+        assertEquals("name", dt.getMappings().get(2).getPurpose().
+                getDvText().getCharset().getTerminologyID().getName());
+        assertEquals("version",
+                dt.getMappings().get(2).getPurpose().
+                        getDvText().getCharset().getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dt.getMappings().get(2).getPurpose().
+                        getDvText().getCharset().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getMappings().get(2).getPurpose().
+                getDvText().getCharset().getCodeString());
+
+        //formatting
+        assertEquals("formatting", dt.getFormatting());
+
+        //hyperlink
+        assertEquals("value", dt.getHyperlink().getValue());
+
+        //language
+        assertEquals("name", dt.getLanguage()
+                .getTerminologyID().getName());
+        assertEquals("version", dt.getLanguage().
+                        getTerminologyID().getVersion());
+        assertEquals("name(version)", dt.getLanguage().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getLanguage().getCodeString());
+
+        //charset
+        assertEquals("name", dt.getCharset()
+                .getTerminologyID().getName());
+        assertEquals("version", dt.getCharset().
+                getTerminologyID().getVersion());
+        assertEquals("name(version)", dt.getCharset().
+                getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getCharset().getCodeString());
+    }
+
+    @Test
+    public void DvTextMappingException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvText(true,
+                    false);
+        });
+    }
+
+    @Test
+    public void DvTextFormattingException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvText(false,
+                    true);
         });
     }
 

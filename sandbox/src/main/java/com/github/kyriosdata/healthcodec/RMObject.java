@@ -764,9 +764,6 @@ public class RMObject {
                 List<TermMapping> mappings,
                 String formatting,
                 DVURI hyperlink, CodePhrase language, CodePhrase charset) {
-            if (!value.isEmpty() && !value.contains("\n\r")) {
-                throw new IllegalArgumentException("value inválido: " + value);
-            }
             if (mappings != null && mappings.isEmpty()) {
                 throw new IllegalArgumentException("mapping vazio");
             }

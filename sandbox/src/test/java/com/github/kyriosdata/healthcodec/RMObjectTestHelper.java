@@ -1,5 +1,7 @@
 package com.github.kyriosdata.healthcodec;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -381,6 +383,31 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de DvText com valor fixo
+     *
+     * @param foceMappingsException erro causado por uma lista vazia
+     * @param forceFormattingException string não pode ser vazia
+     *
+     * @return instância de DvText
+     */
+    @Test
+    public static DvText DvText( boolean foceMappingsException,
+                         boolean forceFormattingException){
+        String value = "value";
+        List<TermMapping> mappings =
+                foceMappingsException ?
+                RMObjectTestHelper.TermMappingList(true) :
+                RMObjectTestHelper.TermMappingList(false);
+        String formatting = forceFormattingException ? "" : "formatting";
+        DVURI hyperlink = RMObjectTestHelper.DVURI(false);
+        CodePhrase language = RMObjectTestHelper.CodePhrase(false);
+        CodePhrase charset = RMObjectTestHelper.CodePhrase(false);
+
+        return RMObjectFactory.newDvText(value, mappings, formatting,
+                hyperlink, language, charset);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
@@ -396,6 +423,35 @@ public class RMObjectTestHelper {
         list.add(id);
         list.add(id);
         list.add(id);
+
+        return list;
+    }
+
+    /**
+     * Método que gera uma lista de TermMapping
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    private static List<TermMapping> TermMappingList(boolean emptyList){
+        List<TermMapping> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        DvText dt = RMObjectFactory.newDvText("value", null,
+                "formatting",
+                RMObjectTestHelper.DVURI(false),
+                RMObjectTestHelper.CodePhrase(false),
+                RMObjectTestHelper.CodePhrase(false));
+
+        TermMapping tm = RMObjectFactory.newTermMapping(
+                RMObjectTestHelper.CodePhrase(false),
+                Match.BROADER,
+                RMObjectFactory.newDvCodedText(dt,
+                        RMObjectTestHelper.CodePhrase(false)));
+        list.add(tm);
+        list.add(tm);
+        list.add(tm);
 
         return list;
     }
