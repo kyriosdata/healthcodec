@@ -385,7 +385,7 @@ public class RMObjectTestHelper {
     /**
      * Cria uma instância de DvText com valor fixo
      *
-     * @param foceMappingsException erro causado por uma lista vazia
+     * @param forceMappingsException erro causado por uma lista vazia
      * @param forceFormattingException string não pode ser vazia
      *
      * @return instância de DvText
@@ -422,6 +422,27 @@ public class RMObjectTestHelper {
                 RMObjectTestHelper.DvText(false,
                 false), cp);
 
+    }
+
+    /**
+     * Cria uma instância de Link com valor fixo
+     *
+     * @param forceMeaningException exceção de variável nula
+     * @param forceTypeException exceção de variável nula
+     * @param forceTargetException exceção de variável nula
+     *
+     * @return nova instância de Link
+     */
+    public static Link Link(boolean forceMeaningException,
+                            boolean forceTypeException,
+                            boolean forceTargetException){
+        return RMObjectFactory.newLink(
+                forceMeaningException ? null : RMObjectTestHelper.DvText(
+                        false, false),
+                forceTypeException ? null : RMObjectTestHelper.DvText(
+                        false, false),
+                forceTargetException ? null : RMObjectTestHelper.DVEHRURI(
+                        false));
     }
 
     /**

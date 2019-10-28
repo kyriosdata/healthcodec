@@ -989,4 +989,51 @@ class RMObjectSerializationClientTest {
         });
     }
 
+    /**
+     * Testes para Link
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Link() throws UnsupportedEncodingException {
+        Link l = RMObjectTestHelper.Link(
+                false,
+                false, false);
+        s.serializeLink(l);
+        l = s.deserializeLink();
+
+        //meaning
+        assertEquals("value", l.getMeaning().getValue());
+
+        //type
+        assertEquals("value", l.getType().getValue());
+
+        //target
+        assertEquals("value", l.getTarget().getDvuri().getValue());
+    }
+
+    @Test
+    public void LinkMeaningException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Link(true,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void LinkTypeException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Link(false,
+                    true, false);
+        });
+    }
+
+    @Test
+    public void LinkTargetException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Link(false,
+                    false, true);
+        });
+    }
+
 }
