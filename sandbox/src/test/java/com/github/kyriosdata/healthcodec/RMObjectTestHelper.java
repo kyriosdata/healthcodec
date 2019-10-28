@@ -458,6 +458,12 @@ public class RMObjectTestHelper {
                 "terminal");
     }
 
+    public static DvParagraph DvParagraph(boolean forceException){
+        return RMObjectFactory.newDvParagraph(
+                forceException ? null :
+                RMObjectTestHelper.DvTextList(false));
+    }
+
     /**
      * Método que gera uma lista de DvIdentifier
      *
@@ -507,4 +513,19 @@ public class RMObjectTestHelper {
         return list;
     }
 
+
+    private static List<DvText> DvTextList(boolean emptyList){
+        List<DvText> list = new ArrayList<>();
+
+        DvText dt = RMObjectFactory.newDvText("value", null,
+                "formatting",
+                RMObjectTestHelper.DVURI(false),
+                RMObjectTestHelper.CodePhrase(false),
+                RMObjectTestHelper.CodePhrase(false));
+        list.add(dt);
+        list.add(dt);
+        list.add(dt);
+
+        return list;
+    }
 }

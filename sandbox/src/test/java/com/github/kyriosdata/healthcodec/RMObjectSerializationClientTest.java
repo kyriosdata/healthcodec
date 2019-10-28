@@ -1038,7 +1038,7 @@ class RMObjectSerializationClientTest {
 
     /**
      * Testes para DvState
-     * 
+     *
      * @throws UnsupportedEncodingException
      */
     @Test
@@ -1061,4 +1061,26 @@ class RMObjectSerializationClientTest {
         });
     }
 
+    /**
+     * Testes para DvParagraph
+     * 
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void DvParagraph() throws UnsupportedEncodingException {
+        DvParagraph dp = RMObjectTestHelper.DvParagraph(false);
+        s.serializeDvParagraph(dp);
+        dp = s.deserializeDvParagraph();
+
+        assertEquals("value", dp.getItems().get(0).getValue());
+        assertEquals("value", dp.getItems().get(1).getValue());
+        assertEquals("value", dp.getItems().get(2).getValue());
+    }
+
+    @Test
+    public void DvParagraphException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvParagraph(true);
+        });
+    }
 }
