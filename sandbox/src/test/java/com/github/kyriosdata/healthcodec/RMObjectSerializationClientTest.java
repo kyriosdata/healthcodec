@@ -605,6 +605,11 @@ class RMObjectSerializationClientTest {
         });
     }
 
+    /**
+     * Testes para DvParsable
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void DvParsable() throws UnsupportedEncodingException {
         DvParsable dp = RMObjectTestHelper.DvParsable(false,
@@ -648,6 +653,49 @@ class RMObjectSerializationClientTest {
     public void DvParsableFormalismException(){
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectTestHelper.DvParsable(false, true);
+        });
+    }
+
+    /**
+     * Testes para DvTimeSpecification
+     * 
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void DvTimeSpecification() throws UnsupportedEncodingException {
+        DvTimeSpecification dt = RMObjectTestHelper.DvTimeSpecification(false);
+        s.serializeDvTimeSpecification(dt);
+        dt = s.deserializeDvTimeSpecification();
+
+        //charset
+        assertEquals("name(version)",
+                dt.getValue().getDvEncapsulated().getCharset().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("version",
+                dt.getValue().getDvEncapsulated().getCharset().
+                        getTerminologyID().getVersion());
+        assertEquals("codeString",
+                dt.getValue().getDvEncapsulated().getCharset().getCodeString());
+        //language
+        assertEquals("name(version)",
+                dt.getValue().getDvEncapsulated().getLanguage()
+                        .getTerminologyID().getObjectID().getValue());
+        assertEquals("version",
+                dt.getValue().getDvEncapsulated().
+                        getLanguage().getTerminologyID().getVersion());
+        assertEquals("codeString", dt.getValue().getDvEncapsulated().
+                getLanguage().getCodeString());
+        //value
+        assertEquals("value", dt.getValue().getValue());
+
+        //formalism
+        assertEquals("formalism", dt.getValue().getFormalism());
+    }
+
+    @Test
+    public void DvTimeSpecificationException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvTimeSpecification(true);
         });
     }
 

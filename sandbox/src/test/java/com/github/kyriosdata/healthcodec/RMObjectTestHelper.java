@@ -340,6 +340,20 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de DvTimeSpecification com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em DvTimeSpecification
+     * @return instância de DvTimeSpecification
+     */
+    public static DvTimeSpecification DvTimeSpecification(boolean forceException){
+        return RMObjectFactory.newDvTimeSpecification(
+                forceException ? null :
+                RMObjectTestHelper.DvParsable(false,
+                        false));
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
