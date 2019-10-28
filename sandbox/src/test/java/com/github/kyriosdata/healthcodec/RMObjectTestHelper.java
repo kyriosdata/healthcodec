@@ -322,6 +322,24 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de DvParsable com valor fixo
+     *
+     * @param forceValueException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em DvParsable
+     * @param forceFormalismException flag que aciona uma I
+     *                       llegalArgumentException de variável null
+     *                       ou vazia em DvParsable
+     * @return instância de DvParsable
+     */
+    public static DvParsable DvParsable(boolean forceValueException,
+                                        boolean forceFormalismException){
+        return RMObjectFactory.newDvParsable(
+                RMObjectTestHelper.DvEncapsulated(),
+                forceValueException ? null : "value",
+                forceFormalismException ? "" : "formalism");
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia

@@ -561,6 +561,11 @@ class RMObjectSerializationClientTest {
         });
     }
 
+    /**
+     * Testes para DvEncapsulated
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void DvEncapsulated() throws UnsupportedEncodingException {
         DvEncapsulated de = RMObjectTestHelper.DvEncapsulated();
@@ -571,15 +576,11 @@ class RMObjectSerializationClientTest {
                 de.getCharset().getTerminologyID().getObjectID().getValue());
         assertEquals("version",
                 de.getCharset().getTerminologyID().getVersion());
-        assertEquals("name(version)",
-                de.getCharset().getTerminologyID().getObjectID().getValue());
         assertEquals("codeString", de.getCharset().getCodeString());
         assertEquals("name(version)",
                 de.getLanguage().getTerminologyID().getObjectID().getValue());
         assertEquals("version",
                 de.getLanguage().getTerminologyID().getVersion());
-        assertEquals("name(version)",
-                de.getLanguage().getTerminologyID().getObjectID().getValue());
         assertEquals("codeString", de.getLanguage().getCodeString());
     }
 
@@ -603,4 +604,51 @@ class RMObjectSerializationClientTest {
             RMObjectTestHelper.UIDBasedID(true);
         });
     }
+
+    @Test
+    public void DvParsable() throws UnsupportedEncodingException {
+        DvParsable dp = RMObjectTestHelper.DvParsable(false,
+                false);
+        s.serializeDvParsable(dp);
+        dp = s.deserializeDvParsable();
+
+        //charset
+        assertEquals("name(version)",
+                dp.getDvEncapsulated().getCharset().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("version",
+                dp.getDvEncapsulated().getCharset().
+                        getTerminologyID().getVersion());
+        assertEquals("codeString",
+                dp.getDvEncapsulated().getCharset().getCodeString());
+        //language
+        assertEquals("name(version)",
+                dp.getDvEncapsulated().getLanguage()
+                        .getTerminologyID().getObjectID().getValue());
+        assertEquals("version",
+                dp.getDvEncapsulated().
+                        getLanguage().getTerminologyID().getVersion());
+        assertEquals("codeString", dp.getDvEncapsulated().
+                getLanguage().getCodeString());
+        //value
+        assertEquals("value", dp.getValue());
+
+        //formalism
+        assertEquals("formalism", dp.getFormalism());
+    }
+
+    @Test
+    public void DvParsableValueException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvParsable(true, false);
+        });
+    }
+
+    @Test
+    public void DvParsableFormalismException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvParsable(false, true);
+        });
+    }
+
 }
