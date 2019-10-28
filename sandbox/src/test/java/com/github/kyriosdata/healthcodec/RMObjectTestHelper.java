@@ -495,6 +495,24 @@ public class RMObjectTestHelper {
                 systemID, provider, location, subject, versionID);
     }
 
+    public static FeederAudit FeederAudit(boolean forceOSAException,
+                                          boolean forceOSIIException,
+                                          boolean forceFSIIException){
+        FeederAuditDetails originatingSystemAudit = forceOSAException ? null :
+                RMObjectTestHelper.FeederAuditDetails(false);
+        List<DvIdentifier> originatingSystemItemIDs = forceOSIIException ? null:
+                RMObjectTestHelper.DvIdentifierList(false);
+        FeederAuditDetails feederSystemAudit =
+                RMObjectTestHelper.FeederAuditDetails(false);
+        List<DvIdentifier> feederSystemItemIDs = forceFSIIException ? null :
+                RMObjectTestHelper.DvIdentifierList(false);
+        DvEncapsulated originalContent = RMObjectTestHelper.DvEncapsulated();
+
+        return RMObjectFactory.newFeederAudit(originatingSystemAudit,
+                originatingSystemItemIDs, feederSystemAudit,
+                feederSystemItemIDs, originalContent);
+    }
+
     /**
      * Método que gera uma lista de DvIdentifier
      *

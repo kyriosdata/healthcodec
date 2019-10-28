@@ -1118,4 +1118,57 @@ class RMObjectSerializationClientTest {
             RMObjectTestHelper.FeederAuditDetails(true);
         });
     }
+
+    /**
+     * Testes para FeederAudit
+     * 
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void FeederAudit() throws UnsupportedEncodingException {
+        FeederAudit fa = RMObjectTestHelper.FeederAudit(false,
+                false, false);
+        s.serializeFeederAudit(fa);
+        fa = s.deserializeFeederAudit();
+
+        //originatingSystemAudit
+        assertEquals("systemID",
+                fa.getOriginatingSystemAudit().getSystemID());
+        //originatingSystemItemIDs
+        assertEquals("issuer",
+                fa.getOriginatingSystemItemIDs().get(0).getIssuer());
+        //feederSystemAudit
+        assertEquals("systemID",
+                fa.getFeederSystemAudit().getSystemID());
+        //feederSystemItemIDs
+        assertEquals("issuer",
+                fa.getFeederSystemItemIDs().get(0).getIssuer());
+        //originalContent
+        assertEquals("codeString",
+                fa.getOriginalContent().getLanguage().getCodeString());
+    }
+
+    @Test
+    public void FeederAuditOSAEException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.FeederAudit(true,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void FeederAuditOSIIException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.FeederAudit(false,
+                    true, false);
+        });
+    }
+
+    @Test
+    public void FeederAuditFSIIException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.FeederAudit(false,
+                    false, true);
+        });
+    }
 }
