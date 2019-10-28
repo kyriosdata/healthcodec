@@ -1063,7 +1063,7 @@ class RMObjectSerializationClientTest {
 
     /**
      * Testes para DvParagraph
-     * 
+     *
      * @throws UnsupportedEncodingException
      */
     @Test
@@ -1081,6 +1081,41 @@ class RMObjectSerializationClientTest {
     public void DvParagraphException(){
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectTestHelper.DvParagraph(true);
+        });
+    }
+
+    /**
+     * Testes para FeederAuditDetails
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void FeederAuditDetails() throws UnsupportedEncodingException {
+        FeederAuditDetails fa = RMObjectTestHelper.FeederAuditDetails(
+                false);
+        s.serializeFeederAuditDetails(fa);
+        fa = s.deserializeFeederAuditDetails();
+
+        //systemID
+        assertEquals("systemID", fa.getSystemID());
+
+        //provider
+        assertEquals("name", fa.getProvider().getName());
+
+        //location
+        assertEquals("name", fa.getLocation().getName());
+
+        //subject
+        assertEquals("value", fa.getSubject().
+                getExternalRef().getObjectRef().getId().getValue());
+
+        assertEquals("versionID", fa.getVersionID());
+    }
+
+    @Test
+    public void FeederAuditDetailsException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.FeederAuditDetails(true);
         });
     }
 }

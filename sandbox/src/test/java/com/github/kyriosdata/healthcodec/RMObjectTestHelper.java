@@ -465,6 +465,37 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de PartyProxy com valor fixo
+     *
+     * @return nova instância de PartyProxy
+     */
+    public static PartyProxy PartyProxy(){
+        return RMObjectFactory.newPartyProxy(RMObjectTestHelper.PartyRef());
+    }
+
+    /**
+     * Cria uma instância de FeederAuditDetails com valor fixo
+     *
+     * @param forceException exceção de variável vazia
+     *
+     * @return nova instância de FeederAuditDetails
+     */
+    public static FeederAuditDetails FeederAuditDetails(boolean forceException){
+        String systemID = "systemID";
+        PartyIdentified provider = RMObjectTestHelper.PartyIdentified(
+                false, false,
+                false);
+        PartyIdentified location = RMObjectTestHelper.PartyIdentified(
+                false, false,
+                false);
+        PartyProxy subject = RMObjectTestHelper.PartyProxy();
+        String versionID = "versionID";
+
+        return RMObjectFactory.newFeederAuditDetails(forceException ? "" :
+                systemID, provider, location, subject, versionID);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
