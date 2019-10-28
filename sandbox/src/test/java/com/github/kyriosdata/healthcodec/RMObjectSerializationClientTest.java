@@ -658,7 +658,7 @@ class RMObjectSerializationClientTest {
 
     /**
      * Testes para DvTimeSpecification
-     * 
+     *
      * @throws UnsupportedEncodingException
      */
     @Test
@@ -696,6 +696,104 @@ class RMObjectSerializationClientTest {
     public void DvTimeSpecificationException(){
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectTestHelper.DvTimeSpecification(true);
+        });
+    }
+
+    @Test
+    public void DvMultimedia() throws UnsupportedEncodingException {
+        DvMultimedia dm = RMObjectTestHelper.DvMultimedia(
+                false, false,
+                false, false);
+        s.serializeDvMultimedia(dm);
+        dm = s.deserializeDvMultimedia();
+
+        //dvEncapsulated
+        assertEquals("name(version)",
+                dm.getDvEncapsulated().getCharset().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("version",
+                dm.getDvEncapsulated().getCharset().
+                        getTerminologyID().getVersion());
+        assertEquals("codeString", dm.getDvEncapsulated().
+                getCharset().getCodeString());
+        assertEquals("name(version)",
+                dm.getDvEncapsulated().getLanguage().getTerminologyID().
+                        getObjectID().getValue());
+        assertEquals("version",
+                dm.getDvEncapsulated().getLanguage().getTerminologyID().getVersion());
+        assertEquals("codeString", dm.getDvEncapsulated().
+                getLanguage().getCodeString());
+
+        //alternateText
+        assertEquals("alternateText", dm.getAlternateText());
+
+        //mediaType
+        assertEquals("name", dm.getMediaType().
+                getTerminologyID().getName());
+        assertEquals("version",
+                dm.getMediaType().getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dm.getMediaType().getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dm.getMediaType().getCodeString());
+
+        //compressionAlgorithm
+        assertEquals("name", dm.getCompressionAlgorithm().
+                getTerminologyID().getName());
+        assertEquals("version",
+                dm.getCompressionAlgorithm().getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dm.getCompressionAlgorithm().getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dm.getCompressionAlgorithm().
+                getCodeString());
+
+        //integrityCheck
+        byte[] integrityCheck = {0,1,0,1};
+        assertArrayEquals(integrityCheck, dm.getIntegrityCheck());
+
+        //thumbnail
+        assertEquals(null, dm.getThumbnail());
+
+        //uri
+        assertEquals("value", dm.getUri().getValue());
+
+        //data
+        byte[] data = {1,0,1,0};
+        assertArrayEquals(data, dm.getData());
+    }
+
+    @Test
+    public void DvMultimediaMediaTypeException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvMultimedia(true,
+                    false,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void DvMultimediaCompressionAlgorithmException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvMultimedia(false,
+                    true,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void DvMultimediaIntegrityCheckException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvMultimedia(false,
+                    false,
+                    true, false);
+        });
+    }
+
+    @Test
+    public void DvMultimediaDataException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvMultimedia(false,
+                    false,
+                    false, true);
         });
     }
 

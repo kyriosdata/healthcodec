@@ -353,6 +353,33 @@ public class RMObjectTestHelper {
                         false));
     }
 
+    public static DvMultimedia DvMultimedia(boolean forceMediaTypeException,
+                  boolean forceCompressionAlgorithmException,
+                  boolean forceIntegrityCheckException,
+                  boolean forceDataException){
+        DvEncapsulated de = RMObjectTestHelper.DvEncapsulated();
+        String alternateText = "alternateText";
+        CodePhrase mediaType = RMObjectTestHelper.CodePhrase(false);
+        CodePhrase compressionAlgorithm =
+                RMObjectTestHelper.CodePhrase(false);
+        byte[] integrityCheck = {0,1,0,1};
+        CodePhrase integrityCheckAlgorithm =
+                RMObjectTestHelper.CodePhrase(false);
+        DVURI du = RMObjectTestHelper.DVURI(false);
+        byte[] data = {1,0,1,0};
+
+        return RMObjectFactory.newDvMultimedia(
+                de,
+                alternateText,
+                forceMediaTypeException ? null : mediaType,
+                forceCompressionAlgorithmException ? null : compressionAlgorithm,
+                integrityCheck,
+                forceIntegrityCheckException ? null : integrityCheckAlgorithm,
+                null,
+                forceDataException ? null : du,
+                forceDataException ? null : data);
+    }
+
     /**
      * Método que gera uma lista de DvIdentifier
      *
