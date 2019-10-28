@@ -446,6 +446,19 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de DvState com valor fixo
+     *
+     * @param forceException flag que aciona uma IllegalArgumentException de
+     *                       variável null ou vazia em DvState
+     * @return instância de DvState
+     */
+    public static DvState DvState(boolean forceException){
+        return RMObjectFactory.newDvState(forceException ? null :
+                RMObjectTestHelper.DvCodedText(false),
+                "terminal");
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia

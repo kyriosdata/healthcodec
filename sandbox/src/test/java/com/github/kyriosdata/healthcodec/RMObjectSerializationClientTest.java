@@ -1036,4 +1036,29 @@ class RMObjectSerializationClientTest {
         });
     }
 
+    /**
+     * Testes para DvState
+     * 
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void DvState() throws UnsupportedEncodingException {
+        DvState ds = RMObjectTestHelper.DvState(false);
+        s.serializeDvState(ds);
+        ds = s.deserializaDvState();
+
+        //dvcodedtext
+        assertEquals("value", ds.getValue().getDvText().getValue());
+
+        //terminal
+        assertEquals("terminal", ds.getTerminal());
+    }
+
+    @Test
+    public void DvStateException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvState(true);
+        });
+    }
+
 }
