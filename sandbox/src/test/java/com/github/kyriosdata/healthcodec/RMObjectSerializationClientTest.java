@@ -561,6 +561,28 @@ class RMObjectSerializationClientTest {
         });
     }
 
+    @Test
+    public void DvEncapsulated() throws UnsupportedEncodingException {
+        DvEncapsulated de = RMObjectTestHelper.DvEncapsulated();
+        s.serializeDvEncapsulated(de);
+        de = s.deserializeDvEncapsulated();
+
+        assertEquals("name(version)",
+                de.getCharset().getTerminologyID().getObjectID().getValue());
+        assertEquals("version",
+                de.getCharset().getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                de.getCharset().getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", de.getCharset().getCodeString());
+        assertEquals("name(version)",
+                de.getLanguage().getTerminologyID().getObjectID().getValue());
+        assertEquals("version",
+                de.getLanguage().getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                de.getLanguage().getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", de.getLanguage().getCodeString());
+    }
+
     /**
      * Testes para UIDBasedID
      *

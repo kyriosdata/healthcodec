@@ -311,6 +311,17 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de DvEncapsulated com valor fixo
+     *
+     * @return instância de DvEncapsulated
+     */
+    public static DvEncapsulated DvEncapsulated(){
+        return RMObjectFactory.newDvEncapsulated(
+                RMObjectTestHelper.CodePhrase(false),
+                RMObjectTestHelper.CodePhrase(false));
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
