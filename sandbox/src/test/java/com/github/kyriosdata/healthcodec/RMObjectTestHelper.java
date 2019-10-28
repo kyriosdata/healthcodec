@@ -391,11 +391,11 @@ public class RMObjectTestHelper {
      * @return instância de DvText
      */
     @Test
-    public static DvText DvText( boolean foceMappingsException,
+    public static DvText DvText( boolean forceMappingsException,
                          boolean forceFormattingException){
         String value = "value";
         List<TermMapping> mappings =
-                foceMappingsException ?
+                forceMappingsException ?
                 RMObjectTestHelper.TermMappingList(true) :
                 RMObjectTestHelper.TermMappingList(false);
         String formatting = forceFormattingException ? "" : "formatting";
@@ -405,6 +405,23 @@ public class RMObjectTestHelper {
 
         return RMObjectFactory.newDvText(value, mappings, formatting,
                 hyperlink, language, charset);
+    }
+
+    /**
+     * Cria uma instância de DvCodedText com valor fixo
+     *
+     * @param forceDefiningCodeException
+     *
+     * @return instância de DvCodedText
+     */
+    public static DvCodedText DvCodedText(boolean forceDefiningCodeException){
+        CodePhrase cp = forceDefiningCodeException ? null :
+                RMObjectTestHelper.CodePhrase(false);
+
+        return RMObjectFactory.newDvCodedText(
+                RMObjectTestHelper.DvText(false,
+                false), cp);
+
     }
 
     /**

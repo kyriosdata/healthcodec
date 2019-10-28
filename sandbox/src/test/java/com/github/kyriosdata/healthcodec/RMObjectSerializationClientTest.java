@@ -959,4 +959,34 @@ class RMObjectSerializationClientTest {
         });
     }
 
+    /**
+     * Testes para DvCodedText
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void DvCodedText() throws UnsupportedEncodingException {
+        DvCodedText dt = RMObjectTestHelper.DvCodedText(false);
+        s.serializeDvCodedText(dt);
+        dt = s.deserializeDvCodedText();
+
+        assertEquals("value",dt.getDvText().getValue());
+        assertEquals("name", dt.getDefiningCode().
+                getTerminologyID().getName());
+        assertEquals("version",
+                dt.getDefiningCode().getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dt.getDefiningCode().getTerminologyID().
+                        getObjectID().getValue());
+        assertEquals("codeString", dt.getDefiningCode().getCodeString());
+
+    }
+
+    @Test
+    public void DvCodedTextDefiningCodeException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvCodedText(true);
+        });
+    }
+
 }

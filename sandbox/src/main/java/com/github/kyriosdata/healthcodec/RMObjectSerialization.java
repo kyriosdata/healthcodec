@@ -1486,7 +1486,8 @@ public class RMObjectSerialization {
                 throws UnsupportedEncodingException {
             int meta = offset;
             int listSize = items.size();
-            int position = offset + (listSize * PrimitiveTypeSize.INT.getSize()) + PrimitiveTypeSize.INT.getSize();
+            int position = offset + (listSize * PrimitiveTypeSize.INT.getSize())
+                    + PrimitiveTypeSize.INT.getSize();
 
             meta = writeHeader(buffer, meta, listSize);
             DvTextSerializer tms = new DvTextSerializer();
@@ -1568,17 +1569,19 @@ public class RMObjectSerialization {
             CodePhraseSerializer cps = new CodePhraseSerializer();
 
             meta = writeHeader(buffer, meta, position);
-            position = dvt.serialize(
-                    buffer,
-                    position,
-                    dvText.getValue(),
-                    dvText.getMappings(),
-                    dvText.getFormatting(),
-                    dvText.getHyperlink(),
-                    dvText.getLanguage(),
-                    dvText.getCharset());
+            if(dvText != null){
+                position = dvt.serialize(
+                        buffer,
+                        position,
+                        dvText.getValue(),
+                        dvText.getMappings(),
+                        dvText.getFormatting(),
+                        dvText.getHyperlink(),
+                        dvText.getLanguage(),
+                        dvText.getCharset());
+            }
 
-            meta = writeHeader(buffer, meta, position);
+            writeHeader(buffer, meta, position);
             position = cps.serialize(buffer, position, definingCode);
 
             return position;
@@ -1589,7 +1592,7 @@ public class RMObjectSerialization {
             DvCodedTextSerializer dcs = new DvCodedTextSerializer();
             int position = offset;
 
-            position = dcs.serialize(buffer, offset,
+            position = dcs.serialize(buffer, position,
                     dct.getDvText(), dct.getDefiningCode());
 
             return position;
