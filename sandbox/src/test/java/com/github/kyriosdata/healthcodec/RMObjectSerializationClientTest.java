@@ -1231,7 +1231,7 @@ class RMObjectSerializationClientTest {
 
     /**
      * Testes para PartyRelated
-     * 
+     *
      * @throws UnsupportedEncodingException
      */
     @Test
@@ -1273,4 +1273,78 @@ class RMObjectSerializationClientTest {
                 "type");
     }
 
+    @Test
+    public void ResourceDescriptionItem() throws UnsupportedEncodingException {
+        ResourceDescriptionItem rd = RMObjectTestHelper.ResourceDescriptionItem(
+                false, false,
+                false, false);
+        s.serializeResourceDescriptionItem(rd);
+        rd = s.deserializeResourceDescriptionItem();
+
+        //language
+        assertEquals("name", rd.getLanguage().getTerminologyID().getName());
+
+        //purpose
+        assertEquals("purpose", rd.getPurpose());
+
+        //keywords
+        assertEquals("value", rd.getKeywords().get(0));
+        assertEquals("value", rd.getKeywords().get(1));
+        assertEquals("value", rd.getKeywords().get(2));
+
+        //use
+        assertEquals("use", rd.getUse());
+
+        //misuse
+        assertEquals("misuse", rd.getMisuse());
+
+        //copyright
+        assertEquals("copyright", rd.getCopyright());
+
+        //originalResourceUri
+        assertEquals("value", rd.getOriginalResourceUri().get("key1"));
+        assertEquals("value", rd.getOriginalResourceUri().get("key2"));
+        assertEquals("value", rd.getOriginalResourceUri().get("key3"));
+
+        //otherDetails
+        assertEquals("value", rd.getOtherDetails().get("key1"));
+        assertEquals("value", rd.getOtherDetails().get("key2"));
+        assertEquals("value", rd.getOtherDetails().get("key3"));
+    }
+
+    @Test
+    public void ResourceDescriptionItemPurposeException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ResourceDescriptionItem(true,
+                     false, false,
+                    false);
+        });
+    }
+
+    @Test
+    public void ResourceDescriptionItemUseException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ResourceDescriptionItem(false,
+                    true, false,
+                    false);
+        });
+    }
+
+    @Test
+    public void ResourceDescriptionItemMisuseException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ResourceDescriptionItem(false,
+                    false, true,
+                    false);
+        });
+    }
+
+    @Test
+    public void ResourceDescriptionItemCopyrightException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ResourceDescriptionItem(false,
+                    false, false,
+                    true);
+        });
+    }
 }

@@ -2,10 +2,7 @@ package com.github.kyriosdata.healthcodec;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.github.kyriosdata.healthcodec.RMObject.*;
 
@@ -73,7 +70,7 @@ public class RMObjectTestHelper {
      *
      * @return instância de UUID
      */
-    public static UUID UUID(){
+    public static RMObject.UUID UUID(){
         return RMObjectFactory.newUUID("value");
     }
 
@@ -584,6 +581,28 @@ public class RMObjectTestHelper {
                 RMObjectTestHelper.PartyRef());
     }
 
+    public static ResourceDescriptionItem ResourceDescriptionItem(
+            boolean forcePurposeException,
+            boolean forceUseException,
+            boolean forceMisuseException,
+            boolean forceCopyrightExpcetion){
+        CodePhrase language =
+                RMObjectTestHelper.CodePhrase(false);
+        String purpose = forcePurposeException ? "" : "purpose";
+        List<String> keywords = RMObjectTestHelper.StringList(false);
+        String use = forceUseException ? "" : "use";
+        String misuse = forceMisuseException ? "" : "misuse";
+        String copyright = forceCopyrightExpcetion ? "" : "copyright";
+        Map<String, String> originalResourceUri =
+                RMObjectTestHelper.StringStringMap(false);
+        Map<String, String> otherDetails =
+                RMObjectTestHelper.StringStringMap(false);
+
+        return RMObjectFactory.newResourceDescriptionItem(language,purpose,
+                keywords,use,misuse,copyright,originalResourceUri,
+                otherDetails);
+    }
+
     /**
      * Método que gera uma lista de DvIdentifier
      *
@@ -673,5 +692,43 @@ public class RMObjectTestHelper {
         set.add(l);
 
         return set;
+    }
+
+    /**
+     * Método que cria uma lista de Strings
+     *
+     * @param emptyList lista vazia
+     *
+     * @return list
+     */
+    private static List<String> StringList(boolean emptyList){
+        List<String> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        list.add("value");
+        list.add("value");
+        list.add("value");
+
+        return list;
+    }
+
+    /**
+     * Método que gera um map de String, String
+     *
+     * @param emptyMap map vazio
+     *
+     * @return map
+     */
+    private static Map<String, String> StringStringMap(boolean emptyMap){
+        Map<String, String> map = new HashMap<>();
+        if(emptyMap){
+            return map;
+        }
+        map.put("key1", "value");
+        map.put("key2", "value");
+        map.put("key3", "value");
+
+        return map;
     }
 }
