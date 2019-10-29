@@ -3,7 +3,9 @@ package com.github.kyriosdata.healthcodec;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.github.kyriosdata.healthcodec.RMObject.*;
 
@@ -495,22 +497,64 @@ public class RMObjectTestHelper {
                 systemID, provider, location, subject, versionID);
     }
 
+    /**
+     * Cria uma instância de FeederAudit com valor fixo
+     *
+     * @param forceOSAException exceção de variável vazia
+     * @param forceOSIIException exceção de variável vazia
+     * @param forceFSIIException exceção de variável vazia
+     *
+     * @return nova instância de FeederAudit
+     */
     public static FeederAudit FeederAudit(boolean forceOSAException,
                                           boolean forceOSIIException,
                                           boolean forceFSIIException){
         FeederAuditDetails originatingSystemAudit = forceOSAException ? null :
                 RMObjectTestHelper.FeederAuditDetails(false);
-        List<DvIdentifier> originatingSystemItemIDs = forceOSIIException ? null:
+        List<DvIdentifier> originatingSystemItemIDs = forceOSIIException ?
+                RMObjectTestHelper.DvIdentifierList(true):
                 RMObjectTestHelper.DvIdentifierList(false);
         FeederAuditDetails feederSystemAudit =
                 RMObjectTestHelper.FeederAuditDetails(false);
-        List<DvIdentifier> feederSystemItemIDs = forceFSIIException ? null :
+        List<DvIdentifier> feederSystemItemIDs = forceFSIIException ?
+                RMObjectTestHelper.DvIdentifierList(true) :
                 RMObjectTestHelper.DvIdentifierList(false);
         DvEncapsulated originalContent = RMObjectTestHelper.DvEncapsulated();
 
         return RMObjectFactory.newFeederAudit(originatingSystemAudit,
                 originatingSystemItemIDs, feederSystemAudit,
                 feederSystemItemIDs, originalContent);
+    }
+
+    /**
+     * Cria uma instância de Locatable com valor fixo
+     *
+     * @param forceArchetypeNodeIdException exceção de variável vazia
+     * @param forceNameException exceção de variável vazia
+     * @param forceLinksException exceção de set vazio
+     *
+     * @return nova instância de Locatable
+     */
+    public static Locatable Locatable(boolean forceArchetypeNodeIdException,
+                                      boolean forceNameException,
+                                      boolean forceLinksException){
+        UIDBasedID uid = RMObjectTestHelper.UIDBasedID(false);
+        String archetypeNodeId = forceArchetypeNodeIdException ? null :
+                "archetypeNodeId";
+        DvText name = forceNameException ? null :
+                RMObjectTestHelper.DvText(false,
+                false);
+        Archetyped archetypeDetails = RMObjectTestHelper.Archetyped(
+                false, false);
+        FeederAudit feederAudit = RMObjectTestHelper.FeederAudit(
+                false, false,
+                false);
+        Set<Link> links = forceLinksException ?
+                RMObjectTestHelper.LinkSet(true) :
+                RMObjectTestHelper.LinkSet(false);
+
+        return RMObjectFactory.newLocatable(uid, archetypeNodeId, name,
+                archetypeDetails, feederAudit, links);
     }
 
     /**
@@ -563,6 +607,12 @@ public class RMObjectTestHelper {
     }
 
 
+    /**
+     * Método que gera uma lista de DvText
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
     private static List<DvText> DvTextList(boolean emptyList){
         List<DvText> list = new ArrayList<>();
 
@@ -576,5 +626,25 @@ public class RMObjectTestHelper {
         list.add(dt);
 
         return list;
+    }
+
+    /**
+     * Método que gera um set de Link
+     *
+     * @param emptySet cria um set vazio
+     * @return set
+     */
+    private static Set<Link> LinkSet(boolean emptySet){
+        Set<Link> set = new HashSet<>();
+        if(emptySet){
+            return set;
+        }
+        Link l = RMObjectTestHelper.Link(false,
+                false, false);
+        set.add(l);
+        set.add(l);
+        set.add(l);
+
+        return set;
     }
 }

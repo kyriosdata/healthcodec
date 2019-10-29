@@ -1121,7 +1121,7 @@ class RMObjectSerializationClientTest {
 
     /**
      * Testes para FeederAudit
-     * 
+     *
      * @throws UnsupportedEncodingException
      */
     @Test
@@ -1171,4 +1171,62 @@ class RMObjectSerializationClientTest {
                     false, true);
         });
     }
+
+    /**
+     * Testes para Locatable
+     * 
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Locatable() throws UnsupportedEncodingException {
+        Locatable l = RMObjectTestHelper.Locatable(
+                false,
+                false, false);
+        s.serializeLocatable(l);
+        l = s.deserializeLocatable();
+
+        //uid
+        assertEquals("archetypeNodeId", l.getUid().getValue());
+
+        //archetypeNodeId
+        assertEquals("archetypeNodeId", l.getArchetypeNodeId());
+
+        //name
+        assertEquals("value", l.getName().getValue());
+
+        //archetypeDetails
+        assertEquals("rmVersion", l.getArchetypeDetails().getRmVersion());
+
+        //feederAudit
+        assertEquals("systemID", l.getFeederAudit().
+                getOriginatingSystemAudit().getSystemID());
+        //links
+        Link link = l.getLinks().iterator().next();
+        assertEquals("value", link.getTarget().getDvuri().getValue());
+    }
+
+    @Test
+    public void LocatableArchetypeNodeIdException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Locatable(true,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void LocatableNameException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Locatable(false,
+                    true, false);
+        });
+    }
+
+    @Test
+    public void LocatableLinksException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Locatable(false,
+                    false, true);
+        });
+    }
+
 }

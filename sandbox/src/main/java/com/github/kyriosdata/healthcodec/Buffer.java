@@ -38,7 +38,7 @@ public class Buffer {
     /**
      * Tamanho máximo do buffer.
      */
-    private static final int MAX_SIZE_BUFFER = 4096;
+    private static final int MAX_SIZE_BUFFER = 10240;
 
     /**
      * Estrutura empregada para armazenamento.

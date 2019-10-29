@@ -2287,7 +2287,10 @@ public class RMObjectSerialization {
                 Locatable locatable) throws UnsupportedEncodingException {
             int position = offset;
             LocatableSerializer ls = new LocatableSerializer();
-            position = ls.serialize(buffer, position, locatable);
+            position = ls.serialize(buffer, position, locatable.getUid(),
+                    locatable.getArchetypeNodeId(), locatable.getName(),
+                    locatable.getArchetypeDetails(), locatable.getFeederAudit(),
+                    locatable.getLinks());
 
             return position;
         }
