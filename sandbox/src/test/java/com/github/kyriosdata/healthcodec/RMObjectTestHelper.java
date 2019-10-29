@@ -558,6 +558,23 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de PartyRelated com valor fixo
+     *
+     * @param forceException exceção de variável nula
+     *
+     * @return nova instância de PartyRelated
+     */
+    public static PartyRelated PartyRelated(boolean forceException){
+        PartyIdentified pi = RMObjectTestHelper.PartyIdentified(
+                false,
+                false, false);
+        DvCodedText relationship = forceException ? null :
+                RMObjectTestHelper.DvCodedText(false);
+
+        return RMObjectFactory.newPartyRelated(pi, relationship);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia

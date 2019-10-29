@@ -1174,7 +1174,7 @@ class RMObjectSerializationClientTest {
 
     /**
      * Testes para Locatable
-     * 
+     *
      * @throws UnsupportedEncodingException
      */
     @Test
@@ -1226,6 +1226,26 @@ class RMObjectSerializationClientTest {
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectTestHelper.Locatable(false,
                     false, true);
+        });
+    }
+
+    @Test
+    public void PartyRelated() throws UnsupportedEncodingException {
+        PartyRelated pr = RMObjectTestHelper.PartyRelated(false);
+        s.serializePartyRelated(pr);
+        pr = s.deserializePartyRelated();
+
+        //pi
+        assertEquals("name", pr.getPi().getName());
+        //relationship
+        assertEquals("value", pr.
+                getRelationship().getDvText().getValue());
+    }
+
+    @Test
+    public void PartyRelatedException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyRelated(true);
         });
     }
 
