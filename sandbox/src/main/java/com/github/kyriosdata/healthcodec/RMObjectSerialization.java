@@ -2436,8 +2436,8 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset,
                 PartySelf ps) throws UnsupportedEncodingException {
             int position = offset;
-            PartyRefSerializer prs = new PartyRefSerializer();
-            position = prs.serialize(buffer, position, ps.getExternalRef());
+            PartySelfSerializer pss = new PartySelfSerializer();
+            position = pss.serialize(buffer, position, ps.getExternalRef());
 
             return position;
         }

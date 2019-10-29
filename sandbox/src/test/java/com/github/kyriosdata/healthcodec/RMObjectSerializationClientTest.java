@@ -1229,6 +1229,11 @@ class RMObjectSerializationClientTest {
         });
     }
 
+    /**
+     * Testes para PartyRelated
+     * 
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void PartyRelated() throws UnsupportedEncodingException {
         PartyRelated pr = RMObjectTestHelper.PartyRelated(false);
@@ -1247,6 +1252,25 @@ class RMObjectSerializationClientTest {
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectTestHelper.PartyRelated(true);
         });
+    }
+
+    /**
+     * Testes para PartySelf
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void PartySelf() throws UnsupportedEncodingException {
+        PartySelf ps = RMObjectTestHelper.PartySelf();
+        s.serializePartySelf(ps);
+        ps = s.deserializePartySelf();
+
+        assertEquals(ps.getExternalRef().getObjectRef().getId().getValue(),
+                "value");
+        assertEquals(ps.getExternalRef().getObjectRef().getNamespace(),
+                "DEMOGRAPHIC");
+        assertEquals(ps.getExternalRef().getObjectRef().getType(),
+                "type");
     }
 
 }

@@ -575,6 +575,16 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de PartySelf com valor fixo
+     *
+     * @return nova instância de PartySelf
+     */
+    public static PartySelf PartySelf(){
+        return RMObjectFactory.newPartySelf(
+                RMObjectTestHelper.PartyRef());
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
