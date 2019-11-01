@@ -1431,7 +1431,7 @@ class RMObjectSerializationClientTest {
 
     /**
      * Testes para Element
-     * 
+     *
      * @throws UnsupportedEncodingException
      */
     @Test
@@ -1447,5 +1447,21 @@ class RMObjectSerializationClientTest {
         //nullFlavour
         assertEquals("formatting", e.getNullFlavour().
                 getDvText().getFormatting());
+    }
+
+    /**
+     * Testes para DataStructure
+     * 
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void DataStrucuture()
+            throws UnsupportedEncodingException {
+        DataStructure ds = RMObjectTestHelper.DataStructure();
+        s.serializeDataStructure(ds);
+        ds = s.deserializeDataStructure();
+
+        //locatable
+        assertEquals("value", ds.getLocatable().getName().getValue());
     }
 }

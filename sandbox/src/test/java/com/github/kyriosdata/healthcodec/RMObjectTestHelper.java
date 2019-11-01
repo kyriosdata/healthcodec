@@ -668,6 +668,18 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de DataStructure com valor fixo
+     *
+     * @return nova instância de DataStructure
+     */
+    public static DataStructure DataStructure(){
+        return RMObjectFactory.newDataStructure(
+                RMObjectTestHelper.Locatable(false,
+                        false, false));
+
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
