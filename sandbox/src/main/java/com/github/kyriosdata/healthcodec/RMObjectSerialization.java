@@ -2962,7 +2962,8 @@ public class RMObjectSerialization {
             int position = offset;
             ElementSerializer es = new ElementSerializer();
 
-            position = es.serialize(buffer, position, element);
+            position = es.serialize(buffer, position,
+                    element.getItem(), element.getNullFlavour());
 
             return position;
         }
@@ -2977,7 +2978,6 @@ public class RMObjectSerialization {
             Item item = is.deserialize(buffer, itemPosition);
 
             int nullFlavourPosition = buffer.readInteger(position);
-            position += PrimitiveTypeSize.INT.getSize();
             DvCodedText nullFlavour = dts.deserialize(
                     buffer, nullFlavourPosition);
 

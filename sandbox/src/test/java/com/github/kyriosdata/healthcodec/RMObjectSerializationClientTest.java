@@ -1410,6 +1410,11 @@ class RMObjectSerializationClientTest {
         assertEquals("value", i.getLocatable().getName().getValue());
     }
 
+    /**
+     * Testes para Cluster
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void Cluster() throws UnsupportedEncodingException {
         Cluster c = RMObjectTestHelper.Cluster();
@@ -1422,5 +1427,25 @@ class RMObjectSerializationClientTest {
         //items
         assertEquals("value", c.getItems().get(0).
                 getLocatable().getName().getValue());
+    }
+
+    /**
+     * Testes para Element
+     * 
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Element() throws UnsupportedEncodingException {
+        Element e = RMObjectTestHelper.Element();
+        s.serializeElement(e);
+        e = s.deserializeElement();
+
+        //item
+        assertEquals("value", e.getItem().getLocatable().
+                getName().getValue());
+
+        //nullFlavour
+        assertEquals("formatting", e.getNullFlavour().
+                getDvText().getFormatting());
     }
 }

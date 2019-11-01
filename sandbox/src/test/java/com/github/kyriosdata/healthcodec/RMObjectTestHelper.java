@@ -656,6 +656,16 @@ public class RMObjectTestHelper {
                 RMObjectTestHelper.ItemList(false));
     }
 
+    /**
+     * Cria uma instância de Element com valor fixo
+     *
+     * @return nova instância de Element
+     */
+    public static Element Element(){
+        return RMObjectFactory.newElement(
+                RMObjectTestHelper.Item(),
+                RMObjectTestHelper.DvCodedText(false));
+    }
 
     /**
      * Método que gera uma lista de DvIdentifier
