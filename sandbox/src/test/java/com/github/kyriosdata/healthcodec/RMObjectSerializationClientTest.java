@@ -1451,7 +1451,7 @@ class RMObjectSerializationClientTest {
 
     /**
      * Testes para DataStructure
-     * 
+     *
      * @throws UnsupportedEncodingException
      */
     @Test
@@ -1463,5 +1463,42 @@ class RMObjectSerializationClientTest {
 
         //locatable
         assertEquals("value", ds.getLocatable().getName().getValue());
+    }
+
+    /**
+     * Testes para ItemList
+     * 
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ItemList() throws UnsupportedEncodingException {
+        ItemList il = RMObjectTestHelper.ItemList();
+        s.serializeItemList(il);
+        il = s.deserializeItemList();
+
+        //uid
+        assertEquals("value", il.getUid().getValue());
+
+        //archetypeNodeId
+        assertEquals("archetypeNodeId", il.getArchetypeNodeId());
+
+        //name
+        assertEquals("value", il.getName().getValue());
+
+        //archetypeDetails
+        assertEquals("rmVersion",
+                il.getArchetypeDetails().getRmVersion());
+
+        //feederAudit
+        assertEquals("systemID",
+                il.getFeederAudit().getOriginatingSystemAudit().getSystemID());
+
+        //links
+        Link l = il.getLinks().iterator().next();
+        assertEquals("value", l.getType().getValue());
+
+        //items
+        Element e = il.getItems().get(0);
+        assertEquals("value", e.getItem().getLocatable().getName().getValue());
     }
 }

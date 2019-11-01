@@ -676,7 +676,17 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newDataStructure(
                 RMObjectTestHelper.Locatable(false,
                         false, false));
+    }
 
+    public static ItemList ItemList(){
+        return RMObjectFactory.newItemList(
+                RMObjectTestHelper.UIDBasedID(false),
+                "archetypeNodeId",
+                RMObjectTestHelper.DvText(false,false),
+                RMObjectTestHelper.Archetyped(false, false),
+                RMObjectTestHelper.FeederAudit(false, false, false),
+                RMObjectTestHelper.LinkSet(false),
+                RMObjectTestHelper.ElementList(false));
     }
 
     /**
@@ -804,6 +814,25 @@ public class RMObjectTestHelper {
         Item i = RMObjectTestHelper.Item();
 
         list.add(i);
+
+        return list;
+    }
+
+    /**
+     * Método que cria uma lista de Element
+     *
+     * @param emptyList lista vazia
+     *
+     * @return list
+     */
+    private static List<Element> ElementList(boolean emptyList){
+        List<Element> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        Element e = RMObjectTestHelper.Element();
+
+        list.add(e);
 
         return list;
     }
