@@ -1273,6 +1273,10 @@ class RMObjectSerializationClientTest {
                 "type");
     }
 
+    /**
+     * Testes para ResourceDescriptionItem
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void ResourceDescriptionItem() throws UnsupportedEncodingException {
         ResourceDescriptionItem rd = RMObjectTestHelper.ResourceDescriptionItem(
@@ -1345,6 +1349,50 @@ class RMObjectSerializationClientTest {
             RMObjectTestHelper.ResourceDescriptionItem(false,
                     false, false,
                     true);
+        });
+    }
+
+    /**
+     * Testes para TranslationDetails
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void TranslationDetails() throws UnsupportedEncodingException {
+        TranslationDetails td = RMObjectTestHelper.TranslationDetails(
+                false, false);
+        s.serializeTranslationDetails(td);
+        td = s.deserializeTranslationDetails();
+
+        //language
+        assertEquals("codeString", td.getLanguage().getCodeString());
+
+        //author
+        assertEquals("value", td.getAuthor().get("key1"));
+        assertEquals("value", td.getAuthor().get("key2"));
+        assertEquals("value", td.getAuthor().get("key3"));
+
+        //accreditation
+        assertEquals("accreditation", td.getAccreditation());
+
+        //otherDetails
+        assertEquals("value", td.getOtherDetails().get("key1"));
+        assertEquals("value", td.getOtherDetails().get("key2"));
+        assertEquals("value", td.getOtherDetails().get("key3"));
+    }
+
+    @Test
+    public void TranslationDetailsLanguageException() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.TranslationDetails(true, false);
+        });
+    }
+
+    @Test
+    public void TranslationDetailsAuthorException() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.TranslationDetails(
+                    false,true);
         });
     }
 }

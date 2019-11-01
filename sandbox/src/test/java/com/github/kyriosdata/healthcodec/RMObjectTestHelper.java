@@ -581,6 +581,16 @@ public class RMObjectTestHelper {
                 RMObjectTestHelper.PartyRef());
     }
 
+    /**
+     * Cria uma instância de ResourceDescriptionItem com valor fixo
+     *
+     * @param forcePurposeException exceção de variável nula
+     * @param forceUseException exceção de variável nula
+     * @param forceMisuseException exceção de variável nula
+     * @param forceCopyrightExpcetion exceção de variável nula
+     *
+     * @return nova instância de ResourceDescriptionItem
+     */
     public static ResourceDescriptionItem ResourceDescriptionItem(
             boolean forcePurposeException,
             boolean forceUseException,
@@ -601,6 +611,27 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newResourceDescriptionItem(language,purpose,
                 keywords,use,misuse,copyright,originalResourceUri,
                 otherDetails);
+    }
+
+    /**
+     * Cria uma instância de TranslationDetails com valor fixo
+     * @param forceLanguageException
+     * @param forceAuthorException
+     * @return nova instância de TranslationDetails
+     */
+    public static TranslationDetails TranslationDetails(
+            boolean forceLanguageException,
+            boolean forceAuthorException){
+        CodePhrase language = forceLanguageException ? null :
+                RMObjectTestHelper.CodePhrase(false);
+        Map<String, String> author = forceAuthorException ? null :
+                RMObjectTestHelper.StringStringMap(false);
+        String accreditation = "accreditation";
+        Map<String, String> otherDetails =
+                RMObjectTestHelper.StringStringMap(false);
+
+        return RMObjectFactory.newTranslationDetails(language,author,
+                accreditation, otherDetails);
     }
 
     /**
