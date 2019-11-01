@@ -716,6 +716,12 @@ public class RMObjectTestHelper {
                 forceException ? null : RMObjectTestHelper.Element());
     }
 
+    public static ItemTable ItemTable(){
+        return RMObjectFactory.newItemTable(
+                RMObjectTestHelper.ItemStructure(),
+                RMObjectTestHelper.ClusterList(false));
+    }
+
     /**
      * Método que gera uma lista de DvIdentifier
      *
@@ -860,6 +866,25 @@ public class RMObjectTestHelper {
         Element e = RMObjectTestHelper.Element();
 
         list.add(e);
+
+        return list;
+    }
+
+    /**
+     * Método que cria uma lista de Cluster
+     *
+     * @param emptyList lista vazia
+     *
+     * @return list
+     */
+    private static List<Cluster> ClusterList(boolean emptyList){
+        List<Cluster> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        Cluster c = RMObjectTestHelper.Cluster();
+
+        list.add(c);
 
         return list;
     }

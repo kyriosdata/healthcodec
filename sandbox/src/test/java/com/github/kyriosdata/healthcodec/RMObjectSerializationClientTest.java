@@ -1551,4 +1551,26 @@ class RMObjectSerializationClientTest {
             RMObjectTestHelper.ItemSingle(true);
         });
     }
+
+    /**
+     * Testes para ItemTable
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ItemTable() throws UnsupportedEncodingException {
+        ItemTable it = RMObjectTestHelper.ItemTable();
+        s.serializeItemTable(it);
+        it = s.deserializeItemTable();
+
+        //itemStructure
+        assertEquals("value", it.getItemStructure().
+                getDataStructure().getLocatable().getName().getValue());
+
+        //rows
+        assertEquals("value", it.getRows().get(0).getItem().
+                getLocatable().getName().getValue());
+        assertEquals("value", it.getRows().get(0).getItems().get(0).
+                getLocatable().getName().getValue());
+    }
 }
