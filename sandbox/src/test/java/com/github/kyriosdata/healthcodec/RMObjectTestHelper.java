@@ -635,6 +635,19 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de Item com valor fixo
+     *
+     * @return nova instância de Item
+     */
+    public static Item Item(){
+        return RMObjectFactory.newItem(RMObjectTestHelper.Locatable(
+                false, false,
+                false));
+    }
+
+
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia

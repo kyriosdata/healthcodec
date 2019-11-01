@@ -1395,4 +1395,18 @@ class RMObjectSerializationClientTest {
                     false,true);
         });
     }
+
+    /**
+     * Testes para Item
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Item() throws UnsupportedEncodingException {
+        Item i = RMObjectTestHelper.Item();
+        s.serializeItem(i);
+        i = s.deserializeItem();
+
+        assertEquals("value", i.getLocatable().getName().getValue());
+    }
 }
