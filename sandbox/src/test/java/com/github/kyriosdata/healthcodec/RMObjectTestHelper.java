@@ -678,6 +678,11 @@ public class RMObjectTestHelper {
                         false, false));
     }
 
+    /**
+     * Cria uma instância de ItemList com valor fixo
+     *
+     * @return nova instância de ItemList
+     */
     public static ItemList ItemList(){
         return RMObjectFactory.newItemList(
                 RMObjectTestHelper.UIDBasedID(false),
@@ -687,6 +692,16 @@ public class RMObjectTestHelper {
                 RMObjectTestHelper.FeederAudit(false, false, false),
                 RMObjectTestHelper.LinkSet(false),
                 RMObjectTestHelper.ElementList(false));
+    }
+
+    /**
+     * Cria uma instância de ItemStructure com valor fixo
+     *
+     * @return nova instância de ItemStructure
+     */
+    public static ItemStructure ItemStructure(){
+        return RMObjectFactory.newItemStructure(
+                RMObjectTestHelper.DataStructure());
     }
 
     /**
