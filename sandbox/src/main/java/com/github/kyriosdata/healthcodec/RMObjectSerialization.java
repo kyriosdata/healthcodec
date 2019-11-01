@@ -2879,7 +2879,8 @@ public class RMObjectSerialization {
             int position = offset;
             ClusterSerializer cs = new ClusterSerializer();
 
-            position = cs.serialize(buffer, position, cluster);
+            position = cs.serialize(buffer, position,
+                    cluster.getItem(), cluster.getItems());
 
             return position;
         }

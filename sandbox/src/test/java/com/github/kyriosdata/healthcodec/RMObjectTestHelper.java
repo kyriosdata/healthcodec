@@ -645,6 +645,16 @@ public class RMObjectTestHelper {
                 false));
     }
 
+    /**
+     * Cria uma instância de Cluster com valor fixo
+     *
+     * @return nova instância de Cluster
+     */
+    public static Cluster Cluster(){
+        return RMObjectFactory.newCluster(
+                RMObjectTestHelper.Item(),
+                RMObjectTestHelper.ItemList(false));
+    }
 
 
     /**
@@ -753,6 +763,25 @@ public class RMObjectTestHelper {
         list.add("value");
         list.add("value");
         list.add("value");
+
+        return list;
+    }
+
+    /**
+     * Método que cria uma lista de Items
+     *
+     * @param emptyList lista vazia
+     *
+     * @return list
+     */
+    private static List<Item> ItemList(boolean emptyList){
+        List<Item> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        Item i = RMObjectTestHelper.Item();
+
+        list.add(i);
 
         return list;
     }
