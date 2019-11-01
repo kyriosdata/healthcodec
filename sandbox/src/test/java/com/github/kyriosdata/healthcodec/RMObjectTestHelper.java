@@ -716,10 +716,26 @@ public class RMObjectTestHelper {
                 forceException ? null : RMObjectTestHelper.Element());
     }
 
+    /**
+     * Cria uma instância de ItemTable com valor fixo
+     *
+     * @return nova instância de ItemTable
+     */
     public static ItemTable ItemTable(){
         return RMObjectFactory.newItemTable(
                 RMObjectTestHelper.ItemStructure(),
                 RMObjectTestHelper.ClusterList(false));
+    }
+
+    /**
+     * Cria uma instância de ItemTree com valor fixo
+     *
+     * @return nova instância de ItemTree
+     */
+    public static ItemTree ItemTree(){
+        return RMObjectFactory.newItemTree(
+                RMObjectTestHelper.ItemStructure(),
+                RMObjectTestHelper.ItemList(false));
     }
 
     /**

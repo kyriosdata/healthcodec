@@ -1573,4 +1573,18 @@ class RMObjectSerializationClientTest {
         assertEquals("value", it.getRows().get(0).getItems().get(0).
                 getLocatable().getName().getValue());
     }
+
+    @Test
+    public void ItemTree() throws UnsupportedEncodingException {
+        ItemTree it = RMObjectTestHelper.ItemTree();
+        s.serializeItemTree(it);
+        it = s.deserializeItemTree();
+
+        //itemStructure
+        assertEquals("value", it.getItemStructure().getDataStructure().
+                getLocatable().getName().getValue());
+        //items
+        assertEquals("value", it.getItems().get(0).getLocatable().
+                getName().getValue());
+    }
 }

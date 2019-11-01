@@ -3350,7 +3350,8 @@ public class RMObjectSerialization {
             int position = offset;
             ItemTreeSerializer its = new ItemTreeSerializer();
 
-            position = its.serialize(buffer, position, it);
+            position = its.serialize(buffer, position, it.getItemStructure(),
+                    it.getItems());
 
             return position;
         }
@@ -3365,10 +3366,10 @@ public class RMObjectSerialization {
             ItemStructure is = iss.deserialize(buffer, itemStructurePosition);
 
             boolean hasItems = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
             List<Item> items = null;
             if (hasItems) {
                 int itemsPosition = buffer.readInteger(position);
-                position += PrimitiveTypeSize.INT.getSize();
                 items = isr.deserializeList(buffer, itemsPosition);
             }
 
