@@ -705,6 +705,18 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de ItemSingle com valor fixo
+     *
+     * @param forceException exceção de variável nula
+     *
+     * @return nova instância de ItemSingle
+     */
+    public static ItemSingle ItemSingle(boolean forceException){
+        return RMObjectFactory.newItemSingle(RMObjectTestHelper.ItemStructure(),
+                forceException ? null : RMObjectTestHelper.Element());
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia

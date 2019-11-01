@@ -2227,12 +2227,8 @@ public class RMObjectSerialization {
                 FeederAudit feederAudit,
                 Set<Link> links) throws UnsupportedEncodingException {
 
-            if (archetypeNodeId == null || name == null) {
-                throw new IllegalArgumentException(
-                        "archetypeNodeId e name não podem ser null");
-            }
-
-            int position = offset + (7 * PrimitiveTypeSize.INT.getSize()) + 5 * PrimitiveTypeSize.BOOLEAN.getSize();
+            int position = offset + (6 * PrimitiveTypeSize.INT.getSize()) + 5 *
+                    PrimitiveTypeSize.BOOLEAN.getSize();
             int meta = offset;
 
             UIDBasedIDSerializer uids = new UIDBasedIDSerializer();
@@ -3256,7 +3252,8 @@ public class RMObjectSerialization {
             int position = offset;
             ItemSingleSerializer iss = new ItemSingleSerializer();
 
-            position = iss.serialize(buffer, position, is);
+            position = iss.serialize(buffer, position, is.getItemStructure(),
+                    is.getItem());
 
             return position;
         }

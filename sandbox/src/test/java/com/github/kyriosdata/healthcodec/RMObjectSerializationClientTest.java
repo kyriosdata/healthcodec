@@ -1518,10 +1518,37 @@ class RMObjectSerializationClientTest {
         assertEquals("archetypeNodeId", is.getDataStructure().
                 getLocatable().getUid().getValue());
         //...
-        
+
         //links
         Link l = is.getDataStructure().getLocatable().
                 getLinks().iterator().next();
         assertEquals("value", l.getType().getValue());
+    }
+
+    /**
+     * Testes para ItemSingle
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ItemSingle() throws UnsupportedEncodingException {
+        ItemSingle is = RMObjectTestHelper.ItemSingle(false);
+        s.serializeItemSingle(is);
+        is = s.deserializeItemSingle();
+
+        //item
+        assertEquals("value", is.getItem().getItem().
+                getLocatable().getName().getValue());
+
+        //itemStructure
+        assertEquals("value", is.getItemStructure().
+                getDataStructure().getLocatable().getName().getValue());
+    }
+
+    @Test
+    public void ItemSingleException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ItemSingle(true);
+        });
     }
 }
