@@ -942,6 +942,24 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de InstructionDetails com valor fixo
+     *
+     * @param forceInstructionIdException exceção de variável nula
+     * @param forceActivityIdException exceção de variável vazia
+     *
+     * @return nova instância de InstructionDetails
+     */
+    public static InstructionDetails InstructionDetails(
+            boolean forceInstructionIdException,
+            boolean forceActivityIdException ) {
+        return RMObjectFactory.newInstructionDetails(
+                forceInstructionIdException ? null :
+                        RMObjectTestHelper.LocatableRef(false),
+                forceActivityIdException ? "" : "activityId",
+                RMObjectTestHelper.ItemStructure());
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia

@@ -1973,4 +1973,38 @@ class RMObjectSerializationClientTest {
         assertEquals("legal identity", pi.getLocatable().
                 getName().getValue());
     }
+
+    @Test
+    public void InstructionDetails() throws UnsupportedEncodingException {
+        InstructionDetails id = RMObjectTestHelper.InstructionDetails(
+                false, false);
+        s.serializeinstructionDetails(id);
+        id = s.deserializeInstructionDetails();
+
+        //instructionId
+        assertEquals("path", id.getInstructionId().getPath());
+
+        //activityId
+        assertEquals("activityId", id.getActivityId());
+
+        //wfDetails
+        assertEquals("value", id.getWfDetails().getDataStructure().
+                getLocatable().getName().getValue());
+    }
+
+    @Test
+    public void InstructionInstructionIdActivityException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.InstructionDetails(true,
+                    false);
+        });
+    }
+
+    @Test
+    public void InstructionDetailsActivityIdException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.InstructionDetails(true,
+                    false);
+        });
+    }
 }
