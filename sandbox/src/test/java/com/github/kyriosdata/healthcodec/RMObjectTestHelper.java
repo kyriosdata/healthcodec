@@ -740,7 +740,9 @@ public class RMObjectTestHelper {
 
     /**
      * Cria uma instância de PartyIdentity com valor fixo
+     *
      * @param forceException exceção de variável nula
+     *
      * @return nova instância de PartyIdentity
      */
     public static PartyIdentity PartyIdentity(boolean forceException){
@@ -748,6 +750,32 @@ public class RMObjectTestHelper {
                 RMObjectTestHelper.Locatable(false,
                         false, false),
                 forceException ? null : RMObjectTestHelper.ItemStructure());
+    }
+
+    /**
+     * Cria uma instância de PartyRelationship com valor fixo
+     *
+     * @param forceLocatableException exceção de variável nula
+     * @param forceSourceException exceção de variável nula
+     * @param forceTargetException exceção de variável nula
+     *
+     * @return nova instância de PartyRelationship
+     */
+    public static PartyRelationship PartyRelationship(
+            boolean forceLocatableException, boolean forceSourceException,
+            boolean forceTargetException){
+        Locatable locatable = forceLocatableException ? null :
+                    RMObjectTestHelper.Locatable(
+                false,false,
+                false);
+        ItemStructure details = RMObjectTestHelper.ItemStructure();
+        ObjectRef source = forceSourceException ? null :
+                RMObjectTestHelper.ObjectRef(false);
+        ObjectRef target = forceTargetException ? null :
+                RMObjectTestHelper.ObjectRef(false);
+
+        return RMObjectFactory.newPartyRelationship(locatable, details,
+                source, target);
     }
 
     /**

@@ -3470,7 +3470,7 @@ public class RMObjectSerialization {
                 ItemStructure details, ObjectRef source,
                 ObjectRef target) throws UnsupportedEncodingException {
             int meta = offset;
-            int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
+            int position = offset + 5 * PrimitiveTypeSize.INT.getSize();
 
             LocatableSerializer ls = new LocatableSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
@@ -3495,7 +3495,8 @@ public class RMObjectSerialization {
                 PartyRelationship pr) throws UnsupportedEncodingException {
             PartyRelationshipSerializer prs = new PartyRelationshipSerializer();
             int position = offset;
-            position = prs.serialize(buffer, position, pr);
+            position = prs.serialize(buffer, position, pr.getLocatable(),
+                    pr.getDetails(), pr.getSource(), pr.getTarget());
 
             return position;
         }

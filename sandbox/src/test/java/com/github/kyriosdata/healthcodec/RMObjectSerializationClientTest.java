@@ -1595,7 +1595,7 @@ class RMObjectSerializationClientTest {
 
     /**
      * Testes para PartyIdentity
-     * 
+     *
      * @throws UnsupportedEncodingException
      */
     @Test
@@ -1617,6 +1617,57 @@ class RMObjectSerializationClientTest {
     public void PartyIdentityException(){
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectTestHelper.PartyIdentity(true);
+        });
+    }
+
+    /**
+     * Testes para PartyRelationship
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void PartyRelationship() throws UnsupportedEncodingException {
+        PartyRelationship pr = RMObjectTestHelper.PartyRelationship(
+                false, false,
+                false);
+        s.serializePartyRelationship(pr);
+        pr = s.deserializePartyRelationship();
+
+        //locatable
+        assertEquals("value", pr.getLocatable().getName().getValue());
+
+        //details
+        assertEquals("value", pr.getDetails().getDataStructure().
+                getLocatable().getName().getValue());
+
+        //source
+        assertEquals("namespace", pr.getSource().getNamespace());
+
+        //target
+        assertEquals("namespace", pr.getTarget().getNamespace());
+    }
+
+    @Test
+    public void PartyRelationshipLocatableException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyRelationship(true,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void PartyRelationshipSourceException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyRelationship(false,
+                    true, false);
+        });
+    }
+
+    @Test
+    public void PartyRelationshipTargetException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyRelationship(false,
+                    false, true);
         });
     }
 }
