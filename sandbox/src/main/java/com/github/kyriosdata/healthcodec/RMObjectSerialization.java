@@ -3968,7 +3968,8 @@ public class RMObjectSerialization {
             int position = offset;
             RoleSerializer rs = new RoleSerializer();
             
-            position = rs.serialize(buffer, position, r);
+            position = rs.serialize(buffer, position, r.getParty(),
+                    r.getCapabilities(), r.getPerformer());
             
             return position;
         }
@@ -4069,7 +4070,8 @@ public class RMObjectSerialization {
             int position = offset;
             ActorSerializer as = new ActorSerializer();
             
-            position = as.serialize(buffer, position, a);
+            position = as.serialize(buffer, position, a.getParty(),
+                    a.getRoles(), a.getLanguages());
             
             return position;
         }

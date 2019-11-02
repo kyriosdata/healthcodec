@@ -812,14 +812,16 @@ public class RMObjectTestHelper {
     public static Party Party(boolean forceLocatableException,
                         boolean forceIdentitiesException,
                         boolean forceContactException,
-                        boolean forceRelationshipException){
+                        boolean forceRelationshipException,
+                              boolean legalIdentity){
         Locatable locatable = forceLocatableException ? null :
                 RMObjectTestHelper.Locatable(
                 false, false,
                 false);
 
         Set<PartyIdentity> identities = RMObjectTestHelper.
-                PartyIdentitySet(forceIdentitiesException);
+                PartyIdentitySet(forceIdentitiesException,
+                        legalIdentity);
 
         Set<Contact> contacts = RMObjectTestHelper.
                 ContactSet(forceContactException);
@@ -848,6 +850,42 @@ public class RMObjectTestHelper {
                 RMObjectTestHelper.Locatable(false,
                         false, false),
                 forceException ? null : RMObjectTestHelper.ItemStructure());
+    }
+
+    /**
+     * Cria uma instância de Role com valor fixo
+     *
+     * @param forceCapabilitiesException exceção de lista vazia
+     * @param forcePerfomerException exceção de variável nula
+     *
+     * @return nova instância de Role
+     */
+    public static Role Role(boolean forceCapabilitiesException,
+                            boolean forcePerfomerException){
+        Party party = RMObjectTestHelper.Party(false,
+                false, false,
+                false, false);
+
+        List<Capability> capabilities = RMObjectTestHelper.
+                CapabilityList(forceCapabilitiesException);
+
+        PartyRef performer = forcePerfomerException ? null :
+                RMObjectTestHelper.PartyRef();
+
+        return RMObjectFactory.newRole(party, capabilities, performer);
+    }
+
+    public static Actor Actor(boolean forceIdentityException,
+                              boolean forceRolesException,
+                              boolean forceLanguagesException){
+        boolean fie = !forceIdentityException;
+        Party party = RMObjectTestHelper.Party(false,
+                false, false,
+                false, fie);
+
+        return RMObjectFactory.newActor(party,
+                RMObjectTestHelper.RoleSet(forceRolesException),
+                RMObjectTestHelper.DvTextSet(forceLanguagesException));
     }
 
     /**
@@ -922,6 +960,24 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Método que gera uma lista de Capability
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    private static List<Capability> CapabilityList(boolean emptyList){
+        List<Capability> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+
+        Capability c = RMObjectTestHelper.Capability(false);
+        list.add(c);
+
+        return list;
+    }
+
+    /**
      * Método que gera um set de Link
      *
      * @param emptySet cria um set vazio
@@ -948,12 +1004,38 @@ public class RMObjectTestHelper {
      *
      * @return set
      */
-    private static Set<PartyIdentity> PartyIdentitySet(boolean emptySet){
+    private static Set<PartyIdentity> PartyIdentitySet(boolean emptySet, boolean
+                                                       legalIdentity){
         Set<PartyIdentity> set = new HashSet<>();
         if(emptySet){
             return set;
         }
         PartyIdentity p = RMObjectTestHelper.PartyIdentity(false);
+        if(legalIdentity){
+            p = RMObjectFactory.newPartyIdentity(
+                    RMObjectFactory.newLocatable(
+                            RMObjectTestHelper.UIDBasedID(false),
+                            "archetypeNodeId",
+                            RMObjectFactory.newDvText("legal identity",
+                                    RMObjectTestHelper.
+                                            TermMappingList(false),
+                                    "formatting",
+                                    RMObjectTestHelper.
+                                            DVURI(false),
+                                    RMObjectTestHelper.
+                                            CodePhrase(false),
+                                    RMObjectTestHelper.
+                                            CodePhrase(false)),
+                            RMObjectTestHelper.Archetyped(
+                                    false,
+                                    false),
+                            RMObjectTestHelper.FeederAudit(
+                                    false,
+                                    false,
+                                    false),
+                            RMObjectTestHelper.LinkSet(false)),
+                    RMObjectTestHelper.ItemStructure());
+        }
         set.add(p);
 
         return set;
@@ -1011,6 +1093,44 @@ public class RMObjectTestHelper {
         }
         LocatableRef lr = RMObjectTestHelper.LocatableRef(false);
         set.add(lr);
+
+        return set;
+    }
+
+    /**
+     * Método que gera um set de Role
+     *
+     * @param emptySet cria um set vazio
+     *
+     * @return set
+     */
+    private static Set<Role> RoleSet(boolean emptySet){
+        Set<Role> set = new HashSet<>();
+        if(emptySet){
+            return set;
+        }
+        Role r = RMObjectTestHelper.Role(false,
+                false);
+        set.add(r);
+
+        return set;
+    }
+
+    /**
+     * Método que gera um set de DvText
+     *
+     * @param emptySet cria um set vazio
+     *
+     * @return set
+     */
+    private static Set<DvText> DvTextSet(boolean emptySet){
+        Set<DvText> set = new HashSet<>();
+        if(emptySet){
+            return set;
+        }
+        DvText d = RMObjectTestHelper.DvText(false,
+                false);
+        set.add(d);
 
         return set;
     }

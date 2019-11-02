@@ -1727,7 +1727,7 @@ class RMObjectSerializationClientTest {
     public void Party() throws UnsupportedEncodingException {
         Party p = RMObjectTestHelper.Party(false,
                 false,false,
-                false);
+                false, false);
         s.serializeParty(p);
         p = s.deserializeParty();
 
@@ -1760,7 +1760,7 @@ class RMObjectSerializationClientTest {
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectTestHelper.Party(true,
                     false,false,
-                    false);
+                    false, false);
         });
     }
 
@@ -1769,7 +1769,7 @@ class RMObjectSerializationClientTest {
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectTestHelper.Party(false,
                     true,false,
-                    false);
+                    false, false);
         });
     }
 
@@ -1778,7 +1778,7 @@ class RMObjectSerializationClientTest {
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectTestHelper.Party(false,
                     false,true,
-                    false);
+                    false, false);
         });
     }
 
@@ -1787,7 +1787,7 @@ class RMObjectSerializationClientTest {
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectTestHelper.Party(false,
                     false,false,
-                    true);
+                    true, false);
         });
     }
 
@@ -1814,6 +1814,86 @@ class RMObjectSerializationClientTest {
     public void CapabilityException(){
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectTestHelper.Capability(true);
+        });
+    }
+
+    @Test
+    public void Role() throws UnsupportedEncodingException {
+        Role r = RMObjectTestHelper.Role(false,
+                false);
+        s.serializeRole(r);
+        r = s.deserializeRole();
+
+        //party
+        assertEquals("value", r.getParty().getLocatable().getName().getValue());
+
+        //capabilities
+        assertEquals("value", r.getCapabilities().get(0).getLocatable().
+                getName().getValue());
+
+        //performer
+        assertEquals("DEMOGRAPHIC", r.getPerformer().getObjectRef().
+                getNamespace());
+    }
+
+    @Test
+    public void RoleCapabilitiesException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Role(true,
+                    false);
+        });
+    }
+
+    @Test
+    public void RolePerfomerException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Role(false,
+                    true);
+        });
+    }
+
+    @Test
+    public void Actor() throws UnsupportedEncodingException {
+        Actor a = RMObjectTestHelper.Actor(false,
+                false, false);
+        s.serializeActor(a);
+        a = s.deserializeActor();
+
+        //party
+        PartyIdentity pi = a.getParty().getIdentities().iterator().next();
+        assertEquals("legal identity", pi.getLocatable().
+                getName().getValue());
+
+        //roles
+        Role r = a.getRoles().iterator().next();
+        assertEquals("type", r.getPerformer().getObjectRef().getType());
+
+        //languages
+        DvText d = a.getLanguages().iterator().next();
+        assertEquals("value", d.getValue());
+    }
+
+    @Test
+    public void ActorPartyException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Actor(true,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void ActorPerformerException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Actor(false,
+                    true, false);
+        });
+    }
+
+    @Test
+    public void ActorLanguagesException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Actor(false,
+                    false, true);
         });
     }
 }
