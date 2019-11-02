@@ -3596,7 +3596,8 @@ public class RMObjectSerialization {
             int position = offset;
             AddressSerializer as = new AddressSerializer();
 
-            position = as.serialize(buffer, position, a);
+            position = as.serialize(buffer, position, a.getLocatable(),
+                    a.getDetails());
 
             return position;
         }

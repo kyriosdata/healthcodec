@@ -1670,4 +1670,30 @@ class RMObjectSerializationClientTest {
                     false, true);
         });
     }
+
+    /**
+     * Testes para Address
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Address() throws UnsupportedEncodingException {
+        Address a = RMObjectTestHelper.Address(false);
+        s.serializeAddress(a);
+        a = s.deserializeAddress();
+
+        //locatable
+        assertEquals("value", a.getLocatable().getName().getValue());
+
+        //details
+        assertEquals("value", a.getDetails().getDataStructure().getLocatable()
+            .getName().getValue());
+    }
+
+    @Test
+    public void AddresException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Address(true);
+        });
+    }
 }

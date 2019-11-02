@@ -779,6 +779,20 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de Address com valor fixo
+     *
+     * @param forceException
+     *
+     * @return nova instância de Address
+     */
+    public static Address Address(boolean forceException){
+        return RMObjectFactory.newAddress(RMObjectTestHelper.Locatable(
+                false,false,
+                false), forceException ? null :
+                RMObjectTestHelper.ItemStructure());
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
