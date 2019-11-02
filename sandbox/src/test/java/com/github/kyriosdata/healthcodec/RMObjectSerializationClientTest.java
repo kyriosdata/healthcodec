@@ -1974,6 +1974,11 @@ class RMObjectSerializationClientTest {
                 getName().getValue());
     }
 
+    /**
+     * Testes para InstructionDetails
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void InstructionDetails() throws UnsupportedEncodingException {
         InstructionDetails id = RMObjectTestHelper.InstructionDetails(
@@ -2005,6 +2010,83 @@ class RMObjectSerializationClientTest {
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectTestHelper.InstructionDetails(true,
                     false);
+        });
+    }
+
+    /**
+     * Testes para ISMTransition
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ISMTransition() throws UnsupportedEncodingException {
+        ISMTransition is = RMObjectTestHelper.ISMTransition(false);
+        s.serializeISMTransition(is);
+        is = s.deserializeISMTransition();
+
+        //currentState
+        assertEquals("value", is.getCurrentState().
+                getDvText().getValue());
+        //transition
+        assertEquals("value", is.getTransition().
+                getDvText().getValue());
+        //careflowStep
+        assertEquals("value", is.getCareflowStep().
+                getDvText().getValue());
+    }
+
+    public void ISMTransitionException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ISMTransition(true);
+        });
+    }
+
+    /**
+     * Testes para Activity
+     *
+     * @throws UnsupportedEncodingException
+     */
+    public void Activity() throws UnsupportedEncodingException {
+        Activity a = RMObjectTestHelper.Activity(false,
+                false, false);
+        s.serializeActivity(a);
+        a = s.deserializeActivity();
+
+        //locatable
+        assertEquals("value", a.getLocatable().getName().getValue());
+
+        //description
+        assertEquals("value", a.getDescription().getDataStructure().
+                getLocatable().getName().getValue());
+
+        //timing
+        assertEquals("value", a.getTiming().getValue());
+
+        //actionArchetypeId
+        assertEquals("actionArchetypeId", a.getActionArchetypeId());
+    }
+
+    @Test
+    public void ActivityDescriptionException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Activity(true,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void ActivityTimingException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Activity(false,
+                    true, false);
+        });
+    }
+
+    @Test
+    public void ActivityActionException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Activity(false,
+                    false, true);
         });
     }
 }

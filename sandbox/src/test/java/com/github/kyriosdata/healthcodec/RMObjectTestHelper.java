@@ -960,6 +960,46 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de ISMTransition com valor fixo
+     *
+     * @param forceException exceção de variável nula
+     *
+     * @return nova instância de ISMTransition
+     */
+    public static ISMTransition ISMTransition(boolean forceException){
+        return RMObjectFactory.newISMTransition(forceException ? null :
+                RMObjectTestHelper.DvCodedText(false),
+                RMObjectTestHelper.DvCodedText(false),
+                RMObjectTestHelper.DvCodedText(false));
+    }
+
+    /**
+     * Cria uma instância de Activity com valor fixo
+     *
+     * @param forceDescriptionException exceção de variável nula
+     * @param forceTimingException exceção de variável nula
+     * @param forceActionException exceção de variável vazia
+     *
+     * @return nova instância de Activity
+     */
+    public static Activity Activity(boolean forceDescriptionException,
+                                     boolean forceTimingException,
+                                     boolean forceActionException){
+        Locatable locatable = RMObjectTestHelper.Locatable(false,
+                false, false);
+        ItemStructure description = forceDescriptionException ? null :
+                RMObjectTestHelper.ItemStructure();
+        DvParsable timing = forceTimingException ? null :
+                RMObjectTestHelper.DvParsable(false,
+                        false);
+        String actionArchetypeId = forceActionException ? "" :
+                "actionArchetypeId";
+
+        return RMObjectFactory.newActivity(locatable, description, timing,
+                actionArchetypeId);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
