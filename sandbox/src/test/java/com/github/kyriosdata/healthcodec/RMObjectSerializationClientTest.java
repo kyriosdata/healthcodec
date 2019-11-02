@@ -1574,6 +1574,11 @@ class RMObjectSerializationClientTest {
                 getLocatable().getName().getValue());
     }
 
+    /**
+     * Testes para ItemTree
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void ItemTree() throws UnsupportedEncodingException {
         ItemTree it = RMObjectTestHelper.ItemTree();
@@ -1586,5 +1591,32 @@ class RMObjectSerializationClientTest {
         //items
         assertEquals("value", it.getItems().get(0).getLocatable().
                 getName().getValue());
+    }
+
+    /**
+     * Testes para PartyIdentity
+     * 
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void PartyIdentity() throws UnsupportedEncodingException {
+        PartyIdentity pi = RMObjectTestHelper.PartyIdentity(false);
+        s.serializePartyIdentity(pi);
+        pi = s.deserializePartyIdentity();
+
+        //locatable
+        assertEquals("value", pi.getLocatable().getName().getValue());
+
+        //details
+        assertEquals("value", pi.getDetails().getDataStructure().
+                getLocatable().getName().getValue());
+
+    }
+
+    @Test
+    public void PartyIdentityException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyIdentity(true);
+        });
     }
 }

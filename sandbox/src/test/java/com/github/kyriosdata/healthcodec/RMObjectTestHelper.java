@@ -739,6 +739,18 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de PartyIdentity com valor fixo
+     * @param forceException exceção de variável nula
+     * @return nova instância de PartyIdentity
+     */
+    public static PartyIdentity PartyIdentity(boolean forceException){
+        return RMObjectFactory.newPartyIdentity(
+                RMObjectTestHelper.Locatable(false,
+                        false, false),
+                forceException ? null : RMObjectTestHelper.ItemStructure());
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
