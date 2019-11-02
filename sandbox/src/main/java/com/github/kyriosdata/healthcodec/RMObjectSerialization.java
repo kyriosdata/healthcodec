@@ -3708,7 +3708,8 @@ public class RMObjectSerialization {
         protected int setSerializer(Buffer buffer, int offset,
                 Set<Contact> contacts) throws UnsupportedEncodingException {
             int setSize = contacts.size();
-            int position = offset + (setSize * PrimitiveTypeSize.INT.getSize()) + PrimitiveTypeSize.INT.getSize();
+            int position = offset + (setSize * PrimitiveTypeSize.INT.getSize())
+                    + PrimitiveTypeSize.INT.getSize();
             int meta = offset;
             ContactSerializer cs = new ContactSerializer();
 
@@ -3717,8 +3718,8 @@ public class RMObjectSerialization {
 
             while (it.hasNext()) {
                 Contact c = it.next();
-                int linkPosition = position;
-                meta = writeHeader(buffer, meta, linkPosition);
+                int contactPosition = position;
+                meta = writeHeader(buffer, meta, contactPosition);
                 position = cs.serialize(buffer, position, c);
             }
 
@@ -3764,7 +3765,7 @@ public class RMObjectSerialization {
 
             meta = writeHeader(buffer, meta, position);
             position = ls.serialize(buffer, position, locatable);
-            
+
             meta = writeHeader(buffer, meta, position);
             position = pis.setSerializer(buffer, position, identities);
 
@@ -3794,7 +3795,10 @@ public class RMObjectSerialization {
             int position = offset;
             PartySerializer ps = new PartySerializer();
 
-            position = ps.serialize(buffer, position, p);
+            position = ps.serialize(buffer, position, p.getLocatable(),
+                    p.getIdentities(), p.getContacts(), p.getRelationships(),
+                    p.getReverseRelationships(), p.getDetails());
+
             return position;
         }
 
@@ -3836,7 +3840,6 @@ public class RMObjectSerialization {
             ItemStructure details = null;
             if(hasDetails){
                 int detailsPosition = buffer.readInteger(position);
-                position += PrimitiveTypeSize.INT.getSize();
                 details = iss.deserialize(buffer, detailsPosition);
             }
             

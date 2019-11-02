@@ -1554,6 +1554,10 @@ public class RMObject {
             this.details = details;
         }
 
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
         public Set<PartyIdentity> getIdentities() {
             return identities;
         }

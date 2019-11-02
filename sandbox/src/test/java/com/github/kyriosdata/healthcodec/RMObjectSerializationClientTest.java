@@ -1722,4 +1722,72 @@ class RMObjectSerializationClientTest {
             RMObjectTestHelper.Contact(true);
         });
     }
+
+    @Test
+    public void Party() throws UnsupportedEncodingException {
+        Party p = RMObjectTestHelper.Party(false,
+                false,false,
+                false);
+        s.serializeParty(p);
+        p = s.deserializeParty();
+
+        //locatable
+        assertEquals("value", p.getLocatable().getName().getValue());
+
+        //identities
+        PartyIdentity pi = p.getIdentities().iterator().next();
+        assertEquals("value", pi.getLocatable().getName().getValue());
+
+        //contacts
+        Contact c = p.getContacts().iterator().next();
+        assertEquals("value", pi.getLocatable().getName().getValue());
+
+        //relationships
+        PartyRelationship pir = p.getRelationships().iterator().next();
+        assertEquals("value", pir.getLocatable().getName().getValue());
+
+        //reverseRelationships
+        LocatableRef lr = p.getReverseRelationships().iterator().next();
+        assertEquals("path", lr.getPath());
+
+        //details
+        assertEquals("value", p.getDetails().getDataStructure().
+                getLocatable().getName().getValue());
+    }
+
+    @Test
+    public void PartyLocatableException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Party(true,
+                    false,false,
+                    false);
+        });
+    }
+
+    @Test
+    public void PartyIdentitiesException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Party(false,
+                    true,false,
+                    false);
+        });
+    }
+
+    @Test
+    public void PartyContactException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Party(false,
+                    false,true,
+                    false);
+        });
+    }
+
+    @Test
+    public void PartyRelationshipException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Party(false,
+                    false,false,
+                    true);
+        });
+    }
 }

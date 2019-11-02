@@ -799,7 +799,32 @@ public class RMObjectTestHelper {
                 RMObjectTestHelper.AddressList(forceException));
     }
 
+    public static Party Party(boolean forceLocatableException,
+                        boolean forceIdentitiesException,
+                        boolean forceContactException,
+                        boolean forceRelationshipException){
+        Locatable locatable = forceLocatableException ? null :
+                RMObjectTestHelper.Locatable(
+                false, false,
+                false);
 
+        Set<PartyIdentity> identities = RMObjectTestHelper.
+                PartyIdentitySet(forceIdentitiesException);
+
+        Set<Contact> contacts = RMObjectTestHelper.
+                ContactSet(forceContactException);
+
+        Set<PartyRelationship> relationships = RMObjectTestHelper.
+                    PartyRelationshipSet(forceRelationshipException);
+
+        Set<LocatableRef> reverseRelationships =
+                RMObjectTestHelper.LocatableRefSet(false);
+
+        ItemStructure details = RMObjectTestHelper.ItemStructure();
+
+        return RMObjectFactory.newParty(locatable, identities, contacts,
+                relationships, reverseRelationships, details);
+    }
 
     /**
      * Método que gera uma lista de DvIdentifier
@@ -888,6 +913,80 @@ public class RMObjectTestHelper {
         set.add(l);
         set.add(l);
         set.add(l);
+
+        return set;
+    }
+
+    /**
+     * Método que gera um set de PartyIdentity
+     *
+     * @param emptySet cria um set vazio
+     *
+     * @return set
+     */
+    private static Set<PartyIdentity> PartyIdentitySet(boolean emptySet){
+        Set<PartyIdentity> set = new HashSet<>();
+        if(emptySet){
+            return set;
+        }
+        PartyIdentity p = RMObjectTestHelper.PartyIdentity(false);
+        set.add(p);
+
+        return set;
+    }
+
+    /**
+     * Método que gera um set de Contact
+     *
+     * @param emptySet cria um set vazio
+     *
+     * @return set
+     */
+    private static Set<Contact> ContactSet(boolean emptySet){
+        Set<Contact> set = new HashSet<>();
+        if(emptySet){
+            return set;
+        }
+        Contact c = RMObjectTestHelper.Contact(false);
+        set.add(c);
+
+        return set;
+    }
+
+    /**
+     * Método que gera um set de PartyRelationship
+     *
+     * @param emptySet cria um set vazio
+     *
+     * @return set
+     */
+    private static Set<PartyRelationship> PartyRelationshipSet(boolean emptySet){
+        Set<PartyRelationship> set = new HashSet<>();
+        if(emptySet){
+            return set;
+        }
+        PartyRelationship pr = RMObjectTestHelper.PartyRelationship(
+                false, false,
+                false);
+        set.add(pr);
+
+        return set;
+    }
+
+    /**
+     * Método que gera um set de LocatableRef
+     *
+     * @param emptySet cria um set vazio
+     *
+     * @return set
+     */
+    private static Set<LocatableRef> LocatableRefSet(boolean emptySet){
+        Set<LocatableRef> set = new HashSet<>();
+        if(emptySet){
+            return set;
+        }
+        LocatableRef lr = RMObjectTestHelper.LocatableRef(false);
+        set.add(lr);
 
         return set;
     }
