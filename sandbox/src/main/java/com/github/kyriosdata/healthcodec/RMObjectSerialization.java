@@ -4209,7 +4209,7 @@ public class RMObjectSerialization {
             int position = offset;
             PersonSerializer ps = new PersonSerializer();
             
-            position = ps.serialize(buffer, position, p);
+            position = ps.serialize(buffer, position, p.getActor());
             
             return position;
         }
@@ -4217,12 +4217,10 @@ public class RMObjectSerialization {
          protected Person deserialize(Buffer buffer, int offset){
              int position = offset;
              ActorSerializer as = new ActorSerializer();
-             
-             int actorPosition = buffer.readInteger(position);
-             
-             Actor a = as.deserialize(buffer, actorPosition);
-             
-             return RMObjectFactory.newPerson(a);
+
+             Actor actor = as.deserialize(buffer, position);
+
+             return RMObjectFactory.newPerson(actor);
          }
     }
     

@@ -1945,12 +1945,30 @@ class RMObjectSerializationClientTest {
      */
     @Test
     public void Organisation() throws UnsupportedEncodingException {
-        Group o = RMObjectTestHelper.Group();
-        s.serializeGroup(o);
-        o = s.deserializeGroup();
+        Organisation o = RMObjectTestHelper.Organisation();
+        s.serializeOrganisation(o);
+        o = s.deserializeOrganisation();
 
         //party
         PartyIdentity pi = o.getActor().getParty().getIdentities().
+                iterator().next();
+        assertEquals("legal identity", pi.getLocatable().
+                getName().getValue());
+    }
+
+    /**
+     * Testes para Person
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Person() throws UnsupportedEncodingException {
+        Person p = RMObjectTestHelper.Person();
+        s.serializePerson(p);
+        p = s.deserializePerson();
+
+        //party
+        PartyIdentity pi = p.getActor().getParty().getIdentities().
                 iterator().next();
         assertEquals("legal identity", pi.getLocatable().
                 getName().getValue());

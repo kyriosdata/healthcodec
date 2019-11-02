@@ -931,6 +931,17 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de Person com valor fixo
+     *
+     * @return nova instância de Organisation
+     */
+    public static Person Person(){
+        return RMObjectFactory.newPerson(RMObjectTestHelper.Actor(
+                false, false,
+                false));
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
