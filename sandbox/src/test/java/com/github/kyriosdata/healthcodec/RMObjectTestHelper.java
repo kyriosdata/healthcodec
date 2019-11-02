@@ -909,6 +909,17 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de Group com valor fixo
+     *
+     * @return nova instância de Group
+     */
+    public static Group Group(){
+        return RMObjectFactory.newGroup(RMObjectTestHelper.Actor(
+                false, false,
+                false));
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia

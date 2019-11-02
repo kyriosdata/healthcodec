@@ -4147,7 +4147,7 @@ public class RMObjectSerialization {
             int position = offset;
             GroupSerializer gs = new GroupSerializer();
             
-            position = gs.serialize(buffer, position, group);
+            position = gs.serialize(buffer, position, group.getActor());
             
             return position;
         }

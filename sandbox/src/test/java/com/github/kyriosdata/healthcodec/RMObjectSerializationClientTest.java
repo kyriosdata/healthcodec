@@ -1919,4 +1919,22 @@ class RMObjectSerializationClientTest {
         assertEquals("legal identity", pi.getLocatable().
                 getName().getValue());
     }
+
+    /**
+     * Testes para Group
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Group() throws UnsupportedEncodingException {
+        Group g = RMObjectTestHelper.Group();
+        s.serializeGroup(g);
+        g = s.deserializeGroup();
+
+        //party
+        PartyIdentity pi = g.getActor().getParty().getIdentities().
+                iterator().next();
+        assertEquals("legal identity", pi.getLocatable().
+                getName().getValue());
+    }
 }
