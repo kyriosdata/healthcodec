@@ -1937,4 +1937,22 @@ class RMObjectSerializationClientTest {
         assertEquals("legal identity", pi.getLocatable().
                 getName().getValue());
     }
+
+    /**
+     * Testes para Organisation
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Organisation() throws UnsupportedEncodingException {
+        Group o = RMObjectTestHelper.Group();
+        s.serializeGroup(o);
+        o = s.deserializeGroup();
+
+        //party
+        PartyIdentity pi = o.getActor().getParty().getIdentities().
+                iterator().next();
+        assertEquals("legal identity", pi.getLocatable().
+                getName().getValue());
+    }
 }

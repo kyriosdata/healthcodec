@@ -4178,7 +4178,7 @@ public class RMObjectSerialization {
             int position = offset;
             OrganisationSerializer os = new OrganisationSerializer();
             
-            position = os.serialize(buffer, position, organisation);
+            position = os.serialize(buffer, position, organisation.getActor());
             
             return position;
         }

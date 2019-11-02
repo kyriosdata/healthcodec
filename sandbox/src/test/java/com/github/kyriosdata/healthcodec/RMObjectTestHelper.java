@@ -920,6 +920,17 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de Organisation com valor fixo
+     *
+     * @return nova instância de Organisation
+     */
+    public static Organisation Organisation(){
+        return RMObjectFactory.newOrganisation(RMObjectTestHelper.Actor(
+                false, false,
+                false));
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
