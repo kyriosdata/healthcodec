@@ -799,6 +799,16 @@ public class RMObjectTestHelper {
                 RMObjectTestHelper.AddressList(forceException));
     }
 
+    /**
+     * Cria uma instância de Party com valor fixo
+     *
+     * @param forceLocatableException exceção de variável nula
+     * @param forceIdentitiesException exceção de set vazio
+     * @param forceContactException exceção de set vazio
+     * @param forceRelationshipException exceção de set vazio
+     *
+     * @return nova instância de Party
+     */
     public static Party Party(boolean forceLocatableException,
                         boolean forceIdentitiesException,
                         boolean forceContactException,
@@ -824,6 +834,20 @@ public class RMObjectTestHelper {
 
         return RMObjectFactory.newParty(locatable, identities, contacts,
                 relationships, reverseRelationships, details);
+    }
+
+    /**
+     * Cria uma instância de Capability com valor fixo
+     *
+     * @param forceException exceção de variável nula
+     *
+     * @return nova instância de Capability
+     */
+    public static Capability Capability(boolean forceException){
+        return RMObjectFactory.newCapability(
+                RMObjectTestHelper.Locatable(false,
+                        false, false),
+                forceException ? null : RMObjectTestHelper.ItemStructure());
     }
 
     /**

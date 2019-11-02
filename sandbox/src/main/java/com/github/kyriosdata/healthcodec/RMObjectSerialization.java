@@ -3872,7 +3872,8 @@ public class RMObjectSerialization {
             int position = offset;
             CapabilitySerializer cs = new CapabilitySerializer();
 
-            position = cs.serialize(buffer, position, c);
+            position = cs.serialize(buffer, position, c.getLocatable(),
+                    c.getCredentials());
 
             return position;
         }

@@ -1790,4 +1790,30 @@ class RMObjectSerializationClientTest {
                     true);
         });
     }
+
+    /**
+     * Testes para Capability
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Capability() throws UnsupportedEncodingException {
+        Capability c = RMObjectTestHelper.Capability(false);
+        s.serialilzeCapability(c);
+        c = s.deserializeCapability();
+
+        //locatable
+        assertEquals("value", c.getLocatable().getName().getValue());
+
+        //credentials
+        assertEquals("value", c.getCredentials().getDataStructure().
+                getLocatable().getName().getValue());
+    }
+
+    @Test
+    public void CapabilityException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Capability(true);
+        });
+    }
 }
