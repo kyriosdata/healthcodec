@@ -1696,4 +1696,30 @@ class RMObjectSerializationClientTest {
             RMObjectTestHelper.Address(true);
         });
     }
+
+    /**
+     * Testes para Contact
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Contact() throws UnsupportedEncodingException {
+        Contact c = RMObjectTestHelper.Contact(false);
+        s.serializeContact(c);
+        c = s.deserializeContact();
+
+        //locatable
+        assertEquals("value", c.getLocatable().getName().getValue());
+
+        //addresses
+        assertEquals("value", c.getAddresses().get(0).getLocatable().getName().
+                getValue());
+    }
+
+    @Test
+    public void ContactException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Contact(true);
+        });
+    }
 }

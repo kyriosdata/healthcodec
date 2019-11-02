@@ -792,6 +792,15 @@ public class RMObjectTestHelper {
                 RMObjectTestHelper.ItemStructure());
     }
 
+    public static Contact Contact(boolean forceException){
+        return RMObjectFactory.newContact(
+                RMObjectTestHelper.Locatable(false,
+                        false, false),
+                RMObjectTestHelper.AddressList(forceException));
+    }
+
+
+
     /**
      * Método que gera uma lista de DvIdentifier
      *
@@ -955,6 +964,25 @@ public class RMObjectTestHelper {
         Cluster c = RMObjectTestHelper.Cluster();
 
         list.add(c);
+
+        return list;
+    }
+
+    /**
+     * Método que cria uma lista de Address
+     *
+     * @param emptyList lista vazia
+     *
+     * @return list
+     */
+    private static List<Address> AddressList(boolean emptyList){
+        List<Address> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        Address a = RMObjectTestHelper.Address(false);
+
+        list.add(a);
 
         return list;
     }

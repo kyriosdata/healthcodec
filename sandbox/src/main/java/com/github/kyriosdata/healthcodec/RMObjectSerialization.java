@@ -3681,7 +3681,8 @@ public class RMObjectSerialization {
             int position = offset;
             ContactSerializer cs = new ContactSerializer();
 
-            position = cs.serialize(buffer, position, c);
+            position = cs.serialize(buffer, position, c.getLocatable(),
+                    c.getAddresses());
 
             return position;
         }
