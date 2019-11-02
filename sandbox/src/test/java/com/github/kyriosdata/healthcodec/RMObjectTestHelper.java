@@ -875,6 +875,15 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newRole(party, capabilities, performer);
     }
 
+    /**
+     * Cria uma instância de Actor com valor fixo
+     *
+     * @param forceIdentityException exceção de variável com nome definido
+     * @param forceRolesException exceção de set vazio
+     * @param forceLanguagesException exceção de set vazio
+     *
+     * @return nova instância de Actor
+     */
     public static Actor Actor(boolean forceIdentityException,
                               boolean forceRolesException,
                               boolean forceLanguagesException){
@@ -886,6 +895,17 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newActor(party,
                 RMObjectTestHelper.RoleSet(forceRolesException),
                 RMObjectTestHelper.DvTextSet(forceLanguagesException));
+    }
+
+    /**
+     * Cria uma instância de Agent com valor fixo
+     *
+     * @return nova instância de Agent
+     */
+    public static Agent Agent(){
+        return RMObjectFactory.newAgent(RMObjectTestHelper.Actor(
+                false, false,
+                false));
     }
 
     /**

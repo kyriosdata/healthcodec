@@ -1852,6 +1852,11 @@ class RMObjectSerializationClientTest {
         });
     }
 
+    /**
+     * Testes para Actor
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void Actor() throws UnsupportedEncodingException {
         Actor a = RMObjectTestHelper.Actor(false,
@@ -1895,5 +1900,23 @@ class RMObjectSerializationClientTest {
             RMObjectTestHelper.Actor(false,
                     false, true);
         });
+    }
+
+    /**
+     * Testes para Agent
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Agent() throws UnsupportedEncodingException {
+        Agent a = RMObjectTestHelper.Agent();
+        s.serializeAgent(a);
+        a = s.deserializeAgent();
+
+        //party
+        PartyIdentity pi = a.getActor().getParty().getIdentities().
+                iterator().next();
+        assertEquals("legal identity", pi.getLocatable().
+                getName().getValue());
     }
 }

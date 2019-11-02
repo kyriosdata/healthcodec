@@ -4116,7 +4116,7 @@ public class RMObjectSerialization {
             int position = offset;
             AgentSerializer as = new AgentSerializer();
             
-            position = as.serialize(buffer, position, agent);
+            position = as.serialize(buffer, position, agent.getActor());
             
             return position;
         }
