@@ -1,1825 +1,2092 @@
-/**
- * Copyright 2019 Instituto de Informática - UFG
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.github.kyriosdata.healthcodec;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.github.kyriosdata.healthcodec.RMObject.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *
- * @author Gabriel
- */
 class RMObjectSerializationClientTest {
 
-    /**
-     *
-     */
-    private static RMObjectSerializationClient s;
+    private RMObjectSerializationClient s = null;
 
     @BeforeEach
-    static void setUp() {
+    void setUp() {
         s = RMObjectSerializationClient.create();
     }
 
+    @AfterEach
+    void tearDown() {
+    }
+
+    /**
+     * Testes sobre DvBoolean
+     */
     @Test
-    void dvBooleanTestTrue() {
-        s.serializeDvBoolean(new RMObject.DvBoolean(true));
-        RMObject.DvBoolean db = s.deserializeDvBoolean();
-        assertTrue(db.getValue());
+    public void DvBooleanTestTrue() {
+        DvBoolean dvBoolean = RMObjectTestHelper.DvBoolean(true);
+        s.serializeDvBoolean(dvBoolean);
+        dvBoolean = s.deserializeDvBoolean();
+
+        assertTrue(dvBoolean.getValue());
     }
 
     @Test
     public void DvBooleanTestFalse() {
-        s.serializeDvBoolean(new RMObject.DvBoolean(false));
-        RMObject.DvBoolean db = s.deserializeDvBoolean();
-        assertEquals(false, db.getValue());
+        DvBoolean dvBoolean = RMObjectTestHelper.DvBoolean(false);
+        s.serializeDvBoolean(dvBoolean);
+        dvBoolean = s.deserializeDvBoolean();
+
+        assertFalse(dvBoolean.getValue());
+    }
+
+    /**
+     * Testes sobre DvIdentifier
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void DvIdentifier() throws UnsupportedEncodingException {
+        DvIdentifier dvIdentifier =
+                RMObjectTestHelper.DvIdentifier(false);
+        s.serializeDvIdentifier(dvIdentifier);
+        dvIdentifier = s.deserializeDvIdentifier();
+
+        assertEquals("issuer", dvIdentifier.getIssuer());
+        assertEquals("assigner", dvIdentifier.getAssigner());
+        assertEquals("id", dvIdentifier.getId());
+        assertEquals("type", dvIdentifier.getType());
     }
 
     @Test
-    public void DvIdentifierTest()
-            throws UnsupportedEncodingException {
-        String issuer = "issuer";
-        String assigner = "assigner";
-        String id = "id";
-        String type = "type";
+    public void DvIdentifierException()  {
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvIdentifier(true);
+        });
+    }
 
-        RMObject.DvIdentifier dvi = new RMObject.DvIdentifier(issuer,
-                assigner, id, type);
-        s.serializeDvIdentifier(dvi);
-        RMObject.DvIdentifier di = s.deserializeDvIdentifier();
+    /**
+     * Testes sobre UID
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void UID() throws UnsupportedEncodingException {
+        UID uid = RMObjectTestHelper.UID(false);
+        s.serializeUID(uid);
+        uid = s.deserializeUID();
 
-        assertEquals(issuer, di.getIssuer());
-        assertEquals(assigner, di.getAssigner());
-        assertEquals(id, di.getId());
-        assertEquals(type, di.getType());
+        assertEquals("value", uid.getValue());
     }
 
     @Test
-    public void InternetIDTest()
-            throws UnsupportedEncodingException {
-        String value = "_INTERNETID_";
-        s.serializeInternetID(value);
-        RMObject.InternetID ii = s.deserializeInternetID();
+    public void UIDException() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.UID(true);
+        });
+    }
 
-        assertEquals(value, ii.getValue());
+    /**
+     * Testes sobre InternetID
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void InternetID() throws UnsupportedEncodingException {
+        InternetID internetId = RMObjectTestHelper.InternetID(false);
+        s.serializeInternetID(internetId);
+        internetId = s.deserializeInternetID();
+
+        assertEquals("openehr", internetId.getUid().getValue());
     }
 
     @Test
-    public void ISOOIDTest()
-            throws UnsupportedEncodingException {
-        String value = "_ISOOID_";
-        s.serializeISOOID(value);
-        RMObject.ISO_OID io = s.deserializeISOOID();
+    public void InternetIDException() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.InternetID(true);
+        });
+    }
 
-        assertEquals(value, io.getValue());
+    /**
+     * Teste sobre ISO_OID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ISOOID() throws UnsupportedEncodingException {
+        ISO_OID isooid = RMObjectTestHelper.ISOOID();
+        s.serializeISOOID(isooid);
+        isooid = s.deserializeISOOID();
+
+        assertEquals("value", isooid.getUid().getValue());
+    }
+
+    /**
+     * Teste sobre UUID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void UUID() throws UnsupportedEncodingException {
+        UUID uuid = RMObjectTestHelper.UUID();
+        s.serializeUUID(uuid);
+        uuid = s.deserializeUUID();
+
+        assertEquals("value", uuid.getUid().getValue());
+    }
+
+    /**
+     * Testes sobre GenericID
+     *2
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void GenericID() throws UnsupportedEncodingException {
+        GenericID genericID = RMObjectTestHelper.GenericID(false);
+        s.serializeGenericID(genericID);
+        genericID = s.deserializeGenericID();
+
+        assertEquals("value", genericID.getObjectID().getValue());
+        assertEquals("scheme", genericID.getScheme());
     }
 
     @Test
-    public void UUIDTest()
-            throws UnsupportedEncodingException {
-        String value = "_UUID_";
-        s.serializeUUID(value);
-        RMObject.UUID u = s.deserializeUUID();
+    public void GenericIDException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.GenericID(true);
+        });
+    }
 
-        assertEquals(value, u.getValue());
+    /**
+     * Teste sobre TemplateID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void TemplateID() throws UnsupportedEncodingException {
+        TemplateID templateId = RMObjectTestHelper.TemplateID();
+        s.serializeTemplateID(templateId);
+        templateId = s.deserializeTemplateID();
+
+        assertEquals("value", templateId.getObjectID().getValue());
+    }
+
+    /**
+     * Teste sobre TerminologyID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void TerminologyID() throws UnsupportedEncodingException {
+        TerminologyID terminologyID = RMObjectTestHelper.TerminologyID();
+        s.serializeTerminologyID(terminologyID);
+        terminologyID = s.deserializeTerminologyID();
+
+        assertEquals("name", terminologyID.getName());
+        assertEquals("version", terminologyID.getVersion());
+        assertEquals("name(version)",
+                terminologyID.getObjectID().getValue());
+    }
+
+    /**
+     * Testes de CodePhrase
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void CodePhrase() throws UnsupportedEncodingException {
+        CodePhrase codePhrase = RMObjectTestHelper.CodePhrase(false);
+        s.serializeCodePhrase(codePhrase);
+        codePhrase = s.deserializeCodePhrase();
+
+        assertEquals("name", codePhrase.getTerminologyID().getName());
+        assertEquals("version",
+                codePhrase.getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                codePhrase.getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", codePhrase.getCodeString());
     }
 
     @Test
-    public void TerminologyIDTest()
-            throws UnsupportedEncodingException {
-        String value = "_TERMINOLOGYID_";
-        s.serializeTerminologyID(value);
-        RMObject.TerminologyID t = s.deserializeTerminologyID();
+    public void CodePhraseException() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.CodePhrase(true);
+        });
+    }
 
-        assertEquals(value, t.getValue());
+    /**
+     * Testes para DVURI
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void DVURI() throws UnsupportedEncodingException {
+        DVURI dvuri = RMObjectTestHelper.DVURI(false);
+        s.serializeDVURI(dvuri);
+        dvuri = s.deserializeDVURI();
+
+        assertEquals("value", dvuri.getValue());
     }
 
     @Test
-    public void GenericIDTest()
-            throws UnsupportedEncodingException {
-        String value = "_GENERICID_";
-        String scheme = "_GENERICID_SCHEME_";
-        s.serializeGenericID(value, scheme);
-        RMObject.GenericID g = s.deserializeGenericID();
+    public void DVURIException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DVURI(true);
+        });
+    }
 
-        assertEquals(value, g.getValue());
-        assertEquals(scheme, g.getScheme());
+    /**
+     * Testes para DVEHRURI
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void DVEHRURI() throws UnsupportedEncodingException {
+        DVEHRURI dvehruri = RMObjectTestHelper.DVEHRURI(false);
+        s.serializeDVEHRURI(dvehruri);
+        dvehruri = s.deserializeDVEHRURI();
+
+        assertEquals("value", dvehruri.getDvuri().getValue());
     }
 
     @Test
-    public void TemplateIDTest()
-            throws UnsupportedEncodingException {
-        String value = "_TEMPLATEID_";
-        s.serializeTemplateID(value);
-        RMObject.TemplateID t = s.deserializeTemplateID();
+    public void DVEHRURIException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DVEHRURI(true);
+        });
+    }
 
-        assertEquals(value, t.getValue());
+    /**
+     * Testes para VersionTreeID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void VersionTreeID() throws UnsupportedEncodingException {
+        VersionTreeID vid = RMObjectTestHelper.VersionTreeID(false);
+        s.serializeVersionTreeID(vid);
+        vid = s.deserializeVersionTreeID();
+
+        assertEquals("value", vid.getValue());
     }
 
     @Test
-    public void CodePhrase()
-            throws UnsupportedEncodingException {
-        String terminololyIdValue = "_TEMPLATEIDVALUE_";
-        String value = "_CODEPRHASE_";
-        RMObject.TerminologyID terminologyId =
-                RMObjectFactory.newTerminologyID(terminololyIdValue);
-        s.serializeCodePhrase(terminologyId, value);
-        RMObject.CodePhrase cp = s.deserializeCodePhrase();
+    public void VersionTreeIDException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.VersionTreeID(true);
+        });
+    }
 
-        assertEquals(terminololyIdValue, cp.getTerminologyID().getValue());
-        assertEquals(value, cp.getValue());
+    /**
+     * Testes para ArchetypeID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ArchetypeID() throws UnsupportedEncodingException {
+        ArchetypeID archetypeId = RMObjectTestHelper.ArchetypeID(false);
+        s.serializeArchetypeID(archetypeId);
+        archetypeId = s.deserializeArchetypeID();
+
+        assertEquals("value", archetypeId.getObjectID().getValue());
     }
 
     @Test
-    public void DVURITest()
-            throws UnsupportedEncodingException {
-        String value = "_DVURI_";
-        s.serializeDVURI(value);
-        RMObject.DVURI d = s.deserializeDVURI();
+    public void ArchetypeIDException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ArchetypeID(true);
+        });
+    }
 
-        assertEquals(value, d.getValue());
+    /**
+     * Testes para ObjectVersionID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ObjectVersionID() throws UnsupportedEncodingException {
+        ObjectVersionID oid = RMObjectTestHelper.ObjectVersionID(false);
+        s.serializeObjectVersionID(oid);
+        oid = s.deserializeObjectVersionID();
+
+        assertEquals("value", oid.getUIDBasedID().getValue());
     }
 
     @Test
-    public void DVEHRURITest()
-            throws UnsupportedEncodingException {
-        String value = "_DVEHRURI_";
-        s.serializeDVEHRURI(value);
-        RMObject.DVEHRURI d = s.deserializeDVEHRURI();
+    public void ObjectVersionIDException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ObjectVersionID(true);
+        });
+    }
 
-        assertEquals(value, d.getValue());
+    /**
+     * Testes para HierObjectID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void HierObjectID() throws UnsupportedEncodingException {
+        HierObjectID hid = RMObjectTestHelper.HierObjectID(false);
+        s.serializeHierObjectID(hid);
+        hid = s.deserializeHierObjectID();
+
+        assertEquals("value", hid.getUIDBasedID().getValue());
     }
 
     @Test
-    public void VersionTreeID()
-            throws UnsupportedEncodingException {
-        String value = "_VERSIONTREEID_";
-        s.serializeVersionTreeID(value);
-        RMObject.VersionTreeID v = s.deserializeVersionTreeID();
+    public void HierObjectIDException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.HierObjectID(true);
+        });
+    }
 
-        assertEquals(value, v.getValue());
+    /**
+     * Testes para ObjectID
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ObjectID() throws UnsupportedEncodingException {
+        ObjectID oid = RMObjectTestHelper.ObjectID(false);
+        s.serializeObjectID(oid);
+        oid = s.deserializeObjectID();
+
+        assertEquals("value", oid.getValue());
     }
 
     @Test
-    public void ArchetypeID()
-            throws UnsupportedEncodingException {
-        String value = "_ARCHETYPEID_";
-        s.serializeArchetypeID(value);
-        RMObject.ArchetypeID a = s.deserializeArchetypeID();
+    public void ObjectIDException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ObjectID(true);
+        });
+    }
 
-        assertEquals(value, a.getValue());
+    /**
+     * Testes para PartyRef
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void PartyRef() throws UnsupportedEncodingException {
+        PartyRef pr = RMObjectTestHelper.PartyRef();
+        s.serializePartyRef(pr);
+        pr = s.deserializePartyRef();
+
+        assertEquals(pr.getObjectRef().getId().getValue(), "value");
+        assertEquals(pr.getObjectRef().getNamespace(), "DEMOGRAPHIC");
+        assertEquals(pr.getObjectRef().getType(), "type");
+    }
+
+    /**
+     * Testes para ObjectRef
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ObjectRef() throws UnsupportedEncodingException {
+        ObjectRef or = RMObjectTestHelper.ObjectRef(false);
+        s.serializeObjectRef(or);
+        or = s.deserializeObjectRef();
+
+        assertEquals("value", or.getId().getValue());
+        assertEquals("namespace", or.getNamespace());
+        assertEquals("type", or.getType());
     }
 
     @Test
-    public void ObjectVersionID()
-            throws UnsupportedEncodingException {
-        String value = "_OBJECTVERSIONID_";
-        s.serializeObjectVersionID(value);
-        RMObject.ObjectVersionID ovi = s.deserializeObjectVersionID();
+    public void ObjectRefException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ObjectRef(true);
+        });
+    }
 
-        assertEquals(value, ovi.getValue());
+    /**
+     * Testes para LocatableRef
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void LocatableRef() throws UnsupportedEncodingException {
+        LocatableRef lr = RMObjectTestHelper.LocatableRef(false);
+        s.serializeLocatableRef(lr);
+        lr = s.deserializeLocatableRef();
+
+        assertEquals("value", lr.getObjectRef().getId().getValue());
+        assertEquals("namespace", lr.getObjectRef().getNamespace());
+        assertEquals("type", lr.getObjectRef().getType());
+        assertEquals("path", lr.getPath());
     }
 
     @Test
-    public void HierObjectID()
-            throws UnsupportedEncodingException {
-        String value = "_HIEROBJECTID_";
-        s.serializeHierObjectID(value);
-        RMObject.HierObjectID hoi = s.deserializeHierObjectID();
+    public void LocatableRefException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.LocatableRef(true);
+        });
+    }
 
-        assertEquals(value, hoi.getValue());
+    /**
+     * Testes para PropotionKind
+     */
+    @Test
+    public void ProportionKind(){
+        ProportionKind pk = RMObjectTestHelper.ProportionKind();
+        s.serializeProportionKind(pk);
+        pk = s.deserializeProportionKind();
+
+        assertEquals(1, pk.getValue());
+    }
+
+    /**
+     * Testes para AccessGroupRef
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void AccessGroupRef() throws UnsupportedEncodingException {
+        AccessGroupRef ag = RMObjectTestHelper.AccessGroupRef(false);
+        s.serializeAccessGroupRef(ag);
+        ag = s.deserializeAccessGroupRef();
+
+        assertEquals("value", ag.getObjectRef().getId().getValue());
+        assertEquals("ACCESS_CONTROL",
+                ag.getObjectRef().getNamespace());
+        assertEquals("ACCESS_GROUP", ag.getObjectRef().getType());
     }
 
     @Test
-    public void ObjectID()
-            throws UnsupportedEncodingException {
-        String value = "_OBJECTID_";
-        s.serializeObjectID(value);
-        RMObject.ObjectID oid = s.deserializeObjectID();
-
-        assertEquals(value, oid.getValue());
+    public void AccessGroupRefException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.AccessGroupRef(true);
+        });
     }
 
-    @Test
-    public void PartyRef()
-            throws UnsupportedEncodingException {
-        String oidValue = "_OBJECTID_";
-        RMObject.ObjectID id = RMObjectFactory.newObjectID(oidValue);
-        String value = "_PARTYREF_";
-        s.serializePartyRef(id, value);
-        RMObject.PartyRef pr = s.deserializePartyRef();
-
-        assertEquals(oidValue, pr.getId().getValue());
-        assertEquals(value, pr.getValue());
-    }
-
-    @Test
-    public void ObjectRef()
-            throws UnsupportedEncodingException {
-        String oidValue = "_OBJECTID_";
-        String namespace = "NAMESPACE";
-        String type = "TYPE";
-
-        RMObject.ObjectID id = RMObjectFactory.newObjectID(oidValue);
-
-        s.serializeObjectRef(id, namespace, type);
-        RMObject.ObjectRef or = s.deserializeObjectRef();
-
-        assertEquals(oidValue, or.getId().getValue());
-        assertEquals(namespace, or.getNamespace());
-        assertEquals(type, or.getType());
-    }
-
-    @Test
-    public void LocatableRefWithPath()
-            throws UnsupportedEncodingException {
-        String ovidValue = "_OBJECTVERSIONID_";
-        String namespace = "NAMESPACE";
-        String type = "TYPE";
-        String path = "PATH";
-
-        RMObject.ObjectVersionID id =
-                RMObjectFactory.newObjectVersionID(ovidValue);
-
-        s.serializeLocatableRef(id, namespace, type, path);
-        RMObject.LocatableRef lr = s.deserializeLocatableRef();
-
-        assertEquals(ovidValue, lr.getId().getValue());
-        assertEquals(namespace, lr.getNamespace());
-        assertEquals(type, lr.getType());
-        assertEquals(path, lr.getPath());
-    }
-
-    @Test
-    public void LocatableRefWithoutPath()
-            throws UnsupportedEncodingException {
-        String ovidValue = "_OBJECTVERSIONID_";
-        String namespace = "NAMESPACE";
-        String type = "TYPE";
-
-        RMObject.ObjectVersionID id =
-                RMObjectFactory.newObjectVersionID(ovidValue);
-
-        s.serializeLocatableRef(id, namespace, type, null);
-        RMObject.LocatableRef lr = s.deserializeLocatableRef();
-
-        assertEquals(ovidValue, lr.getId().getValue());
-        assertEquals(namespace, lr.getNamespace());
-        assertEquals(type, lr.getType());
-        assertEquals(null, lr.getPath());
-    }
-
-    @Test
-    public void ProportionKind() {
-        int value = 10;
-        s.serializeProportionKind(value);
-        RMObject.ProportionKind p = s.deserializeProportionKind();
-        assertEquals(value, p.getValue());
-    }
-
-    @Test
-    public void AccessGroupRef() {
-        String oidValue = "_OBJECTID_";
-        RMObject.ObjectID id = RMObjectFactory.newObjectID(oidValue);
-        s.serializeAccessGroupRef(id);
-        RMObject.AccessGroupRef a = s.deserializeAccessGroupRef();
-        assertEquals(oidValue, a.getId().getValue());
-    }
-
+    /**
+     * Testes para PartyIdentified
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void PartyIdentified() throws UnsupportedEncodingException {
-        String oidValue = "OBJECTID";
-        String value = "VALUE";
-        String name = "NAME";
+        PartyIdentified pi = RMObjectTestHelper.PartyIdentified(
+                false, false,
+                false);
 
-        RMObject.ObjectID oid = RMObjectFactory.newObjectID(oidValue);
-        RMObject.PartyRef externalRef = RMObjectFactory.newPartyRef(oid, value);
+        s.serializePartyIdentified(pi);
+        pi = s.deserializePartyIdentified();
+        //externalRef
+        assertEquals("value", pi.getExternalRef().getObjectRef().
+                getId().getValue());
+        assertEquals("DEMOGRAPHIC", pi.getExternalRef().
+                getObjectRef().getNamespace());
+        assertEquals("value", pi.getExternalRef().
+                getObjectRef().getType());
+        //name
+        assertEquals("name", pi.getName());
+        //identifiers
+        assertEquals("issuer", pi.getIdentifiers().get(0).getIssuer());
+        assertEquals("issuer", pi.getIdentifiers().get(1).getIssuer());
+        assertEquals("issuer", pi.getIdentifiers().get(2).getIssuer());
 
-        String issuer = "ISSUER";
-        String assigner = "ASSIGNER";
-        String id = "ID";
-        String type = "TYPE";
+        assertEquals("assigner", pi.getIdentifiers().
+                get(0).getAssigner());
+        assertEquals("assigner", pi.getIdentifiers().
+                get(1).getAssigner());
+        assertEquals("assigner", pi.getIdentifiers().
+                get(2).getAssigner());
 
-        List<RMObject.DvIdentifier> identifiers = new ArrayList<>();
-        identifiers.add(
-                RMObjectFactory.newDvIdentifier(issuer, assigner, id, type));
+        assertEquals("id", pi.getIdentifiers().get(0).getId());
+        assertEquals("id", pi.getIdentifiers().get(1).getId());
+        assertEquals("id", pi.getIdentifiers().get(2).getId());
 
-        s.serializePartyIdentified(externalRef, name, identifiers);
-        RMObject.PartyIdentified p = s.deserializePartyIdentified();
-
-        assertEquals(oidValue, p.getExternalRef().getId().getValue());
-        assertEquals(value, p.getExternalRef().getValue());
-        assertEquals(issuer, p.getIdentifiers().get(0).getIssuer());
-        assertEquals(assigner, p.getIdentifiers().get(0).getAssigner());
-        assertEquals(id, p.getIdentifiers().get(0).getId());
-        assertEquals(type, p.getIdentifiers().get(0).getType());
+        assertEquals("type", pi.getIdentifiers().get(0).getType());
+        assertEquals("type", pi.getIdentifiers().get(1).getType());
+        assertEquals("type", pi.getIdentifiers().get(2).getType());
     }
 
+    @Test
+    public void PartyIdentifiedPartyRefException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyIdentified(true,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void PartyIdentifiedNameException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyIdentified(false,
+                    true, false);
+        });
+    }
+
+    @Test
+    public void PartyIdentifiedListException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyIdentified(false,
+                    false, true);
+        });
+    }
+
+    /**
+     * Testes para Archetyped
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void Archetyped() throws UnsupportedEncodingException {
-        String archetypeIDValue = "_ARCHETYPEID_";
-        String templateIDValue = "_TEMPLATEID_";
-        String rmVersion = "_RMVERSION_";
+        Archetyped a = RMObjectTestHelper.Archetyped(
+                false, false);
+        s.serializeArchetyped(a);
+        a = s.deserializeArchetyped();
 
-        RMObject.ArchetypeID archetypeId =
-                RMObjectFactory.newArchetypeID(archetypeIDValue);
-        RMObject.TemplateID templateId =
-                RMObjectFactory.newTemplateID(templateIDValue);
-
-        s.serializeArchetyped(archetypeId, templateId, rmVersion);
-        RMObject.Archetyped a = s.deserializeArchetyped();
-
-        assertEquals(archetypeIDValue, a.getArchetypeId().getValue());
-        assertEquals(templateIDValue, a.getTemplateId().getValue());
-        assertEquals(rmVersion, a.getRmVersion());
+        assertEquals("value", a.getArchetypeId().
+                getObjectID().getValue());
+        assertEquals("value", a.getTemplateId().
+                getObjectID().getValue());
+        assertEquals("rmVersion", a.getRmVersion());
     }
 
+    @Test
+    public void ArchetypedArchetypeIDException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Archetyped(true,
+                    false);
+        });
+    }
+
+    @Test
+    public void ArchetypedRmVersionException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Archetyped(false,
+                    true);
+        });
+    }
+
+    /**
+     * Testes para DvEncapsulated
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void DvEncapsulated() throws UnsupportedEncodingException {
-        String codePhraseCharsetTerminologyIDValue = "_TERMINOLOGYCHARSET_";
-        String charsetCodeString = "UTF-8";
-        String codePhraseLanguageTerminologyIDValue = "_LANGUAGETERMINOLOGY_";
-        String languageCodeString = "UTF-8";
+        DvEncapsulated de = RMObjectTestHelper.DvEncapsulated();
+        s.serializeDvEncapsulated(de);
+        de = s.deserializeDvEncapsulated();
 
-        RMObject.TerminologyID charsetTID =
-                RMObjectFactory.newTerminologyID(
-                        codePhraseCharsetTerminologyIDValue);
-        RMObject.CodePhrase charset
-                = RMObjectFactory.newCodePhrase(
-                charsetTID,
-                charsetCodeString);
-
-        RMObject.TerminologyID languageID =
-                RMObjectFactory.newTerminologyID(
-                        codePhraseLanguageTerminologyIDValue);
-
-        RMObject.CodePhrase language
-                = RMObjectFactory.newCodePhrase(
-                languageID,
-                languageCodeString);
-
-        s.serializeDvEncapsulated(charset, language);
-
-        RMObject.DvEncapsulated d = s.deserializeDvEncapsulated();
-
-        assertEquals(
-                codePhraseCharsetTerminologyIDValue,
-                d.getCharset().getTerminologyID().getValue());
-        assertEquals(charsetCodeString, d.getCharset().getValue());
-        assertEquals(
-                codePhraseLanguageTerminologyIDValue,
-                d.getLanguage().getTerminologyID().getValue());
-        assertEquals(
-                languageCodeString, d.getLanguage().getValue());
+        assertEquals("name(version)",
+                de.getCharset().getTerminologyID().getObjectID().getValue());
+        assertEquals("version",
+                de.getCharset().getTerminologyID().getVersion());
+        assertEquals("codeString", de.getCharset().getCodeString());
+        assertEquals("name(version)",
+                de.getLanguage().getTerminologyID().getObjectID().getValue());
+        assertEquals("version",
+                de.getLanguage().getTerminologyID().getVersion());
+        assertEquals("codeString", de.getLanguage().getCodeString());
     }
 
+    /**
+     * Testes para UIDBasedID
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void UIDBasedID() throws UnsupportedEncodingException {
-        String value = "_UIDBASEDID_";
-        s.serializeUIDBasedID(value);
+        UIDBasedID uid = RMObjectTestHelper.UIDBasedID(false);
+        s.serializeUIDBasedID(uid);
+        uid = s.deserializeUIDBasedID();
 
-        RMObject.UIDBasedID uid = s.deserializeUIDBasedID();
-        assertEquals(value, uid.getValue());
+        assertEquals("value", uid.getValue());
     }
 
+    @Test
+    public void UIDBasedIDException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.UIDBasedID(true);
+        });
+    }
+
+    /**
+     * Testes para DvParsable
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void DvParsable() throws UnsupportedEncodingException {
-        String codePhraseCharsetTerminologyIDValue = "_TERMINOLOGYCHARSET_";
-        String charsetCodeString = "UTF-8";
-        String codePhraseLanguageTerminologyIDValue = "_LANGUAGETERMINOLOGY_";
-        String languageCodeString = "UTF-8";
-        String value = "_DVPARSABLE_";
-        String formalism = "FORMALISM";
+        DvParsable dp = RMObjectTestHelper.DvParsable(false,
+                false);
+        s.serializeDvParsable(dp);
+        dp = s.deserializeDvParsable();
 
-        RMObject.TerminologyID charsetTID =
-                RMObjectFactory.newTerminologyID(
-                        codePhraseCharsetTerminologyIDValue);
-        RMObject.CodePhrase charset
-                = RMObjectFactory.newCodePhrase(
-                charsetTID,
-                charsetCodeString);
+        //charset
+        assertEquals("name(version)",
+                dp.getDvEncapsulated().getCharset().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("version",
+                dp.getDvEncapsulated().getCharset().
+                        getTerminologyID().getVersion());
+        assertEquals("codeString",
+                dp.getDvEncapsulated().getCharset().getCodeString());
+        //language
+        assertEquals("name(version)",
+                dp.getDvEncapsulated().getLanguage()
+                        .getTerminologyID().getObjectID().getValue());
+        assertEquals("version",
+                dp.getDvEncapsulated().
+                        getLanguage().getTerminologyID().getVersion());
+        assertEquals("codeString", dp.getDvEncapsulated().
+                getLanguage().getCodeString());
+        //value
+        assertEquals("value", dp.getValue());
 
-        RMObject.TerminologyID languageID =
-                RMObjectFactory.newTerminologyID(
-                        codePhraseLanguageTerminologyIDValue);
-
-        RMObject.CodePhrase language
-                = RMObjectFactory.newCodePhrase(
-                languageID,
-                languageCodeString);
-
-
-        s.serializeDvParsable(charset, language, value, formalism);
-
-        RMObject.DvParsable d = s.deserializeDvParsable();
-
-        assertEquals(
-                codePhraseCharsetTerminologyIDValue,
-                d.getCharset().getTerminologyID().getValue());
-        assertEquals(charsetCodeString, d.getCharset().getValue());
-        assertEquals(
-                codePhraseLanguageTerminologyIDValue,
-                d.getLanguage().getTerminologyID().getValue());
-        assertEquals(
-                languageCodeString, d.getLanguage().getValue());
-        assertEquals(value, d.getValue());
-        assertEquals(formalism, d.getFormalism());
+        //formalism
+        assertEquals("formalism", dp.getFormalism());
     }
 
+    @Test
+    public void DvParsableValueException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvParsable(true, false);
+        });
+    }
+
+    @Test
+    public void DvParsableFormalismException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvParsable(false, true);
+        });
+    }
+
+    /**
+     * Testes para DvTimeSpecification
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void DvTimeSpecification() throws UnsupportedEncodingException {
-        String terminologyIDValue = "_TERMINOLOGYID_";
-        String codePhraseValue = "_CODEPHRASE_";
-        String dvParsablevalue = "_DVVPARSABLEVALUE_";
-        String formalism = "_DVPARSABLEFORMALISM_";
-        RMObject.TerminologyID terminologyID =
-                RMObjectFactory.newTerminologyID(terminologyIDValue);
-        RMObject.CodePhrase charset = RMObjectFactory.newCodePhrase(
-                terminologyID, codePhraseValue);
-        RMObject.CodePhrase language = RMObjectFactory.newCodePhrase(
-                terminologyID, codePhraseValue);
-        RMObject.DvParsable value = RMObjectFactory.newDvParsable(
-                charset, language, dvParsablevalue, formalism);
+        DvTimeSpecification dt = RMObjectTestHelper.DvTimeSpecification(false);
+        s.serializeDvTimeSpecification(dt);
+        dt = s.deserializeDvTimeSpecification();
 
-        s.serializeDvTimeSpecification(value);
-        RMObject.DvTimeSpecification d = s.deserializeDvTimeSpecification();
+        //charset
+        assertEquals("name(version)",
+                dt.getValue().getDvEncapsulated().getCharset().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("version",
+                dt.getValue().getDvEncapsulated().getCharset().
+                        getTerminologyID().getVersion());
+        assertEquals("codeString",
+                dt.getValue().getDvEncapsulated().getCharset().getCodeString());
+        //language
+        assertEquals("name(version)",
+                dt.getValue().getDvEncapsulated().getLanguage()
+                        .getTerminologyID().getObjectID().getValue());
+        assertEquals("version",
+                dt.getValue().getDvEncapsulated().
+                        getLanguage().getTerminologyID().getVersion());
+        assertEquals("codeString", dt.getValue().getDvEncapsulated().
+                getLanguage().getCodeString());
+        //value
+        assertEquals("value", dt.getValue().getValue());
 
-        assertEquals(terminologyIDValue,
-                d.getValue().getCharset().getTerminologyID().getValue());
-        assertEquals(codePhraseValue, d.getValue().getCharset().getValue());
-        assertEquals(terminologyIDValue,
-                d.getValue().getLanguage().getTerminologyID().getValue());
-        assertEquals(codePhraseValue, d.getValue().getLanguage().getValue());
-        assertEquals(dvParsablevalue, d.getValue().getValue());
-        assertEquals(formalism, d.getValue().getFormalism());
+        //formalism
+        assertEquals("formalism", dt.getValue().getFormalism());
     }
 
+    @Test
+    public void DvTimeSpecificationException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvTimeSpecification(true);
+        });
+    }
+
+    /**
+     * Testes para DvMultimedia
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void DvMultimedia() throws UnsupportedEncodingException {
-        RMObject.TerminologyID charsetTID = RMObjectFactory.newTerminologyID(
-                "charset");
-        RMObject.TerminologyID languageTID =
-                RMObjectFactory.newTerminologyID("language");
-        RMObject.CodePhrase charset =
-                RMObjectFactory.newCodePhrase(charsetTID, "charset");
-        RMObject.CodePhrase language =
-                RMObjectFactory.newCodePhrase(languageTID, "language");
-        RMObject.DvEncapsulated dvMultimediaDvEncapsulated =
-                RMObjectFactory.newDvEncapsulated(charset, language);
-        String alternateText = "alternateText";
-        RMObject.TerminologyID mediaTypeTID =
-                RMObjectFactory.newTerminologyID("media");
-        RMObject.CodePhrase mediaType =
-                RMObjectFactory.newCodePhrase(mediaTypeTID, "mediaType");
-        RMObject.TerminologyID compressionAlgorithmTID =
-                RMObjectFactory.newTerminologyID("compressionAlgorithm");
-        RMObject.CodePhrase compressionAlgorithm =
-                RMObjectFactory.newCodePhrase(
-                        compressionAlgorithmTID, "compressionAlgorithm");
-        byte[] integrityCheck = {0, 1, 0, 1, 0, 1};
-        RMObject.TerminologyID integrityCheckTID =
-                RMObjectFactory.newTerminologyID("integrityCheck");
-        RMObject.CodePhrase integrityCheckAlgorithm =
-                RMObjectFactory.newCodePhrase(integrityCheckTID, "integrity");
-        RMObject.DVURI uri = RMObjectFactory.newDVURI("DVURI");
-        byte[] data = {1, 0, 1, 1, 0};
-        RMObject.DvMultimedia thumbnail = RMObjectFactory.newDvMultimedia(
-                dvMultimediaDvEncapsulated,
-                alternateText,
-                mediaType,
-                compressionAlgorithm,
-                integrityCheck,
-                integrityCheckAlgorithm,
-                null,
-                uri,
-                data);
+        DvMultimedia dm = RMObjectTestHelper.DvMultimedia(
+                false, false,
+                false, false);
+        s.serializeDvMultimedia(dm);
+        dm = s.deserializeDvMultimedia();
 
-        s.serializeDvMultimedia(
-                dvMultimediaDvEncapsulated,
-                alternateText,
-                mediaType,
-                compressionAlgorithm, integrityCheck, integrityCheckAlgorithm,
-                thumbnail, uri, data);
+        //dvEncapsulated
+        assertEquals("name(version)",
+                dm.getDvEncapsulated().getCharset().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("version",
+                dm.getDvEncapsulated().getCharset().
+                        getTerminologyID().getVersion());
+        assertEquals("codeString", dm.getDvEncapsulated().
+                getCharset().getCodeString());
+        assertEquals("name(version)",
+                dm.getDvEncapsulated().getLanguage().getTerminologyID().
+                        getObjectID().getValue());
+        assertEquals("version",
+                dm.getDvEncapsulated().getLanguage().getTerminologyID().getVersion());
+        assertEquals("codeString", dm.getDvEncapsulated().
+                getLanguage().getCodeString());
 
-        RMObject.DvMultimedia dvMultimedia = s.deserializeDvMultimedia();
+        //alternateText
+        assertEquals("alternateText", dm.getAlternateText());
 
-        assertEquals(
-                dvMultimediaDvEncapsulated.
-                        getCharset().getTerminologyID().getValue(),
-                dvMultimedia.getDvMultimediaDvEncapsulated().
-                        getCharset().getTerminologyID().getValue());
+        //mediaType
+        assertEquals("name", dm.getMediaType().
+                getTerminologyID().getName());
+        assertEquals("version",
+                dm.getMediaType().getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dm.getMediaType().getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dm.getMediaType().getCodeString());
 
-        assertEquals(alternateText, dvMultimedia.getAlternateText());
+        //compressionAlgorithm
+        assertEquals("name", dm.getCompressionAlgorithm().
+                getTerminologyID().getName());
+        assertEquals("version",
+                dm.getCompressionAlgorithm().getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dm.getCompressionAlgorithm().getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dm.getCompressionAlgorithm().
+                getCodeString());
 
-        assertEquals(mediaType.getTerminologyID().getValue(),
-                dvMultimedia.getMediaType().getTerminologyID().getValue());
+        //integrityCheck
+        byte[] integrityCheck = {0,1,0,1};
+        assertArrayEquals(integrityCheck, dm.getIntegrityCheck());
 
-        assertEquals(mediaType.getValue(),
-                dvMultimedia.getMediaType().getValue());
+        //thumbnail
+        assertEquals(null, dm.getThumbnail());
 
-        assertEquals(compressionAlgorithm.getTerminologyID().getValue(),
-                dvMultimedia.
-                        getCompressionAlgorithm().
-                        getTerminologyID().getValue());
+        //uri
+        assertEquals("value", dm.getUri().getValue());
 
-        assertArrayEquals(integrityCheck, dvMultimedia.getIntegrityCheck());
-
-        assertEquals(integrityCheckAlgorithm.getTerminologyID().getValue(),
-                dvMultimedia.
-                        getIntegrityCheckAlgorithm().
-                        getTerminologyID().getValue());
-
-        assertEquals(dvMultimediaDvEncapsulated.
-                        getCharset().getTerminologyID().getValue(),
-                dvMultimedia.
-                        getThumbnail().
-                        getDvMultimediaDvEncapsulated().
-                        getCharset().getTerminologyID().getValue());
-
-        assertEquals(dvMultimediaDvEncapsulated.
-                        getLanguage().getTerminologyID().getValue(),
-                dvMultimedia.
-                        getThumbnail().
-                        getDvMultimediaDvEncapsulated().
-                        getLanguage().getTerminologyID().getValue());
-
-        assertEquals(dvMultimediaDvEncapsulated.getCharset().getValue(),
-                dvMultimedia.
-                        getThumbnail().
-                        getDvMultimediaDvEncapsulated().
-                        getCharset().getValue());
-
-        assertEquals(dvMultimediaDvEncapsulated.getLanguage().getValue(),
-                dvMultimedia.
-                        getDvMultimediaDvEncapsulated().
-                        getLanguage().getValue());
-
-        assertEquals(alternateText,
-                dvMultimedia.getThumbnail().getAlternateText());
-
-        assertEquals(mediaType.getTerminologyID().getValue(),
-                dvMultimedia.getMediaType().getTerminologyID().getValue());
-
-        assertEquals(mediaType.getValue(),
-                dvMultimedia.getThumbnail().getMediaType().getValue());
-
-        assertEquals(mediaType.getTerminologyID().getValue(),
-                dvMultimedia.
-                        getThumbnail().
-                        getMediaType().getTerminologyID().getValue());
-
-        assertEquals(compressionAlgorithm.getTerminologyID().getValue(),
-                dvMultimedia.
-                        getThumbnail().
-                        getCompressionAlgorithm().
-                        getTerminologyID().getValue());
-
-        assertEquals(compressionAlgorithm.getValue(),
-                dvMultimedia.
-                        getThumbnail().getCompressionAlgorithm().getValue());
-
-        assertArrayEquals(integrityCheck,
-                dvMultimedia.getThumbnail().getIntegrityCheck());
-
-        assertEquals(integrityCheckAlgorithm.getTerminologyID().getValue(),
-                dvMultimedia.
-                        getThumbnail().
-                        getIntegrityCheckAlgorithm().
-                        getTerminologyID().getValue());
-
-        assertEquals(integrityCheckAlgorithm.getValue(),
-                dvMultimedia.
-                        getThumbnail().getIntegrityCheckAlgorithm().getValue());
-
-        assertEquals(null, dvMultimedia.getThumbnail().getThumbnail());
-
-        assertEquals(uri.getValue(),
-                dvMultimedia.getThumbnail().getUri().getValue());
-
-        assertArrayEquals(data, dvMultimedia.getThumbnail().getData());
+        //data
+        byte[] data = {1,0,1,0};
+        assertArrayEquals(data, dm.getData());
     }
 
+    @Test
+    public void DvMultimediaMediaTypeException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvMultimedia(true,
+                    false,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void DvMultimediaCompressionAlgorithmException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvMultimedia(false,
+                    true,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void DvMultimediaIntegrityCheckException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvMultimedia(false,
+                    false,
+                    true, false);
+        });
+    }
+
+    @Test
+    public void DvMultimediaDataException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvMultimedia(false,
+                    false,
+                    false, true);
+        });
+    }
+
+    /**
+     * Testes para DvText
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void DvText() throws UnsupportedEncodingException {
-        String value = "DvTextValue";
-        List<RMObject.TermMapping> mappings = null;
-        String formatting = "DvText Formatting";
-        String hyperlinkValue = "Hyperlink value";
-        RMObject.DVURI hyperlink = RMObjectFactory.newDVURI(hyperlinkValue);
+        DvText dt = RMObjectTestHelper.DvText(false,
+                false);
+        s.serializeDvText(dt);
+        dt = s.deserializeDvText();
 
-        String languageTIDValue = "Language Terminology ID";
-        RMObject.TerminologyID languageTID =
-                RMObjectFactory.newTerminologyID(languageTIDValue);
-        String languageValue = "Language value";
-        RMObject.CodePhrase language =
-                RMObjectFactory.newCodePhrase(languageTID,
-                languageValue);
+        //value
+        assertEquals("value", dt.getValue());
 
-        String charsetTIDValue = "Charset Terminology ID";
-        String charsetValue = "Charset Value";
-        RMObject.TerminologyID charsetTID =
-                RMObjectFactory.newTerminologyID(charsetTIDValue);
-        RMObject.CodePhrase charset =
-                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
+        //mappings
 
-        s.serializeDvText(
-                value, mappings, formatting, hyperlink, language, charset);
-        RMObject.DvText dvText = s.deserializeDvText();
+        //0
+        assertEquals("name", dt.getMappings().get(0).getTarget()
+                .getTerminologyID().getName());
+        assertEquals("version",
+                dt.getMappings().get(0).getTarget().
+                        getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dt.getMappings().get(0).getTarget().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getMappings().get(0).
+                getTarget().getCodeString());
+        assertEquals(">", dt.getMappings().get(0).
+                getMatch().getValue());
+        assertEquals("value", dt.getMappings().get(0).
+                getPurpose().getDvText().getValue());
+        assertEquals(null, dt.getMappings().get(0).getPurpose().
+                getDvText().getMappings());
+        assertEquals("formatting", dt.getMappings().get(0).
+                getPurpose().getDvText().getFormatting());
+        assertEquals("value", dt.getMappings().get(0).getPurpose().
+                getDvText().getHyperlink().getValue());
+        assertEquals("name", dt.getMappings().get(0).getPurpose().
+                getDvText().getCharset().getTerminologyID().getName());
+        assertEquals("version",
+                dt.getMappings().get(0).getPurpose().
+                        getDvText().getCharset().getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dt.getMappings().get(0).getPurpose().
+                        getDvText().getCharset().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getMappings().get(0).getPurpose().
+                getDvText().getCharset().getCodeString());
 
-        assertEquals(value, dvText.getValue());
+        //1
+        assertEquals("name", dt.getMappings().get(1).getTarget()
+                .getTerminologyID().getName());
+        assertEquals("version",
+                dt.getMappings().get(1).getTarget().
+                        getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dt.getMappings().get(1).getTarget().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getMappings().get(1).
+                getTarget().getCodeString());
+        assertEquals(">", dt.getMappings().get(1).
+                getMatch().getValue());
+        assertEquals("value", dt.getMappings().get(1).
+                getPurpose().getDvText().getValue());
+        assertEquals(null, dt.getMappings().get(1).getPurpose().
+                getDvText().getMappings());
+        assertEquals("formatting", dt.getMappings().get(1).
+                getPurpose().getDvText().getFormatting());
+        assertEquals("value", dt.getMappings().get(1).getPurpose().
+                getDvText().getHyperlink().getValue());
+        assertEquals("name", dt.getMappings().get(1).getPurpose().
+                getDvText().getCharset().getTerminologyID().getName());
+        assertEquals("version",
+                dt.getMappings().get(1).getPurpose().
+                        getDvText().getCharset().getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dt.getMappings().get(1).getPurpose().
+                        getDvText().getCharset().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getMappings().get(1).getPurpose().
+                getDvText().getCharset().getCodeString());
 
-        assertEquals(null, dvText.getMappings());
+        //2
+        assertEquals("name", dt.getMappings().get(2).getTarget()
+                .getTerminologyID().getName());
+        assertEquals("version",
+                dt.getMappings().get(2).getTarget().
+                        getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dt.getMappings().get(2).getTarget().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getMappings().get(2).
+                getTarget().getCodeString());
+        assertEquals(">", dt.getMappings().get(2).
+                getMatch().getValue());
+        assertEquals("value", dt.getMappings().get(2).
+                getPurpose().getDvText().getValue());
+        assertEquals(null, dt.getMappings().get(2).getPurpose().
+                getDvText().getMappings());
+        assertEquals("formatting", dt.getMappings().get(2).
+                getPurpose().getDvText().getFormatting());
+        assertEquals("value", dt.getMappings().get(2).getPurpose().
+                getDvText().getHyperlink().getValue());
+        assertEquals("name", dt.getMappings().get(2).getPurpose().
+                getDvText().getCharset().getTerminologyID().getName());
+        assertEquals("version",
+                dt.getMappings().get(2).getPurpose().
+                        getDvText().getCharset().getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dt.getMappings().get(2).getPurpose().
+                        getDvText().getCharset().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getMappings().get(2).getPurpose().
+                getDvText().getCharset().getCodeString());
 
-        assertEquals(formatting, dvText.getFormatting());
+        //formatting
+        assertEquals("formatting", dt.getFormatting());
 
-        assertEquals(hyperlink.getValue(), dvText.getHyperlink().getValue());
+        //hyperlink
+        assertEquals("value", dt.getHyperlink().getValue());
 
-        assertEquals(language.getTerminologyID().getValue(),
-                dvText.getLanguage().getTerminologyID().getValue());
+        //language
+        assertEquals("name", dt.getLanguage()
+                .getTerminologyID().getName());
+        assertEquals("version", dt.getLanguage().
+                        getTerminologyID().getVersion());
+        assertEquals("name(version)", dt.getLanguage().
+                        getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getLanguage().getCodeString());
 
-        assertEquals(language.getValue(), dvText.getLanguage().getValue());
-
-        assertEquals(charset.getTerminologyID().getValue(),
-                dvText.getCharset().getTerminologyID().getValue());
-
-        assertEquals(charset.getValue(), dvText.getCharset().getValue());
+        //charset
+        assertEquals("name", dt.getCharset()
+                .getTerminologyID().getName());
+        assertEquals("version", dt.getCharset().
+                getTerminologyID().getVersion());
+        assertEquals("name(version)", dt.getCharset().
+                getTerminologyID().getObjectID().getValue());
+        assertEquals("codeString", dt.getCharset().getCodeString());
     }
 
+    @Test
+    public void DvTextMappingException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvText(true,
+                    false);
+        });
+    }
+
+    @Test
+    public void DvTextFormattingException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvText(false,
+                    true);
+        });
+    }
+
+    /**
+     * Testes para DvCodedText
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void DvCodedText() throws UnsupportedEncodingException {
-        String value = "DvTextValue";
-        List<RMObject.TermMapping> mappings = null;
-        String formatting = "DvText Formatting";
-        String hyperlinkValue = "Hyperlink value";
-        RMObject.DVURI hyperlink = RMObjectFactory.newDVURI(hyperlinkValue);
+        DvCodedText dt = RMObjectTestHelper.DvCodedText(false);
+        s.serializeDvCodedText(dt);
+        dt = s.deserializeDvCodedText();
 
-        String languageTIDValue = "Language Terminology ID";
-        RMObject.TerminologyID languageTID =
-                RMObjectFactory.newTerminologyID(languageTIDValue);
-        String languageValue = "Language value";
-        RMObject.CodePhrase language =
-                RMObjectFactory.newCodePhrase(languageTID,
-                languageValue);
+        assertEquals("value",dt.getDvText().getValue());
+        assertEquals("name", dt.getDefiningCode().
+                getTerminologyID().getName());
+        assertEquals("version",
+                dt.getDefiningCode().getTerminologyID().getVersion());
+        assertEquals("name(version)",
+                dt.getDefiningCode().getTerminologyID().
+                        getObjectID().getValue());
+        assertEquals("codeString", dt.getDefiningCode().getCodeString());
 
-        String charsetTIDValue = "Charset Terminology ID";
-        String charsetValue = "Charset Value";
-        RMObject.TerminologyID charsetTID =
-                RMObjectFactory.newTerminologyID(charsetTIDValue);
-        RMObject.CodePhrase charset =
-                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
-
-        RMObject.DvText dvText = RMObjectFactory.newDvText(
-                value, mappings, formatting, hyperlink, language, charset);
-
-        String definingCodeTIDValue = "Defining Code Terminology ID Value";
-        RMObject.TerminologyID definingCodeTID =
-                RMObjectFactory.newTerminologyID(definingCodeTIDValue);
-        String definingCodeValue = "Defining Code Value";
-        RMObject.CodePhrase definingCode =
-                RMObjectFactory.newCodePhrase(
-                        definingCodeTID, definingCodeTIDValue);
-
-        s.serializeDvCodedText(dvText, definingCode);
-        RMObject.DvCodedText dvCodedText = s.deserializeDvCodedText();
-
-        assertEquals(value, dvCodedText.getDvText().getValue());
-
-        assertEquals(null, dvCodedText.getDvText().getMappings());
-
-        assertEquals(formatting, dvCodedText.getDvText().getFormatting());
-
-        assertEquals(hyperlinkValue,
-                dvCodedText.getDvText().getHyperlink().getValue());
-
-        assertEquals(language.getTerminologyID().getValue(),
-                dvCodedText.getDvText().
-                        getLanguage().getTerminologyID().getValue());
-
-        assertEquals(language.getValue(), dvCodedText.getDvText().
-                getLanguage().getValue());
-
-        assertEquals(charset.getTerminologyID().getValue(),
-                dvCodedText.getDvText().
-                        getCharset().getTerminologyID().getValue());
-
-        assertEquals(charset.getValue(), dvCodedText.getDvText().
-                getCharset().getValue());
-
-        assertEquals(definingCode.getTerminologyID().getValue(),
-                dvCodedText.getDefiningCode().getTerminologyID().getValue());
-
-        assertEquals(definingCode.getValue(),
-                dvCodedText.getDefiningCode().getValue());
     }
 
     @Test
-    public void TermMapping() throws UnsupportedEncodingException {
-        RMObject.CodePhrase target = null;
-        RMObject.Match match = RMObject.Match.BROADER;
-        RMObject.DvCodedText purpose = null;
-
-        String targetTIDValue = "Target TerminologyID";
-        String targetValue = "Target Value";
-        RMObject.TerminologyID targetTID =
-                RMObjectFactory.newTerminologyID(targetTIDValue);
-        target = RMObjectFactory.newCodePhrase(targetTID, targetValue);
-
-        String value = "DvTextValue";
-        List<RMObject.TermMapping> mappings = null;
-        String formatting = "DvText Formatting";
-        String hyperlinkValue = "Hyperlink value";
-        RMObject.DVURI hyperlink = RMObjectFactory.newDVURI(hyperlinkValue);
-
-        String languageTIDValue = "Language Terminology ID";
-        RMObject.TerminologyID languageTID =
-                RMObjectFactory.newTerminologyID(languageTIDValue);
-        String languageValue = "Language value";
-        RMObject.CodePhrase language =
-                RMObjectFactory.newCodePhrase(languageTID,
-                languageValue);
-
-        String charsetTIDValue = "Charset Terminology ID";
-        String charsetValue = "Charset Value";
-        RMObject.TerminologyID charsetTID =
-                RMObjectFactory.newTerminologyID(charsetTIDValue);
-        RMObject.CodePhrase charset =
-                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
-
-        RMObject.DvText dvText = RMObjectFactory.newDvText(
-                value, mappings, formatting, hyperlink, language, charset);
-
-        String definingCodeTIDValue = "Defining Code Terminology ID Value";
-        RMObject.TerminologyID definingCodeTID =
-                RMObjectFactory.newTerminologyID(definingCodeTIDValue);
-        String definingCodeValue = "Defining Code Value";
-        RMObject.CodePhrase definingCode =
-                RMObjectFactory.newCodePhrase(
-                        definingCodeTID, definingCodeTIDValue);
-
-        purpose = RMObjectFactory.newDvCodedText(dvText, definingCode);
-
-        s.serializeTermMapping(target, match, purpose);
-
-        RMObject.TermMapping termMapping = s.deserializeTermMapping();
-
-        assertEquals(target.getTerminologyID().getValue(),
-                termMapping.getTarget().getTerminologyID().getValue());
-
-        assertEquals(target.getValue(), termMapping.getTarget().getValue());
-
-        assertEquals(match.EQUIVALENT, termMapping.getMatch().EQUIVALENT);
-
-        assertEquals(dvText.getValue(),
-                termMapping.getPurpose().getDvText().getValue());
-
-        assertEquals(dvText.getMappings(),
-                termMapping.getPurpose().getDvText().getMappings());
-
-        assertEquals(dvText.getFormatting(),
-                termMapping.getPurpose().getDvText().getFormatting());
-
-        assertEquals(dvText.getHyperlink().getValue(),
-                termMapping.getPurpose().getDvText().getHyperlink().getValue());
-
-        assertEquals(dvText.getLanguage().getTerminologyID().getValue(),
-                termMapping.
-                        getPurpose().
-                        getDvText().
-                        getLanguage().getTerminologyID().getValue());
-
-        assertEquals(dvText.getLanguage().getValue(),
-                termMapping.getPurpose().getDvText().getLanguage().getValue());
-
-        assertEquals(dvText.getCharset().getTerminologyID().getValue(),
-                termMapping.
-                        getPurpose().
-                        getDvText().
-                        getCharset().getTerminologyID().getValue());
-
-        assertEquals(dvText.getCharset().getValue(),
-                termMapping.getPurpose().getDvText().getCharset().getValue());
-
-        assertEquals(definingCode.getTerminologyID().getValue(),
-                termMapping.
-                        getPurpose().
-                        getDefiningCode().
-                        getTerminologyID().getValue());
-        assertEquals(definingCode.getValue(),
-                termMapping.getPurpose().getDefiningCode().getValue());
+    public void DvCodedTextDefiningCodeException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvCodedText(true);
+        });
     }
 
-    @Test
-    public void TermMappingList() throws UnsupportedEncodingException {
-
-        String value = "DvTextValue";
-        List<RMObject.TermMapping> mappings = new ArrayList<>();
-        String formatting = "DvText Formatting";
-        String hyperlinkValue = "Hyperlink value";
-        RMObject.DVURI hyperlink = RMObjectFactory.newDVURI(hyperlinkValue);
-
-        String languageTIDValue = "Language Terminology ID";
-        RMObject.TerminologyID languageTID =
-                RMObjectFactory.newTerminologyID(languageTIDValue);
-        String languageValue = "Language value";
-        RMObject.CodePhrase language =
-                RMObjectFactory.newCodePhrase(languageTID,
-                languageValue);
-
-        String charsetTIDValue = "Charset Terminology ID";
-        String charsetValue = "Charset Value";
-        RMObject.TerminologyID charsetTID =
-                RMObjectFactory.newTerminologyID(charsetTIDValue);
-        RMObject.CodePhrase charset =
-                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
-
-        RMObject.DvText dvText = RMObjectFactory.newDvText(
-                value, null, formatting, hyperlink, language, charset);
-
-        String definingCodeTIDValue = "Defining Code Terminology ID Value";
-        RMObject.TerminologyID definingCodeTID =
-                RMObjectFactory.newTerminologyID(definingCodeTIDValue);
-        String definingCodeValue = "Defining Code Value";
-        RMObject.CodePhrase definingCode =
-                RMObjectFactory.newCodePhrase(
-                        definingCodeTID, definingCodeTIDValue);
-
-        RMObject.DvCodedText purpose =
-                RMObjectFactory.newDvCodedText(dvText, definingCode);
-
-        RMObject.TermMapping t =
-                RMObjectFactory.newTermMapping(charset,
-                        RMObject.Match.BROADER, purpose);
-
-        mappings.add(t);
-
-        s.serializeDvText(
-                value, mappings, formatting, hyperlink, language, charset);
-        dvText = s.deserializeDvText();
-
-        assertEquals(value, dvText.getValue());
-
-        assertEquals(mappings.get(0).getTarget().getTerminologyID().getValue(),
-                dvText.getMappings().get(0).
-                        getTarget().getTerminologyID().getValue());
-
-        assertEquals(mappings.get(0).getTarget().getValue(),
-                dvText.getMappings().get(0).getTarget().getValue());
-
-        assertEquals(mappings.get(0).getMatch().BROADER,
-                dvText.getMappings().get(0).getMatch().BROADER);
-
-        assertEquals(mappings.get(0).getPurpose().
-                        getDefiningCode().getTerminologyID().getValue(),
-                dvText.getMappings().
-                        get(0).
-                        getPurpose().
-                        getDefiningCode().getTerminologyID().getValue());
-
-        assertEquals(mappings.get(0).getPurpose().
-                        getDefiningCode().getValue(),
-                dvText.getMappings().
-                        get(0).
-                        getPurpose().
-                        getDefiningCode().getValue());
-
-        assertEquals(mappings.get(0).getPurpose().
-                        getDvText().getValue(),
-                dvText.getMappings().
-                        get(0).
-                        getPurpose().
-                        getDvText().getValue());
-
-        assertEquals(mappings.get(0).getPurpose().
-                        getDvText().getMappings(),
-                dvText.getMappings().
-                        get(0).
-                        getPurpose().
-                        getDvText().getMappings());
-
-        assertEquals(mappings.get(0).getPurpose().
-                        getDvText().getFormatting(),
-                dvText.getMappings().
-                        get(0).
-                        getPurpose().
-                        getDvText().getFormatting());
-
-        assertEquals(mappings.get(0).getPurpose().
-                        getDvText().getHyperlink().getValue(),
-                dvText.getMappings().
-                        get(0).
-                        getPurpose().
-                        getDvText().getHyperlink().getValue());
-
-        assertEquals(mappings.get(0).getPurpose().
-                        getDvText().getLanguage().getTerminologyID().getValue(),
-                dvText.getMappings().
-                        get(0).
-                        getPurpose().
-                        getDvText().getLanguage().
-                        getTerminologyID().getValue());
-
-        assertEquals(mappings.get(0).getPurpose().
-                        getDvText().getLanguage().getValue(),
-                dvText.getMappings().
-                        get(0).
-                        getPurpose().
-                        getDvText().getLanguage().getValue());
-
-        assertEquals(mappings.get(0).getPurpose().
-                        getDvText().getCharset().getTerminologyID().getValue(),
-                dvText.getMappings().
-                        get(0).
-                        getPurpose().
-                        getDvText().getCharset().
-                        getTerminologyID().getValue());
-
-        assertEquals(mappings.get(0).getPurpose().
-                        getDvText().getCharset().getValue(),
-                dvText.getMappings().
-                        get(0).
-                        getPurpose().
-                        getDvText().getCharset().getValue());
-
-        assertEquals(formatting, dvText.getFormatting());
-
-        assertEquals(hyperlink.getValue(), dvText.getHyperlink().getValue());
-
-        assertEquals(language.getTerminologyID().getValue(),
-                dvText.getLanguage().getTerminologyID().getValue());
-
-        assertEquals(language.getValue(), dvText.getLanguage().getValue());
-
-        assertEquals(charset.getTerminologyID().getValue(),
-                dvText.getCharset().getTerminologyID().getValue());
-
-        assertEquals(charset.getValue(), dvText.getCharset().getValue());
-    }
-
+    /**
+     * Testes para Link
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void Link() throws UnsupportedEncodingException {
-        String value = "DvTextValue";
-        List<RMObject.TermMapping> mappings = new ArrayList<>();
-        String formatting = "DvText Formatting";
-        String hyperlinkValue = "Hyperlink value";
-        RMObject.DVURI hyperlink = RMObjectFactory.newDVURI(hyperlinkValue);
+        Link l = RMObjectTestHelper.Link(
+                false,
+                false, false);
+        s.serializeLink(l);
+        l = s.deserializeLink();
 
-        String languageTIDValue = "Language Terminology ID";
-        RMObject.TerminologyID languageTID =
-                RMObjectFactory.newTerminologyID(languageTIDValue);
-        String languageValue = "Language value";
-        RMObject.CodePhrase language =
-                RMObjectFactory.newCodePhrase(languageTID,
-                languageValue);
+        //meaning
+        assertEquals("value", l.getMeaning().getValue());
 
-        String charsetTIDValue = "Charset Terminology ID";
-        String charsetValue = "Charset Value";
-        RMObject.TerminologyID charsetTID =
-                RMObjectFactory.newTerminologyID(charsetTIDValue);
-        RMObject.CodePhrase charset =
-                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
+        //type
+        assertEquals("value", l.getType().getValue());
 
-        RMObject.DvText dvText = RMObjectFactory.newDvText(
-                value, null, formatting, hyperlink, language, charset);
-
-        String dvehruriValue = "DVEHRURI Value";
-        RMObject.DVEHRURI dvehruri = RMObjectFactory.newDVEHRURI(dvehruriValue);
-
-        RMObject.Link link = RMObjectFactory.newLink(dvText, dvText, dvehruri);
-        RMObjectSerialization.LinkSerializer ls =
-                new RMObjectSerialization.LinkSerializer();
-
-        s.serializeLink(link);
-        link = s.deserializeLink();
-
-        assertEquals(dvText.getValue(), link.getMeaning().getValue());
-
-        assertEquals(dvText.getMappings(), link.getMeaning().getMappings());
-
-        assertEquals(dvText.getFormatting(), link.getMeaning().getFormatting());
-
-        assertEquals(dvText.getHyperlink().getValue(),
-                link.getMeaning().getHyperlink().getValue());
-
-        assertEquals(dvText.getLanguage().getTerminologyID().getValue(),
-                link.getMeaning().getLanguage().getTerminologyID().getValue());
-        assertEquals(dvText.getLanguage().getValue(),
-                link.getMeaning().getLanguage().getValue());
-        assertEquals(dvText.getCharset().getTerminologyID().getValue(),
-                link.getMeaning().getCharset().getTerminologyID().getValue());
-        assertEquals(dvText.getCharset().getValue(),
-                link.getMeaning().getCharset().getValue());
-
-        assertEquals(dvText.getValue(), link.getType().getValue());
-
-        assertEquals(dvText.getMappings(), link.getType().getMappings());
-
-        assertEquals(dvText.getFormatting(), link.getType().getFormatting());
-
-        assertEquals(dvText.getHyperlink().getValue(),
-                link.getType().getHyperlink().getValue());
-
-        assertEquals(dvText.getLanguage().getTerminologyID().getValue(),
-                link.getType().getLanguage().getTerminologyID().getValue());
-        assertEquals(dvText.getLanguage().getValue(),
-                link.getType().getLanguage().getValue());
-        assertEquals(dvText.getCharset().getTerminologyID().getValue(),
-                link.getType().getCharset().getTerminologyID().getValue());
-        assertEquals(dvText.getCharset().getValue(),
-                link.getType().getCharset().getValue());
-
-        assertEquals(dvehruri.getValue(), link.getTarget().getValue());
+        //target
+        assertEquals("value", l.getTarget().getDvuri().getValue());
     }
 
     @Test
-    public void DvStateWithTerminal() throws UnsupportedEncodingException {
-        String value = "DvTextValue";
-        List<RMObject.TermMapping> mappings = null;
-        String formatting = "DvText Formatting";
-        String hyperlinkValue = "Hyperlink value";
-        RMObject.DVURI hyperlink = RMObjectFactory.newDVURI(hyperlinkValue);
-
-        String languageTIDValue = "Language Terminology ID";
-        RMObject.TerminologyID languageTID =
-                RMObjectFactory.newTerminologyID(languageTIDValue);
-        String languageValue = "Language value";
-        RMObject.CodePhrase language =
-                RMObjectFactory.newCodePhrase(languageTID,
-                languageValue);
-
-        String charsetTIDValue = "Charset Terminology ID";
-        String charsetValue = "Charset Value";
-        RMObject.TerminologyID charsetTID =
-                RMObjectFactory.newTerminologyID(charsetTIDValue);
-        RMObject.CodePhrase charset =
-                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
-
-        RMObject.DvText dvText = RMObjectFactory.newDvText(
-                value, mappings, formatting, hyperlink, language, charset);
-
-        String definingCodeTIDValue = "Defining Code Terminology ID Value";
-        RMObject.TerminologyID definingCodeTID =
-                RMObjectFactory.newTerminologyID(definingCodeTIDValue);
-        String definingCodeValue = "Defining Code Value";
-        RMObject.CodePhrase definingCode =
-                RMObjectFactory.newCodePhrase(
-                        definingCodeTID, definingCodeTIDValue);
-
-        RMObject.DvCodedText dvStateValue =
-                RMObjectFactory.newDvCodedText(dvText, definingCode);
-        String terminal = "DvState terminal";
-
-        RMObject.DvState dvState = RMObjectFactory.newDvState(dvStateValue,
-                terminal);
-
-        s.serializeDvState(dvState);
-        dvState = s.deserializaDvState();
-
-        assertEquals(dvStateValue.getDvText().getValue(),
-                dvState.getValue().getDvText().getValue());
-
-        assertEquals(dvStateValue.getDvText().getMappings(),
-                dvState.getValue().getDvText().getMappings());
-
-        assertEquals(dvStateValue.getDvText().getFormatting(),
-                dvState.getValue().getDvText().getFormatting());
-
-        assertEquals(dvStateValue.getDvText().getHyperlink().getValue(),
-                dvState.getValue().getDvText().getHyperlink().getValue());
-
-        assertEquals(dvStateValue.
-                        getDvText().getLanguage().getTerminologyID().getValue(),
-                dvState.getValue().getDvText().
-                        getLanguage().getTerminologyID().getValue());
-
-        assertEquals(dvStateValue.
-                        getDvText().getLanguage().getValue(),
-                dvState.getValue().getDvText().getLanguage().getValue());
-
-        assertEquals(dvStateValue.
-                        getDvText().getCharset().getTerminologyID().getValue(),
-                dvState.getValue().getDvText().
-                        getCharset().getTerminologyID().getValue());
-
-        assertEquals(dvStateValue.
-                        getDvText().getCharset().getValue(),
-                dvState.getValue().getDvText().getCharset().getValue());
-
-        assertEquals(terminal, dvState.getTerminal());
+    public void LinkMeaningException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Link(true,
+                    false, false);
+        });
     }
 
     @Test
-    public void DvStateWithoutTerminal() throws UnsupportedEncodingException {
-        String value = "DvTextValue";
-        List<RMObject.TermMapping> mappings = null;
-        String formatting = "DvText Formatting";
-        String hyperlinkValue = "Hyperlink value";
-        RMObject.DVURI hyperlink = RMObjectFactory.newDVURI(hyperlinkValue);
-
-        String languageTIDValue = "Language Terminology ID";
-        RMObject.TerminologyID languageTID =
-                RMObjectFactory.newTerminologyID(languageTIDValue);
-        String languageValue = "Language value";
-        RMObject.CodePhrase language =
-                RMObjectFactory.newCodePhrase(languageTID,
-                languageValue);
-
-        String charsetTIDValue = "Charset Terminology ID";
-        String charsetValue = "Charset Value";
-        RMObject.TerminologyID charsetTID =
-                RMObjectFactory.newTerminologyID(charsetTIDValue);
-        RMObject.CodePhrase charset =
-                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
-
-        RMObject.DvText dvText = RMObjectFactory.newDvText(
-                value, mappings, formatting, hyperlink, language, charset);
-
-        String definingCodeTIDValue = "Defining Code Terminology ID Value";
-        RMObject.TerminologyID definingCodeTID =
-                RMObjectFactory.newTerminologyID(definingCodeTIDValue);
-        String definingCodeValue = "Defining Code Value";
-        RMObject.CodePhrase definingCode =
-                RMObjectFactory.newCodePhrase(
-                        definingCodeTID, definingCodeTIDValue);
-
-        RMObject.DvCodedText dvStateValue =
-                RMObjectFactory.newDvCodedText(dvText, definingCode);
-        String terminal = null;
-
-        RMObject.DvState dvState = RMObjectFactory.newDvState(dvStateValue,
-                terminal);
-
-        s.serializeDvState(dvState);
-        dvState = s.deserializaDvState();
-
-        assertEquals(dvStateValue.getDvText().getValue(),
-                dvState.getValue().getDvText().getValue());
-
-        assertEquals(dvStateValue.getDvText().getMappings(),
-                dvState.getValue().getDvText().getMappings());
-
-        assertEquals(dvStateValue.getDvText().getFormatting(),
-                dvState.getValue().getDvText().getFormatting());
-
-        assertEquals(dvStateValue.getDvText().getHyperlink().getValue(),
-                dvState.getValue().getDvText().getHyperlink().getValue());
-
-        assertEquals(dvStateValue.
-                        getDvText().getLanguage().getTerminologyID().getValue(),
-                dvState.getValue().getDvText().
-                        getLanguage().getTerminologyID().getValue());
-
-        assertEquals(dvStateValue.
-                        getDvText().getLanguage().getValue(),
-                dvState.getValue().getDvText().getLanguage().getValue());
-
-        assertEquals(dvStateValue.
-                        getDvText().getCharset().getTerminologyID().getValue(),
-                dvState.getValue().getDvText().
-                        getCharset().getTerminologyID().getValue());
-
-        assertEquals(dvStateValue.
-                        getDvText().getCharset().getValue(),
-                dvState.getValue().getDvText().getCharset().getValue());
-
-        assertEquals(terminal, dvState.getTerminal());
+    public void LinkTypeException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Link(false,
+                    true, false);
+        });
     }
 
+    @Test
+    public void LinkTargetException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Link(false,
+                    false, true);
+        });
+    }
+
+    /**
+     * Testes para DvState
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void DvState() throws UnsupportedEncodingException {
+        DvState ds = RMObjectTestHelper.DvState(false);
+        s.serializeDvState(ds);
+        ds = s.deserializaDvState();
+
+        //dvcodedtext
+        assertEquals("value", ds.getValue().getDvText().getValue());
+
+        //terminal
+        assertEquals("terminal", ds.getTerminal());
+    }
+
+    @Test
+    public void DvStateException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvState(true);
+        });
+    }
+
+    /**
+     * Testes para DvParagraph
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void DvParagraph() throws UnsupportedEncodingException {
-        String value = "DvTextValue";
-        List<RMObject.TermMapping> mappings = null;
-        String formatting = "DvText Formatting";
-        String hyperlinkValue = "Hyperlink value";
-        RMObject.DVURI hyperlink = RMObjectFactory.newDVURI(hyperlinkValue);
+        DvParagraph dp = RMObjectTestHelper.DvParagraph(false);
+        s.serializeDvParagraph(dp);
+        dp = s.deserializeDvParagraph();
 
-        String languageTIDValue = "Language Terminology ID";
-        RMObject.TerminologyID languageTID =
-                RMObjectFactory.newTerminologyID(languageTIDValue);
-        String languageValue = "Language value";
-        RMObject.CodePhrase language =
-                RMObjectFactory.newCodePhrase(languageTID,
-                languageValue);
-
-        String charsetTIDValue = "Charset Terminology ID";
-        String charsetValue = "Charset Value";
-        RMObject.TerminologyID charsetTID =
-                RMObjectFactory.newTerminologyID(charsetTIDValue);
-        RMObject.CodePhrase charset =
-                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
-
-        RMObject.DvText dvText = RMObjectFactory.newDvText(
-                value, mappings, formatting, hyperlink, language, charset);
-
-        List<RMObject.DvText> items = new ArrayList<>();
-        items.add(dvText);
-
-        s.serializeDvParagraph(items);
-        RMObject.DvParagraph dvp = s.deserializeDvParagraph();
-
-        assertEquals(dvText.getValue(), dvp.getItems().get(0).getValue());
-
-        assertEquals(dvText.getMappings(), dvp.getItems().get(0).getMappings());
-
-        assertEquals(dvText.getFormatting(),
-                dvp.getItems().get(0).getFormatting());
-
-        assertEquals(dvText.getHyperlink().getValue(),
-                dvp.getItems().get(0).getHyperlink().getValue());
-
-        assertEquals(dvText.getLanguage().getTerminologyID().getValue(),
-                dvp.getItems().get(0).
-                        getLanguage().getTerminologyID().getValue());
-
-        assertEquals(dvText.getLanguage().getValue(),
-                dvp.getItems().get(0).getLanguage().getValue());
-
-        assertEquals(dvText.getCharset().getTerminologyID().getValue(),
-                dvp.getItems().get(0).
-                        getCharset().getTerminologyID().getValue());
-
-        assertEquals(dvText.getCharset().getValue(),
-                dvp.getItems().get(0).getCharset().getValue());
+        assertEquals("value", dp.getItems().get(0).getValue());
+        assertEquals("value", dp.getItems().get(1).getValue());
+        assertEquals("value", dp.getItems().get(2).getValue());
     }
 
     @Test
-    public void PartyProxy() throws UnsupportedEncodingException {
-        String partyRefOIDValue = "ObjectID value";
-        String partyRefValue = "PartyRefValue";
-
-        RMObject.ObjectID oid = RMObjectFactory.newObjectID(partyRefOIDValue);
-        RMObject.PartyRef externalValue =
-                RMObjectFactory.newPartyRef(oid, partyRefValue);
-
-        RMObject.PartyProxy p = RMObjectFactory.newPartyProxy(externalValue);
-
-        s.serializePartyProxy(p);
-        p = s.deserializePartyProxy();
-
-        assertEquals(oid.getValue(), p.getExternalRef().getId().getValue());
-
-        assertEquals(partyRefValue, p.getExternalRef().getValue());
+    public void DvParagraphException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.DvParagraph(true);
+        });
     }
 
+    /**
+     * Testes para FeederAuditDetails
+     *
+     * @throws UnsupportedEncodingException
+     */
     @Test
     public void FeederAuditDetails() throws UnsupportedEncodingException {
-        String systemID = "System ID";
+        FeederAuditDetails fa = RMObjectTestHelper.FeederAuditDetails(
+                false);
+        s.serializeFeederAuditDetails(fa);
+        fa = s.deserializeFeederAuditDetails();
 
-        String oidValue = "_OBJECTID_";
-        RMObject.ObjectID id = RMObjectFactory.newObjectID(oidValue);
-        String value = "_PARTYREF_";
-        RMObject.PartyRef providerRef = RMObjectFactory.newPartyRef(id, value);
+        //systemID
+        assertEquals("systemID", fa.getSystemID());
 
-        String providerName = "Provider Name";
+        //provider
+        assertEquals("name", fa.getProvider().getName());
 
-        String idIssuer = "issuer";
-        String idAssigner = "assigner";
-        String idId = "id";
-        String idType = "type";
-        RMObject.DvIdentifier idf =
-                RMObjectFactory.newDvIdentifier(
-                        idIssuer, idAssigner, idId, idType);
-        List<RMObject.DvIdentifier> identifiers = new ArrayList<>();
-        identifiers.add(idf);
-        identifiers.add(idf);
+        //location
+        assertEquals("name", fa.getLocation().getName());
 
-        RMObject.PartyIdentified provider =
-                RMObjectFactory.newPartyIdentified(
-                        providerRef, providerName, identifiers);
+        //subject
+        assertEquals("value", fa.getSubject().
+                getExternalRef().getObjectRef().getId().getValue());
 
-        RMObject.PartyIdentified location =
-                RMObjectFactory.newPartyIdentified(
-                        providerRef, providerName, identifiers);
-
-        RMObject.PartyProxy subject =
-                RMObjectFactory.newPartyProxy(providerRef);
-
-        String versionID = "Version ID";
-
-        RMObject.FeederAuditDetails f = RMObjectFactory.newFeederAuditDetails(
-                systemID, provider, location, subject, versionID);
-
-        s.serializeFeederAuditDetails(f);
-        f = s.deserializeFeederAuditDetails();
-
-        assertEquals(systemID, f.getSystemID());
-
-        assertEquals(providerRef.getId().getValue(),
-                f.getProvider().getExternalRef().getId().getValue());
-
-        assertEquals(providerRef.getValue(),
-                f.getProvider().getExternalRef().getValue());
-
-        assertEquals(providerName, f.getProvider().getName());
-
-        assertEquals(idIssuer,
-                f.getProvider().getIdentifiers().get(0).getIssuer());
-
-        assertEquals(idAssigner,
-                f.getProvider().getIdentifiers().get(0).getAssigner());
-
-        assertEquals(idId,
-                f.getProvider().getIdentifiers().get(0).getId());
-
-        assertEquals(idType,
-                f.getProvider().getIdentifiers().get(1).getType());
-
-        assertEquals(idIssuer,
-                f.getProvider().getIdentifiers().get(1).getIssuer());
-
-        assertEquals(idAssigner,
-                f.getProvider().getIdentifiers().get(1).getAssigner());
-
-        assertEquals(idId,
-                f.getProvider().getIdentifiers().get(1).getId());
-
-        assertEquals(idType,
-                f.getProvider().getIdentifiers().get(1).getType());
-
-        assertEquals(providerRef.getId().getValue(),
-                f.getLocation().getExternalRef().getId().getValue());
-
-        assertEquals(providerRef.getValue(),
-                f.getLocation().getExternalRef().getValue());
-
-        assertEquals(providerName, f.getLocation().getName());
-
-        assertEquals(idIssuer,
-                f.getLocation().getIdentifiers().get(0).getIssuer());
-
-        assertEquals(idAssigner,
-                f.getLocation().getIdentifiers().get(0).getAssigner());
-
-        assertEquals(idId,
-                f.getLocation().getIdentifiers().get(0).getId());
-
-        assertEquals(idType,
-                f.getLocation().getIdentifiers().get(1).getType());
-
-        assertEquals(idIssuer,
-                f.getLocation().getIdentifiers().get(1).getIssuer());
-
-        assertEquals(idAssigner,
-                f.getLocation().getIdentifiers().get(1).getAssigner());
-
-        assertEquals(idId,
-                f.getLocation().getIdentifiers().get(1).getId());
-
-        assertEquals(idType,
-                f.getLocation().getIdentifiers().get(1).getType());
-
-
-        assertEquals(subject.getExternalRef().getId().getValue(),
-                f.getSubject().getExternalRef().getId().getValue());
-
-        assertEquals(subject.getExternalRef().getValue(),
-                f.getSubject().getExternalRef().getValue());
-
-        assertEquals(versionID, f.getVersionID());
+        assertEquals("versionID", fa.getVersionID());
     }
 
     @Test
+    public void FeederAuditDetailsException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.FeederAuditDetails(true);
+        });
+    }
+
+    /**
+     * Testes para FeederAudit
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
     public void FeederAudit() throws UnsupportedEncodingException {
-        String systemID = "System ID";
-
-        String oidValue = "_OBJECTID_";
-        RMObject.ObjectID id = RMObjectFactory.newObjectID(oidValue);
-        String value = "_PARTYREF_";
-        RMObject.PartyRef providerRef = RMObjectFactory.newPartyRef(id, value);
-
-        String providerName = "Provider Name";
-
-        String idIssuer = "issuer";
-        String idAssigner = "assigner";
-        String idId = "id";
-        String idType = "type";
-        RMObject.DvIdentifier idf =
-                RMObjectFactory.newDvIdentifier(
-                        idIssuer, idAssigner, idId, idType);
-        List<RMObject.DvIdentifier> identifiers = new ArrayList<>();
-        identifiers.add(idf);
-
-        RMObject.PartyIdentified provider =
-                RMObjectFactory.newPartyIdentified(
-                        providerRef, providerName, identifiers);
-
-        RMObject.PartyIdentified location =
-                RMObjectFactory.newPartyIdentified(
-                        providerRef, providerName, identifiers);
-
-        RMObject.PartyProxy subject =
-                RMObjectFactory.newPartyProxy(providerRef);
-
-        String versionID = "Version ID";
-
-        RMObject.FeederAuditDetails f = RMObjectFactory.newFeederAuditDetails(
-                systemID, provider, location, subject, versionID);
-        String codePhraseCharsetTerminologyIDValue = "_TERMINOLOGYCHARSET_";
-        String charsetCodeString = "UTF-8";
-        String codePhraseLanguageTerminologyIDValue = "_LANGUAGETERMINOLOGY_";
-        String languageCodeString = "UTF-8";
-
-        RMObject.TerminologyID charsetTID =
-                RMObjectFactory.newTerminologyID(
-                        codePhraseCharsetTerminologyIDValue);
-        RMObject.CodePhrase charset
-                = RMObjectFactory.newCodePhrase(
-                charsetTID,
-                charsetCodeString);
-
-        RMObject.TerminologyID languageID =
-                RMObjectFactory.newTerminologyID(
-                        codePhraseLanguageTerminologyIDValue);
-
-        RMObject.CodePhrase language
-                = RMObjectFactory.newCodePhrase(
-                languageID,
-                languageCodeString);
-        RMObject.DvEncapsulated originalContent =
-                RMObjectFactory.newDvEncapsulated(charset, language);
-
-        RMObject.FeederAudit fa = RMObjectFactory.newFeederAudit(
-                f, identifiers, f, identifiers, originalContent);
-
+        FeederAudit fa = RMObjectTestHelper.FeederAudit(false,
+                false, false);
         s.serializeFeederAudit(fa);
         fa = s.deserializeFeederAudit();
 
         //originatingSystemAudit
-        assertEquals(systemID, fa.getOriginatingSystemAudit().getSystemID());
-
-        assertEquals(providerRef.getId().getValue(),
-                fa.getOriginatingSystemAudit().
-                        getProvider().getExternalRef().getId().getValue());
-
-        assertEquals(providerRef.getValue(),
-                fa.getOriginatingSystemAudit().
-                        getProvider().getExternalRef().getValue());
-
-        assertEquals(providerName, fa.getOriginatingSystemAudit().
-                getProvider().getName());
-
-        assertEquals(idIssuer,
-                fa.getOriginatingSystemAudit().
-                        getProvider().getIdentifiers().get(0).getIssuer());
-
-        assertEquals(idAssigner,
-                fa.getOriginatingSystemAudit().
-                        getProvider().getIdentifiers().get(0).getAssigner());
-
-        assertEquals(idId,
-                fa.getOriginatingSystemAudit().
-                        getProvider().getIdentifiers().get(0).getId());
-
-        assertEquals(providerRef.getId().getValue(),
-                fa.getOriginatingSystemAudit().
-                        getLocation().getExternalRef().getId().getValue());
-
-        assertEquals(providerRef.getValue(),
-                fa.getOriginatingSystemAudit().
-                        getLocation().getExternalRef().getValue());
-
-        assertEquals(providerName, fa.getOriginatingSystemAudit().
-                getLocation().getName());
-
-        assertEquals(idIssuer,
-                fa.getOriginatingSystemAudit().
-                        getLocation().getIdentifiers().get(0).getIssuer());
-
-        assertEquals(idAssigner,
-                fa.getOriginatingSystemAudit().
-                        getLocation().getIdentifiers().get(0).getAssigner());
-
-        assertEquals(idId,
-                fa.getOriginatingSystemAudit().
-                        getLocation().getIdentifiers().get(0).getId());
-
-
-        assertEquals(subject.getExternalRef().getId().getValue(),
-                fa.getOriginatingSystemAudit().
-                        getSubject().getExternalRef().getId().getValue());
-
-        assertEquals(subject.getExternalRef().getValue(),
-                fa.getOriginatingSystemAudit().
-                        getSubject().getExternalRef().getValue());
-
-        assertEquals(versionID, fa.getOriginatingSystemAudit().getVersionID());
-
+        assertEquals("systemID",
+                fa.getOriginatingSystemAudit().getSystemID());
         //originatingSystemItemIDs
-        assertEquals(idIssuer,
+        assertEquals("issuer",
                 fa.getOriginatingSystemItemIDs().get(0).getIssuer());
-
-        assertEquals(idAssigner,
-                fa.getOriginatingSystemItemIDs().get(0).getAssigner());
-
-        assertEquals(idId,
-                fa.getOriginatingSystemItemIDs().get(0).getId());
-
-        assertEquals(idType,
-                fa.getOriginatingSystemItemIDs().get(0).getType());
-
         //feederSystemAudit
-        assertEquals(systemID, fa.getFeederSystemAudit().getSystemID());
-
-        assertEquals(providerRef.getId().getValue(),
-                fa.getFeederSystemAudit().
-                        getProvider().getExternalRef().getId().getValue());
-
-        assertEquals(providerRef.getValue(),
-                fa.getFeederSystemAudit().
-                        getProvider().getExternalRef().getValue());
-
-        assertEquals(providerName, fa.getFeederSystemAudit().
-                getProvider().getName());
-
-        assertEquals(idIssuer,
-                fa.getFeederSystemAudit().
-                        getProvider().getIdentifiers().get(0).getIssuer());
-
-        assertEquals(idAssigner,
-                fa.getFeederSystemAudit().
-                        getProvider().getIdentifiers().get(0).getAssigner());
-
-        assertEquals(idId,
-                fa.getFeederSystemAudit().
-                        getProvider().getIdentifiers().get(0).getId());
-
-        assertEquals(providerRef.getId().getValue(),
-                fa.getFeederSystemAudit().
-                        getLocation().getExternalRef().getId().getValue());
-
-        assertEquals(providerRef.getValue(),
-                fa.getFeederSystemAudit().
-                        getLocation().getExternalRef().getValue());
-
-        assertEquals(providerName, fa.getFeederSystemAudit().
-                getLocation().getName());
-
-        assertEquals(idIssuer,
-                fa.getFeederSystemAudit().
-                        getLocation().getIdentifiers().get(0).getIssuer());
-
-        assertEquals(idAssigner,
-                fa.getFeederSystemAudit().
-                        getLocation().getIdentifiers().get(0).getAssigner());
-
-        assertEquals(idId,
-                fa.getFeederSystemAudit().
-                        getLocation().getIdentifiers().get(0).getId());
-
-
-        assertEquals(subject.getExternalRef().getId().getValue(),
-                fa.getFeederSystemAudit().
-                        getSubject().getExternalRef().getId().getValue());
-
-        assertEquals(subject.getExternalRef().getValue(),
-                fa.getFeederSystemAudit().
-                        getSubject().getExternalRef().getValue());
-
-        assertEquals(versionID, fa.getFeederSystemAudit().getVersionID());
-
+        assertEquals("systemID",
+                fa.getFeederSystemAudit().getSystemID());
         //feederSystemItemIDs
-        assertEquals(idIssuer,
+        assertEquals("issuer",
                 fa.getFeederSystemItemIDs().get(0).getIssuer());
-
-        assertEquals(idAssigner,
-                fa.getFeederSystemItemIDs().get(0).getAssigner());
-
-        assertEquals(idId,
-                fa.getFeederSystemItemIDs().get(0).getId());
-
-        assertEquals(idType,
-                fa.getFeederSystemItemIDs().get(0).getType());
-
         //originalContent
-        assertEquals(charset.getTerminologyID().getValue(),
-                fa.getOriginalContent().
-                        getCharset().getTerminologyID().getValue());
-
-        assertEquals(charset.getValue(), fa.getOriginalContent().
-                getCharset().getValue());
-
-        assertEquals(language.getTerminologyID().getValue(),
-                fa.getOriginalContent().
-                        getLanguage().getTerminologyID().getValue());
-
-        assertEquals(language.getValue(), fa.getOriginalContent().
-                getLanguage().getValue());
+        assertEquals("codeString",
+                fa.getOriginalContent().getLanguage().getCodeString());
     }
 
     @Test
-    public void Locatable() {
-        String uidValue = "UID Value";
+    public void FeederAuditOSAEException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.FeederAudit(true,
+                    false, false);
+        });
+    }
 
-        String value = "DvTextValue";
-        List<RMObject.TermMapping> mappings = null;
-        String formatting = "DvText Formatting";
-        String hyperlinkValue = "Hyperlink value";
-        RMObject.DVURI hyperlink = RMObjectFactory.newDVURI(hyperlinkValue);
+    @Test
+    public void FeederAuditOSIIException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.FeederAudit(false,
+                    true, false);
+        });
+    }
 
-        String languageTIDValue = "Language Terminology ID";
-        RMObject.TerminologyID languageTID =
-                RMObjectFactory.newTerminologyID(languageTIDValue);
-        String languageValue = "Language value";
-        RMObject.CodePhrase language =
-                RMObjectFactory.newCodePhrase(languageTID,
-                languageValue);
+    @Test
+    public void FeederAuditFSIIException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.FeederAudit(false,
+                    false, true);
+        });
+    }
 
-        String charsetTIDValue = "Charset Terminology ID";
-        String charsetValue = "Charset Value";
-        RMObject.TerminologyID charsetTID =
-                RMObjectFactory.newTerminologyID(charsetTIDValue);
-        RMObject.CodePhrase charset =
-                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
+    /**
+     * Testes para Locatable
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Locatable() throws UnsupportedEncodingException {
+        Locatable l = RMObjectTestHelper.Locatable(
+                false,
+                false, false);
+        s.serializeLocatable(l);
+        l = s.deserializeLocatable();
 
-        String archetypeIDValue = "ArchetypeID Value";
-        RMObject.ArchetypeID archetypeId = RMObjectFactory.newArchetypeID(
-                archetypeIDValue);
-        String templateIDValue = "TemplateID Value";
-        RMObject.TemplateID templateId = RMObjectFactory.newTemplateID(value);
-
-        String dvehruriValue = "DVEHRURI Value";
-        RMObject.DVEHRURI dvehruri = RMObjectFactory.newDVEHRURI(dvehruriValue);
-
-        String systemID = "System ID";
-
-        String oidValue = "_OBJECTID_";
-        RMObject.ObjectID id = RMObjectFactory.newObjectID(oidValue);
-        String PrefValue = "_PARTYREF_";
-        RMObject.PartyRef providerRef = RMObjectFactory.newPartyRef(id,
-                PrefValue);
-
-        String providerName = "Provider Name";
-
-        String idIssuer = "issuer";
-        String idAssigner = "assigner";
-        String idId = "id";
-        String idType = "type";
-        RMObject.DvIdentifier idf =
-                RMObjectFactory.newDvIdentifier(
-                        idIssuer, idAssigner, idId, idType);
-        List<RMObject.DvIdentifier> identifiers = new ArrayList<>();
-        identifiers.add(idf);
-
-        RMObject.DvEncapsulated originalContent =
-                RMObjectFactory.newDvEncapsulated(charset, language);
-
-        RMObject.PartyIdentified provider =
-                RMObjectFactory.newPartyIdentified(
-                        providerRef, providerName, identifiers);
-
-        RMObject.PartyIdentified location =
-                RMObjectFactory.newPartyIdentified(
-                        providerRef, providerName, identifiers);
-
-        RMObject.PartyProxy subject =
-                RMObjectFactory.newPartyProxy(providerRef);
-
-        String versionID = "Version ID";
-
-        RMObject.FeederAuditDetails f = RMObjectFactory.newFeederAuditDetails(
-                systemID, provider, location, subject, versionID);
-
-        //Construindo todos os componentes de Locatable
-        RMObject.UIDBasedID uid = RMObjectFactory.newUIDBasedID(uidValue);
-
-        String archetypeNodeId = "Archetyped Node ID";
-
-        RMObject.DvText name = RMObjectFactory.newDvText(
-                value, mappings, formatting, hyperlink, language, charset);
-
-        RMObject.Archetyped archetypeDetails = RMObjectFactory.newArchetyped(
-                archetypeId, templateId, formatting);
-
-        RMObject.FeederAudit feederAudit = RMObjectFactory.newFeederAudit(
-                f, identifiers, f, identifiers, originalContent);
-
-        RMObject.Link link = RMObjectFactory.newLink(name, name, dvehruri);
-        Set<RMObject.Link> links = new HashSet<>();
-        links.add(link);
-
-        RMObject.Locatable l = RMObjectFactory.newLocatable(
-                uid, archetypeNodeId, name, archetypeDetails,
-                feederAudit, links);
-
-        //Inicio dos testes
-
-        //UID
-        assertEquals(uidValue, l.getUid().getValue());
+        //uid
+        assertEquals("archetypeNodeId", l.getUid().getValue());
 
         //archetypeNodeId
-        assertEquals(archetypeNodeId, l.getArchetypeNodeId());
+        assertEquals("archetypeNodeId", l.getArchetypeNodeId());
 
         //name
-        assertEquals(value, l.getName().getValue());
-        assertEquals(mappings, l.getName().getMappings());
-        assertEquals(formatting, l.getName().getFormatting());
-        assertEquals(hyperlink.getValue(),
-                l.getName().getHyperlink().getValue());
-        assertEquals(language.getTerminologyID().getValue(),
-                l.getName().getLanguage().getTerminologyID().getValue());
-        assertEquals(language.getValue(),
-                l.getName().getLanguage().getValue());
-        assertEquals(charset.getTerminologyID().getValue(),
-                l.getName().getCharset().getTerminologyID().getValue());
-        assertEquals(charset.getValue(),
-                l.getName().getCharset().getValue());
+        assertEquals("value", l.getName().getValue());
 
         //archetypeDetails
-        assertEquals(archetypeDetails.getArchetypeId().getValue(),
-                l.getArchetypeDetails().getArchetypeId().getValue());
-        assertEquals(archetypeDetails.getTemplateId().getValue(),
-                l.getArchetypeDetails().getTemplateId().getValue());
-        assertEquals(archetypeDetails.getRmVersion(),
-                l.getArchetypeDetails().getRmVersion());
+        assertEquals("rmVersion", l.getArchetypeDetails().getRmVersion());
 
         //feederAudit
-        assertEquals(feederAudit.getOriginatingSystemAudit().getLocation().getName(),
-                l.getFeederAudit().getOriginatingSystemAudit().getLocation().getName());
+        assertEquals("systemID", l.getFeederAudit().
+                getOriginatingSystemAudit().getSystemID());
+        //links
+        Link link = l.getLinks().iterator().next();
+        assertEquals("value", link.getTarget().getDvuri().getValue());
     }
 
     @Test
+    public void LocatableArchetypeNodeIdException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Locatable(true,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void LocatableNameException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Locatable(false,
+                    true, false);
+        });
+    }
+
+    @Test
+    public void LocatableLinksException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Locatable(false,
+                    false, true);
+        });
+    }
+
+    /**
+     * Testes para PartyRelated
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
     public void PartyRelated() throws UnsupportedEncodingException {
-        String oidValue = "OBJECTID";
-        String value = "VALUE";
-        String name = "NAME";
-
-        RMObject.ObjectID oid = RMObjectFactory.newObjectID(oidValue);
-        RMObject.PartyRef externalRef = RMObjectFactory.newPartyRef(oid, value);
-
-        String issuer = "ISSUER";
-        String assigner = "ASSIGNER";
-        String id = "ID";
-        String type = "TYPE";
-
-        List<RMObject.DvIdentifier> identifiers = new ArrayList<>();
-        identifiers.add(
-                RMObjectFactory.newDvIdentifier(issuer, assigner, id, type));
-
-        RMObject.PartyIdentified pi = RMObjectFactory.newPartyIdentified(
-                externalRef, name, identifiers);
-
-        List<RMObject.TermMapping> mappings = null;
-        String formatting = "DvText Formatting";
-        String hyperlinkValue = "Hyperlink value";
-        RMObject.DVURI hyperlink = RMObjectFactory.newDVURI(hyperlinkValue);
-
-        String languageTIDValue = "Language Terminology ID";
-        RMObject.TerminologyID languageTID =
-                RMObjectFactory.newTerminologyID(languageTIDValue);
-        String languageValue = "Language value";
-        RMObject.CodePhrase language =
-                RMObjectFactory.newCodePhrase(languageTID,
-                languageValue);
-
-        String charsetTIDValue = "Charset Terminology ID";
-        String charsetValue = "Charset Value";
-        RMObject.TerminologyID charsetTID =
-                RMObjectFactory.newTerminologyID(charsetTIDValue);
-        RMObject.CodePhrase charset =
-                RMObjectFactory.newCodePhrase(charsetTID, charsetValue);
-
-        RMObject.DvText dvText = RMObjectFactory.newDvText(
-                value, mappings, formatting, hyperlink, language, charset);
-
-        String definingCodeTIDValue = "Defining Code Terminology ID Value";
-        RMObject.TerminologyID definingCodeTID =
-                RMObjectFactory.newTerminologyID(definingCodeTIDValue);
-        String definingCodeValue = "Defining Code Value";
-        RMObject.CodePhrase definingCode =
-                RMObjectFactory.newCodePhrase(
-                        definingCodeTID, definingCodeTIDValue);
-
-        RMObject.DvCodedText relationship = RMObjectFactory.newDvCodedText(
-                dvText, definingCode);
-
-        RMObject.PartyRelated pr = RMObjectFactory.newPartyRelated(pi,
-                relationship);
-
+        PartyRelated pr = RMObjectTestHelper.PartyRelated(false);
         s.serializePartyRelated(pr);
-        //pr = s.deserializePartyRelated();
+        pr = s.deserializePartyRelated();
 
-        //assertEquals(relationship.getDvText().getValue(), pr
-        // .getRelationship().getDvText().getValue());
+        //pi
+        assertEquals("name", pr.getPi().getName());
+        //relationship
+        assertEquals("value", pr.
+                getRelationship().getDvText().getValue());
+    }
 
+    @Test
+    public void PartyRelatedException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyRelated(true);
+        });
+    }
+
+    /**
+     * Testes para PartySelf
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void PartySelf() throws UnsupportedEncodingException {
+        PartySelf ps = RMObjectTestHelper.PartySelf();
+        s.serializePartySelf(ps);
+        ps = s.deserializePartySelf();
+
+        assertEquals(ps.getExternalRef().getObjectRef().getId().getValue(),
+                "value");
+        assertEquals(ps.getExternalRef().getObjectRef().getNamespace(),
+                "DEMOGRAPHIC");
+        assertEquals(ps.getExternalRef().getObjectRef().getType(),
+                "type");
+    }
+
+    /**
+     * Testes para ResourceDescriptionItem
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ResourceDescriptionItem() throws UnsupportedEncodingException {
+        ResourceDescriptionItem rd = RMObjectTestHelper.ResourceDescriptionItem(
+                false, false,
+                false, false);
+        s.serializeResourceDescriptionItem(rd);
+        rd = s.deserializeResourceDescriptionItem();
+
+        //language
+        assertEquals("name", rd.getLanguage().getTerminologyID().getName());
+
+        //purpose
+        assertEquals("purpose", rd.getPurpose());
+
+        //keywords
+        assertEquals("value", rd.getKeywords().get(0));
+        assertEquals("value", rd.getKeywords().get(1));
+        assertEquals("value", rd.getKeywords().get(2));
+
+        //use
+        assertEquals("use", rd.getUse());
+
+        //misuse
+        assertEquals("misuse", rd.getMisuse());
+
+        //copyright
+        assertEquals("copyright", rd.getCopyright());
+
+        //originalResourceUri
+        assertEquals("value", rd.getOriginalResourceUri().get("key1"));
+        assertEquals("value", rd.getOriginalResourceUri().get("key2"));
+        assertEquals("value", rd.getOriginalResourceUri().get("key3"));
+
+        //otherDetails
+        assertEquals("value", rd.getOtherDetails().get("key1"));
+        assertEquals("value", rd.getOtherDetails().get("key2"));
+        assertEquals("value", rd.getOtherDetails().get("key3"));
+    }
+
+    @Test
+    public void ResourceDescriptionItemPurposeException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ResourceDescriptionItem(true,
+                     false, false,
+                    false);
+        });
+    }
+
+    @Test
+    public void ResourceDescriptionItemUseException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ResourceDescriptionItem(false,
+                    true, false,
+                    false);
+        });
+    }
+
+    @Test
+    public void ResourceDescriptionItemMisuseException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ResourceDescriptionItem(false,
+                    false, true,
+                    false);
+        });
+    }
+
+    @Test
+    public void ResourceDescriptionItemCopyrightException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ResourceDescriptionItem(false,
+                    false, false,
+                    true);
+        });
+    }
+
+    /**
+     * Testes para TranslationDetails
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void TranslationDetails() throws UnsupportedEncodingException {
+        TranslationDetails td = RMObjectTestHelper.TranslationDetails(
+                false, false);
+        s.serializeTranslationDetails(td);
+        td = s.deserializeTranslationDetails();
+
+        //language
+        assertEquals("codeString", td.getLanguage().getCodeString());
+
+        //author
+        assertEquals("value", td.getAuthor().get("key1"));
+        assertEquals("value", td.getAuthor().get("key2"));
+        assertEquals("value", td.getAuthor().get("key3"));
+
+        //accreditation
+        assertEquals("accreditation", td.getAccreditation());
+
+        //otherDetails
+        assertEquals("value", td.getOtherDetails().get("key1"));
+        assertEquals("value", td.getOtherDetails().get("key2"));
+        assertEquals("value", td.getOtherDetails().get("key3"));
+    }
+
+    @Test
+    public void TranslationDetailsLanguageException() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.TranslationDetails(true, false);
+        });
+    }
+
+    @Test
+    public void TranslationDetailsAuthorException() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.TranslationDetails(
+                    false,true);
+        });
+    }
+
+    /**
+     * Testes para Item
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Item() throws UnsupportedEncodingException {
+        Item i = RMObjectTestHelper.Item();
+        s.serializeItem(i);
+        i = s.deserializeItem();
+
+        assertEquals("value", i.getLocatable().getName().getValue());
+    }
+
+    /**
+     * Testes para Cluster
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Cluster() throws UnsupportedEncodingException {
+        Cluster c = RMObjectTestHelper.Cluster();
+        s.serializeCluster(c);
+        c = s.deserializeCluster();
+
+        //item
+        assertEquals("value", c.getItem().getLocatable().getName().getValue());
+
+        //items
+        assertEquals("value", c.getItems().get(0).
+                getLocatable().getName().getValue());
+    }
+
+    /**
+     * Testes para Element
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Element() throws UnsupportedEncodingException {
+        Element e = RMObjectTestHelper.Element();
+        s.serializeElement(e);
+        e = s.deserializeElement();
+
+        //item
+        assertEquals("value", e.getItem().getLocatable().
+                getName().getValue());
+
+        //nullFlavour
+        assertEquals("formatting", e.getNullFlavour().
+                getDvText().getFormatting());
+    }
+
+    /**
+     * Testes para DataStructure
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void DataStrucuture()
+            throws UnsupportedEncodingException {
+        DataStructure ds = RMObjectTestHelper.DataStructure();
+        s.serializeDataStructure(ds);
+        ds = s.deserializeDataStructure();
+
+        //locatable
+        assertEquals("value", ds.getLocatable().getName().getValue());
+    }
+
+    /**
+     * Testes para ItemList
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ItemList() throws UnsupportedEncodingException {
+        ItemList il = RMObjectTestHelper.ItemList();
+        s.serializeItemList(il);
+        il = s.deserializeItemList();
+
+        //uid
+        assertEquals("value", il.getUid().getValue());
+
+        //archetypeNodeId
+        assertEquals("archetypeNodeId", il.getArchetypeNodeId());
+
+        //name
+        assertEquals("value", il.getName().getValue());
+
+        //archetypeDetails
+        assertEquals("rmVersion",
+                il.getArchetypeDetails().getRmVersion());
+
+        //feederAudit
+        assertEquals("systemID",
+                il.getFeederAudit().getOriginatingSystemAudit().getSystemID());
+
+        //links
+        Link l = il.getLinks().iterator().next();
+        assertEquals("value", l.getType().getValue());
+
+        //items
+        Element e = il.getItems().get(0);
+        assertEquals("value", e.getItem().
+                getLocatable().getName().getValue());
+    }
+
+    /**
+     * Testes para ItemStructure
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ItemStructure() throws UnsupportedEncodingException {
+        ItemStructure is = RMObjectTestHelper.ItemStructure();
+        s.serializeItemStructure(is);
+        is = s.deserializeItemStructure();
+
+        //uid
+        assertEquals("archetypeNodeId", is.getDataStructure().
+                getLocatable().getUid().getValue());
+        //...
+
+        //links
+        Link l = is.getDataStructure().getLocatable().
+                getLinks().iterator().next();
+        assertEquals("value", l.getType().getValue());
+    }
+
+    /**
+     * Testes para ItemSingle
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ItemSingle() throws UnsupportedEncodingException {
+        ItemSingle is = RMObjectTestHelper.ItemSingle(false);
+        s.serializeItemSingle(is);
+        is = s.deserializeItemSingle();
+
+        //item
+        assertEquals("value", is.getItem().getItem().
+                getLocatable().getName().getValue());
+
+        //itemStructure
+        assertEquals("value", is.getItemStructure().
+                getDataStructure().getLocatable().getName().getValue());
+    }
+
+    @Test
+    public void ItemSingleException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ItemSingle(true);
+        });
+    }
+
+    /**
+     * Testes para ItemTable
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ItemTable() throws UnsupportedEncodingException {
+        ItemTable it = RMObjectTestHelper.ItemTable();
+        s.serializeItemTable(it);
+        it = s.deserializeItemTable();
+
+        //itemStructure
+        assertEquals("value", it.getItemStructure().
+                getDataStructure().getLocatable().getName().getValue());
+
+        //rows
+        assertEquals("value", it.getRows().get(0).getItem().
+                getLocatable().getName().getValue());
+        assertEquals("value", it.getRows().get(0).getItems().get(0).
+                getLocatable().getName().getValue());
+    }
+
+    /**
+     * Testes para ItemTree
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ItemTree() throws UnsupportedEncodingException {
+        ItemTree it = RMObjectTestHelper.ItemTree();
+        s.serializeItemTree(it);
+        it = s.deserializeItemTree();
+
+        //itemStructure
+        assertEquals("value", it.getItemStructure().getDataStructure().
+                getLocatable().getName().getValue());
+        //items
+        assertEquals("value", it.getItems().get(0).getLocatable().
+                getName().getValue());
+    }
+
+    /**
+     * Testes para PartyIdentity
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void PartyIdentity() throws UnsupportedEncodingException {
+        PartyIdentity pi = RMObjectTestHelper.PartyIdentity(false);
+        s.serializePartyIdentity(pi);
+        pi = s.deserializePartyIdentity();
+
+        //locatable
+        assertEquals("value", pi.getLocatable().getName().getValue());
+
+        //details
+        assertEquals("value", pi.getDetails().getDataStructure().
+                getLocatable().getName().getValue());
+
+    }
+
+    @Test
+    public void PartyIdentityException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyIdentity(true);
+        });
+    }
+
+    /**
+     * Testes para PartyRelationship
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void PartyRelationship() throws UnsupportedEncodingException {
+        PartyRelationship pr = RMObjectTestHelper.PartyRelationship(
+                false, false,
+                false);
+        s.serializePartyRelationship(pr);
+        pr = s.deserializePartyRelationship();
+
+        //locatable
+        assertEquals("value", pr.getLocatable().getName().getValue());
+
+        //details
+        assertEquals("value", pr.getDetails().getDataStructure().
+                getLocatable().getName().getValue());
+
+        //source
+        assertEquals("namespace", pr.getSource().getNamespace());
+
+        //target
+        assertEquals("namespace", pr.getTarget().getNamespace());
+    }
+
+    @Test
+    public void PartyRelationshipLocatableException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyRelationship(true,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void PartyRelationshipSourceException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyRelationship(false,
+                    true, false);
+        });
+    }
+
+    @Test
+    public void PartyRelationshipTargetException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.PartyRelationship(false,
+                    false, true);
+        });
+    }
+
+    /**
+     * Testes para Address
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Address() throws UnsupportedEncodingException {
+        Address a = RMObjectTestHelper.Address(false);
+        s.serializeAddress(a);
+        a = s.deserializeAddress();
+
+        //locatable
+        assertEquals("value", a.getLocatable().getName().getValue());
+
+        //details
+        assertEquals("value", a.getDetails().getDataStructure().getLocatable()
+            .getName().getValue());
+    }
+
+    @Test
+    public void AddresException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Address(true);
+        });
+    }
+
+    /**
+     * Testes para Contact
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Contact() throws UnsupportedEncodingException {
+        Contact c = RMObjectTestHelper.Contact(false);
+        s.serializeContact(c);
+        c = s.deserializeContact();
+
+        //locatable
+        assertEquals("value", c.getLocatable().getName().getValue());
+
+        //addresses
+        assertEquals("value", c.getAddresses().get(0).getLocatable().getName().
+                getValue());
+    }
+
+    @Test
+    public void ContactException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Contact(true);
+        });
+    }
+
+    @Test
+    public void Party() throws UnsupportedEncodingException {
+        Party p = RMObjectTestHelper.Party(false,
+                false,false,
+                false, false);
+        s.serializeParty(p);
+        p = s.deserializeParty();
+
+        //locatable
+        assertEquals("value", p.getLocatable().getName().getValue());
+
+        //identities
+        PartyIdentity pi = p.getIdentities().iterator().next();
+        assertEquals("value", pi.getLocatable().getName().getValue());
+
+        //contacts
+        Contact c = p.getContacts().iterator().next();
+        assertEquals("value", pi.getLocatable().getName().getValue());
+
+        //relationships
+        PartyRelationship pir = p.getRelationships().iterator().next();
+        assertEquals("value", pir.getLocatable().getName().getValue());
+
+        //reverseRelationships
+        LocatableRef lr = p.getReverseRelationships().iterator().next();
+        assertEquals("path", lr.getPath());
+
+        //details
+        assertEquals("value", p.getDetails().getDataStructure().
+                getLocatable().getName().getValue());
+    }
+
+    @Test
+    public void PartyLocatableException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Party(true,
+                    false,false,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void PartyIdentitiesException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Party(false,
+                    true,false,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void PartyContactException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Party(false,
+                    false,true,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void PartyRelationshipException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Party(false,
+                    false,false,
+                    true, false);
+        });
+    }
+
+    /**
+     * Testes para Capability
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Capability() throws UnsupportedEncodingException {
+        Capability c = RMObjectTestHelper.Capability(false);
+        s.serialilzeCapability(c);
+        c = s.deserializeCapability();
+
+        //locatable
+        assertEquals("value", c.getLocatable().getName().getValue());
+
+        //credentials
+        assertEquals("value", c.getCredentials().getDataStructure().
+                getLocatable().getName().getValue());
+    }
+
+    @Test
+    public void CapabilityException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Capability(true);
+        });
+    }
+
+    @Test
+    public void Role() throws UnsupportedEncodingException {
+        Role r = RMObjectTestHelper.Role(false,
+                false);
+        s.serializeRole(r);
+        r = s.deserializeRole();
+
+        //party
+        assertEquals("value", r.getParty().getLocatable().getName().getValue());
+
+        //capabilities
+        assertEquals("value", r.getCapabilities().get(0).getLocatable().
+                getName().getValue());
+
+        //performer
+        assertEquals("DEMOGRAPHIC", r.getPerformer().getObjectRef().
+                getNamespace());
+    }
+
+    @Test
+    public void RoleCapabilitiesException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Role(true,
+                    false);
+        });
+    }
+
+    @Test
+    public void RolePerfomerException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Role(false,
+                    true);
+        });
+    }
+
+    /**
+     * Testes para Actor
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Actor() throws UnsupportedEncodingException {
+        Actor a = RMObjectTestHelper.Actor(false,
+                false, false);
+        s.serializeActor(a);
+        a = s.deserializeActor();
+
+        //party
+        PartyIdentity pi = a.getParty().getIdentities().iterator().next();
+        assertEquals("legal identity", pi.getLocatable().
+                getName().getValue());
+
+        //roles
+        Role r = a.getRoles().iterator().next();
+        assertEquals("type", r.getPerformer().getObjectRef().getType());
+
+        //languages
+        DvText d = a.getLanguages().iterator().next();
+        assertEquals("value", d.getValue());
+    }
+
+    @Test
+    public void ActorPartyException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Actor(true,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void ActorPerformerException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Actor(false,
+                    true, false);
+        });
+    }
+
+    @Test
+    public void ActorLanguagesException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Actor(false,
+                    false, true);
+        });
+    }
+
+    /**
+     * Testes para Agent
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Agent() throws UnsupportedEncodingException {
+        Agent a = RMObjectTestHelper.Agent();
+        s.serializeAgent(a);
+        a = s.deserializeAgent();
+
+        //party
+        PartyIdentity pi = a.getActor().getParty().getIdentities().
+                iterator().next();
+        assertEquals("legal identity", pi.getLocatable().
+                getName().getValue());
+    }
+
+    /**
+     * Testes para Group
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Group() throws UnsupportedEncodingException {
+        Group g = RMObjectTestHelper.Group();
+        s.serializeGroup(g);
+        g = s.deserializeGroup();
+
+        //party
+        PartyIdentity pi = g.getActor().getParty().getIdentities().
+                iterator().next();
+        assertEquals("legal identity", pi.getLocatable().
+                getName().getValue());
+    }
+
+    /**
+     * Testes para Organisation
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Organisation() throws UnsupportedEncodingException {
+        Organisation o = RMObjectTestHelper.Organisation();
+        s.serializeOrganisation(o);
+        o = s.deserializeOrganisation();
+
+        //party
+        PartyIdentity pi = o.getActor().getParty().getIdentities().
+                iterator().next();
+        assertEquals("legal identity", pi.getLocatable().
+                getName().getValue());
+    }
+
+    /**
+     * Testes para Person
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void Person() throws UnsupportedEncodingException {
+        Person p = RMObjectTestHelper.Person();
+        s.serializePerson(p);
+        p = s.deserializePerson();
+
+        //party
+        PartyIdentity pi = p.getActor().getParty().getIdentities().
+                iterator().next();
+        assertEquals("legal identity", pi.getLocatable().
+                getName().getValue());
+    }
+
+    /**
+     * Testes para InstructionDetails
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void InstructionDetails() throws UnsupportedEncodingException {
+        InstructionDetails id = RMObjectTestHelper.InstructionDetails(
+                false, false);
+        s.serializeinstructionDetails(id);
+        id = s.deserializeInstructionDetails();
+
+        //instructionId
+        assertEquals("path", id.getInstructionId().getPath());
+
+        //activityId
+        assertEquals("activityId", id.getActivityId());
+
+        //wfDetails
+        assertEquals("value", id.getWfDetails().getDataStructure().
+                getLocatable().getName().getValue());
+    }
+
+    @Test
+    public void InstructionInstructionIdActivityException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.InstructionDetails(true,
+                    false);
+        });
+    }
+
+    @Test
+    public void InstructionDetailsActivityIdException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.InstructionDetails(true,
+                    false);
+        });
+    }
+
+    /**
+     * Testes para ISMTransition
+     *
+     * @throws UnsupportedEncodingException
+     */
+    @Test
+    public void ISMTransition() throws UnsupportedEncodingException {
+        ISMTransition is = RMObjectTestHelper.ISMTransition(false);
+        s.serializeISMTransition(is);
+        is = s.deserializeISMTransition();
+
+        //currentState
+        assertEquals("value", is.getCurrentState().
+                getDvText().getValue());
+        //transition
+        assertEquals("value", is.getTransition().
+                getDvText().getValue());
+        //careflowStep
+        assertEquals("value", is.getCareflowStep().
+                getDvText().getValue());
+    }
+
+    public void ISMTransitionException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.ISMTransition(true);
+        });
+    }
+
+    /**
+     * Testes para Activity
+     *
+     * @throws UnsupportedEncodingException
+     */
+    public void Activity() throws UnsupportedEncodingException {
+        Activity a = RMObjectTestHelper.Activity(false,
+                false, false);
+        s.serializeActivity(a);
+        a = s.deserializeActivity();
+
+        //locatable
+        assertEquals("value", a.getLocatable().getName().getValue());
+
+        //description
+        assertEquals("value", a.getDescription().getDataStructure().
+                getLocatable().getName().getValue());
+
+        //timing
+        assertEquals("value", a.getTiming().getValue());
+
+        //actionArchetypeId
+        assertEquals("actionArchetypeId", a.getActionArchetypeId());
+    }
+
+    @Test
+    public void ActivityDescriptionException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Activity(true,
+                    false, false);
+        });
+    }
+
+    @Test
+    public void ActivityTimingException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Activity(false,
+                    true, false);
+        });
+    }
+
+    @Test
+    public void ActivityActionException(){
+        assertThrows(IllegalArgumentException.class, () -> {
+            RMObjectTestHelper.Activity(false,
+                    false, true);
+        });
     }
 }

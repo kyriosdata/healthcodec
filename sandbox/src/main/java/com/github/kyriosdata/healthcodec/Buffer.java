@@ -31,7 +31,6 @@ import java.nio.charset.StandardCharsets;
  * escrita para sequências de caracteres (<em>String</em>) e vetor de bytes
  * (<em>byte[]</em>.
  *
- * TODO não localizei o double??!!!
  * </p>
  */
 public class Buffer {
@@ -39,7 +38,7 @@ public class Buffer {
     /**
      * Tamanho máximo do buffer.
      */
-    private static final int MAX_SIZE_BUFFER = 1024;
+    private static final int MAX_SIZE_BUFFER = 1024000;
 
     /**
      * Estrutura empregada para armazenamento.
@@ -106,7 +105,6 @@ public class Buffer {
      * @throws ReadOnlyBufferException no caso do buffer ser apenas para escrita
      */
     public void writeByte(int position, byte b) {
-        buffer.position(position);
         buffer.put(position, b);
     }
 
@@ -138,8 +136,38 @@ public class Buffer {
      *                                   escrita
      */
     public void writeInteger(int position, int valor) {
-        buffer.position(position); // TODO se não puder remove, documente!
         buffer.putInt(position, valor);
+    }
+
+    /**
+     * Função responsável por ler 8 bytes sequenciais do buffer, a partir da
+     * posição indicada, e retornar o double correspondente.
+     *
+     * @param position Posição inicial de leitura no <em>buffer</em>.
+     * @return double aos 8 btyes lidos a partir da
+     * posição indicada.
+     *
+     * @throws BufferUnderflowException no caso de não conseguir ler 8 bytes do
+     *                                  buffer
+     */
+    public double readDouble(int position) throws BufferUnderflowException {
+        return buffer.getDouble(position);
+    }
+
+    /**
+     * Função responsável por armazenar o double fornecido a partir
+     * da posição indicada.
+     *
+     * @param position A posição inicial da escrita do double no
+     *                 <em>buffer</em>.
+     * @param valor        Valor a ser armazenado no <em>buffer</em>.
+     * @throws IndexOutOfBoundsException no caso de uma posição maior que o
+     *                                   tamanho do array
+     * @throws ReadOnlyBufferException   no caso do buffer ser apenas para
+     *                                   escrita
+     */
+    public void writeDouble(int position, double valor) {
+        buffer.putDouble(position, valor);
     }
 
     /**
@@ -267,7 +295,6 @@ public class Buffer {
     public void writeBoolean(int position, boolean b)
             throws IndexOutOfBoundsException,
             ReadOnlyBufferException {
-        buffer.position(position);
         buffer.put(position, (byte) (b ? 1 : 0));
     }
 

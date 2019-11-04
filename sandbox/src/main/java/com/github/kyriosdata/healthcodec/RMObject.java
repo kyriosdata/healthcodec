@@ -46,6 +46,18 @@ public class RMObject {
 
         protected DvIdentifier(String issuer, String assigner, String id,
                 String type) {
+            if(issuer == null || issuer.isEmpty()){
+                throw new IllegalArgumentException("issuer vazio ou null");
+            }
+            if(assigner == null || assigner.isEmpty()){
+                throw new IllegalArgumentException("assigner vazio ou null");
+            }
+            if(id == null || id.isEmpty()){
+                throw new IllegalArgumentException("id vazio ou null");
+            }
+            if(type == null || type.isEmpty()){
+                throw new IllegalArgumentException("type vazio ou null");
+            }
             this.issuer = issuer;
             this.assigner = assigner;
             this.id = id;
@@ -73,6 +85,9 @@ public class RMObject {
         private final String value;
 
         protected UID(String value) {
+            if(value.isEmpty()){
+                throw new IllegalArgumentException("value vazio");
+            }
             this.value = value;
         }
 
@@ -84,8 +99,12 @@ public class RMObject {
     public static class InternetID {
 
         private final UID uid;
+        private static String PATTERN = "[a-zA-Z]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\\.[a-zA-Z]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*";
 
         protected InternetID(String value) {
+            if (!value.matches(PATTERN)) {
+                throw new IllegalArgumentException("formato incorreto");
+            }
             this.uid = RMObjectFactory.newUID(value);
         }
 
@@ -126,6 +145,9 @@ public class RMObject {
         private final String scheme;
 
         protected GenericID(String value, String scheme) {
+            if(scheme.isEmpty()) {
+                throw new IllegalArgumentException("scheme vazio");
+            }
             this.objectID = RMObjectFactory.newObjectID(value);
             this.scheme = scheme;
         }
@@ -183,19 +205,25 @@ public class RMObject {
     public static class CodePhrase {
 
         private final TerminologyID terminologyID;
-        private final String value;
+        private final String codeString;
 
-        protected CodePhrase(TerminologyID terminologyID, String value) {
+        protected CodePhrase(TerminologyID terminologyID, String codeString) {
+            if(terminologyID == null) {
+                throw new IllegalArgumentException("null terminologyId");
+            }
+            if(codeString.isEmpty()) {
+                throw new IllegalArgumentException("codeString vazio");
+            }
             this.terminologyID = terminologyID;
-            this.value = value;
+            this.codeString = codeString;
         }
 
         public TerminologyID getTerminologyID() {
             return terminologyID;
         }
 
-        public String getValue() {
-            return value;
+        public String getCodeString() {
+            return codeString;
         }
     }
 
@@ -204,6 +232,9 @@ public class RMObject {
         private final String value;
 
         protected DVURI(String value) {
+            if(value == null || value.isEmpty()){
+                throw new IllegalArgumentException("codeString null ou vazio");
+            }
             this.value = value;
         }
 
@@ -217,6 +248,9 @@ public class RMObject {
         private final DVURI dvuri;
 
         protected DVEHRURI(String value) {
+            if (value == null || value.isEmpty()) {
+                throw new IllegalArgumentException("value vazio");
+            }
             this.dvuri = RMObjectFactory.newDVURI(value);
         }
 
@@ -230,6 +264,9 @@ public class RMObject {
         private final String value;
 
         protected VersionTreeID(String value) {
+            if (value == null || value.isEmpty()) {
+                throw new IllegalArgumentException("value vazio");
+            }
             this.value = value;
         }
 
@@ -243,6 +280,9 @@ public class RMObject {
         private final ObjectID objectID;
 
         protected ArchetypeID(String value) {
+            if (value == null || value.isEmpty()) {
+                throw new IllegalArgumentException("value vazio");
+            }
             this.objectID = RMObjectFactory.newObjectID(value);
         }
 
@@ -256,6 +296,9 @@ public class RMObject {
         private final UIDBasedID uidBasedID;
 
         protected ObjectVersionID(String value) {
+            if (value == null || value.isEmpty()) {
+                throw new IllegalArgumentException("value vazio");
+            }
             this.uidBasedID = RMObjectFactory.newUIDBasedID(value);
         }
 
@@ -269,6 +312,9 @@ public class RMObject {
         private final UIDBasedID uidBasedID;
 
         protected HierObjectID(String value) {
+            if (value == null || value.isEmpty()) {
+                throw new IllegalArgumentException("value vazio");
+            }
             this.uidBasedID = RMObjectFactory.newUIDBasedID(value);
         }
 
@@ -282,6 +328,9 @@ public class RMObject {
         private final String value;
 
         protected ObjectID(String value) {
+            if (value == null || value.isEmpty()) {
+                throw new IllegalArgumentException("value vazio");
+            }
             this.value = value;
         }
 
@@ -311,6 +360,15 @@ public class RMObject {
         private final String type;
 
         protected ObjectRef(ObjectID id, String namespace, String type) {
+            if (id == null) {
+                throw new IllegalArgumentException("null id");
+            }
+            if (namespace == null) {
+                throw new IllegalArgumentException("null namespace");
+            }
+            if (type == null) {
+                throw new IllegalArgumentException("null type");
+            }
             this.id = id;
             this.namespace = namespace;
             this.type = type;
@@ -336,6 +394,18 @@ public class RMObject {
         
         protected LocatableRef(ObjectVersionID id, String namespace, String type,
                 String path) {
+            if (id == null) {
+                throw new IllegalArgumentException("null id");
+            }
+            if (namespace == null) {
+                throw new IllegalArgumentException("null namespace");
+            }
+            if (type == null) {
+                throw new IllegalArgumentException("null type");
+            }
+            if (path != null && path.isEmpty()) {
+                throw new IllegalArgumentException("path vazio");
+            }
             this.objectRef = RMObjectFactory.newObjectRef(
                     RMObjectFactory.newObjectID(id.getUIDBasedID().getValue()), 
                     namespace, type);
@@ -369,6 +439,9 @@ public class RMObject {
         private final ObjectRef objectRef;
 
         protected AccessGroupRef(ObjectID id) {
+            if(id == null){
+                throw new IllegalArgumentException("null id");
+            }
             this.objectRef = RMObjectFactory.newObjectRef(id, 
                     "ACCESS_CONTROL", "ACCESS_GROUP");
         }
@@ -386,6 +459,16 @@ public class RMObject {
 
         protected PartyIdentified(PartyRef externalRef, String name,
                 List<DvIdentifier> identifiers) {
+            if(externalRef == null && name == null && identifiers == null) {
+                throw new IllegalArgumentException(
+                        "externalRef, name, identifiers todos vazios");
+            }
+            if(name != null && name.isEmpty()) {
+                throw new IllegalArgumentException("name vazio");
+            }
+            if(identifiers != null && identifiers.size() == 0) {
+                throw new IllegalArgumentException("identifiers vazios");
+            }
             this.externalRef = externalRef;
             this.name = name;
             this.identifiers = identifiers;
@@ -410,6 +493,19 @@ public class RMObject {
         private final TemplateID templateId;
         private final String rmVersion;
 
+        public Archetyped(ArchetypeID archetypeId, TemplateID templateId,
+                          String rmVersion) {
+            if (archetypeId == null) {
+                throw new IllegalArgumentException("null archetypeId");
+            }
+            if (rmVersion.isEmpty()) {
+                throw new IllegalArgumentException("rmVersion vazio");
+            }
+            this.archetypeId = archetypeId;
+            this.templateId = templateId;
+            this.rmVersion = rmVersion;
+        }
+
         public ArchetypeID getArchetypeId() {
             return archetypeId;
         }
@@ -420,12 +516,6 @@ public class RMObject {
 
         public String getRmVersion() {
             return rmVersion;
-        }
-
-        public Archetyped(ArchetypeID archetypeId, TemplateID templateId, String rmVersion) {
-            this.archetypeId = archetypeId;
-            this.templateId = templateId;
-            this.rmVersion = rmVersion;
         }
     }
 
@@ -453,6 +543,9 @@ public class RMObject {
         private final String value;
 
         protected UIDBasedID(String value) {
+            if(value.isEmpty()){
+                throw new IllegalArgumentException("value vazio");
+            }
             this.value = value;
         }
 
@@ -469,6 +562,12 @@ public class RMObject {
 
         protected DvParsable(DvEncapsulated dvEncapsulated, String value, 
                 String formalism) {
+            if (value == null) {
+                throw new IllegalArgumentException("null value");
+            }
+            if (formalism.isEmpty()) {
+                throw new IllegalArgumentException("formalism null ou vazio");
+            }
             this.dvEncapsulated = dvEncapsulated;
             this.value = value;
             this.formalism = formalism;
@@ -492,6 +591,9 @@ public class RMObject {
         private final DvParsable value;
 
         protected DvTimeSpecification(DvParsable value) {
+            if(value == null) {
+                throw new IllegalArgumentException("null value");
+            }
             this.value = value;
         }
 
@@ -522,6 +624,20 @@ public class RMObject {
                 DvMultimedia thumbnail,
                 DVURI uri,
                 byte[] data) {
+            if (mediaType == null) {
+                throw new IllegalArgumentException("null mediaType");
+            }
+            if (compressionAlgorithm == null) {
+                throw new IllegalArgumentException("null compressionAlgorithm");
+            }
+            if (integrityCheck != null &&
+                    integrityCheckAlgorithm == null) {
+                throw new IllegalArgumentException(
+                        "null integrity check algorithm");
+            }
+            if (uri == null && data == null) {
+                throw new IllegalArgumentException("null uri e null data");
+            }
             this.dvEncapsulated = dvEncapsulated;
             this.alternateText = alternateText;
             this.mediaType = mediaType;
@@ -611,6 +727,12 @@ public class RMObject {
 
         protected TermMapping(CodePhrase target,
                 Match match, DvCodedText purpose) {
+            if (target == null) {
+                throw new IllegalArgumentException("null target");
+            }
+            if (match == null) {
+                throw new IllegalArgumentException("null match");
+            }
             this.target = target;
             this.match = match;
             this.purpose = purpose;
@@ -642,6 +764,12 @@ public class RMObject {
                 List<TermMapping> mappings,
                 String formatting,
                 DVURI hyperlink, CodePhrase language, CodePhrase charset) {
+            if (mappings != null && mappings.isEmpty()) {
+                throw new IllegalArgumentException("mapping vazio");
+            }
+            if (formatting != null && formatting.isEmpty()) {
+                throw new IllegalArgumentException("formatting vazio");
+            }
             this.value = value;
             this.mappings = mappings;
             this.formatting = formatting;
@@ -681,6 +809,9 @@ public class RMObject {
         private final CodePhrase definingCode;
 
         protected DvCodedText(DvText dvText, CodePhrase definingCode) {
+            if (definingCode == null) {
+                throw new IllegalArgumentException("null defining code");
+            }
             this.dvText = dvText;
             this.definingCode = definingCode;
         }
@@ -701,6 +832,15 @@ public class RMObject {
         private final DVEHRURI target;
 
         protected Link(DvText meaning, DvText type, DVEHRURI target) {
+            if(meaning == null) {
+                throw new IllegalArgumentException("null meaning");
+            }
+            if(type == null) {
+                throw new IllegalArgumentException("null type");
+            }
+            if(target == null) {
+                throw new IllegalArgumentException("null target");
+            }
             this.meaning = meaning;
             this.type = type;
             this.target = target;
@@ -725,6 +865,9 @@ public class RMObject {
         private final String terminal;
 
         protected DvState(DvCodedText value, String terminal) {
+            if (value == null) {
+                throw new IllegalArgumentException("null value");
+            }
             this.value = value;
             this.terminal = terminal;
         }
@@ -743,6 +886,10 @@ public class RMObject {
         private final List<DvText> items;
 
         protected DvParagraph(List<DvText> items) {
+            if (items == null || items.size() == 0) {
+                throw new IllegalArgumentException(
+                        "null items ou items vazios");
+            }
             this.items = items;
         }
 
@@ -780,6 +927,9 @@ public class RMObject {
                 //DateTime time, TODO
                 PartyProxy subject,
                 String versionID) {
+            if (systemID.isEmpty()) {
+                throw new IllegalArgumentException("empty null ou vazio");
+            }
             this.systemID = systemID;
             this.provider = provider;
             this.location = location;
@@ -822,6 +972,19 @@ public class RMObject {
                 FeederAuditDetails feederSystemAudit,
                 List<DvIdentifier> feederSystemItemIDs,
                 DvEncapsulated originalContent) {
+            if (originatingSystemAudit == null) {
+                throw new IllegalArgumentException(
+                        "null originatingSystemAudit");
+            }
+            if (originatingSystemItemIDs != null &&
+                    originatingSystemItemIDs.size() == 0) {
+                throw new IllegalArgumentException(
+                        "originatingSystemItemIds vazio");
+            }
+            if (feederSystemItemIDs != null &&
+                    feederSystemItemIDs.size() == 0) {
+                throw new IllegalArgumentException("feederSystemItemIds vazio");
+            }
             this.originatingSystemAudit = originatingSystemAudit;
             this.originatingSystemItemIDs = originatingSystemItemIDs;
             this.feederSystemAudit = feederSystemAudit;
@@ -866,6 +1029,15 @@ public class RMObject {
                 Archetyped archetypeDetails,
                 FeederAudit feederAudit,
                 Set<Link> links) {
+            if (archetypeNodeId == null) {
+                throw new IllegalArgumentException("null archetypeNodeId");
+            }
+            if (name == null) {
+                throw new IllegalArgumentException("null name");
+            }
+            if (links != null && links.isEmpty()) {
+                throw new IllegalArgumentException("links vazio");
+            }
             this.uid = uid;
             this.archetypeNodeId = archetypeNodeId;
             this.name = name;
@@ -905,6 +1077,9 @@ public class RMObject {
         private final DvCodedText relationship;
 
         protected PartyRelated(PartyIdentified pi, DvCodedText relationship) {
+            if (relationship == null) {
+                throw new IllegalArgumentException("null relationship");
+            }
             this.pi = pi;
             this.relationship = relationship;
         }
@@ -947,6 +1122,24 @@ public class RMObject {
                 String use, String misuse, String copyright,
                 Map<String, String> originalResourceUri,
                 Map<String, String> otherDetails) {
+            if (language == null) {
+                language = RMObjectFactory.newCodePhrase(
+                        RMObjectFactory.newTerminologyID(
+                                "language", "ISO_639-1"),
+                        "en");
+            }
+            if (purpose.isEmpty()) {
+                throw new IllegalArgumentException("purpose vazio");
+            }
+            if (use != null && use.isEmpty()) {
+                throw new IllegalArgumentException("use vazio");
+            }
+            if (misuse != null && misuse.isEmpty()) {
+                throw new IllegalArgumentException("misuse vazio");
+            }
+            if (copyright != null && copyright.isEmpty()) {
+                throw new IllegalArgumentException("copyright vazio");
+            }
             this.language = language;
             this.purpose = purpose;
             this.keywords = keywords;
@@ -997,8 +1190,15 @@ public class RMObject {
         private final String accreditation;
         private final Map<String, String> otherDetails;
 
-        protected TranslationDetails(CodePhrase language, Map<String, String> author, String accreditation,
-                Map<String, String> otherDetails) {
+        protected TranslationDetails(CodePhrase language, Map<String,
+                String> author, String accreditation, Map<String,
+                String> otherDetails) {
+            if (language == null) {
+                throw new IllegalArgumentException("null language");
+            }
+            if (author == null) {
+                throw new IllegalArgumentException("null author");
+            }
             this.language = language;
             this.author = author;
             this.accreditation = accreditation;
@@ -1156,6 +1356,9 @@ public class RMObject {
         private final Element item;
 
         protected ItemSingle(ItemStructure itemStructure, Element item) {
+            if(item == null) {
+                throw new IllegalArgumentException("item null");
+            }
             this.itemStructure = itemStructure;
             this.item = item;
         }
@@ -1213,6 +1416,9 @@ public class RMObject {
         private final ItemStructure details;
 
         protected PartyIdentity(Locatable locatable, ItemStructure details) {
+            if (details == null) {
+                throw new IllegalArgumentException("details null");
+            }
             this.locatable = locatable;
             this.details = details;
         }
@@ -1236,6 +1442,16 @@ public class RMObject {
 
         protected PartyRelationship(Locatable locatable,
                 ItemStructure details, ObjectRef source, ObjectRef target) {
+            if (locatable == null) {
+                throw new IllegalArgumentException("null locatable");
+            }
+
+            if (source == null) {
+                throw new IllegalArgumentException("null source");
+            }
+            if (target == null) {
+                throw new IllegalArgumentException("null target");
+            }
             this.locatable = locatable;
             this.details = details;
             this.source = source;
@@ -1265,6 +1481,9 @@ public class RMObject {
         private final ItemStructure details;
 
         protected Address(Locatable locatable, ItemStructure details) {
+            if (details == null) {
+                throw new IllegalArgumentException("null details");
+            }
             this.locatable = locatable;
             this.details = details;
         }
@@ -1285,6 +1504,9 @@ public class RMObject {
         private final List<Address> addresses;
 
         protected Contact(Locatable locatable, List<Address> addresses) {
+            if (addresses == null || addresses.size() == 0) {
+                throw new IllegalArgumentException("addresses null ou vazio");
+            }
             this.locatable = locatable;
             this.addresses = addresses;
         }
@@ -1310,12 +1532,30 @@ public class RMObject {
         protected Party(Locatable locatable, Set<PartyIdentity> identities,
                 Set<Contact> contacts, Set<PartyRelationship> relationships,
                 Set<LocatableRef> reverseRelationships, ItemStructure details) {
+            if (locatable == null) {
+                throw new IllegalArgumentException("null locatable");
+            }
+            if (identities == null || identities.isEmpty()) {
+                throw new IllegalArgumentException("identities null ou vazio");
+            }
+            if (contacts != null && contacts.isEmpty()) {
+                throw new IllegalArgumentException("contacts vazio");
+            }
+            if (relationships != null) {
+                if (relationships.isEmpty()) {
+                    throw new IllegalArgumentException("relationships vazio");
+                }
+            }
             this.locatable = locatable;
             this.identities = identities;
             this.contacts = contacts;
             this.relationships = relationships;
             this.reverseRelationships = reverseRelationships;
             this.details = details;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
         }
 
         public Set<PartyIdentity> getIdentities() {
@@ -1345,6 +1585,9 @@ public class RMObject {
         private final ItemStructure credentials;
 
         protected Capability(Locatable locatable, ItemStructure credentials) {
+            if (credentials == null) {
+                throw new IllegalArgumentException("null credentials");
+            }
             this.locatable = locatable;
             this.credentials = credentials;
         }
@@ -1367,6 +1610,12 @@ public class RMObject {
 
         protected Role(Party party, List<Capability> capabilities,
                 PartyRef performer) {
+            if (capabilities != null && capabilities.size() == 0) {
+                throw new IllegalArgumentException("capabilities vazio");
+            }
+            if (performer == null) {
+                throw new IllegalArgumentException("null performer");
+            }
             this.party = party;
             this.capabilities = capabilities;
             this.performer = performer;
@@ -1392,6 +1641,24 @@ public class RMObject {
         private final Set<DvText> languages;
 
         protected Actor(Party party, Set<Role> roles, Set<DvText> languages) {
+            String LEGAL_IDENTITY = "legal identity";
+
+            boolean hasLegalIdentity = false;
+            for (PartyIdentity identity : party.getIdentities()) {
+                if (LEGAL_IDENTITY.equals(identity.locatable.name.getValue())) {
+                    hasLegalIdentity = true;
+                    break;
+                }
+            }
+            if (!hasLegalIdentity) {
+                throw new IllegalArgumentException("no legal identity");
+            }
+            if (roles != null && roles.isEmpty()) {
+                throw new IllegalArgumentException("roles vazio");
+            }
+            if (languages != null && languages.isEmpty()) {
+                throw new IllegalArgumentException("languages vazio");
+            }
             this.party = party;
             this.roles = roles;
             this.languages = languages;
@@ -1470,6 +1737,12 @@ public class RMObject {
 
         public InstructionDetails(LocatableRef instructionId,
                 String activityId, ItemStructure wfDetails) {
+            if (instructionId == null) {
+                throw new IllegalArgumentException("null instructionId");
+            }
+            if (activityId.isEmpty()) {
+                throw new IllegalArgumentException("activityId null ou vazio");
+            }
             this.instructionId = instructionId;
             this.activityId = activityId;
             this.wfDetails = wfDetails;
@@ -1496,6 +1769,9 @@ public class RMObject {
 
         public ISMTransition(DvCodedText currentState,
                 DvCodedText transition, DvCodedText careflowStep) {
+            if (currentState == null) {
+                throw new IllegalArgumentException("null currentState");
+            }
             this.currentState = currentState;
             this.transition = transition;
             this.careflowStep = careflowStep;
@@ -1522,6 +1798,15 @@ public class RMObject {
 
         public Activity(Locatable locatable, ItemStructure description, 
                 DvParsable timing, String actionArchetypeId) {
+            if (description == null) {
+                throw new IllegalArgumentException("null description");
+            }
+            if (timing == null) {
+                throw new IllegalArgumentException("null timing");
+            }
+            if(actionArchetypeId.isEmpty()) {
+                throw new IllegalArgumentException("actionArchetypeId vazio");
+            }
             this.locatable = locatable;
             this.description = description;
             this.timing = timing;

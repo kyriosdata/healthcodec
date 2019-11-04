@@ -14,8 +14,9 @@
  */
 package com.github.kyriosdata.healthcodec;
 
-import java.util.List;
 import com.github.kyriosdata.healthcodec.RMObject.*;
+
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -63,8 +64,8 @@ public class RMObjectFactory {
     }
 
     public static CodePhrase newCodePhrase(
-            TerminologyID terminologyID, String value) {
-        return new CodePhrase(terminologyID, value);
+            TerminologyID terminologyID, String codeString) {
+        return new CodePhrase(terminologyID, codeString);
     }
     
     public static DVURI newDVURI(String value) {
