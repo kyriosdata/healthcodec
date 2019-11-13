@@ -1,314 +1,258 @@
 package com.github.kyriosdata.healthcodec;
 
-import org.junit.jupiter.api.Test;
-
 import java.util.*;
 
 import static com.github.kyriosdata.healthcodec.RMObject.*;
 
 /**
  * Classe responsável por criar instâncias com parâmetros fixos que serão
- * utilizados na classe de teste RMObjectSerializationClient
+ * utilizados na classe de teste RMObjectSerializationClient.
+ *
  */
 public class RMObjectTestHelper {
 
     /**
-     * Cria uma instância de DvBoolean
+     * Cria uma instância de DvBoolean com valores fixos.
      *
      * @param value
      * @return DvBoolean(true) se @param true, DvBoolean(false) se @param false
      */
-    public static DvBoolean DvBoolean(boolean value){
-       return RMObjectFactory.newDvBoolean(value);
+    public static DvBoolean dvBoolean(boolean value){
+        return RMObjectFactory.newDvBoolean(value);
     }
 
     /**
-     * Cria uma instância de DvIdentifier com valores fixos
+     * Cria uma instância de DvIdentifier com valores fixos.
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em DvIdentifier
      * @return instância de DvIdentifier
      */
-    public static DvIdentifier DvIdentifier(boolean forceException){
-        return RMObjectFactory.newDvIdentifier(forceException ? "" : "issuer",
+    public static DvIdentifier dvIdentifier(){
+        return RMObjectFactory.newDvIdentifier("issuer",
                 "assigner", "id", "type");
     }
 
     /**
-     * Cria uma instância de UID com valor fixo
+     * Cria uma instância de UID com valor fixo.
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em UID
      * @return instância de UID
      */
-    public static UID UID(boolean forceException){
-        return RMObjectFactory.newUID(forceException ? "" : "value");
+    public static UID uID(){
+        return RMObjectFactory.newUID("value");
     }
 
     /**
-     * Cria uma instância de InternetID com valor fixo
+     * Cria uma instância de InternetID com valor fixo.
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em InternetID
      * @return instância de InternetID
      */
-    public static InternetID InternetID(boolean forceException){
-        return RMObjectFactory.newInternetID(forceException ? "000" : "openehr");
+    public static InternetID internetID(){
+        return RMObjectFactory.newInternetID("openehr");
     }
 
     /**
-     * Cria uma instância de ISO_OID com valor fixo
+     * Cria uma instância de ISO_OID com valor fixo.
      *
      * @return instância de ISO_OID
      */
-    public static ISO_OID ISOOID(){
+    public static ISO_OID isooid(){
         return RMObjectFactory.newISOOID("value");
     }
 
     /**
-     * Cria uma instância de UUID com valor fixo
+     * Cria uma instância de UUID com valor fixo.
      *
      * @return instância de UUID
      */
-    public static RMObject.UUID UUID(){
+    public static RMObject.UUID uUID(){
         return RMObjectFactory.newUUID("value");
     }
 
     /**
-     * Cria uma instância de GenericID com valor fixo
+     * Cria uma instância de GenericID com valor fixo.
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em GenericID
      * @return instância de GenericID
      */
-    public static GenericID GenericID(boolean forceException){
-        return RMObjectFactory.newGenericID(
-                "value", forceException ? "" : "scheme");
+    public static GenericID genericID(){
+        return RMObjectFactory.newGenericID("value","scheme");
     }
 
     /**
-     * Cria uma instância de TemplateID com valor fixo
+     * Cria uma instância de TemplateID com valor fixo.
      *
      * @return instância de TemplateID
      */
-    public static TemplateID TemplateID(){
+    public static TemplateID templateID(){
         return RMObjectFactory.newTemplateID("value");
     }
 
     /**
-     * Cria uma instância de TerminologyID com valor fixo
+     * Cria uma instância de TerminologyID com valor fixo.
      *
      * @return instância de TerminologyID
      */
-    public static TerminologyID TerminologyID(){
+    public static TerminologyID terminologyID(){
         return RMObjectFactory.newTerminologyID("name", "version");
     }
 
     /**
-     * Cria uma instância de CodePhrase com valor fixo
+     * Cria uma instância de CodePhrase com valor fixo.
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em CodePhrase
      * @return instância de CodePhrase
      */
-    public static CodePhrase CodePhrase(boolean forceException){
-        TerminologyID terminologyID = RMObjectTestHelper.TerminologyID();
-        return RMObjectFactory.newCodePhrase(
-                forceException ? null : terminologyID, "codeString");
+    public static CodePhrase codePhrase(){
+        TerminologyID terminologyID = RMObjectTestHelper.terminologyID();
+        return RMObjectFactory.newCodePhrase(terminologyID,
+                "codeString");
     }
 
     /**
-     * Cria uma instância de DVURI com valor fixo
+     * Cria uma instância de DVURI com valor fixo.
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em DVURI
      * @return instância de DVURI
      */
-    public static DVURI DVURI(boolean forceException){
-        return RMObjectFactory.newDVURI(forceException ? null : "value" );
+    public static DVURI dVURI(){
+        return RMObjectFactory.newDVURI("value" );
     }
 
     /**
-     * Cria uma instância de DVEHRURI com valor fixo
+     * Cria uma instância de DVEHRURI com valor fixo.
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em DVEHRURI
      * @return instância de DVEHRURI
      */
-    public static DVEHRURI DVEHRURI(boolean forceException){
-        return RMObjectFactory.newDVEHRURI(forceException ? "" : "value");
+    public static DVEHRURI dVEHRURI(){
+        return RMObjectFactory.newDVEHRURI("value");
     }
 
     /**
-     * Cria uma instância de VersionTreeID com valor fixo
+     * Cria uma instância de VersionTreeID com valor fixo.
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em VersionTreeID
      * @return instância de VersionTreeID
      */
-    public static VersionTreeID VersionTreeID(boolean forceException){
-        return RMObjectFactory.newVersionTreeID(forceException ? "" : "value");
+    public static VersionTreeID versionTreeID(){
+        return RMObjectFactory.newVersionTreeID("value");
     }
 
     /**
-     * Cria uma instância de ArchetypeID com valor fixo
+     * Cria uma instância de ArchetypeID com valor fixo.
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em ArchetypeID
      * @return instância de ArchetypeID
      */
-    public static ArchetypeID ArchetypeID(boolean forceException){
-        return RMObjectFactory.newArchetypeID(forceException ? "" : "value");
+    public static ArchetypeID archetypeID(){
+        return RMObjectFactory.newArchetypeID("value");
     }
 
     /**
      * Cria uma instância de ObjectVersionID com valor fixo
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em ObjectVersionID
      * @return instância de ObjectVersionID
      */
-    public static ObjectVersionID ObjectVersionID(boolean forceException){
-        return RMObjectFactory.newObjectVersionID(
-                forceException ? "" : "value");
+    public static ObjectVersionID objectVersionID(){
+        return RMObjectFactory.newObjectVersionID("value");
     }
 
     /**
-     * Cria uma instância de HierObjectID com valor fixo
+     * Cria uma instância de HierObjectID com valor fixo.
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em HierObjectID
      * @return instância de HierObjectID
      */
-    public static HierObjectID HierObjectID(boolean forceException){
-        return RMObjectFactory.newHierObjectID(forceException ? "" : "value");
+    public static HierObjectID hierObjectID(){
+        return RMObjectFactory.newHierObjectID("value");
     }
 
     /**
-     * Cria uma instância de ObjectID com valor fixo
+     * Cria uma instância de ObjectID com valor fixo.
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em ObjectID
      * @return instância de ObjectID
      */
-    public static ObjectID ObjectID(boolean forceException){
-        return RMObjectFactory.newObjectID(forceException ? "" : "value");
+    public static ObjectID objectID(){
+        return RMObjectFactory.newObjectID("value");
     }
 
     /**
-     * Cria uma instância de PartyRef com valor fixo
+     * Cria uma instância de PartyRef com valor fixo.
      *
      * @return instância de PartyRef
      */
-    public static PartyRef PartyRef(){
+    public static PartyRef partyRef(){
         return RMObjectFactory.newPartyRef(
-                RMObjectTestHelper.ObjectID(false),
-                "type");
+                RMObjectTestHelper.objectID(),"type");
     }
 
     /**
-     * Cria uma instância de ObjectRef com valor fixo
+     * Cria uma instância de ObjectRef com valor fixo.
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em ObjectRef
      * @return instância de ObjectRef
      */
-    public static ObjectRef ObjectRef(boolean forceException){
-        return RMObjectFactory.newObjectRef(forceException ? null :
-                RMObjectTestHelper.ObjectID(false),
+    public static ObjectRef objectRef(){
+        return RMObjectFactory.newObjectRef(RMObjectTestHelper.objectID(),
                 "namespace",
                 "type");
     }
 
     /**
-     * Cria uma instância de LocatableRef com valor fixo
+     * Cria uma instância de LocatableRef com valor fixo.
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em LocatableRef
      * @return instância de LocatableRef
      */
-    public static LocatableRef LocatableRef(boolean forceException) {
-        return RMObjectFactory.newLocatableRef(forceException ? null :
-                        RMObjectTestHelper.ObjectVersionID(false),
+    public static LocatableRef locatableRef() {
+        return RMObjectFactory.newLocatableRef(
+                RMObjectTestHelper.objectVersionID(),
                 "namespace", "type", "path");
     }
 
     /**
-     * Cria uma instância de ProportionKind com valor fixo
+     * Cria uma instância de ProportionKind com valor fixo.
      *
      * @return instância de ProportionKind
      */
-    public static ProportionKind ProportionKind(){
+    public static ProportionKind proportionKind(){
         return RMObjectFactory.newPropotionKind(1);
     }
 
     /**
-     * Cria uma instância de AccessGroupRef com valor fixo
+     * Cria uma instância de AccessGroupRef com valor fixo.
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em AccessGroupRef
      * @return instância de LocatableRef
      */
-    public static AccessGroupRef AccessGroupRef(boolean forceException){
-        return RMObjectFactory.newAccessGroupRef(forceException ? null :
+    public static AccessGroupRef accessGroupRef(){
+        return RMObjectFactory.newAccessGroupRef(
                 RMObjectFactory.newObjectID("value"));
     }
 
 
 
     /**
-     * Cria uma instância de PartyIdentified com valor fixo
+     * Cria uma instância de PartyIdentified com valor fixo.
      *
-     * @param forcePartyRefException flag que aciona uma
-     *                               IllegalArgumentException de variável null
-     *                               ou vazia em PartyIdentified
-     * @param forceNameException flag que aciona uma
-     *                           {@link IllegalArgumentException} de
-     *                           variável null ou vazia em PartyIdentified
-     * @param forceListException flag que aciona uma lista vazia
-     *                           em PartyIdentified
      *
      * @return instância de PartyIdentified
      */
-    public static PartyIdentified PartyIdentified(
-            boolean forcePartyRefException, boolean forceNameException,
-            boolean forceListException){
+    public static PartyIdentified partyIdentified(){
         return RMObjectFactory.newPartyIdentified(
                 RMObjectFactory.newPartyRef(
-                        forcePartyRefException ? null :
-                                RMObjectFactory.newObjectID("value"),
-                        "value"),
-                forceNameException ? "" : "name",
-                forceListException ? DvIdentifierList(true) :
-                        DvIdentifierList(false));
+                        RMObjectFactory.newObjectID("value"),
+                        "value"), "name",
+                dvIdentifierList(true));
     }
 
     /**
      * Cria uma instância de Archetyped com valor fixo
      *
-     * @param forceArchetypeIdException flag que aciona uma variável nula em
-     *                                  Archetyped
-     * @param forceRmVersionException   flag que aciona uma variável vazia em
-     *                                  Archetyped
      * @return instância de Archetyped
      */
-    public static Archetyped Archetyped(boolean forceArchetypeIdException,
-                                        boolean forceRmVersionException){
-        return RMObjectFactory.newArchetyped(forceArchetypeIdException ? null :
-                        RMObjectFactory.newArchetypeID("value"),
-                RMObjectTestHelper.TemplateID(),
-                forceRmVersionException ? "" : "rmVersion");
+    public static Archetyped archetyped(){
+        return RMObjectFactory.newArchetyped(
+                RMObjectFactory.newArchetypeID("value"),
+                RMObjectTestHelper.templateID(), "rmVersion");
     }
 
     /**
      * Cria uma instância de UIDBasedID com valor fixo
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em UIDBasedID
      * @return instância de UIDBasedID
      */
-    public static UIDBasedID UIDBasedID(boolean forceException){
-        return RMObjectFactory.newUIDBasedID(forceException ? "" : "value" );
+    public static UIDBasedID uIDBasedID(){
+        return RMObjectFactory.newUIDBasedID("value" );
     }
 
     /**
@@ -316,207 +260,151 @@ public class RMObjectTestHelper {
      *
      * @return instância de DvEncapsulated
      */
-    public static DvEncapsulated DvEncapsulated(){
+    public static DvEncapsulated dvEncapsulated(){
         return RMObjectFactory.newDvEncapsulated(
-                RMObjectTestHelper.CodePhrase(false),
-                RMObjectTestHelper.CodePhrase(false));
+                RMObjectTestHelper.codePhrase(),
+                RMObjectTestHelper.codePhrase());
     }
 
     /**
      * Cria uma instância de DvParsable com valor fixo
      *
-     * @param forceValueException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em DvParsable
-     * @param forceFormalismException flag que aciona uma I
-     *                       llegalArgumentException de variável null
-     *                       ou vazia em DvParsable
      * @return instância de DvParsable
      */
-    public static DvParsable DvParsable(boolean forceValueException,
-                                        boolean forceFormalismException){
+    public static DvParsable dvParsable(){
         return RMObjectFactory.newDvParsable(
-                RMObjectTestHelper.DvEncapsulated(),
-                forceValueException ? null : "value",
-                forceFormalismException ? "" : "formalism");
+                RMObjectTestHelper.dvEncapsulated(),"value",
+                "formalism");
     }
 
     /**
      * Cria uma instância de DvTimeSpecification com valor fixo
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em DvTimeSpecification
      * @return instância de DvTimeSpecification
      */
-    public static DvTimeSpecification DvTimeSpecification(boolean forceException){
+    public static DvTimeSpecification dvTimeSpecification(){
         return RMObjectFactory.newDvTimeSpecification(
-                forceException ? null :
-                RMObjectTestHelper.DvParsable(false,
-                        false));
+                RMObjectTestHelper.dvParsable());
     }
 
-    public static DvMultimedia DvMultimedia(boolean forceMediaTypeException,
-                  boolean forceCompressionAlgorithmException,
-                  boolean forceIntegrityCheckException,
-                  boolean forceDataException){
-        DvEncapsulated de = RMObjectTestHelper.DvEncapsulated();
+    public static DvMultimedia DvMultimedia(){
+        DvEncapsulated de = RMObjectTestHelper.dvEncapsulated();
         String alternateText = "alternateText";
-        CodePhrase mediaType = RMObjectTestHelper.CodePhrase(false);
+        CodePhrase mediaType = RMObjectTestHelper.codePhrase();
         CodePhrase compressionAlgorithm =
-                RMObjectTestHelper.CodePhrase(false);
+                RMObjectTestHelper.codePhrase();
         byte[] integrityCheck = {0,1,0,1};
         CodePhrase integrityCheckAlgorithm =
-                RMObjectTestHelper.CodePhrase(false);
-        DVURI du = RMObjectTestHelper.DVURI(false);
+                RMObjectTestHelper.codePhrase();
+        DVURI du = RMObjectTestHelper.dVURI();
         byte[] data = {1,0,1,0};
 
         return RMObjectFactory.newDvMultimedia(
-                de,
-                alternateText,
-                forceMediaTypeException ? null : mediaType,
-                forceCompressionAlgorithmException ? null : compressionAlgorithm,
-                integrityCheck,
-                forceIntegrityCheckException ? null : integrityCheckAlgorithm,
-                null,
-                forceDataException ? null : du,
-                forceDataException ? null : data);
+                de,alternateText,mediaType,compressionAlgorithm,integrityCheck,
+                integrityCheckAlgorithm,null, du, data);
     }
 
     /**
      * Cria uma instância de DvText com valor fixo
      *
-     * @param forceMappingsException erro causado por uma lista vazia
-     * @param forceFormattingException string não pode ser vazia
-     *
      * @return instância de DvText
      */
-    @Test
-    public static DvText DvText( boolean forceMappingsException,
-                         boolean forceFormattingException){
+    public static DvText dvText(){
         String value = "value";
         List<TermMapping> mappings =
-                forceMappingsException ?
-                RMObjectTestHelper.TermMappingList(true) :
-                RMObjectTestHelper.TermMappingList(false);
-        String formatting = forceFormattingException ? "" : "formatting";
-        DVURI hyperlink = RMObjectTestHelper.DVURI(false);
-        CodePhrase language = RMObjectTestHelper.CodePhrase(false);
-        CodePhrase charset = RMObjectTestHelper.CodePhrase(false);
+                RMObjectTestHelper.termMappingList(false);
+        String formatting = "formatting";
+        DVURI hyperlink = RMObjectTestHelper.dVURI();
+        CodePhrase language = RMObjectTestHelper.codePhrase();
+        CodePhrase charset = RMObjectTestHelper.codePhrase();
 
         return RMObjectFactory.newDvText(value, mappings, formatting,
                 hyperlink, language, charset);
     }
 
     /**
-     * Cria uma instância de DvCodedText com valor fixo
-     *
-     * @param forceDefiningCodeException
+     * Cria uma instância de DvCodedText com valor fixo.
      *
      * @return instância de DvCodedText
      */
-    public static DvCodedText DvCodedText(boolean forceDefiningCodeException){
-        CodePhrase cp = forceDefiningCodeException ? null :
-                RMObjectTestHelper.CodePhrase(false);
+    public static DvCodedText dvCodedText(){
+        CodePhrase cp = RMObjectTestHelper.codePhrase();
 
         return RMObjectFactory.newDvCodedText(
-                RMObjectTestHelper.DvText(false,
-                false), cp);
+                RMObjectTestHelper.dvText(), cp);
 
     }
 
     /**
-     * Cria uma instância de Link com valor fixo
-     *
-     * @param forceMeaningException exceção de variável nula
-     * @param forceTypeException exceção de variável nula
-     * @param forceTargetException exceção de variável nula
+     * Cria uma instância de Link com valor fixo.
      *
      * @return nova instância de Link
      */
-    public static Link Link(boolean forceMeaningException,
-                            boolean forceTypeException,
-                            boolean forceTargetException){
-        return RMObjectFactory.newLink(
-                forceMeaningException ? null : RMObjectTestHelper.DvText(
-                        false, false),
-                forceTypeException ? null : RMObjectTestHelper.DvText(
-                        false, false),
-                forceTargetException ? null : RMObjectTestHelper.DVEHRURI(
-                        false));
+    public static Link link(){
+        return RMObjectFactory.newLink(RMObjectTestHelper.dvText(),
+                RMObjectTestHelper.dvText(),RMObjectTestHelper.dVEHRURI());
     }
 
     /**
-     * Cria uma instância de DvState com valor fixo
+     * Cria uma instância de DvState com valor fixo.
      *
-     * @param forceException flag que aciona uma IllegalArgumentException de
-     *                       variável null ou vazia em DvState
      * @return instância de DvState
      */
-    public static DvState DvState(boolean forceException){
-        return RMObjectFactory.newDvState(forceException ? null :
-                RMObjectTestHelper.DvCodedText(false),
+    public static DvState dvState(){
+        return RMObjectFactory.newDvState(RMObjectTestHelper.dvCodedText(),
                 "terminal");
     }
 
-    public static DvParagraph DvParagraph(boolean forceException){
+    /**
+     * Cria uma instância de DvParagraph com valor fixo.
+     *
+     * @return nova instância de DvParagraph
+     */
+    public static DvParagraph dvParagraph(){
         return RMObjectFactory.newDvParagraph(
-                forceException ? null :
-                RMObjectTestHelper.DvTextList(false));
+                RMObjectTestHelper.dvTextList(false));
     }
 
     /**
-     * Cria uma instância de PartyProxy com valor fixo
+     * Cria uma instância de PartyProxy com valor fixo.
      *
      * @return nova instância de PartyProxy
      */
-    public static PartyProxy PartyProxy(){
-        return RMObjectFactory.newPartyProxy(RMObjectTestHelper.PartyRef());
+    public static PartyProxy partyProxy(){
+        return RMObjectFactory.newPartyProxy(RMObjectTestHelper.partyRef());
     }
 
     /**
      * Cria uma instância de FeederAuditDetails com valor fixo
      *
-     * @param forceException exceção de variável vazia
-     *
      * @return nova instância de FeederAuditDetails
      */
-    public static FeederAuditDetails FeederAuditDetails(boolean forceException){
+    public static FeederAuditDetails feederAuditDetails(){
         String systemID = "systemID";
-        PartyIdentified provider = RMObjectTestHelper.PartyIdentified(
-                false, false,
-                false);
-        PartyIdentified location = RMObjectTestHelper.PartyIdentified(
-                false, false,
-                false);
-        PartyProxy subject = RMObjectTestHelper.PartyProxy();
+        PartyIdentified provider = RMObjectTestHelper.partyIdentified();
+        PartyIdentified location = RMObjectTestHelper.partyIdentified();
+        PartyProxy subject = RMObjectTestHelper.partyProxy();
         String versionID = "versionID";
 
-        return RMObjectFactory.newFeederAuditDetails(forceException ? "" :
-                systemID, provider, location, subject, versionID);
+        return RMObjectFactory.newFeederAuditDetails(systemID, provider,
+                location, subject, versionID);
     }
 
     /**
      * Cria uma instância de FeederAudit com valor fixo
      *
-     * @param forceOSAException exceção de variável vazia
-     * @param forceOSIIException exceção de variável vazia
-     * @param forceFSIIException exceção de variável vazia
-     *
      * @return nova instância de FeederAudit
      */
-    public static FeederAudit FeederAudit(boolean forceOSAException,
-                                          boolean forceOSIIException,
-                                          boolean forceFSIIException){
-        FeederAuditDetails originatingSystemAudit = forceOSAException ? null :
-                RMObjectTestHelper.FeederAuditDetails(false);
-        List<DvIdentifier> originatingSystemItemIDs = forceOSIIException ?
-                RMObjectTestHelper.DvIdentifierList(true):
-                RMObjectTestHelper.DvIdentifierList(false);
+    public static FeederAudit feederAudit(){
+        FeederAuditDetails originatingSystemAudit =
+                RMObjectTestHelper.feederAuditDetails();
+        List<DvIdentifier> originatingSystemItemIDs =
+                RMObjectTestHelper.dvIdentifierList(false);
         FeederAuditDetails feederSystemAudit =
-                RMObjectTestHelper.FeederAuditDetails(false);
-        List<DvIdentifier> feederSystemItemIDs = forceFSIIException ?
-                RMObjectTestHelper.DvIdentifierList(true) :
-                RMObjectTestHelper.DvIdentifierList(false);
-        DvEncapsulated originalContent = RMObjectTestHelper.DvEncapsulated();
+                RMObjectTestHelper.feederAuditDetails();
+        List<DvIdentifier> feederSystemItemIDs =
+                RMObjectTestHelper.dvIdentifierList(false);
+        DvEncapsulated originalContent = RMObjectTestHelper.dvEncapsulated();
 
         return RMObjectFactory.newFeederAudit(originatingSystemAudit,
                 originatingSystemItemIDs, feederSystemAudit,
@@ -524,31 +412,17 @@ public class RMObjectTestHelper {
     }
 
     /**
-     * Cria uma instância de Locatable com valor fixo
-     *
-     * @param forceArchetypeNodeIdException exceção de variável vazia
-     * @param forceNameException exceção de variável vazia
-     * @param forceLinksException exceção de set vazio
+     * Cria uma instância de Locatable com valor fixo.
      *
      * @return nova instância de Locatable
      */
-    public static Locatable Locatable(boolean forceArchetypeNodeIdException,
-                                      boolean forceNameException,
-                                      boolean forceLinksException){
-        UIDBasedID uid = RMObjectTestHelper.UIDBasedID(false);
-        String archetypeNodeId = forceArchetypeNodeIdException ? null :
-                "archetypeNodeId";
-        DvText name = forceNameException ? null :
-                RMObjectTestHelper.DvText(false,
-                false);
-        Archetyped archetypeDetails = RMObjectTestHelper.Archetyped(
-                false, false);
-        FeederAudit feederAudit = RMObjectTestHelper.FeederAudit(
-                false, false,
-                false);
-        Set<Link> links = forceLinksException ?
-                RMObjectTestHelper.LinkSet(true) :
-                RMObjectTestHelper.LinkSet(false);
+    public static Locatable locatable(){
+        UIDBasedID uid = RMObjectTestHelper.uIDBasedID();
+        String archetypeNodeId = "archetypeNodeId";
+        DvText name = RMObjectTestHelper.dvText();
+        Archetyped archetypeDetails = RMObjectTestHelper.archetyped();
+        FeederAudit feederAudit = RMObjectTestHelper.feederAudit();
+        Set<Link> links = RMObjectTestHelper.linkSet(false);
 
         return RMObjectFactory.newLocatable(uid, archetypeNodeId, name,
                 archetypeDetails, feederAudit, links);
@@ -557,16 +431,11 @@ public class RMObjectTestHelper {
     /**
      * Cria uma instância de PartyRelated com valor fixo
      *
-     * @param forceException exceção de variável nula
-     *
      * @return nova instância de PartyRelated
      */
-    public static PartyRelated PartyRelated(boolean forceException){
-        PartyIdentified pi = RMObjectTestHelper.PartyIdentified(
-                false,
-                false, false);
-        DvCodedText relationship = forceException ? null :
-                RMObjectTestHelper.DvCodedText(false);
+    public static PartyRelated partyRelated(){
+        PartyIdentified pi = RMObjectTestHelper.partyIdentified();
+        DvCodedText relationship = RMObjectTestHelper.dvCodedText();
 
         return RMObjectFactory.newPartyRelated(pi, relationship);
     }
@@ -576,37 +445,27 @@ public class RMObjectTestHelper {
      *
      * @return nova instância de PartySelf
      */
-    public static PartySelf PartySelf(){
-        return RMObjectFactory.newPartySelf(
-                RMObjectTestHelper.PartyRef());
+    public static PartySelf partySelf(){
+        return RMObjectFactory.newPartySelf(RMObjectTestHelper.partyRef());
     }
 
     /**
      * Cria uma instância de ResourceDescriptionItem com valor fixo
      *
-     * @param forcePurposeException exceção de variável nula
-     * @param forceUseException exceção de variável nula
-     * @param forceMisuseException exceção de variável nula
-     * @param forceCopyrightExpcetion exceção de variável nula
-     *
      * @return nova instância de ResourceDescriptionItem
      */
-    public static ResourceDescriptionItem ResourceDescriptionItem(
-            boolean forcePurposeException,
-            boolean forceUseException,
-            boolean forceMisuseException,
-            boolean forceCopyrightExpcetion){
+    public static ResourceDescriptionItem resourceDescriptionItem(){
         CodePhrase language =
-                RMObjectTestHelper.CodePhrase(false);
-        String purpose = forcePurposeException ? "" : "purpose";
-        List<String> keywords = RMObjectTestHelper.StringList(false);
-        String use = forceUseException ? "" : "use";
-        String misuse = forceMisuseException ? "" : "misuse";
-        String copyright = forceCopyrightExpcetion ? "" : "copyright";
+                RMObjectTestHelper.codePhrase();
+        String purpose = "purpose";
+        List<String> keywords = RMObjectTestHelper.stringList(false);
+        String use = "use";
+        String misuse = "misuse";
+        String copyright = "copyright";
         Map<String, String> originalResourceUri =
-                RMObjectTestHelper.StringStringMap(false);
+                RMObjectTestHelper.stringStringMap(false);
         Map<String, String> otherDetails =
-                RMObjectTestHelper.StringStringMap(false);
+                RMObjectTestHelper.stringStringMap(false);
 
         return RMObjectFactory.newResourceDescriptionItem(language,purpose,
                 keywords,use,misuse,copyright,originalResourceUri,
@@ -615,20 +474,16 @@ public class RMObjectTestHelper {
 
     /**
      * Cria uma instância de TranslationDetails com valor fixo
-     * @param forceLanguageException
-     * @param forceAuthorException
+     *
      * @return nova instância de TranslationDetails
      */
-    public static TranslationDetails TranslationDetails(
-            boolean forceLanguageException,
-            boolean forceAuthorException){
-        CodePhrase language = forceLanguageException ? null :
-                RMObjectTestHelper.CodePhrase(false);
-        Map<String, String> author = forceAuthorException ? null :
-                RMObjectTestHelper.StringStringMap(false);
+    public static TranslationDetails translationDetails(){
+        CodePhrase language = RMObjectTestHelper.codePhrase();
+        Map<String, String> author = RMObjectTestHelper.stringStringMap(
+                false);
         String accreditation = "accreditation";
-        Map<String, String> otherDetails =
-                RMObjectTestHelper.StringStringMap(false);
+        Map<String, String> otherDetails =RMObjectTestHelper.stringStringMap(
+                false);
 
         return RMObjectFactory.newTranslationDetails(language,author,
                 accreditation, otherDetails);
@@ -639,10 +494,8 @@ public class RMObjectTestHelper {
      *
      * @return nova instância de Item
      */
-    public static Item Item(){
-        return RMObjectFactory.newItem(RMObjectTestHelper.Locatable(
-                false, false,
-                false));
+    public static Item item(){
+        return RMObjectFactory.newItem(RMObjectTestHelper.locatable());
     }
 
     /**
@@ -650,10 +503,10 @@ public class RMObjectTestHelper {
      *
      * @return nova instância de Cluster
      */
-    public static Cluster Cluster(){
+    public static Cluster cluster(){
         return RMObjectFactory.newCluster(
-                RMObjectTestHelper.Item(),
-                RMObjectTestHelper.ItemList(false));
+                RMObjectTestHelper.item(),
+                RMObjectTestHelper.itemList(false));
     }
 
     /**
@@ -661,10 +514,10 @@ public class RMObjectTestHelper {
      *
      * @return nova instância de Element
      */
-    public static Element Element(){
+    public static Element element(){
         return RMObjectFactory.newElement(
-                RMObjectTestHelper.Item(),
-                RMObjectTestHelper.DvCodedText(false));
+                RMObjectTestHelper.item(),
+                RMObjectTestHelper.dvCodedText());
     }
 
     /**
@@ -672,10 +525,9 @@ public class RMObjectTestHelper {
      *
      * @return nova instância de DataStructure
      */
-    public static DataStructure DataStructure(){
+    public static DataStructure dataStructure(){
         return RMObjectFactory.newDataStructure(
-                RMObjectTestHelper.Locatable(false,
-                        false, false));
+                RMObjectTestHelper.locatable());
     }
 
     /**
@@ -683,15 +535,15 @@ public class RMObjectTestHelper {
      *
      * @return nova instância de ItemList
      */
-    public static ItemList ItemList(){
+    public static ItemList itemList(){
         return RMObjectFactory.newItemList(
-                RMObjectTestHelper.UIDBasedID(false),
+                RMObjectTestHelper.uIDBasedID(),
                 "archetypeNodeId",
-                RMObjectTestHelper.DvText(false,false),
-                RMObjectTestHelper.Archetyped(false, false),
-                RMObjectTestHelper.FeederAudit(false, false, false),
-                RMObjectTestHelper.LinkSet(false),
-                RMObjectTestHelper.ElementList(false));
+                RMObjectTestHelper.dvText(),
+                RMObjectTestHelper.archetyped(),
+                RMObjectTestHelper.feederAudit(),
+                RMObjectTestHelper.linkSet(false),
+                RMObjectTestHelper.elementList(false));
     }
 
     /**
@@ -699,21 +551,19 @@ public class RMObjectTestHelper {
      *
      * @return nova instância de ItemStructure
      */
-    public static ItemStructure ItemStructure(){
+    public static ItemStructure itemStructure(){
         return RMObjectFactory.newItemStructure(
-                RMObjectTestHelper.DataStructure());
+                RMObjectTestHelper.dataStructure());
     }
 
     /**
      * Cria uma instância de ItemSingle com valor fixo
      *
-     * @param forceException exceção de variável nula
-     *
      * @return nova instância de ItemSingle
      */
-    public static ItemSingle ItemSingle(boolean forceException){
-        return RMObjectFactory.newItemSingle(RMObjectTestHelper.ItemStructure(),
-                forceException ? null : RMObjectTestHelper.Element());
+    public static ItemSingle itemSingle(){
+        return RMObjectFactory.newItemSingle(RMObjectTestHelper.itemStructure(),
+                RMObjectTestHelper.element());
     }
 
     /**
@@ -721,10 +571,10 @@ public class RMObjectTestHelper {
      *
      * @return nova instância de ItemTable
      */
-    public static ItemTable ItemTable(){
+    public static ItemTable itemTable(){
         return RMObjectFactory.newItemTable(
-                RMObjectTestHelper.ItemStructure(),
-                RMObjectTestHelper.ClusterList(false));
+                RMObjectTestHelper.itemStructure(),
+                RMObjectTestHelper.clusterList(false));
     }
 
     /**
@@ -732,47 +582,33 @@ public class RMObjectTestHelper {
      *
      * @return nova instância de ItemTree
      */
-    public static ItemTree ItemTree(){
+    public static ItemTree itemTree(){
         return RMObjectFactory.newItemTree(
-                RMObjectTestHelper.ItemStructure(),
-                RMObjectTestHelper.ItemList(false));
+                RMObjectTestHelper.itemStructure(),
+                RMObjectTestHelper.itemList(false));
     }
 
     /**
      * Cria uma instância de PartyIdentity com valor fixo
      *
-     * @param forceException exceção de variável nula
-     *
      * @return nova instância de PartyIdentity
      */
-    public static PartyIdentity PartyIdentity(boolean forceException){
+    public static PartyIdentity partyIdentity(){
         return RMObjectFactory.newPartyIdentity(
-                RMObjectTestHelper.Locatable(false,
-                        false, false),
-                forceException ? null : RMObjectTestHelper.ItemStructure());
+                RMObjectTestHelper.locatable(),
+                RMObjectTestHelper.itemStructure());
     }
 
     /**
      * Cria uma instância de PartyRelationship com valor fixo
      *
-     * @param forceLocatableException exceção de variável nula
-     * @param forceSourceException exceção de variável nula
-     * @param forceTargetException exceção de variável nula
-     *
      * @return nova instância de PartyRelationship
      */
-    public static PartyRelationship PartyRelationship(
-            boolean forceLocatableException, boolean forceSourceException,
-            boolean forceTargetException){
-        Locatable locatable = forceLocatableException ? null :
-                    RMObjectTestHelper.Locatable(
-                false,false,
-                false);
-        ItemStructure details = RMObjectTestHelper.ItemStructure();
-        ObjectRef source = forceSourceException ? null :
-                RMObjectTestHelper.ObjectRef(false);
-        ObjectRef target = forceTargetException ? null :
-                RMObjectTestHelper.ObjectRef(false);
+    public static PartyRelationship partyRelationship(){
+        Locatable locatable = RMObjectTestHelper.locatable();
+        ItemStructure details = RMObjectTestHelper.itemStructure();
+        ObjectRef source = RMObjectTestHelper.objectRef();
+        ObjectRef target = RMObjectTestHelper.objectRef();
 
         return RMObjectFactory.newPartyRelationship(locatable, details,
                 source, target);
@@ -781,58 +617,44 @@ public class RMObjectTestHelper {
     /**
      * Cria uma instância de Address com valor fixo
      *
-     * @param forceException
-     *
      * @return nova instância de Address
      */
-    public static Address Address(boolean forceException){
-        return RMObjectFactory.newAddress(RMObjectTestHelper.Locatable(
-                false,false,
-                false), forceException ? null :
-                RMObjectTestHelper.ItemStructure());
+    public static Address address(){
+        return RMObjectFactory.newAddress(RMObjectTestHelper.locatable(),
+                RMObjectTestHelper.itemStructure());
     }
 
-    public static Contact Contact(boolean forceException){
+    /**
+     * Cria uma instância de Contact com valor fixo
+     *
+     * @return nova instância de Contact
+     */
+    public static Contact contact(){
         return RMObjectFactory.newContact(
-                RMObjectTestHelper.Locatable(false,
-                        false, false),
-                RMObjectTestHelper.AddressList(forceException));
+                RMObjectTestHelper.locatable(),
+                RMObjectTestHelper.addressList(false));
     }
 
     /**
      * Cria uma instância de Party com valor fixo
      *
-     * @param forceLocatableException exceção de variável nula
-     * @param forceIdentitiesException exceção de set vazio
-     * @param forceContactException exceção de set vazio
-     * @param forceRelationshipException exceção de set vazio
-     *
      * @return nova instância de Party
      */
-    public static Party Party(boolean forceLocatableException,
-                        boolean forceIdentitiesException,
-                        boolean forceContactException,
-                        boolean forceRelationshipException,
-                              boolean legalIdentity){
-        Locatable locatable = forceLocatableException ? null :
-                RMObjectTestHelper.Locatable(
-                false, false,
-                false);
+    public static Party party(){
+        Locatable locatable = RMObjectTestHelper.locatable();
 
-        Set<PartyIdentity> identities = RMObjectTestHelper.
-                PartyIdentitySet(forceIdentitiesException,
-                        legalIdentity);
+        Set<PartyIdentity> identities = RMObjectTestHelper.partyIdentitySet(
+                false, true);
 
-        Set<Contact> contacts = RMObjectTestHelper.
-                ContactSet(forceContactException);
+        Set<Contact> contacts = RMObjectTestHelper.contactSet(false);
 
         Set<PartyRelationship> relationships = RMObjectTestHelper.
-                    PartyRelationshipSet(forceRelationshipException);
+                partyRelationshipSet(false);
 
         Set<LocatableRef> reverseRelationships =
-                RMObjectTestHelper.LocatableRefSet(false);
+                RMObjectTestHelper.locatableRefSet(false);
 
-        ItemStructure details = RMObjectTestHelper.ItemStructure();
+        ItemStructure details = RMObjectTestHelper.itemStructure();
 
         return RMObjectFactory.newParty(locatable, identities, contacts,
                 relationships, reverseRelationships, details);
@@ -841,36 +663,26 @@ public class RMObjectTestHelper {
     /**
      * Cria uma instância de Capability com valor fixo
      *
-     * @param forceException exceção de variável nula
-     *
      * @return nova instância de Capability
      */
-    public static Capability Capability(boolean forceException){
+    public static Capability capability(){
         return RMObjectFactory.newCapability(
-                RMObjectTestHelper.Locatable(false,
-                        false, false),
-                forceException ? null : RMObjectTestHelper.ItemStructure());
+                RMObjectTestHelper.locatable(),
+                RMObjectTestHelper.itemStructure());
     }
 
     /**
      * Cria uma instância de Role com valor fixo
      *
-     * @param forceCapabilitiesException exceção de lista vazia
-     * @param forcePerfomerException exceção de variável nula
-     *
      * @return nova instância de Role
      */
-    public static Role Role(boolean forceCapabilitiesException,
-                            boolean forcePerfomerException){
-        Party party = RMObjectTestHelper.Party(false,
-                false, false,
-                false, false);
+    public static Role role(){
+        Party party = RMObjectTestHelper.party();
 
         List<Capability> capabilities = RMObjectTestHelper.
-                CapabilityList(forceCapabilitiesException);
+                capabilityList(false);
 
-        PartyRef performer = forcePerfomerException ? null :
-                RMObjectTestHelper.PartyRef();
+        PartyRef performer = RMObjectTestHelper.partyRef();
 
         return RMObjectFactory.newRole(party, capabilities, performer);
     }
@@ -878,23 +690,14 @@ public class RMObjectTestHelper {
     /**
      * Cria uma instância de Actor com valor fixo
      *
-     * @param forceIdentityException exceção de variável com nome definido
-     * @param forceRolesException exceção de set vazio
-     * @param forceLanguagesException exceção de set vazio
-     *
      * @return nova instância de Actor
      */
-    public static Actor Actor(boolean forceIdentityException,
-                              boolean forceRolesException,
-                              boolean forceLanguagesException){
-        boolean fie = !forceIdentityException;
-        Party party = RMObjectTestHelper.Party(false,
-                false, false,
-                false, fie);
+    public static Actor actor(){
+        Party party = RMObjectTestHelper.party();
 
         return RMObjectFactory.newActor(party,
-                RMObjectTestHelper.RoleSet(forceRolesException),
-                RMObjectTestHelper.DvTextSet(forceLanguagesException));
+                RMObjectTestHelper.roleSet(false),
+                RMObjectTestHelper.dvTextSet(false));
     }
 
     /**
@@ -902,10 +705,8 @@ public class RMObjectTestHelper {
      *
      * @return nova instância de Agent
      */
-    public static Agent Agent(){
-        return RMObjectFactory.newAgent(RMObjectTestHelper.Actor(
-                false, false,
-                false));
+    public static Agent agent(){
+        return RMObjectFactory.newAgent(RMObjectTestHelper.actor());
     }
 
     /**
@@ -913,10 +714,8 @@ public class RMObjectTestHelper {
      *
      * @return nova instância de Group
      */
-    public static Group Group(){
-        return RMObjectFactory.newGroup(RMObjectTestHelper.Actor(
-                false, false,
-                false));
+    public static Group group(){
+        return RMObjectFactory.newGroup(RMObjectTestHelper.actor());
     }
 
     /**
@@ -924,76 +723,53 @@ public class RMObjectTestHelper {
      *
      * @return nova instância de Organisation
      */
-    public static Organisation Organisation(){
-        return RMObjectFactory.newOrganisation(RMObjectTestHelper.Actor(
-                false, false,
-                false));
+    public static Organisation organisation(){
+        return RMObjectFactory.newOrganisation(RMObjectTestHelper.actor());
     }
 
     /**
      * Cria uma instância de Person com valor fixo
      *
-     * @return nova instância de Organisation
+     * @return nova instância de Person
      */
-    public static Person Person(){
-        return RMObjectFactory.newPerson(RMObjectTestHelper.Actor(
-                false, false,
-                false));
+    public static Person person(){
+        return RMObjectFactory.newPerson(RMObjectTestHelper.actor());
     }
 
     /**
      * Cria uma instância de InstructionDetails com valor fixo
      *
-     * @param forceInstructionIdException exceção de variável nula
-     * @param forceActivityIdException exceção de variável vazia
-     *
      * @return nova instância de InstructionDetails
      */
-    public static InstructionDetails InstructionDetails(
-            boolean forceInstructionIdException,
-            boolean forceActivityIdException ) {
+    public static InstructionDetails instructionDetails() {
         return RMObjectFactory.newInstructionDetails(
-                forceInstructionIdException ? null :
-                        RMObjectTestHelper.LocatableRef(false),
-                forceActivityIdException ? "" : "activityId",
-                RMObjectTestHelper.ItemStructure());
+                RMObjectTestHelper.locatableRef(),
+                "activityId",
+                RMObjectTestHelper.itemStructure());
     }
 
     /**
      * Cria uma instância de ISMTransition com valor fixo
      *
-     * @param forceException exceção de variável nula
-     *
      * @return nova instância de ISMTransition
      */
-    public static ISMTransition ISMTransition(boolean forceException){
-        return RMObjectFactory.newISMTransition(forceException ? null :
-                RMObjectTestHelper.DvCodedText(false),
-                RMObjectTestHelper.DvCodedText(false),
-                RMObjectTestHelper.DvCodedText(false));
+    public static ISMTransition iSMTransition(){
+        return RMObjectFactory.newISMTransition(
+                RMObjectTestHelper.dvCodedText(),
+                RMObjectTestHelper.dvCodedText(),
+                RMObjectTestHelper.dvCodedText());
     }
 
     /**
      * Cria uma instância de Activity com valor fixo
      *
-     * @param forceDescriptionException exceção de variável nula
-     * @param forceTimingException exceção de variável nula
-     * @param forceActionException exceção de variável vazia
-     *
      * @return nova instância de Activity
      */
-    public static Activity Activity(boolean forceDescriptionException,
-                                     boolean forceTimingException,
-                                     boolean forceActionException){
-        Locatable locatable = RMObjectTestHelper.Locatable(false,
-                false, false);
-        ItemStructure description = forceDescriptionException ? null :
-                RMObjectTestHelper.ItemStructure();
-        DvParsable timing = forceTimingException ? null :
-                RMObjectTestHelper.DvParsable(false,
-                        false);
-        String actionArchetypeId = forceActionException ? "" :
-                "actionArchetypeId";
+    public static Activity activity(){
+        Locatable locatable = RMObjectTestHelper.locatable();
+        ItemStructure description = RMObjectTestHelper.itemStructure();
+        DvParsable timing = RMObjectTestHelper.dvParsable();
+        String actionArchetypeId = "actionArchetypeId";
 
         return RMObjectFactory.newActivity(locatable, description, timing,
                 actionArchetypeId);
@@ -1005,7 +781,7 @@ public class RMObjectTestHelper {
      * @param emptyList cria uma lista vazia
      * @return list
      */
-    private static List<DvIdentifier> DvIdentifierList(boolean emptyList){
+    private static List<DvIdentifier> dvIdentifierList(boolean emptyList){
         List<DvIdentifier> list = new ArrayList<>();
         if(emptyList){
             return list;
@@ -1025,22 +801,22 @@ public class RMObjectTestHelper {
      * @param emptyList cria uma lista vazia
      * @return list
      */
-    private static List<TermMapping> TermMappingList(boolean emptyList){
+    private static List<TermMapping> termMappingList(boolean emptyList){
         List<TermMapping> list = new ArrayList<>();
         if(emptyList){
             return list;
         }
         DvText dt = RMObjectFactory.newDvText("value", null,
                 "formatting",
-                RMObjectTestHelper.DVURI(false),
-                RMObjectTestHelper.CodePhrase(false),
-                RMObjectTestHelper.CodePhrase(false));
+                RMObjectTestHelper.dVURI(),
+                RMObjectTestHelper.codePhrase(),
+                RMObjectTestHelper.codePhrase());
 
         TermMapping tm = RMObjectFactory.newTermMapping(
-                RMObjectTestHelper.CodePhrase(false),
+                RMObjectTestHelper.codePhrase(),
                 Match.BROADER,
                 RMObjectFactory.newDvCodedText(dt,
-                        RMObjectTestHelper.CodePhrase(false)));
+                        RMObjectTestHelper.codePhrase()));
         list.add(tm);
         list.add(tm);
         list.add(tm);
@@ -1055,14 +831,14 @@ public class RMObjectTestHelper {
      * @param emptyList cria uma lista vazia
      * @return list
      */
-    private static List<DvText> DvTextList(boolean emptyList){
+    private static List<DvText> dvTextList(boolean emptyList){
         List<DvText> list = new ArrayList<>();
 
         DvText dt = RMObjectFactory.newDvText("value", null,
                 "formatting",
-                RMObjectTestHelper.DVURI(false),
-                RMObjectTestHelper.CodePhrase(false),
-                RMObjectTestHelper.CodePhrase(false));
+                RMObjectTestHelper.dVURI(),
+                RMObjectTestHelper.codePhrase(),
+                RMObjectTestHelper.codePhrase());
         list.add(dt);
         list.add(dt);
         list.add(dt);
@@ -1076,13 +852,13 @@ public class RMObjectTestHelper {
      * @param emptyList cria uma lista vazia
      * @return list
      */
-    private static List<Capability> CapabilityList(boolean emptyList){
+    private static List<Capability> capabilityList(boolean emptyList){
         List<Capability> list = new ArrayList<>();
         if(emptyList){
             return list;
         }
 
-        Capability c = RMObjectTestHelper.Capability(false);
+        Capability c = RMObjectTestHelper.capability();
         list.add(c);
 
         return list;
@@ -1094,13 +870,12 @@ public class RMObjectTestHelper {
      * @param emptySet cria um set vazio
      * @return set
      */
-    private static Set<Link> LinkSet(boolean emptySet){
+    private static Set<Link> linkSet(boolean emptySet){
         Set<Link> set = new HashSet<>();
         if(emptySet){
             return set;
         }
-        Link l = RMObjectTestHelper.Link(false,
-                false, false);
+        Link l = RMObjectTestHelper.link();
         set.add(l);
         set.add(l);
         set.add(l);
@@ -1115,38 +890,30 @@ public class RMObjectTestHelper {
      *
      * @return set
      */
-    private static Set<PartyIdentity> PartyIdentitySet(boolean emptySet, boolean
-                                                       legalIdentity){
+    private static Set<PartyIdentity> partyIdentitySet(boolean emptySet, boolean
+            legalIdentity){
         Set<PartyIdentity> set = new HashSet<>();
         if(emptySet){
             return set;
         }
-        PartyIdentity p = RMObjectTestHelper.PartyIdentity(false);
-        if(legalIdentity){
-            p = RMObjectFactory.newPartyIdentity(
-                    RMObjectFactory.newLocatable(
-                            RMObjectTestHelper.UIDBasedID(false),
-                            "archetypeNodeId",
-                            RMObjectFactory.newDvText("legal identity",
-                                    RMObjectTestHelper.
-                                            TermMappingList(false),
-                                    "formatting",
-                                    RMObjectTestHelper.
-                                            DVURI(false),
-                                    RMObjectTestHelper.
-                                            CodePhrase(false),
-                                    RMObjectTestHelper.
-                                            CodePhrase(false)),
-                            RMObjectTestHelper.Archetyped(
-                                    false,
-                                    false),
-                            RMObjectTestHelper.FeederAudit(
-                                    false,
-                                    false,
-                                    false),
-                            RMObjectTestHelper.LinkSet(false)),
-                    RMObjectTestHelper.ItemStructure());
-        }
+        PartyIdentity p =RMObjectFactory.newPartyIdentity(
+                RMObjectFactory.newLocatable(
+                        RMObjectTestHelper.uIDBasedID(),
+                        "archetypeNodeId",
+                        RMObjectFactory.newDvText("legal identity",
+                                RMObjectTestHelper.
+                                        termMappingList(false),
+                                "formatting",
+                                RMObjectTestHelper.
+                                        dVURI(),
+                                RMObjectTestHelper.
+                                        codePhrase(),
+                                RMObjectTestHelper.
+                                        codePhrase()),
+                        RMObjectTestHelper.archetyped(),
+                        RMObjectTestHelper.feederAudit(),
+                        RMObjectTestHelper.linkSet(false)),
+                RMObjectTestHelper.itemStructure());
         set.add(p);
 
         return set;
@@ -1159,12 +926,12 @@ public class RMObjectTestHelper {
      *
      * @return set
      */
-    private static Set<Contact> ContactSet(boolean emptySet){
+    private static Set<Contact> contactSet(boolean emptySet){
         Set<Contact> set = new HashSet<>();
         if(emptySet){
             return set;
         }
-        Contact c = RMObjectTestHelper.Contact(false);
+        Contact c = RMObjectTestHelper.contact();
         set.add(c);
 
         return set;
@@ -1177,14 +944,12 @@ public class RMObjectTestHelper {
      *
      * @return set
      */
-    private static Set<PartyRelationship> PartyRelationshipSet(boolean emptySet){
+    private static Set<PartyRelationship> partyRelationshipSet(boolean emptySet){
         Set<PartyRelationship> set = new HashSet<>();
         if(emptySet){
             return set;
         }
-        PartyRelationship pr = RMObjectTestHelper.PartyRelationship(
-                false, false,
-                false);
+        PartyRelationship pr = RMObjectTestHelper.partyRelationship();
         set.add(pr);
 
         return set;
@@ -1197,12 +962,12 @@ public class RMObjectTestHelper {
      *
      * @return set
      */
-    private static Set<LocatableRef> LocatableRefSet(boolean emptySet){
+    private static Set<LocatableRef> locatableRefSet(boolean emptySet){
         Set<LocatableRef> set = new HashSet<>();
         if(emptySet){
             return set;
         }
-        LocatableRef lr = RMObjectTestHelper.LocatableRef(false);
+        LocatableRef lr = RMObjectTestHelper.locatableRef();
         set.add(lr);
 
         return set;
@@ -1215,13 +980,12 @@ public class RMObjectTestHelper {
      *
      * @return set
      */
-    private static Set<Role> RoleSet(boolean emptySet){
+    private static Set<Role> roleSet(boolean emptySet){
         Set<Role> set = new HashSet<>();
         if(emptySet){
             return set;
         }
-        Role r = RMObjectTestHelper.Role(false,
-                false);
+        Role r = RMObjectTestHelper.role();
         set.add(r);
 
         return set;
@@ -1234,13 +998,12 @@ public class RMObjectTestHelper {
      *
      * @return set
      */
-    private static Set<DvText> DvTextSet(boolean emptySet){
+    private static Set<DvText> dvTextSet(boolean emptySet){
         Set<DvText> set = new HashSet<>();
         if(emptySet){
             return set;
         }
-        DvText d = RMObjectTestHelper.DvText(false,
-                false);
+        DvText d = RMObjectTestHelper.dvText();
         set.add(d);
 
         return set;
@@ -1253,7 +1016,7 @@ public class RMObjectTestHelper {
      *
      * @return list
      */
-    private static List<String> StringList(boolean emptyList){
+    private static List<String> stringList(boolean emptyList){
         List<String> list = new ArrayList<>();
         if(emptyList){
             return list;
@@ -1272,12 +1035,12 @@ public class RMObjectTestHelper {
      *
      * @return list
      */
-    private static List<Item> ItemList(boolean emptyList){
+    private static List<Item> itemList(boolean emptyList){
         List<Item> list = new ArrayList<>();
         if(emptyList){
             return list;
         }
-        Item i = RMObjectTestHelper.Item();
+        Item i = RMObjectTestHelper.item();
 
         list.add(i);
 
@@ -1291,12 +1054,12 @@ public class RMObjectTestHelper {
      *
      * @return list
      */
-    private static List<Element> ElementList(boolean emptyList){
+    private static List<Element> elementList(boolean emptyList){
         List<Element> list = new ArrayList<>();
         if(emptyList){
             return list;
         }
-        Element e = RMObjectTestHelper.Element();
+        Element e = RMObjectTestHelper.element();
 
         list.add(e);
 
@@ -1310,12 +1073,12 @@ public class RMObjectTestHelper {
      *
      * @return list
      */
-    private static List<Cluster> ClusterList(boolean emptyList){
+    private static List<Cluster> clusterList(boolean emptyList){
         List<Cluster> list = new ArrayList<>();
         if(emptyList){
             return list;
         }
-        Cluster c = RMObjectTestHelper.Cluster();
+        Cluster c = RMObjectTestHelper.cluster();
 
         list.add(c);
 
@@ -1329,12 +1092,12 @@ public class RMObjectTestHelper {
      *
      * @return list
      */
-    private static List<Address> AddressList(boolean emptyList){
+    private static List<Address> addressList(boolean emptyList){
         List<Address> list = new ArrayList<>();
         if(emptyList){
             return list;
         }
-        Address a = RMObjectTestHelper.Address(false);
+        Address a = RMObjectTestHelper.address();
 
         list.add(a);
 
@@ -1348,7 +1111,7 @@ public class RMObjectTestHelper {
      *
      * @return map
      */
-    private static Map<String, String> StringStringMap(boolean emptyMap){
+    private static Map<String, String> stringStringMap(boolean emptyMap){
         Map<String, String> map = new HashMap<>();
         if(emptyMap){
             return map;
