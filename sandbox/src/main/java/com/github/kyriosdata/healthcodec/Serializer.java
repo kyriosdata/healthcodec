@@ -38,8 +38,7 @@ public interface Serializer {
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeDvIdentifier(
-            DvIdentifier d) throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeDvIdentifier(DvIdentifier d);
 
     /**
      * Serializador de InternetID
@@ -48,8 +47,7 @@ public interface Serializer {
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeInternetID(
-            InternetID i) throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeInternetID(InternetID i);
     
     /**
      * Serializador de UID
@@ -58,8 +56,7 @@ public interface Serializer {
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeUID(
-            UID u) throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeUID(UID u);
     
     /**
      * Serializador de ISO_OID
@@ -68,8 +65,7 @@ public interface Serializer {
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeISOOID(
-            ISO_OID i) throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeISOOID(ISO_OID i);
 
     /**
      * Serializador de UUID
@@ -78,8 +74,7 @@ public interface Serializer {
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeUUID(
-            UUID u) throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeUUID(UUID u);
 
     /**
      * Serializador de TerminologyID
@@ -88,8 +83,7 @@ public interface Serializer {
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws java.io.UnsupportedEncodingException
      */
-    RMObjectSerializationClient serializeTerminologyID(
-            TerminologyID t) throws UnsupportedEncodingException;
+    RMObjectSerializationClient serializeTerminologyID(TerminologyID t);
 
     /**
      * Serializador de GenericID
@@ -99,7 +93,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeGenericID(
-            GenericID g) throws UnsupportedEncodingException;
+            GenericID g);
 
     /**
      * Serializador de TemplateID
@@ -109,7 +103,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeTemplateID(
-            TemplateID t) throws UnsupportedEncodingException;
+            TemplateID t);
 
     /**
      * Serializador de CodePhrase
@@ -119,7 +113,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeCodePhrase(
-            CodePhrase c) throws UnsupportedEncodingException;
+            CodePhrase c);
 
     /**
      * Serializador de DVURI
@@ -129,7 +123,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDVURI(
-            DVURI d) throws UnsupportedEncodingException;
+            DVURI d);
 
     /**
      * Serializador de DVEHRURI
@@ -139,17 +133,17 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDVEHRURI(
-            DVEHRURI d) throws UnsupportedEncodingException;
+            DVEHRURI d);
 
     /**
      * Serializador de VersionTreeID
      *
      * @param v
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeVersionTreeID(
-            VersionTreeID v) throws UnsupportedEncodingException;
+            VersionTreeID v);
 
     /**
      * Serializador de ArchetypeID
@@ -159,7 +153,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeArchetypeID(
-            ArchetypeID a) throws UnsupportedEncodingException;
+            ArchetypeID a);
 
     /**
      * Serializador de ObjectVersionID
@@ -169,7 +163,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeObjectVersionID(
-            ObjectVersionID o) throws UnsupportedEncodingException;
+            ObjectVersionID o);
 
     /**
      * Serializador de HierObjectID
@@ -179,7 +173,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeHierObjectID(
-            HierObjectID h) throws UnsupportedEncodingException;
+            HierObjectID h);
 
     /**
      * Serializador de ObjectID
@@ -189,7 +183,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeObjectID(
-            ObjectID o) throws UnsupportedEncodingException;
+            ObjectID o);
 
     /**
      * Serializador de PartyRef
@@ -199,7 +193,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializePartyRef(
-            PartyRef p) throws UnsupportedEncodingException;
+            PartyRef p);
 
     /**
      * Serializador de ObjectRef
@@ -209,7 +203,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeObjectRef(
-            ObjectRef o) throws UnsupportedEncodingException;
+            ObjectRef o);
 
     /**
      * Serializador de LocatableRef
@@ -219,7 +213,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeLocatableRef(
-            LocatableRef l) throws UnsupportedEncodingException;
+            LocatableRef l);
 
     /**
      * Serializador de ProportionKind
@@ -236,7 +230,7 @@ public interface Serializer {
      * @return Instância de RMObjectSerializationClient para chaining
      */
     RMObjectSerializationClient serializeAccessGroupRef(
-            AccessGroupRef a) throws UnsupportedEncodingException;
+            AccessGroupRef a);
 
     /**
      * Serializador de PartyIdentified
@@ -246,7 +240,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializePartyIdentified(
-            PartyIdentified p) throws UnsupportedEncodingException;
+            PartyIdentified p);
 
     /**
      * Serializador de Archetyped
@@ -256,7 +250,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeArchetyped(
-            Archetyped a) throws UnsupportedEncodingException;
+            Archetyped a);
 
     /**
      * Serializador de DvEncapsulated
@@ -266,7 +260,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvEncapsulated(
-            DvEncapsulated d) throws UnsupportedEncodingException;
+            DvEncapsulated d);
 
     /**
      * Serializador de UIDBasedID
@@ -276,7 +270,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeUIDBasedID(
-            UIDBasedID u) throws UnsupportedEncodingException;
+            UIDBasedID u);
 
     /**
      * Serializador de DvParsable
@@ -286,7 +280,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvParsable(
-            DvParsable d) throws UnsupportedEncodingException;
+            DvParsable d);
 
     /**
      * Serializador de DvTimeSpecification
@@ -296,7 +290,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvTimeSpecification(
-            DvTimeSpecification d) throws UnsupportedEncodingException;
+            DvTimeSpecification d);
 
     /**
      * Serializador de DvMultimedia
@@ -306,7 +300,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvMultimedia(
-            DvMultimedia d) throws UnsupportedEncodingException;
+            DvMultimedia d);
 
     /**
      * Serializador de DvText
@@ -316,7 +310,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvText(
-            DvText d) throws UnsupportedEncodingException;
+            DvText d);
 
     /**
      * Serilizador de DvCodedText
@@ -326,7 +320,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvCodedText(
-            DvCodedText d) throws UnsupportedEncodingException;
+            DvCodedText d);
 
     /**
      * Serializador de TermMapping
@@ -336,7 +330,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeTermMapping(
-            TermMapping t) throws UnsupportedEncodingException;
+            TermMapping t);
 
     /**
      * Serializador de Link
@@ -346,7 +340,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeLink(
-            Link l) throws UnsupportedEncodingException;
+            Link l);
 
     /**
      * Serializador de DvState
@@ -356,7 +350,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvState(
-            DvState d) throws UnsupportedEncodingException;
+            DvState d);
 
     /**
      * Serializador de DvParagraph
@@ -366,7 +360,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeDvParagraph(
-            DvParagraph d) throws UnsupportedEncodingException;
+            DvParagraph d);
 
     /**
      * *
@@ -377,7 +371,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializePartyProxy(
-            PartyProxy p) throws UnsupportedEncodingException;
+            PartyProxy p);
 
 
     /**
@@ -388,7 +382,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeFeederAuditDetails(
-            FeederAuditDetails f) throws UnsupportedEncodingException;
+            FeederAuditDetails f);
         
     /**
      * Serializador de FeederAudit
@@ -398,7 +392,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeFeederAudit(
-            FeederAudit f) throws UnsupportedEncodingException;
+            FeederAudit f);
     
     /**
      * Serializador de Locatable
@@ -408,7 +402,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeLocatable(
-            Locatable l) throws UnsupportedEncodingException;
+            Locatable l);
     
     /**
      * Serilizador de PartyRelated
@@ -418,7 +412,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializePartyRelated(
-            PartyRelated p) throws UnsupportedEncodingException;
+            PartyRelated p);
     
     /**
      * Serializador de PartySelf
@@ -428,7 +422,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializePartySelf(
-            PartySelf p) throws UnsupportedEncodingException;
+            PartySelf p);
     
     
     /**
@@ -439,7 +433,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeResourceDescriptionItem(
-            ResourceDescriptionItem r) throws UnsupportedEncodingException;
+            ResourceDescriptionItem r);
     
     /**
      * Serializador de TranslationDetails
@@ -449,7 +443,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeTranslationDetails(
-            TranslationDetails t) throws UnsupportedEncodingException;
+            TranslationDetails t);
     
     /**
      * Serializador de Item
@@ -459,7 +453,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeItem(
-            Item i) throws UnsupportedEncodingException;
+            Item i);
     
     /**
      * Serializador de Cluster
@@ -469,7 +463,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeCluster(
-            Cluster c) throws UnsupportedEncodingException;
+            Cluster c);
     
     /**
      * Serializador de Element
@@ -479,7 +473,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeElement(
-            Element e) throws UnsupportedEncodingException;
+            Element e);
     
     /**
      * Serializador de DataStructure
@@ -489,7 +483,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeDataStructure(
-            DataStructure d) throws UnsupportedEncodingException;
+            DataStructure d);
     
     /**
      * Serializador de ItemList
@@ -499,7 +493,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeItemList(
-            ItemList i) throws UnsupportedEncodingException;
+            ItemList i);
     
     /**
      * Serializador de ItemStructure
@@ -508,7 +502,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeItemStructure(
-            ItemStructure i) throws UnsupportedEncodingException;
+            ItemStructure i);
     
     /**
      * Serializador de ItemSingle
@@ -518,7 +512,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeItemSingle(
-            ItemSingle i) throws UnsupportedEncodingException;
+            ItemSingle i);
     
     /**
      * Serializador de ItemTable
@@ -528,7 +522,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeItemTable(
-            ItemTable i) throws UnsupportedEncodingException; 
+            ItemTable i); 
     
     /**
      * Serializador de ItemTree
@@ -538,7 +532,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeItemTree(
-            ItemTree i) throws UnsupportedEncodingException; 
+            ItemTree i); 
     
     /**
      * Serializador de PartyIdentity
@@ -548,7 +542,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializePartyIdentity(PartyIdentity p)
-                throws UnsupportedEncodingException; 
+               ; 
     
     /**
      * Serializador de PartyRelationship
@@ -558,7 +552,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializePartyRelationship(
-            PartyRelationship p) throws UnsupportedEncodingException; 
+            PartyRelationship p); 
     
     /**
      * Serializador de Address
@@ -568,7 +562,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeAddress(
-            Address a) throws UnsupportedEncodingException; 
+            Address a); 
     
     /**
      * Serializador de Contact
@@ -578,7 +572,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeContact(
-            Contact c) throws UnsupportedEncodingException; 
+            Contact c); 
     
     /**
      * Serializador de Party
@@ -588,7 +582,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeParty(
-            Party p) throws UnsupportedEncodingException; 
+            Party p); 
     
     /**
      * Serializador de Capability
@@ -598,7 +592,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serialilzeCapability(
-            Capability c) throws UnsupportedEncodingException; 
+            Capability c); 
     
     /**
      * Serializador de Role
@@ -608,7 +602,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeRole(
-            Role r) throws UnsupportedEncodingException; 
+            Role r); 
     
     /**
      * Serializador de Actor
@@ -618,7 +612,7 @@ public interface Serializer {
      * @throws java.io.UnsupportedEncodingException
      */
     RMObjectSerializationClient serializeActor(
-            Actor a) throws UnsupportedEncodingException;
+            Actor a);
     
     /**
      * Serializador de Agent
@@ -628,7 +622,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeAgent(
-            Agent a) throws UnsupportedEncodingException;
+            Agent a);
     
     /**
      * Serializador de Group
@@ -638,7 +632,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeGroup(
-            Group g) throws UnsupportedEncodingException;
+            Group g);
     
     /**
      * Serializador de Organisation
@@ -648,7 +642,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeOrganisation(
-            Organisation o) throws UnsupportedEncodingException;
+            Organisation o);
     
     /**
      * Serializador de Person
@@ -658,7 +652,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializePerson(Person p)
-                throws UnsupportedEncodingException;
+               ;
     
     /**
      * Serializador de InstructionDetails
@@ -668,7 +662,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeinstructionDetails(
-            InstructionDetails id) throws UnsupportedEncodingException;
+            InstructionDetails id);
     
     /**
      * Serializador de ISMTransition
@@ -678,7 +672,7 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeISMTransition(
-            ISMTransition ism) throws UnsupportedEncodingException;
+            ISMTransition ism);
     
     /**
      * Serializador de Activity
@@ -688,5 +682,5 @@ public interface Serializer {
      * @throws UnsupportedEncodingException 
      */
     RMObjectSerializationClient serializeActivity(
-            Activity a) throws UnsupportedEncodingException;
+            Activity a);
 }

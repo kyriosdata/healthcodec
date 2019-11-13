@@ -90,7 +90,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeDvIdentifier(
-            DvIdentifier d) throws UnsupportedEncodingException {
+            DvIdentifier d)  {
         DvIdentifierSerializer s = new DvIdentifierSerializer();
         register(DVIDENTIFIER, offset);
         setOffset(s.serialize(buffer, offset, d));
@@ -114,11 +114,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param u
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeUID(
-            UID u) throws UnsupportedEncodingException {
+            UID u)  {
         UIDSerializer s = new UIDSerializer();
         register(UID, offset);
         setOffset(s.serialize(buffer, offset, u));
@@ -141,11 +141,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * Serializador de InternetID
      *
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeInternetID(
-            InternetID i) throws UnsupportedEncodingException {
+            InternetID i)  {
 
         InternetIDSerializer s = new InternetIDSerializer();
         register(INTERNETID, offset);
@@ -168,11 +168,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * Serializador de ISO_OID
      * 
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeISOOID(ISO_OID i)
-            throws UnsupportedEncodingException {
+             {
         ISOOIDSerialilzer s = new ISOOIDSerialilzer();
         register(ISO_OID, offset);
         setOffset(s.serialize(buffer, offset, i));
@@ -196,11 +196,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param u
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeUUID(UUID u)
-            throws UnsupportedEncodingException {
+             {
         UUIDSerializer s = new UUIDSerializer();
         register(UUID, offset);
         setOffset(s.serialize(buffer, offset, u));
@@ -224,11 +224,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param t
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeTerminologyID(
-            TerminologyID t) throws UnsupportedEncodingException {
+            TerminologyID t)  {
         TerminologyIDSerializer s = new TerminologyIDSerializer();
         register(TERMINOLOGYID, offset);
         setOffset(s.serialize(buffer, offset, t));
@@ -252,11 +252,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param g
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeGenericID(
-            GenericID g) throws UnsupportedEncodingException {
+            GenericID g)  {
         GenericIDSerializer s = new GenericIDSerializer();
         register(GENERICID, offset);
         setOffset(s.serialize(buffer, offset, g));
@@ -280,11 +280,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param t
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeTemplateID(
-            TemplateID t) throws UnsupportedEncodingException {
+            TemplateID t)  {
         TemplateIDSerializer s = new TemplateIDSerializer();
         register(TEMPLATEID, offset);
         setOffset(s.serialize(buffer, offset, t));
@@ -308,11 +308,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param c
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeCodePhrase(
-            CodePhrase c) throws UnsupportedEncodingException {
+            CodePhrase c)  {
         CodePhraseSerializer s = new CodePhraseSerializer();
         register(CODEPHRASE, offset);
         setOffset(s.serialize(buffer, offset, c));
@@ -336,11 +336,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param d
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeDVURI(
-            DVURI d) throws UnsupportedEncodingException {
+            DVURI d)  {
         DVURISerializer s = new DVURISerializer();
         register(DVURI, offset);
         setOffset(s.serialize(buffer, offset, d));
@@ -364,11 +364,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param d
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeDVEHRURI(
-            DVEHRURI d) throws UnsupportedEncodingException {
+            DVEHRURI d)  {
         DVEHRURISerializer s = new DVEHRURISerializer();
         register(DVEHRURI, offset);
         s.serialize(buffer, offset, d);
@@ -392,11 +392,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param v
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeVersionTreeID(
-            VersionTreeID v) throws UnsupportedEncodingException {
+            VersionTreeID v)  {
         VersionTreeIDSerializer s = new VersionTreeIDSerializer();
         register(VERSIONTREEID, offset);
         s.serialize(buffer, offset, v);
@@ -420,11 +420,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param a
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeArchetypeID(
-            ArchetypeID a) throws UnsupportedEncodingException {
+            ArchetypeID a)  {
         ArchetypeIDSerializer s = new ArchetypeIDSerializer();
         register(ARCHETYPEID, offset);
         s.serialize(buffer, offset, a);
@@ -448,11 +448,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param o
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeObjectVersionID(
-            ObjectVersionID o) throws UnsupportedEncodingException {
+            ObjectVersionID o)  {
         ObjectVersionIDSerializer s = new ObjectVersionIDSerializer();
         register(OBJECTVERSIONID, offset);
         setOffset(s.serialize(buffer, offset, o));
@@ -476,11 +476,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param h
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeHierObjectID(
-            HierObjectID h) throws UnsupportedEncodingException {
+            HierObjectID h)  {
         HierObjectIDSerializer s = new HierObjectIDSerializer();
         register(HIEROBJECTID, offset);
         setOffset(s.serialize(buffer, offset, h));
@@ -504,11 +504,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param o
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeObjectID(ObjectID o)
-            throws UnsupportedEncodingException {
+             {
         ObjectIDSerializer s = new ObjectIDSerializer();
         register(OBJECTID, offset);
         setOffset(s.serialize(buffer, offset, o));
@@ -532,11 +532,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param p
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializePartyRef(
-            PartyRef p) throws UnsupportedEncodingException {
+            PartyRef p)  {
         PartyRefSerializer s = new PartyRefSerializer();
         register(PARTYREF, offset);
         setOffset(s.serialize(buffer, offset, p));
@@ -560,11 +560,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param o
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeObjectRef(
-            ObjectRef o) throws UnsupportedEncodingException {
+            ObjectRef o)  {
         ObjectRefSerializer s = new ObjectRefSerializer();
         register(OBJECTREF, offset);
         setOffset(s.serialize(buffer, offset, o));
@@ -588,11 +588,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param l
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeLocatableRef(
-            LocatableRef l) throws UnsupportedEncodingException {
+            LocatableRef l)  {
         LocatableRefSerializer s = new LocatableRefSerializer();
         register(LOCATABLEREF, offset);
         setOffset(s.serialize(buffer, offset, l));
@@ -647,7 +647,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeAccessGroupRef(
-            AccessGroupRef a) throws UnsupportedEncodingException{
+            AccessGroupRef a) {
         AccessGroupRefSerializer s = new AccessGroupRefSerializer();
         register(ACCESSGROUPREF, offset);
         setOffset(s.serialize(buffer, offset, a));
@@ -671,11 +671,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param p
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializePartyIdentified(
-            PartyIdentified p) throws UnsupportedEncodingException {
+            PartyIdentified p)  {
         PartyIdentifiedSerializer s = new PartyIdentifiedSerializer();
         register(PARTYIDENTIFIED, offset);
         setOffset(s.serialize(buffer, offset, p));
@@ -699,11 +699,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param a
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeArchetyped(
-            Archetyped a) throws UnsupportedEncodingException {
+            Archetyped a)  {
         ArchetypedSerializer s = new ArchetypedSerializer();
         register(ARCHETYPED, offset);
         setOffset(s.serialize(buffer, offset, a));
@@ -727,11 +727,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param d
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeDvEncapsulated(
-            DvEncapsulated d) throws UnsupportedEncodingException {
+            DvEncapsulated d)  {
         DvEncapsulatedSerializer s = new DvEncapsulatedSerializer();
         register(DVENCAPSULATED, offset);
         setOffset(s.serialize(buffer, offset, d));
@@ -755,11 +755,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param u
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeUIDBasedID(
-            UIDBasedID u) throws UnsupportedEncodingException {
+            UIDBasedID u)  {
         UIDBasedIDSerializer s = new UIDBasedIDSerializer();
         register(UIDBASEDID, offset);
         setOffset(s.serialize(buffer, offset, u));
@@ -783,11 +783,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param d
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeDvParsable(
-            DvParsable d) throws UnsupportedEncodingException {
+            DvParsable d)  {
         DvParsableSerializer s = new DvParsableSerializer();
         register(DVPARSABLE, offset);
         setOffset(s.serialize(buffer,offset, d));
@@ -811,11 +811,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param d
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeDvTimeSpecification(
-            DvTimeSpecification d) throws UnsupportedEncodingException {
+            DvTimeSpecification d)  {
         DvTimeSpecificationSerializer s = new DvTimeSpecificationSerializer();
         register(DVTIMESPECIFICATION, offset);
         setOffset(s.serialize(buffer, offset, d));
@@ -839,11 +839,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param d
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeDvMultimedia(
-            DvMultimedia d) throws UnsupportedEncodingException {
+            DvMultimedia d)  {
         DvMultimediaSerializer s = new DvMultimediaSerializer();
         register(DVMULTIMEDIA, offset);
         setOffset(s.serialize(buffer,offset, d));
@@ -867,11 +867,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param d
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeDvText(
-            DvText d) throws UnsupportedEncodingException {
+            DvText d)  {
 
         DvTextSerializer s = new DvTextSerializer();
         register(DVTEXT, offset);
@@ -896,11 +896,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param d
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeDvCodedText(
-            DvCodedText d) throws UnsupportedEncodingException {
+            DvCodedText d)  {
         DvCodedTextSerializer s = new DvCodedTextSerializer();
         register(DVCODEDTEXT, offset);
         setOffset(s.serialize(buffer, offset, d));
@@ -928,7 +928,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeTermMapping(
-            TermMapping t) throws UnsupportedEncodingException {
+            TermMapping t)  {
 
         TermMappingSerializer s = new TermMappingSerializer();
         register(TERMMAPPING, offset);
@@ -957,7 +957,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     @Override
     public RMObjectSerializationClient serializeLink(
-            Link l) throws UnsupportedEncodingException {
+            Link l)  {
         LinkSerializer s = new LinkSerializer();
         register(LINK, offset);
         setOffset(s.serialize(buffer, offset, l));
@@ -981,11 +981,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param d
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeDvState(
-            DvState d) throws UnsupportedEncodingException {
+            DvState d)  {
         DvStateSerializer s = new DvStateSerializer();
         register(DVSTATE, offset);
         setOffset(s.serialize(buffer, offset, d));
@@ -1010,11 +1010,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param d
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeDvParagraph(
-            DvParagraph d) throws UnsupportedEncodingException {
+            DvParagraph d)  {
         DvParagraphSerializer s = new DvParagraphSerializer();
         register(DVPARAGRAPH, offset);
         setOffset(s.serialize(buffer, offset, d));
@@ -1038,11 +1038,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param p
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializePartyProxy(
-            PartyProxy p) throws UnsupportedEncodingException {
+            PartyProxy p)  {
         PartyProxySerializer s = new PartyProxySerializer();
         register(PARTYPROXY, offset);
         setOffset(s.serialize(buffer, offset, p));
@@ -1066,11 +1066,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      *
      * @param f
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException
+     * @
      */
     @Override
     public RMObjectSerializationClient serializeFeederAuditDetails(
-            FeederAuditDetails f) throws UnsupportedEncodingException {
+            FeederAuditDetails f)  {
         FeederAuditDetailsSerializer s = new FeederAuditDetailsSerializer();
         register(FEEDERAUDITDETAILS, offset);
         setOffset(s.serialize(buffer, offset, f));
@@ -1094,11 +1094,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param f
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeFeederAudit(
-            FeederAudit f) throws UnsupportedEncodingException {
+            FeederAudit f)  {
         FeederAuditSerializer s = new FeederAuditSerializer();
         register(FEEDERAUDIT, offset);
         setOffset(s.serialize(buffer, offset, f));
@@ -1122,11 +1122,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param l
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeLocatable(
-            Locatable l) throws UnsupportedEncodingException {
+            Locatable l)  {
        LocatableSerializer s = new LocatableSerializer();
        register(LOCATABLE, offset);
        setOffset(s.serialize(buffer, offset, l));
@@ -1150,11 +1150,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param p
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializePartyRelated(
-            PartyRelated p) throws UnsupportedEncodingException {
+            PartyRelated p)  {
         PartyRelatedSerializer s = new PartyRelatedSerializer();
         register(PARTYRELATED, offset);
         setOffset(s.serialize(buffer, offset, p));
@@ -1178,11 +1178,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param p
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializePartySelf(
-            PartySelf p) throws UnsupportedEncodingException {
+            PartySelf p)  {
         PartySelfSerializer s = new PartySelfSerializer();
         register(PARTYSELF, offset);
         setOffset(s.serialize(buffer, offset, p));
@@ -1207,11 +1207,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param r
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeResourceDescriptionItem(
-            ResourceDescriptionItem r) throws UnsupportedEncodingException {
+            ResourceDescriptionItem r)  {
         ResourceDescriptionItemSerializer s = 
                 new ResourceDescriptionItemSerializer();
         register(RESOURCEDESCRIPTIONITEM, offset);
@@ -1238,11 +1238,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param t
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeTranslationDetails(
-            TranslationDetails t) throws UnsupportedEncodingException {
+            TranslationDetails t)  {
         TranslationDetailsSerializer s = 
                 new TranslationDetailsSerializer();
         register(TRANSLATIONDETAILS, offset);
@@ -1269,11 +1269,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param i
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeItem(
-            Item i) throws UnsupportedEncodingException {
+            Item i)  {
         ItemSerializer s = new ItemSerializer();
         register(ITEM, offset);
         setOffset(s.serialize(buffer, offset, i));
@@ -1297,11 +1297,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param c
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeCluster(
-            Cluster c) throws UnsupportedEncodingException {
+            Cluster c)  {
         ClusterSerializer s = new ClusterSerializer();
         register(CLUSTER, offset);
         setOffset(s.serialize(buffer, offset, c));
@@ -1325,11 +1325,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param e
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeElement(
-            Element e) throws UnsupportedEncodingException {
+            Element e)  {
         ElementSerializer s = new ElementSerializer();
         register(ELEMENT, offset);
         setOffset(s.serialize(buffer, offset, e));
@@ -1353,11 +1353,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param d
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeDataStructure(
-            DataStructure d) throws UnsupportedEncodingException {
+            DataStructure d)  {
         DataStructureSerializer s = new DataStructureSerializer();
         register(DATASTRUCTURE, offset);
         setOffset(s.serialize(buffer, offset, d));
@@ -1381,11 +1381,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param il
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeItemList(
-            ItemList il) throws UnsupportedEncodingException {
+            ItemList il)  {
         ItemListSerializer s = new ItemListSerializer();
         register(ITEMLIST, offset);
         setOffset(s.serialize(buffer, offset, il));
@@ -1409,11 +1409,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param i
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeItemStructure(
-            ItemStructure i) throws UnsupportedEncodingException {
+            ItemStructure i)  {
         ItemStructureSerializer s = new ItemStructureSerializer();
         register(ITEMSTRUCTURE, offset);
         setOffset(s.serialize(buffer, offset, i));
@@ -1438,11 +1438,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param i
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeItemSingle(
-            ItemSingle i) throws UnsupportedEncodingException {
+            ItemSingle i)  {
         ItemSingleSerializer s = new ItemSingleSerializer();
         register(ITEMSINGLE, offset);
         setOffset(s.serialize(buffer, offset, i));
@@ -1466,11 +1466,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param i
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeItemTable(
-            ItemTable i) throws UnsupportedEncodingException {
+            ItemTable i)  {
         ItemTableSerializer s = new ItemTableSerializer();
         register(ITEMTABLE, offset);
         setOffset(s.serialize(buffer, offset, i));
@@ -1494,11 +1494,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param i
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeItemTree(
-            ItemTree i) throws UnsupportedEncodingException {
+            ItemTree i)  {
         ItemTreeSerializer s = new ItemTreeSerializer();
         register(ITEMTREE, offset);
         s.serialize(buffer, offset, i);
@@ -1522,11 +1522,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param p
      * @return instância de RMObjectSerializationClient atual 
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializePartyIdentity(
-            PartyIdentity p) throws UnsupportedEncodingException {
+            PartyIdentity p)  {
         PartyIdentitySerializer s = new PartyIdentitySerializer();
         register(PARTYIDENTITY, offset);
         setOffset(s.serialize(buffer, offset, p));
@@ -1550,11 +1550,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param p
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializePartyRelationship(
-            PartyRelationship p) throws UnsupportedEncodingException {
+            PartyRelationship p)  {
         PartyRelationshipSerializer s = new PartyRelationshipSerializer();
         register(PARTYRELATIONSHIP, offset);
         setOffset(s.serialize(buffer, offset, p));
@@ -1578,11 +1578,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param a
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeAddress(
-            Address a) throws UnsupportedEncodingException {
+            Address a)  {
         AddressSerializer s = new AddressSerializer();
         register(ADDRESS, offset);
         setOffset(s.serialize(buffer, offset, a));
@@ -1606,11 +1606,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param c
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeContact(
-            Contact c) throws UnsupportedEncodingException {
+            Contact c)  {
         ContactSerializer s = new ContactSerializer();
         register(CONTACT, offset);
         setOffset(s.serialize(buffer, offset, c));
@@ -1634,11 +1634,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param p
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeParty(
-            Party p) throws UnsupportedEncodingException {
+            Party p)  {
         PartySerializer s = new PartySerializer();
         register(PARTY, offset);
         setOffset(s.serialize(buffer, offset, p));
@@ -1662,11 +1662,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param c
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serialilzeCapability(
-            Capability c) throws UnsupportedEncodingException {
+            Capability c)  {
         CapabilitySerializer s = new CapabilitySerializer();
         register(CAPABILITY, offset);
         setOffset(s.serialize(buffer, offset, c));
@@ -1690,11 +1690,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param r
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeRole(
-            Role r) throws UnsupportedEncodingException {
+            Role r)  {
         RoleSerializer s = new RoleSerializer();
         register(ROLE, offset);
         setOffset(s.serialize(buffer, offset, r));
@@ -1718,11 +1718,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param a
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeActor(
-            Actor a) throws UnsupportedEncodingException {
+            Actor a)  {
         ActorSerializer s = new ActorSerializer();
         register(ACTOR, offset);
         setOffset(s.serialize(buffer, offset, a));
@@ -1746,11 +1746,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param a
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeAgent(
-            Agent a) throws UnsupportedEncodingException {
+            Agent a)  {
         AgentSerializer s = new AgentSerializer();
         register(AGENT, offset);
         setOffset(s.serialize(buffer, offset, a));
@@ -1773,11 +1773,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * Serializador de Group
      * 
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeGroup(
-            Group g) throws UnsupportedEncodingException {
+            Group g)  {
         GroupSerializer s = new GroupSerializer();
         register(GROUP, offset);
         setOffset(s.serialize(buffer, offset, g));
@@ -1801,11 +1801,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param o
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeOrganisation(
-            Organisation o) throws UnsupportedEncodingException {
+            Organisation o)  {
         OrganisationSerializer s = new OrganisationSerializer();
         register(ORGANISATION, offset);
         setOffset(s.serialize(buffer, offset, o));
@@ -1829,11 +1829,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param p
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializePerson(
-            Person p) throws UnsupportedEncodingException {
+            Person p)  {
         PersonSerializer s = new PersonSerializer();
         register(PERSON, offset);
         setOffset(s.serialize(buffer, offset, p));
@@ -1857,11 +1857,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param id
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeinstructionDetails(
-            InstructionDetails id) throws UnsupportedEncodingException {
+            InstructionDetails id)  {
         InstructionDetailsSerializer s = new InstructionDetailsSerializer();
         register(INSTRUCTIONDETAILS, offset);
         setOffset(s.serialize(buffer, offset, id));
@@ -1885,11 +1885,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param ism
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeISMTransition(
-            ISMTransition ism) throws UnsupportedEncodingException {
+            ISMTransition ism)  {
         ISMTransitionSerializer s = new ISMTransitionSerializer();
         register(ISMTRANSITION, offset);
         setOffset(s.serialize(buffer, offset, ism));
@@ -1913,11 +1913,11 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * 
      * @param a
      * @return instância de RMObjectSerializationClient atual
-     * @throws UnsupportedEncodingException 
+     * @ 
      */
     @Override
     public RMObjectSerializationClient serializeActivity(
-            Activity a) throws UnsupportedEncodingException {
+            Activity a)  {
         ActivitySerializer s = new ActivitySerializer();
         register(ACTIVITY, offset);
         setOffset(s.serialize(buffer, offset, a));
