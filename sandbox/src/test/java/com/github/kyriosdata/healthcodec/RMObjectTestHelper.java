@@ -231,8 +231,8 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newPartyIdentified(
                 RMObjectFactory.newPartyRef(
                         RMObjectFactory.newObjectID("value"),
-                        "value"), "name",
-                dvIdentifierList(true));
+                        "type"), "name",
+                dvIdentifierList(false));
     }
 
     /**
@@ -287,7 +287,7 @@ public class RMObjectTestHelper {
                 RMObjectTestHelper.dvParsable());
     }
 
-    public static DvMultimedia DvMultimedia(){
+    public static DvMultimedia dvMultimedia(){
         DvEncapsulated de = RMObjectTestHelper.dvEncapsulated();
         String alternateText = "alternateText";
         CodePhrase mediaType = RMObjectTestHelper.codePhrase();
@@ -305,9 +305,9 @@ public class RMObjectTestHelper {
     }
 
     /**
-     * Cria uma instância de DvText com valor fixo
+     * Cria uma instância de DvTextTest com valor fixo
      *
-     * @return instância de DvText
+     * @return instância de DvTextTest
      */
     public static DvText dvText(){
         String value = "value";
@@ -320,6 +320,18 @@ public class RMObjectTestHelper {
 
         return RMObjectFactory.newDvText(value, mappings, formatting,
                 hyperlink, language, charset);
+    }
+
+    /**
+     * Cria uma instância de TermMapping com valor fixo.
+     *
+     * @return instância de TermMapping
+     */
+    public static TermMapping termMapping(){
+        return RMObjectFactory.newTermMapping(
+                RMObjectTestHelper.codePhrase(),
+                Match.BROADER,
+                RMObjectTestHelper.dvCodedText());
     }
 
     /**
@@ -356,9 +368,9 @@ public class RMObjectTestHelper {
     }
 
     /**
-     * Cria uma instância de DvParagraph com valor fixo.
+     * Cria uma instância de DvParagraphTest com valor fixo.
      *
-     * @return nova instância de DvParagraph
+     * @return nova instância de DvParagraphTest
      */
     public static DvParagraph dvParagraph(){
         return RMObjectFactory.newDvParagraph(
@@ -402,8 +414,10 @@ public class RMObjectTestHelper {
                 RMObjectTestHelper.dvIdentifierList(false);
         FeederAuditDetails feederSystemAudit =
                 RMObjectTestHelper.feederAuditDetails();
+
         List<DvIdentifier> feederSystemItemIDs =
                 RMObjectTestHelper.dvIdentifierList(false);
+
         DvEncapsulated originalContent = RMObjectTestHelper.dvEncapsulated();
 
         return RMObjectFactory.newFeederAudit(originatingSystemAudit,
@@ -531,9 +545,9 @@ public class RMObjectTestHelper {
     }
 
     /**
-     * Cria uma instância de ItemList com valor fixo
+     * Cria uma instância de ItemListTest com valor fixo
      *
-     * @return nova instância de ItemList
+     * @return nova instância de ItemListTest
      */
     public static ItemList itemList(){
         return RMObjectFactory.newItemList(
@@ -640,11 +654,11 @@ public class RMObjectTestHelper {
      *
      * @return nova instância de Party
      */
-    public static Party party(){
+    public static Party party(boolean legalIdentity){
         Locatable locatable = RMObjectTestHelper.locatable();
 
         Set<PartyIdentity> identities = RMObjectTestHelper.partyIdentitySet(
-                false, true);
+                false, legalIdentity);
 
         Set<Contact> contacts = RMObjectTestHelper.contactSet(false);
 
@@ -677,7 +691,7 @@ public class RMObjectTestHelper {
      * @return nova instância de Role
      */
     public static Role role(){
-        Party party = RMObjectTestHelper.party();
+        Party party = RMObjectTestHelper.party(false);
 
         List<Capability> capabilities = RMObjectTestHelper.
                 capabilityList(false);
@@ -693,7 +707,7 @@ public class RMObjectTestHelper {
      * @return nova instância de Actor
      */
     public static Actor actor(){
-        Party party = RMObjectTestHelper.party();
+        Party party = RMObjectTestHelper.party(true);
 
         return RMObjectFactory.newActor(party,
                 RMObjectTestHelper.roleSet(false),
@@ -781,7 +795,7 @@ public class RMObjectTestHelper {
      * @param emptyList cria uma lista vazia
      * @return list
      */
-    private static List<DvIdentifier> dvIdentifierList(boolean emptyList){
+    public static List<DvIdentifier> dvIdentifierList(boolean emptyList){
         List<DvIdentifier> list = new ArrayList<>();
         if(emptyList){
             return list;
@@ -801,7 +815,7 @@ public class RMObjectTestHelper {
      * @param emptyList cria uma lista vazia
      * @return list
      */
-    private static List<TermMapping> termMappingList(boolean emptyList){
+    public static List<TermMapping> termMappingList(boolean emptyList){
         List<TermMapping> list = new ArrayList<>();
         if(emptyList){
             return list;
@@ -826,13 +840,16 @@ public class RMObjectTestHelper {
 
 
     /**
-     * Método que gera uma lista de DvText
+     * Método que gera uma lista de DvTextTest
      *
      * @param emptyList cria uma lista vazia
      * @return list
      */
-    private static List<DvText> dvTextList(boolean emptyList){
+    public static List<DvText> dvTextList(boolean emptyList){
         List<DvText> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
 
         DvText dt = RMObjectFactory.newDvText("value", null,
                 "formatting",
@@ -852,7 +869,7 @@ public class RMObjectTestHelper {
      * @param emptyList cria uma lista vazia
      * @return list
      */
-    private static List<Capability> capabilityList(boolean emptyList){
+    public static List<Capability> capabilityList(boolean emptyList){
         List<Capability> list = new ArrayList<>();
         if(emptyList){
             return list;
@@ -870,7 +887,7 @@ public class RMObjectTestHelper {
      * @param emptySet cria um set vazio
      * @return set
      */
-    private static Set<Link> linkSet(boolean emptySet){
+    public static Set<Link> linkSet(boolean emptySet){
         Set<Link> set = new HashSet<>();
         if(emptySet){
             return set;
@@ -890,7 +907,7 @@ public class RMObjectTestHelper {
      *
      * @return set
      */
-    private static Set<PartyIdentity> partyIdentitySet(boolean emptySet, boolean
+    public static Set<PartyIdentity> partyIdentitySet(boolean emptySet, boolean
             legalIdentity){
         Set<PartyIdentity> set = new HashSet<>();
         if(emptySet){
@@ -900,7 +917,8 @@ public class RMObjectTestHelper {
                 RMObjectFactory.newLocatable(
                         RMObjectTestHelper.uIDBasedID(),
                         "archetypeNodeId",
-                        RMObjectFactory.newDvText("legal identity",
+                        RMObjectFactory.newDvText(legalIdentity ?
+                                        "legal identity" : "value",
                                 RMObjectTestHelper.
                                         termMappingList(false),
                                 "formatting",
@@ -926,7 +944,7 @@ public class RMObjectTestHelper {
      *
      * @return set
      */
-    private static Set<Contact> contactSet(boolean emptySet){
+    public static Set<Contact> contactSet(boolean emptySet){
         Set<Contact> set = new HashSet<>();
         if(emptySet){
             return set;
@@ -944,7 +962,7 @@ public class RMObjectTestHelper {
      *
      * @return set
      */
-    private static Set<PartyRelationship> partyRelationshipSet(boolean emptySet){
+    public static Set<PartyRelationship> partyRelationshipSet(boolean emptySet){
         Set<PartyRelationship> set = new HashSet<>();
         if(emptySet){
             return set;
@@ -962,7 +980,7 @@ public class RMObjectTestHelper {
      *
      * @return set
      */
-    private static Set<LocatableRef> locatableRefSet(boolean emptySet){
+    public static Set<LocatableRef> locatableRefSet(boolean emptySet){
         Set<LocatableRef> set = new HashSet<>();
         if(emptySet){
             return set;
@@ -980,7 +998,7 @@ public class RMObjectTestHelper {
      *
      * @return set
      */
-    private static Set<Role> roleSet(boolean emptySet){
+    public static Set<Role> roleSet(boolean emptySet){
         Set<Role> set = new HashSet<>();
         if(emptySet){
             return set;
@@ -992,13 +1010,13 @@ public class RMObjectTestHelper {
     }
 
     /**
-     * Método que gera um set de DvText
+     * Método que gera um set de DvTextTest
      *
      * @param emptySet cria um set vazio
      *
      * @return set
      */
-    private static Set<DvText> dvTextSet(boolean emptySet){
+    public static Set<DvText> dvTextSet(boolean emptySet){
         Set<DvText> set = new HashSet<>();
         if(emptySet){
             return set;
@@ -1016,7 +1034,7 @@ public class RMObjectTestHelper {
      *
      * @return list
      */
-    private static List<String> stringList(boolean emptyList){
+    public static List<String> stringList(boolean emptyList){
         List<String> list = new ArrayList<>();
         if(emptyList){
             return list;
@@ -1035,7 +1053,7 @@ public class RMObjectTestHelper {
      *
      * @return list
      */
-    private static List<Item> itemList(boolean emptyList){
+    public static List<Item> itemList(boolean emptyList){
         List<Item> list = new ArrayList<>();
         if(emptyList){
             return list;
@@ -1054,7 +1072,7 @@ public class RMObjectTestHelper {
      *
      * @return list
      */
-    private static List<Element> elementList(boolean emptyList){
+    public static List<Element> elementList(boolean emptyList){
         List<Element> list = new ArrayList<>();
         if(emptyList){
             return list;
@@ -1073,7 +1091,7 @@ public class RMObjectTestHelper {
      *
      * @return list
      */
-    private static List<Cluster> clusterList(boolean emptyList){
+    public static List<Cluster> clusterList(boolean emptyList){
         List<Cluster> list = new ArrayList<>();
         if(emptyList){
             return list;
@@ -1092,7 +1110,7 @@ public class RMObjectTestHelper {
      *
      * @return list
      */
-    private static List<Address> addressList(boolean emptyList){
+    public static List<Address> addressList(boolean emptyList){
         List<Address> list = new ArrayList<>();
         if(emptyList){
             return list;
@@ -1111,7 +1129,7 @@ public class RMObjectTestHelper {
      *
      * @return map
      */
-    private static Map<String, String> stringStringMap(boolean emptyMap){
+    public static Map<String, String> stringStringMap(boolean emptyMap){
         Map<String, String> map = new HashMap<>();
         if(emptyMap){
             return map;

@@ -14,10 +14,20 @@
  */
 package com.github.kyriosdata.healthcodec;
 
-import com.github.kyriosdata.healthcodec.RMObjectSerialization.*;
-import static com.github.kyriosdata.healthcodec.RMObjectID.*;
 import com.github.kyriosdata.healthcodec.RMObject.*;
-import java.io.UnsupportedEncodingException;
+import com.github.kyriosdata.healthcodec.RMObject.DVEHRURI;
+import com.github.kyriosdata.healthcodec.RMObject.DVURI;
+import com.github.kyriosdata.healthcodec.RMObject.ISO_OID;
+import com.github.kyriosdata.healthcodec.RMObject.UID;
+import com.github.kyriosdata.healthcodec.RMObject.UUID;
+import com.github.kyriosdata.healthcodec.RMObjectSerialization.*;
+
+import static com.github.kyriosdata.healthcodec.RMObjectID.*;
+import static com.github.kyriosdata.healthcodec.RMObjectID.DVEHRURI;
+import static com.github.kyriosdata.healthcodec.RMObjectID.DVURI;
+import static com.github.kyriosdata.healthcodec.RMObjectID.ISO_OID;
+import static com.github.kyriosdata.healthcodec.RMObjectID.UID;
+import static com.github.kyriosdata.healthcodec.RMObjectID.UUID;
 
 /**
  *
@@ -1665,7 +1675,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      * @ 
      */
     @Override
-    public RMObjectSerializationClient serialilzeCapability(
+    public RMObjectSerializationClient serializeCapability(
             Capability c)  {
         CapabilitySerializer s = new CapabilitySerializer();
         register(CAPABILITY, offset);

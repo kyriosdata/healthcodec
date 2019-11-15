@@ -591,7 +591,7 @@ public interface Serializer {
      * @return Instância de RMObjectSerializationClient para chaining
      * @throws UnsupportedEncodingException 
      */
-    RMObjectSerializationClient serialilzeCapability(
+    RMObjectSerializationClient serializeCapability(
             Capability c); 
     
     /**

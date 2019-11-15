@@ -1,39 +1,32 @@
 package com.github.kyriosdata.healthcodec.common.archetyped;
 
-import com.github.kyriosdata.healthcodec.RMObject;
+import com.github.kyriosdata.healthcodec.RMObject.Archetyped;
 import com.github.kyriosdata.healthcodec.RMObjectFactory;
 import com.github.kyriosdata.healthcodec.RMObjectSerializationClient;
 import com.github.kyriosdata.healthcodec.RMObjectTestHelper;
-import org.junit.jupiter.api.BeforeEach;
+import com.github.kyriosdata.healthcodec.datatypes.support.identification.ArchetypeIDTest;
+import com.github.kyriosdata.healthcodec.datatypes.support.identification.TemplateIDTest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ArchetypedTest {
-    private RMObjectSerializationClient s = null;
+    RMObjectSerializationClient s = RMObjectSerializationClient.create();
 
-    @BeforeEach
-    void setUp() {
-        s = RMObjectSerializationClient.create();
+    public static void testValidArchetyped(Archetyped a){
+        ArchetypeIDTest.testValidArchetypeID(a.getArchetypeId());
+        TemplateIDTest.testValidTemplateID(a.getTemplateId());
+        assertEquals("rmVersion", a.getRmVersion());
     }
 
     @Test
     void archetypedValidTrue(){
-        RMObject.Archetyped a = RMObjectTestHelper.archetyped();
+        Archetyped a = RMObjectTestHelper.archetyped();
         s.serializeArchetyped(a);
         a = s.deserializeArchetyped();
 
-        //testa archetypedId
-        assertEquals("value",
-                a.getArchetypeId().getObjectID().getValue());
-
-        //testa ObjectID
-        assertEquals("value",
-                a.getTemplateId().getObjectID().getValue());
-
-        //testa rmVersion
-        assertEquals("rmVersion", a.getRmVersion());
+        testValidArchetyped(a);
     }
 
     @Test

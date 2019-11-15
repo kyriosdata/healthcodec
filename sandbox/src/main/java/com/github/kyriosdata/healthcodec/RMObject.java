@@ -566,7 +566,7 @@ public class RMObject {
                 throw new IllegalArgumentException("null value");
             }
             if (formalism.isEmpty()) {
-                throw new IllegalArgumentException("formalism null ou vazio");
+                throw new IllegalArgumentException("formalism vazio");
             }
             this.dvEncapsulated = dvEncapsulated;
             this.value = value;
