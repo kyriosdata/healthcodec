@@ -1829,4 +1829,104 @@ public class RMObject {
             return actionArchetypeId;
         }
     }
+
+    public static class DvOrdered {
+        private List<ReferenceRange> otherReferenceRanges;
+        private final DvInterval normalRange;
+        private final CodePhrase normalStatus;
+
+        public DvOrdered(List<ReferenceRange> otherReferenceRanges,
+                         DvInterval normalRange, CodePhrase normalStatus) {
+            if (otherReferenceRanges != null) {
+                if (otherReferenceRanges.isEmpty()) {
+                    throw new IllegalArgumentException(
+                            "otherReferenceRanges vazio");
+                }
+            } else {
+                this.otherReferenceRanges = null;
+            }
+
+            this.otherReferenceRanges = otherReferenceRanges;
+            this.normalRange = normalRange;
+            this.normalStatus = normalStatus;
+        }
+
+        public List<ReferenceRange> getOtherReferenceRanges() {
+            return otherReferenceRanges;
+        }
+
+        public DvInterval getNormalRange() {
+            return normalRange;
+        }
+
+        public CodePhrase getNormalStatus() {
+            return normalStatus;
+        }
+    }
+
+    public static class Interval {
+        private final DvOrdered lower;
+        private final DvOrdered upper;
+        private boolean lowerIncluded;
+        private boolean upperIncluded;
+
+        public Interval(DvOrdered lower, DvOrdered upper) {
+            this.lower = lower;
+            this.upper = upper;
+            this.lowerIncluded = true;
+            this.upperIncluded = true;
+        }
+
+        public DvOrdered getLower() {
+            return lower;
+        }
+
+        public DvOrdered getUpper() {
+            return upper;
+        }
+
+        public boolean isLowerIncluded() {
+            return lowerIncluded;
+        }
+
+        public boolean isUpperIncluded() {
+            return upperIncluded;
+        }
+    }
+
+    public static class DvInterval {
+        private final Interval interval;
+
+        public DvInterval(DvOrdered lower, DvOrdered upper) {
+            this.interval = new Interval(lower, upper);
+        }
+
+        public Interval getInterval() {
+            return interval;
+        }
+    }
+
+    public static class ReferenceRange {
+        private final DvText meaning;
+        private final DvInterval range;
+
+        public ReferenceRange(DvText meaning, DvInterval range) {
+            if(meaning == null){
+                throw new IllegalArgumentException("null meaning");
+            }
+            if (range == null) {
+                throw new IllegalArgumentException("null range");
+            }
+            this.meaning = meaning;
+            this.range = range;
+        }
+
+        public DvText getMeaning() {
+            return meaning;
+        }
+
+        public DvInterval getRange() {
+            return range;
+        }
+    }
 }

@@ -790,6 +790,58 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de DvOrdered com valor fixo
+     *
+     * @return nova instância de DvOrdered
+     */
+    public static DvOrdered dvOrdered(){
+        List<ReferenceRange> otherReferenceRanges =
+                referenceRangeList(false);
+        DvInterval normalRange = RMObjectFactory.newDvInterval(null,
+                null);
+        CodePhrase normalStatus = RMObjectTestHelper.codePhrase();
+
+        return RMObjectFactory.newDvOrdered(otherReferenceRanges,
+                null, normalStatus);
+    }
+
+    /**
+     * Cria uma instância de Interval com valor fixo
+     *
+     * @return nova instância de Interval
+     */
+    public static Interval interval(){
+        DvOrdered upper = RMObjectTestHelper.dvOrdered();
+        DvOrdered lower = RMObjectTestHelper.dvOrdered();
+
+        return RMObjectFactory.newInterval(lower, upper);
+    }
+
+    /**
+     * Cria uma instância de DvInterval com valor fixo
+     *
+     * @return nova instância de DvInterval
+     */
+    public static DvInterval dvInterval(){
+        DvOrdered upper = RMObjectTestHelper.dvOrdered();
+        DvOrdered lower = RMObjectTestHelper.dvOrdered();
+
+        return RMObjectFactory.newDvInterval(lower, upper);
+    }
+
+    /**
+     * Cria uma instância de ReferenceRange com valor fixo
+     *
+     * @return nova instância de ReferenceRange
+     */
+    public static ReferenceRange referenceRange(){
+        DvText meaning = RMObjectTestHelper.dvText();
+        DvInterval range = RMObjectTestHelper.dvInterval();
+
+        return RMObjectFactory.newReferenceRange(meaning, range);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
@@ -805,6 +857,25 @@ public class RMObjectTestHelper {
         list.add(id);
         list.add(id);
         list.add(id);
+
+        return list;
+    }
+
+    /**
+     * Método que gera uma lista de ReferenceRange
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    public static List<ReferenceRange> referenceRangeList(boolean emptyList){
+        List<ReferenceRange> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        ReferenceRange r = RMObjectFactory.newReferenceRange(
+                RMObjectTestHelper.dvText(), RMObjectFactory.newDvInterval(
+                        null, null));
+        list.add(r);
 
         return list;
     }
@@ -880,6 +951,7 @@ public class RMObjectTestHelper {
 
         return list;
     }
+
 
     /**
      * Método que gera um set de Link

@@ -383,4 +383,24 @@ public class RMObjectFactory {
             String actionArchetypeId){
         return new Activity(locatable, description, timing, actionArchetypeId);
     }
+
+    public static Interval newInterval(DvOrdered lower,DvOrdered upper){
+        return new Interval(lower, upper);
+    }
+
+    public static DvInterval newDvInterval(DvOrdered lower, DvOrdered upper){
+        return new DvInterval(lower, upper);
+    }
+
+    public static ReferenceRange newReferenceRange(DvText meaning,
+                                                   DvInterval range){
+        return new ReferenceRange(meaning, range);
+    }
+
+    public static DvOrdered newDvOrdered(
+            List<ReferenceRange> otherReferenceRanges,
+            DvInterval normalRange,
+            CodePhrase normalStatus){
+        return new DvOrdered(otherReferenceRanges, normalRange, normalStatus);
+    }
 }

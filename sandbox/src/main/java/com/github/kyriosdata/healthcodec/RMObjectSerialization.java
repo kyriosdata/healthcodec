@@ -19,6 +19,8 @@ import com.github.kyriosdata.healthcodec.RMObject.UUID;
 
 import java.util.*;
 
+import static com.github.kyriosdata.healthcodec.PrimitiveTypeSize.BOOLEAN;
+
 /**
  *
  * @author Gabriel
@@ -29,7 +31,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, boolean value){
             buffer.writeBoolean(offset, value);
-            return offset + PrimitiveTypeSize.BOOLEAN.getSize();
+            return offset + BOOLEAN.getSize();
         }
         
         protected int serialize(Buffer buffer, int offset, DvBoolean d){
@@ -712,7 +714,7 @@ public class RMObjectSerialization {
                 String path) {
             int meta = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize()+
-                    PrimitiveTypeSize.BOOLEAN.getSize();
+                    BOOLEAN.getSize();
             
             ObjectVersionIDSerializer os = new ObjectVersionIDSerializer();
             
@@ -768,7 +770,7 @@ public class RMObjectSerialization {
             String type = stringDeserialization(buffer, typePosition);
             
             boolean hasPath = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             String path = null;
             if(hasPath){
                 int pathPosition = buffer.readInteger(position);
@@ -948,7 +950,7 @@ public class RMObjectSerialization {
                 String rmVersion) {
             int meta = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize() +
-                    PrimitiveTypeSize.BOOLEAN.getSize();
+                    BOOLEAN.getSize();
             
             ArchetypeIDSerializer ais = new ArchetypeIDSerializer();
             TemplateIDSerializer tis = new TemplateIDSerializer();
@@ -992,7 +994,7 @@ public class RMObjectSerialization {
                     buffer, archetypeIdPosition);
             
             boolean hasTemplateId = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             TemplateID templateId = null;
             if(hasTemplateId){
                 int templateIdPosition = buffer.readInteger(position);
@@ -1298,20 +1300,20 @@ public class RMObjectSerialization {
             int compressionAlgorithmPosition = 0;
             CodePhrase compressionAlgorithm = null;
             if (hasCompressionAlgorithm){
-                meta += PrimitiveTypeSize.BOOLEAN.getSize();
+                meta += BOOLEAN.getSize();
                 compressionAlgorithmPosition = buffer.readInteger(meta);
                 compressionAlgorithm
                         = cps.deserialize(buffer, compressionAlgorithmPosition);
                 meta += PrimitiveTypeSize.INT.getSize();
             } else {
-                meta += PrimitiveTypeSize.BOOLEAN.getSize();
+                meta += BOOLEAN.getSize();
             }
             boolean hasIntegrityCheck = buffer.readBoolean(meta);
             int integrityCheckPosition = 0;
             int integrityCheckLength = 0;
             byte[] integrityCheck = null;
             if (hasIntegrityCheck){
-                meta += PrimitiveTypeSize.BOOLEAN.getSize();
+                meta += BOOLEAN.getSize();
                 integrityCheckPosition = buffer.readInteger(meta);
                 meta += PrimitiveTypeSize.INT.getSize();
                 integrityCheckLength = buffer.readInteger(meta);
@@ -1320,32 +1322,32 @@ public class RMObjectSerialization {
                 integrityCheck = buffer.readByteArray(integrityCheckPosition,
                         integrityCheckLength);
             } else {
-                meta += PrimitiveTypeSize.BOOLEAN.getSize();
+                meta += BOOLEAN.getSize();
             }
 
             boolean hasIntegrityCheckAlgorithm = buffer.readBoolean(meta);
             int integrityCheckAlgorithmPosition = 0;
             CodePhrase integrityCheckAlgorithm = null;
             if (hasIntegrityCheckAlgorithm){
-                meta += PrimitiveTypeSize.BOOLEAN.getSize();
+                meta += BOOLEAN.getSize();
                 integrityCheckAlgorithmPosition = buffer.readInteger(meta);
                 meta += PrimitiveTypeSize.INT.getSize();
                 integrityCheckAlgorithm = cps.deserialize(buffer,
                         integrityCheckAlgorithmPosition);
             } else {
-                meta += PrimitiveTypeSize.BOOLEAN.getSize();
+                meta += BOOLEAN.getSize();
             }
 
             boolean hasThumbnail = buffer.readBoolean(meta);
             int thumbnailPosition = 0;
             DvMultimedia thumbnail = null;
             if (hasThumbnail){
-                meta += PrimitiveTypeSize.BOOLEAN.getSize();
+                meta += BOOLEAN.getSize();
                 thumbnailPosition = buffer.readInteger(meta);
                 meta += PrimitiveTypeSize.INT.getSize();
                 thumbnail = dvm.deserialize(buffer, thumbnailPosition);
             } else {
-                meta += PrimitiveTypeSize.BOOLEAN.getSize();
+                meta += BOOLEAN.getSize();
             }
 
             int uriPosition = buffer.readInteger(meta);
@@ -1384,7 +1386,7 @@ public class RMObjectSerialization {
 
             int meta = offset;
             int position = offset + 6 * PrimitiveTypeSize.INT.getSize()+
-                    3 * PrimitiveTypeSize.BOOLEAN.getSize();
+                    3 * BOOLEAN.getSize();
 
             meta = writeHeader(buffer, meta, position);
             position = stringSerialization(buffer, position, value);
@@ -1451,7 +1453,7 @@ public class RMObjectSerialization {
             boolean hasMappings = buffer.readBoolean(position);
             int mappingsPosition = 0;
             List<TermMapping> mappings = null;
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             if (hasMappings){
                 mappingsPosition = buffer.readInteger(position);
                 mappings = tms.deserializeList(buffer, mappingsPosition);
@@ -1459,7 +1461,7 @@ public class RMObjectSerialization {
             }
 
             boolean hasFormatting = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             int formattingPosition = 0;
             String formatting = null;
             if (hasFormatting){
@@ -1471,7 +1473,7 @@ public class RMObjectSerialization {
             boolean hasHyperlink = buffer.readBoolean(position);
             int hyperlinkPosition = 0;
             DVURI hyperlink = null;
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             if (hasHyperlink){
                 hyperlinkPosition = buffer.readInteger(position);
                 hyperlink = dvu.deserialize(buffer, hyperlinkPosition);
@@ -1653,7 +1655,7 @@ public class RMObjectSerialization {
                 DvCodedText purpose) {
             int meta = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize() +
-                    PrimitiveTypeSize.BOOLEAN.getSize();
+                    BOOLEAN.getSize();
             boolean hasPurpose = purpose != null;
             CodePhraseSerializer cps = new CodePhraseSerializer();
             MatchSerializer ms = new MatchSerializer();
@@ -1704,7 +1706,7 @@ public class RMObjectSerialization {
             }
 
             boolean hasPurpose = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             DvCodedText purpose = null;
             if (hasPurpose){
                 int purposePosition = buffer.readInteger(position);
@@ -1863,7 +1865,7 @@ public class RMObjectSerialization {
                 String terminal) {
             int meta = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize() +
-                    PrimitiveTypeSize.BOOLEAN.getSize();
+                    BOOLEAN.getSize();
             boolean hasTerminal = terminal != null;
 
             DvCodedTextSerializer dcs = new DvCodedTextSerializer();
@@ -1901,7 +1903,7 @@ public class RMObjectSerialization {
             DvCodedText value = dcs.deserialize(buffer, valuePosition);
 
             boolean hasTerminal = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             String terminal = null;
             if (hasTerminal){
                 int terminalPosition = buffer.readInteger(position);
@@ -1983,7 +1985,7 @@ public class RMObjectSerialization {
                 String versionID) {
             int meta = offset;
             int position = offset + (6 * PrimitiveTypeSize.INT.getSize())+
-                    5 * PrimitiveTypeSize.BOOLEAN.getSize();
+                    5 * BOOLEAN.getSize();
             PartyIdentifiedSerializer pis = new PartyIdentifiedSerializer();
             PartyProxySerializer pps = new PartyProxySerializer();
 
@@ -2062,7 +2064,7 @@ public class RMObjectSerialization {
                     = stringDeserialization(buffer, systemIDPosition);
 
             boolean hasProvider = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             PartyIdentified provider = null;
             if (hasProvider){
                 int providerPosition = buffer.readInteger(position);
@@ -2071,7 +2073,7 @@ public class RMObjectSerialization {
             }
 
             boolean hasLocation = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             PartyIdentified location = null;
             if (hasLocation){
                 int locationPosition = buffer.readInteger(position);
@@ -2080,13 +2082,13 @@ public class RMObjectSerialization {
             }
 
             boolean hasTime = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             if (hasTime){
                 //TODO
             }
 
             boolean hasSubject = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             PartyProxy subject = null;
             if (hasSubject){
                 int subjectPosition = buffer.readInteger(position);
@@ -2095,7 +2097,7 @@ public class RMObjectSerialization {
             }
 
             boolean hasVersionID = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             String versionID = null;
             if (hasVersionID){
                 int versionIDPosition = buffer.readInteger(position);
@@ -2120,7 +2122,7 @@ public class RMObjectSerialization {
         ) {
             int meta = offset;
             int position = offset + (4 * PrimitiveTypeSize.INT.getSize()) +
-                    4 * PrimitiveTypeSize.BOOLEAN.getSize();
+                    4 * BOOLEAN.getSize();
             FeederAuditDetailsSerializer fas
                     = new FeederAuditDetailsSerializer();
             meta = writeHeader(buffer, meta, position);
@@ -2194,7 +2196,7 @@ public class RMObjectSerialization {
             position += PrimitiveTypeSize.INT.getSize();
 
             boolean hasOriginatingSystemItemIDs = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             List<DvIdentifier> originatingSystemItemIDs = null;
             if (hasOriginatingSystemItemIDs){
                 int feederSystemItemIDsPosition = buffer.readInteger(position);
@@ -2204,7 +2206,7 @@ public class RMObjectSerialization {
             }
 
             boolean hasFeederSystemAudit = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             FeederAuditDetails feederSystemAudit = null;
             if (hasFeederSystemAudit){
                 int hasFeederSystemAuditPosition = buffer.readInteger(position);
@@ -2214,7 +2216,7 @@ public class RMObjectSerialization {
             }
 
             boolean hasFeederSystemItemIDs = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             List<DvIdentifier> feederSystemItemIDs = null;
             if (hasFeederSystemItemIDs){
                 int feederSystemItemIDsPosition = buffer.readInteger(position);
@@ -2224,7 +2226,7 @@ public class RMObjectSerialization {
             }
 
             boolean hasOriginalContent = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             DvEncapsulated originalContent = null;
             if (hasOriginalContent){
                 int originalContentPosition = buffer.readInteger(position);
@@ -2246,7 +2248,7 @@ public class RMObjectSerialization {
                 Set<Link> links) {
 
             int position = offset + (6 * PrimitiveTypeSize.INT.getSize())+ 5 *
-                    PrimitiveTypeSize.BOOLEAN.getSize();
+                    BOOLEAN.getSize();
             int meta = offset;
 
             UIDBasedIDSerializer uids = new UIDBasedIDSerializer();
@@ -2319,7 +2321,7 @@ public class RMObjectSerialization {
             LinkSerializer ls = new LinkSerializer();
 
             boolean hasUid = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             UIDBasedID uid = null;
             if (hasUid){
                 int uidPosition = buffer.readInteger(position);
@@ -2337,7 +2339,7 @@ public class RMObjectSerialization {
             DvText name = dts.deserialize(buffer, namePosition);
 
             boolean hasArchetypeDetails = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             Archetyped archetypeDetails = null;
             if (hasArchetypeDetails){
                 int archetypeDetailsPosition = buffer.readInteger(position);
@@ -2347,7 +2349,7 @@ public class RMObjectSerialization {
             }
 
             boolean hasFeederAudit = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             FeederAudit feederAudit = null;
             if (hasFeederAudit){
                 int hasFeederAuditPosition = buffer.readInteger(position);
@@ -2356,7 +2358,7 @@ public class RMObjectSerialization {
             }
 
             boolean hasLinks = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             Set<Link> links = null;
             if (hasLinks){
                 int linksPosition = buffer.readInteger(position);
@@ -2375,7 +2377,7 @@ public class RMObjectSerialization {
                 DvCodedText relationship) {
             int meta = offset;
             int position = offset + (2 * PrimitiveTypeSize.INT.getSize())
-                    + PrimitiveTypeSize.BOOLEAN.getSize();
+                    + BOOLEAN.getSize();
             PartyIdentifiedSerializer pis = new PartyIdentifiedSerializer();
             DvCodedTextSerializer dts = new DvCodedTextSerializer();
 
@@ -2413,7 +2415,7 @@ public class RMObjectSerialization {
             DvCodedTextSerializer dts = new DvCodedTextSerializer();
 
             boolean hasPi = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             PartyIdentified pi = null;
             if (hasPi){
                 int piPosition = buffer.readInteger(position);
@@ -2434,7 +2436,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset,
                 PartyRef externalRef) {
             int position = offset + PrimitiveTypeSize.INT.getSize()
-                    + PrimitiveTypeSize.BOOLEAN.getSize();
+                    + BOOLEAN.getSize();
             int meta = offset;
             PartyRefSerializer prs = new PartyRefSerializer();
 
@@ -2461,7 +2463,7 @@ public class RMObjectSerialization {
         protected PartySelf deserialize(Buffer buffer, int offset){
             int position = offset;
             boolean hasExternalRef = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
 
             PartyRefSerializer prs = new PartyRefSerializer();
 
@@ -2484,7 +2486,7 @@ public class RMObjectSerialization {
                 Map<String, String> otherDetails)
                  {
             int position = offset + 8 * PrimitiveTypeSize.INT.getSize() +
-                    3 * PrimitiveTypeSize.BOOLEAN.getSize();
+                    3 * BOOLEAN.getSize();
 
             int meta = offset;
             CodePhraseSerializer cps = new CodePhraseSerializer();
@@ -2555,7 +2557,6 @@ public class RMObjectSerialization {
             int position = offset;
 
             int languagePosition = buffer.readInteger(position);
-            System.out.println(languagePosition);
             position += PrimitiveTypeSize.INT.getSize();
             CodePhraseSerializer cps = new CodePhraseSerializer();
             CodePhrase language = cps.deserialize(buffer, languagePosition);
@@ -2566,7 +2567,7 @@ public class RMObjectSerialization {
                     buffer, purposePosition);
 
             boolean hasKeywords = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             List<String> keywords = null;
             if (hasKeywords){
                 int keywordsPosition = buffer.readInteger(position);
@@ -2588,7 +2589,7 @@ public class RMObjectSerialization {
                     buffer, copyrightPosition);
 
             boolean hasOriginalResourceUri = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             Map<String, String> originalResourceUri = null;
             if (hasOriginalResourceUri){
                 int originalResourceUriPosition = buffer.readInteger(position);
@@ -2598,7 +2599,7 @@ public class RMObjectSerialization {
             }
 
             boolean hasOtherDetails = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             Map<String, String> otherDetails = null;
             if (hasOtherDetails){
                 int otherDetailsPosition = buffer.readInteger(position);
@@ -2664,7 +2665,7 @@ public class RMObjectSerialization {
                  {
             int meta = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize() +
-                    2 * PrimitiveTypeSize.BOOLEAN.getSize();
+                    2 * BOOLEAN.getSize();
             CodePhraseSerializer cps = new CodePhraseSerializer();
 
             if (language == null){
@@ -2728,7 +2729,7 @@ public class RMObjectSerialization {
                     buffer, authorPosition);
 
             boolean hasAccreditation = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             String accreditation = null;
             if (hasAccreditation){
                 int accreditationPosition = buffer.readInteger(position);
@@ -2738,7 +2739,7 @@ public class RMObjectSerialization {
             }
 
             boolean hasOtherDetails = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             Map<String, String> otherDetails = null;
             if (hasOtherDetails){
                 int otherDetailsPosition = buffer.readInteger(position);
@@ -3089,7 +3090,7 @@ public class RMObjectSerialization {
                 List<Element> items) {
             int meta = offset;
             int position = offset + (7 * PrimitiveTypeSize.INT.getSize()) +
-                    5 * PrimitiveTypeSize.BOOLEAN.getSize();
+                    5 * BOOLEAN.getSize();
 
             UIDBasedIDSerializer us = new UIDBasedIDSerializer();
             DvTextSerializer dts = new DvTextSerializer();
@@ -3172,7 +3173,7 @@ public class RMObjectSerialization {
             ElementSerializer es = new ElementSerializer();
 
             boolean hasUId = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             UIDBasedID uid = null;
             if (hasUId){
                 int uidPosition = buffer.readInteger(position);
@@ -3190,7 +3191,7 @@ public class RMObjectSerialization {
             DvText name = dts.deserialize(buffer, namePosition);
 
             boolean hasArchetypeDetails = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             Archetyped archetypeDetails = null;
             if (hasArchetypeDetails){
                 int archetypeDetailsPosition = buffer.readInteger(position);
@@ -3200,7 +3201,7 @@ public class RMObjectSerialization {
             }
 
             boolean hasFeederAudit = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             FeederAudit feederAudit = null;
             if (hasFeederAudit){
                 int feederAuditPosition = buffer.readInteger(position);
@@ -3209,7 +3210,7 @@ public class RMObjectSerialization {
             }
 
             boolean hasLinks = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             Set<Link> links = null;
             if (hasLinks){
                 int linksPosition = buffer.readInteger(position);
@@ -3218,7 +3219,7 @@ public class RMObjectSerialization {
             }
 
             boolean hasItems = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             List<Element> items = null;
             if (hasItems){
                 int itemsPosition = buffer.readInteger(position);
@@ -3360,7 +3361,7 @@ public class RMObjectSerialization {
                 List<Item> items) {
             int meta = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize() +
-                    PrimitiveTypeSize.BOOLEAN.getSize();
+                    BOOLEAN.getSize();
             ItemStructureSerializer iss = new ItemStructureSerializer();
             ItemSerializer isr = new ItemSerializer();
 
@@ -3399,7 +3400,7 @@ public class RMObjectSerialization {
             ItemStructure is = iss.deserialize(buffer, itemStructurePosition);
 
             boolean hasItems = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             List<Item> items = null;
             if (hasItems){
                 int itemsPosition = buffer.readInteger(position);
@@ -3795,7 +3796,7 @@ public class RMObjectSerialization {
             int meta = offset;
             int position = offset + 6 *
                     PrimitiveTypeSize.INT.getSize()+
-                    PrimitiveTypeSize.BOOLEAN.getSize();
+                    BOOLEAN.getSize();
 
             LocatableSerializer ls = new LocatableSerializer();
             ContactSerializer cs = new ContactSerializer();
@@ -3877,7 +3878,7 @@ public class RMObjectSerialization {
                     buffer, reverseRelationshipsPosition);
             
             boolean hasDetails = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             ItemStructure details = null;
             if(hasDetails){
                 int detailsPosition = buffer.readInteger(position);
@@ -3982,7 +3983,7 @@ public class RMObjectSerialization {
                 PartyRef performer){
             int meta = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize() +
-                    2 * PrimitiveTypeSize.BOOLEAN.getSize();
+                    2 * BOOLEAN.getSize();
             
             PartySerializer ps = new PartySerializer();
             CapabilitySerializer cs = new CapabilitySerializer();
@@ -4029,7 +4030,7 @@ public class RMObjectSerialization {
             Party party = ps.deserialize(buffer, partyPosition);
             
             boolean hasCapabilities = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             List<Capability> capabilities = null;
             if(hasCapabilities){
                 int capabilitiesPosition = buffer.readInteger(position);
@@ -4276,7 +4277,7 @@ public class RMObjectSerialization {
                 ItemStructure wfDetails) {
             int meta = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize() +
-                    PrimitiveTypeSize.BOOLEAN.getSize();
+                    BOOLEAN.getSize();
             
             LocatableRefSerializer lrs = new LocatableRefSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
@@ -4327,7 +4328,7 @@ public class RMObjectSerialization {
                     buffer, activityIdPosition);
             
             boolean hasWfDetails = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             ItemStructure wfDetails = null;
             if(hasWfDetails){
                 int wfDetailsPosition = buffer.readInteger(position);
@@ -4345,7 +4346,7 @@ public class RMObjectSerialization {
                 DvCodedText careflowStep){
             int meta = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize() +
-                    2 * PrimitiveTypeSize.BOOLEAN.getSize();
+                    2 * BOOLEAN.getSize();
             
             DvCodedTextSerializer dcs = new DvCodedTextSerializer();
             
@@ -4392,7 +4393,7 @@ public class RMObjectSerialization {
                     buffer, currentStatePosition);
             
             boolean hasTransition = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             DvCodedText transition = null;
             if(hasTransition){
                 int transitionPosition = buffer.readInteger(position);
@@ -4401,7 +4402,7 @@ public class RMObjectSerialization {
             }
             
             boolean hasCareflowStep = buffer.readBoolean(position);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             DvCodedText careflowStep = null;
             if(hasCareflowStep){
                 int careflowStepPosition = buffer.readInteger(position);
@@ -4446,7 +4447,8 @@ public class RMObjectSerialization {
             int position = offset;
             ActivitySerializer as = new ActivitySerializer();
             
-            position = as.serialize(buffer, position, a);
+            position = as.serialize(buffer, position, a.getLocatable(),
+                    a.getDescription(), a.getTiming(), a.getActionArchetypeId());
             
             return position;
         }
@@ -4477,6 +4479,297 @@ public class RMObjectSerialization {
             
             return RMObjectFactory.newActivity(locatable, description, 
                     timing, actionArchetypeId);
+        }
+    }
+
+    public static class IntervalSerializer {
+        protected int serialize(Buffer buffer, int offset, DvOrdered lower,
+                                DvOrdered upper){
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize() +
+                    2 * PrimitiveTypeSize.BOOLEAN.getSize();
+            int meta = offset;
+
+            boolean hasLower = lower != null;
+            boolean hasUpper = upper != null;
+
+            DvOrderedSerializer ds = new DvOrderedSerializer();
+            meta = writeHeader(buffer, meta, hasLower, position);
+            position = ds.serialize(buffer, position, lower);
+
+            writeHeader(buffer, meta, hasUpper, position);
+            position = ds.serialize(buffer, position, upper);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, Interval interval){
+            int position = offset;
+
+            IntervalSerializer is = new IntervalSerializer();
+            position = is.serialize(buffer, position, interval.getLower(),
+                    interval.getUpper());
+
+            return position;
+        }
+
+        protected Interval deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            DvOrderedSerializer dos = new DvOrderedSerializer();
+
+            boolean hasLower = buffer.readBoolean(offset);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvOrdered lower = null;
+            if(hasLower){
+                int lowerPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                lower = dos.deserialize(buffer, lowerPosition);
+            }
+
+            boolean hasUpper = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvOrdered upper = null;
+            if(hasUpper){
+                int upperPosition = buffer.readInteger(position);
+                upper = dos.deserialize(buffer, upperPosition);
+            }
+
+            return RMObjectFactory.newInterval(lower, upper);
+        }
+    }
+
+    public static class DvIntervalSerializer {
+        protected int serialize(Buffer buffer, int offset, DvOrdered lower,
+                                DvOrdered upper){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize() +
+                    2 * PrimitiveTypeSize.BOOLEAN.getSize();
+            boolean hasLower = lower != null;
+            boolean hasUpper = upper != null;
+
+            if(lower == null && upper == null){
+                return offset;
+            }
+
+            DvOrderedSerializer dos = new DvOrderedSerializer();
+            meta = writeHeader(buffer, meta, hasLower, position);
+            position = dos.serialize(buffer, position, lower);
+
+            writeHeader(buffer, meta, hasUpper, position);
+            position = dos.serialize(buffer, position, upper);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, DvInterval dvInterval){
+            int position = offset;
+            DvIntervalSerializer dis = new DvIntervalSerializer();
+            if(dvInterval == null){
+                return offset;
+            }
+            if(dvInterval.getInterval().getLower() == null ||
+                    dvInterval.getInterval().getUpper() == null){
+                return position;
+            }
+            position = dis.serialize(buffer, position, dvInterval.getInterval().
+                    getLower(), dvInterval.getInterval().getUpper());
+
+            return position;
+        }
+
+        protected DvInterval deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            DvOrderedSerializer dos = new DvOrderedSerializer();
+            boolean hasLower = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            DvOrdered lower = null;
+            if(hasLower){
+                int lowerPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                lower = dos.deserialize(buffer, lowerPosition);
+            }
+            boolean hasUpper = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            DvOrdered upper = null;
+            if(hasUpper){
+                int upperPosition = buffer.readInteger(position);
+                upper = dos.deserialize(buffer, upperPosition);
+            }
+
+            return RMObjectFactory.newDvInterval(lower, upper);
+        }
+    }
+
+    public static class ReferenceRangeSerializer {
+        protected int serialize(Buffer buffer, int offset, DvText meaning,
+                                DvInterval range){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
+            DvIntervalSerializer dis = new DvIntervalSerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, meaning);
+
+            writeHeader(buffer, meta, position);
+            position = dis.serialize(buffer, position, range);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, ReferenceRange range){
+            int position = offset;
+            ReferenceRangeSerializer rrs = new ReferenceRangeSerializer();
+
+            if(range == null){
+                return position;
+            }
+
+            position = rrs.serialize(buffer, position, range.getMeaning(),
+                    range.getRange());
+
+            return position;
+        }
+
+        protected ReferenceRange deserialize(Buffer buffer, int offset){
+            int position = offset;
+            DvIntervalSerializer dis = new DvIntervalSerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+
+            int meaningPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvText meaning = dts.deserialize(buffer, meaningPosition);
+
+            int rangePosition = buffer.readInteger(position);
+            DvInterval range = dis.deserialize(buffer, rangePosition);
+
+            return RMObjectFactory.newReferenceRange(meaning, range);
+        }
+
+        protected int listSerialize(
+                Buffer buffer, int offset, List<ReferenceRange> items) {
+            if(items.size() > 0 && (!items.get(0).getRange().getInterval().
+                    isUpperIncluded() && !items.get(0).getRange().getInterval().
+                    isLowerIncluded())){
+                return offset;
+            }
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            ReferenceRangeSerializer rrs = new ReferenceRangeSerializer();
+
+            for (ReferenceRange r : items){
+                meta = writeHeader(buffer, meta, position);
+                position = rrs.serialize(buffer, position, r);
+            }
+
+            return position;
+        }
+
+        protected List<ReferenceRange> deserializeList(Buffer buffer, int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            List<ReferenceRange> list = new ArrayList<>();
+            ReferenceRangeSerializer rrs = new ReferenceRangeSerializer();
+
+            for (int i = 0; i < listSize; i++){
+                int referenceRangePosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                ReferenceRange r = rrs.deserialize(buffer, referenceRangePosition);
+                list.add(r);
+            }
+
+            return list;
+        }
+    }
+
+    public static class DvOrderedSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                List<ReferenceRange> otherReferenceRanges,
+                                DvInterval normalRange,
+                                CodePhrase normalStatus){
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize() +
+                    3 * PrimitiveTypeSize.BOOLEAN.getSize();
+            int meta = offset;
+
+            boolean hasOtherReferenceRanges = otherReferenceRanges != null;
+            boolean hasNormalRange = normalRange != null;
+            boolean hasNormalStatus = normalStatus != null;
+
+            ReferenceRangeSerializer rrs = new ReferenceRangeSerializer();
+            DvIntervalSerializer dis = new DvIntervalSerializer();
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+
+            meta = writeHeader(buffer, meta, hasOtherReferenceRanges, position);
+            position = rrs.listSerialize(buffer, position, otherReferenceRanges);
+
+            meta = writeHeader(buffer, meta, hasNormalRange, position);
+            position = dis.serialize(buffer, position, normalRange);
+
+            writeHeader(buffer, meta, hasNormalStatus, position);
+            position = cps.serialize(buffer, position, normalStatus);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, DvOrdered dvOrdered){
+            int position = offset;
+            DvOrderedSerializer dos = new DvOrderedSerializer();
+
+            position = dos.serialize(buffer, position,
+                    dvOrdered.getOtherReferenceRanges(),
+                    dvOrdered.getNormalRange(),
+                    dvOrdered.getNormalStatus());
+
+            return position;
+        }
+
+        protected DvOrdered deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            ReferenceRangeSerializer rrs = new ReferenceRangeSerializer();
+            DvIntervalSerializer dis = new DvIntervalSerializer();
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+
+            boolean hasOtherReferenceRanges = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            List<ReferenceRange> otherReferenceRanges = null;
+            if(hasOtherReferenceRanges){
+                int otherReferenceRangesPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                otherReferenceRanges = rrs.deserializeList(buffer,
+                        otherReferenceRangesPosition);
+            }
+
+            boolean hasNormalRange = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvInterval normalRange = null;
+            if(hasNormalRange){
+                int normalRangePosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                normalRange = dis.deserialize(buffer, normalRangePosition);
+            }
+
+            boolean hasNormalStatus = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            CodePhrase normalStatus = null;
+            if(hasNormalStatus){
+                int normalStatusPosition = buffer.readInteger(position);
+                normalStatus = cps.deserialize(buffer, normalStatusPosition);
+            }
+
+
+            return RMObjectFactory.newDvOrdered(otherReferenceRanges,
+                    normalRange, normalStatus);
         }
     }
     
@@ -4670,7 +4963,7 @@ public class RMObjectSerialization {
     private static int writeHeader(Buffer buffer, int offset, boolean exists){
         int position = offset;
         buffer.writeBoolean(offset, exists);
-        return position + PrimitiveTypeSize.BOOLEAN.getSize();
+        return position + BOOLEAN.getSize();
     }
 
     /**
@@ -4688,13 +4981,13 @@ public class RMObjectSerialization {
         int position = offset;
         if (exists){
             buffer.writeBoolean(position, exists);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
             buffer.writeInteger(position, value);
 
             position += PrimitiveTypeSize.INT.getSize();
         } else {
             buffer.writeBoolean(position, exists);
-            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            position += BOOLEAN.getSize();
         }
         return position;
     }

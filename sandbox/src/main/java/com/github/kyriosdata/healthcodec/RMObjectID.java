@@ -85,7 +85,11 @@ public enum RMObjectID {
     INSTRUCTIONDETAILS(63),
     ISMTRANSITION(64),
     ACTIVITY(65),
-    UID(66);
+    UID(66),
+    INTERVAL(67),
+    DVINTERVAL(68),
+    REFERENCERANGE(69),
+    DVORDERED(70);
     
     private final int value;
 

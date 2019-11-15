@@ -454,4 +454,16 @@ public interface Deserializer {
      * @return nova instância de Activity
      */
     RMObject.Activity deserializeActivity();
+
+    /**
+     * Deserializador de DvOrdered.
+     * @return nova instância de DvOrdered.
+     */
+    RMObject.DvOrdered deserializeDvOrdered();
+
+    /**
+     * Deserializador de DvInterval.
+     * @return nova instância de DvInterval
+     */
+    RMObject.DvInterval deserializeDvInterval();
 }

@@ -683,4 +683,22 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeActivity(
             Activity a);
+
+    /**
+     * Serializador de DvOrdered.
+     *
+     * @param d
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeDvOrdered(DvOrdered d);
+
+    /**
+     * Serializador de DvInterval.
+     *
+     * @param d
+     * @return Instância de RMObjectSerializationClient para chaining
+     * @throws UnsupportedEncodingException
+     */
+    RMObjectSerializationClient serializeDvInterval(DvInterval d);
 }

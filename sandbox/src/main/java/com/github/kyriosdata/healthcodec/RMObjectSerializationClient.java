@@ -1934,7 +1934,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         
         return this;
     }
-    
+
     /**
      * Deserializador de Activity
      * 
@@ -1945,7 +1945,59 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         ActivitySerializer d = new ActivitySerializer();
         return d.deserialize(buffer, getOffsetFromID(ACTIVITY));
     }
-    
+
+    /**
+     * Serializador de DvOrdered
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvOrdered(DvOrdered d) {
+        DvOrderedSerializer s = new DvOrderedSerializer();
+        register(DVORDERED, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvOrdered
+     *
+     * @return nova instância de DvOrdered
+     */
+    @Override
+    public DvOrdered deserializeDvOrdered() {
+        DvOrderedSerializer d = new DvOrderedSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVORDERED));
+    }
+
+    /**
+     * Serializador de DvInterval
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvInterval(DvInterval d) {
+        DvIntervalSerializer s = new DvIntervalSerializer();
+        register(DVINTERVAL, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvInterval
+     *
+     * @return nova instância de DvInterval
+     */
+    @Override
+    public DvInterval deserializeDvInterval() {
+        DvIntervalSerializer d = new DvIntervalSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVINTERVAL));
+    }
+
     /**
      * Método para registrar um determinado objeto no índice
      * 
@@ -1981,5 +2033,9 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     private void setOffset(int pos) {
         this.offset = pos;
+    }
+
+    public byte[] getBuffer(){
+        return buffer.data();
     }
 }
