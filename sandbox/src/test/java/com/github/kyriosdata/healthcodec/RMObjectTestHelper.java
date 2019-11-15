@@ -841,6 +841,13 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newReferenceRange(meaning, range);
     }
 
+    public static DvQuantified dvQuantified(){
+        DvOrdered dvOrdered = dvOrdered();
+        String magnitudeStatus = "magnitudeStatus";
+
+        return RMObjectFactory.newDvQuantified(dvOrdered, magnitudeStatus);
+    }
+
     /**
      * Método que gera uma lista de DvIdentifier
      *

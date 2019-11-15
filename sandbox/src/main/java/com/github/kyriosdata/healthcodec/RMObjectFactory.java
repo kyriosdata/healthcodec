@@ -403,4 +403,9 @@ public class RMObjectFactory {
             CodePhrase normalStatus){
         return new DvOrdered(otherReferenceRanges, normalRange, normalStatus);
     }
+
+    public static DvQuantified newDvQuantified(DvOrdered dvOrdered,
+                                               String magnitudeStatus){
+        return new DvQuantified(dvOrdered, magnitudeStatus);
+    }
 }

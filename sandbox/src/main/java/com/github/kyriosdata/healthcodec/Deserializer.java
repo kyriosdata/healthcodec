@@ -466,4 +466,10 @@ public interface Deserializer {
      * @return nova instância de DvInterval
      */
     RMObject.DvInterval deserializeDvInterval();
+
+    /**
+     * Deserializador de DvQuantified.
+     * @return nova instância de DvInterval
+     */
+    RMObject.DvQuantified deserializeDvQuantified();
 }

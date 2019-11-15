@@ -4904,6 +4904,53 @@ public class RMObjectSerialization {
         return position;
     }
 
+    public static class DvQuantifiedSerializer {
+        protected int serialize(Buffer buffer, int offset, DvOrdered dvOrdered,
+                                String magnitudeStatus){
+            int meta = offset;
+            int position = 2 * PrimitiveTypeSize.INT.getSize() +
+                    PrimitiveTypeSize.BOOLEAN.getSize();
+            DvOrderedSerializer dos = new DvOrderedSerializer();
+            boolean hasMagnitudeStatus = magnitudeStatus != null;
+
+            meta = writeHeader(buffer, meta, position);
+            position = dos.serialize(buffer, position, dvOrdered);
+            writeHeader(buffer, meta, hasMagnitudeStatus, position);
+            position = stringSerialization(buffer, position, magnitudeStatus);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, DvQuantified d){
+            int position = offset;
+            DvQuantifiedSerializer dqs = new DvQuantifiedSerializer();
+            dqs.serialize(buffer, position, d.getDvOrdered(),
+                    d.getMagnitudeStatus());
+
+            return position;
+        }
+
+        protected DvQuantified deserialize(Buffer buffer, int offset){
+            int position = offset;
+            DvOrderedSerializer dos = new DvOrderedSerializer();
+
+            int dvOrederedPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvOrdered dvOrdered = dos.deserialize(buffer, dvOrederedPosition);
+
+            boolean hasMagnitudeStatus = buffer.readBoolean(position);
+            position +=PrimitiveTypeSize.BOOLEAN.getSize();
+            String magnitudeStatus = null;
+            if(hasMagnitudeStatus){
+                int magnitudeStatusPosition = buffer.readInteger(position);
+                magnitudeStatus = stringDeserialization(buffer,
+                        magnitudeStatusPosition);
+            }
+
+            return RMObjectFactory.newDvQuantified(dvOrdered, magnitudeStatus);
+        }
+    }
+
     /**
      * Deserializa um map de Strings
      *

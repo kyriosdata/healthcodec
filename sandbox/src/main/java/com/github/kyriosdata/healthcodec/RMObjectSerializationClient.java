@@ -1999,6 +1999,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de DvQuantified.
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvQuantified(DvQuantified d) {
+        DvQuantifiedSerializer s = new DvQuantifiedSerializer();
+        register(DVQUANTIFIED, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvQuantified
+     *
+     * @return nova instância de DvQuantified
+     */
+    @Override
+    public DvQuantified deserializeDvQuantified() {
+        DvQuantifiedSerializer d = new DvQuantifiedSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVQUANTIFIED));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id

@@ -15,7 +15,6 @@
 package com.github.kyriosdata.healthcodec;
 
 import com.github.kyriosdata.healthcodec.RMObject.*;
-import java.io.UnsupportedEncodingException;
 
 /**
  *
@@ -36,7 +35,7 @@ public interface Serializer {
      *
      * @param d
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeDvIdentifier(DvIdentifier d);
 
@@ -45,7 +44,7 @@ public interface Serializer {
      *
      * @param i
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeInternetID(InternetID i);
     
@@ -54,7 +53,7 @@ public interface Serializer {
      *
      * @param u
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeUID(UID u);
     
@@ -63,7 +62,7 @@ public interface Serializer {
      *
      * @param i
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeISOOID(ISO_OID i);
 
@@ -72,7 +71,7 @@ public interface Serializer {
      *
      * @param u
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeUUID(UUID u);
 
@@ -81,7 +80,7 @@ public interface Serializer {
      *
      * @param t
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeTerminologyID(TerminologyID t);
 
@@ -90,7 +89,7 @@ public interface Serializer {
      *
      * @param g
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeGenericID(
             GenericID g);
@@ -100,7 +99,7 @@ public interface Serializer {
      *
      * @param t
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeTemplateID(
             TemplateID t);
@@ -110,7 +109,7 @@ public interface Serializer {
      *
      * @param c
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeCodePhrase(
             CodePhrase c);
@@ -120,7 +119,7 @@ public interface Serializer {
      *
      * @param d
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeDVURI(
             DVURI d);
@@ -130,7 +129,7 @@ public interface Serializer {
      *
      * @param d
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeDVEHRURI(
             DVEHRURI d);
@@ -150,7 +149,7 @@ public interface Serializer {
      *
      * @param a
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeArchetypeID(
             ArchetypeID a);
@@ -160,7 +159,7 @@ public interface Serializer {
      *
      * @param o
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeObjectVersionID(
             ObjectVersionID o);
@@ -170,7 +169,7 @@ public interface Serializer {
      *
      * @param h
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeHierObjectID(
             HierObjectID h);
@@ -180,7 +179,7 @@ public interface Serializer {
      *
      * @param o
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeObjectID(
             ObjectID o);
@@ -190,7 +189,7 @@ public interface Serializer {
      *
      * @param p
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializePartyRef(
             PartyRef p);
@@ -200,7 +199,7 @@ public interface Serializer {
      *
      * @param o
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeObjectRef(
             ObjectRef o);
@@ -210,7 +209,7 @@ public interface Serializer {
      *
      * @param l
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeLocatableRef(
             LocatableRef l);
@@ -237,7 +236,7 @@ public interface Serializer {
      *
      * @param p
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializePartyIdentified(
             PartyIdentified p);
@@ -247,7 +246,7 @@ public interface Serializer {
      *
      * @param a
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeArchetyped(
             Archetyped a);
@@ -257,7 +256,7 @@ public interface Serializer {
      *
      * @param d
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeDvEncapsulated(
             DvEncapsulated d);
@@ -267,7 +266,7 @@ public interface Serializer {
      *
      * @param u
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeUIDBasedID(
             UIDBasedID u);
@@ -277,7 +276,7 @@ public interface Serializer {
      *
      * @param d
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeDvParsable(
             DvParsable d);
@@ -287,7 +286,7 @@ public interface Serializer {
      *
      * @param d
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeDvTimeSpecification(
             DvTimeSpecification d);
@@ -297,7 +296,7 @@ public interface Serializer {
      *
      * @param d
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeDvMultimedia(
             DvMultimedia d);
@@ -307,7 +306,7 @@ public interface Serializer {
      *
      * @param d
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeDvText(
             DvText d);
@@ -317,7 +316,7 @@ public interface Serializer {
      *
      * @param d
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeDvCodedText(
             DvCodedText d);
@@ -327,7 +326,7 @@ public interface Serializer {
      *
      * @param t
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeTermMapping(
             TermMapping t);
@@ -337,7 +336,7 @@ public interface Serializer {
      *
      * @param l
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeLink(
             Link l);
@@ -347,7 +346,7 @@ public interface Serializer {
      *
      * @param d
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeDvState(
             DvState d);
@@ -357,7 +356,7 @@ public interface Serializer {
      *
      * @param d
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeDvParagraph(
             DvParagraph d);
@@ -368,7 +367,7 @@ public interface Serializer {
      *
      * @param p
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializePartyProxy(
             PartyProxy p);
@@ -379,7 +378,7 @@ public interface Serializer {
      *
      * @param f
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeFeederAuditDetails(
             FeederAuditDetails f);
@@ -389,7 +388,7 @@ public interface Serializer {
      * 
      * @param f
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeFeederAudit(
             FeederAudit f);
@@ -399,7 +398,7 @@ public interface Serializer {
      * 
      * @param l
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeLocatable(
             Locatable l);
@@ -409,7 +408,7 @@ public interface Serializer {
      * 
      * @param p
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializePartyRelated(
             PartyRelated p);
@@ -419,7 +418,7 @@ public interface Serializer {
      * 
      * @param p
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializePartySelf(
             PartySelf p);
@@ -430,7 +429,7 @@ public interface Serializer {
      * 
      * @param r
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeResourceDescriptionItem(
             ResourceDescriptionItem r);
@@ -440,7 +439,7 @@ public interface Serializer {
      * 
      * @param t
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeTranslationDetails(
             TranslationDetails t);
@@ -450,7 +449,7 @@ public interface Serializer {
      * 
      * @param i
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeItem(
             Item i);
@@ -460,7 +459,7 @@ public interface Serializer {
      * 
      * @param c
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeCluster(
             Cluster c);
@@ -470,7 +469,7 @@ public interface Serializer {
      * 
      * @param e
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeElement(
             Element e);
@@ -480,7 +479,7 @@ public interface Serializer {
      * 
      * @param d
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeDataStructure(
             DataStructure d);
@@ -490,7 +489,7 @@ public interface Serializer {
      * 
      * @param i
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeItemList(
             ItemList i);
@@ -499,7 +498,7 @@ public interface Serializer {
      * Serializador de ItemStructure
      * @param i
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeItemStructure(
             ItemStructure i);
@@ -509,7 +508,7 @@ public interface Serializer {
      * 
      * @param i
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeItemSingle(
             ItemSingle i);
@@ -519,7 +518,7 @@ public interface Serializer {
      * 
      * @param i
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeItemTable(
             ItemTable i); 
@@ -529,7 +528,7 @@ public interface Serializer {
      * 
      * @param i
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeItemTree(
             ItemTree i); 
@@ -539,7 +538,7 @@ public interface Serializer {
      * 
      * @param p
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializePartyIdentity(PartyIdentity p)
                ; 
@@ -549,7 +548,7 @@ public interface Serializer {
      * 
      * @param p
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializePartyRelationship(
             PartyRelationship p); 
@@ -559,7 +558,7 @@ public interface Serializer {
      * 
      * @param a
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeAddress(
             Address a); 
@@ -569,7 +568,7 @@ public interface Serializer {
      * 
      * @param c
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeContact(
             Contact c); 
@@ -579,7 +578,7 @@ public interface Serializer {
      * 
      * @param p
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeParty(
             Party p); 
@@ -589,7 +588,7 @@ public interface Serializer {
      * 
      * @param c
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeCapability(
             Capability c); 
@@ -599,7 +598,7 @@ public interface Serializer {
      * 
      * @param r
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeRole(
             Role r); 
@@ -609,7 +608,7 @@ public interface Serializer {
      * 
      * @param a
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws java.io.UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeActor(
             Actor a);
@@ -619,7 +618,7 @@ public interface Serializer {
      * 
      * @param a
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeAgent(
             Agent a);
@@ -629,7 +628,7 @@ public interface Serializer {
      * 
      * @param g
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeGroup(
             Group g);
@@ -639,7 +638,7 @@ public interface Serializer {
      * 
      * @param o
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeOrganisation(
             Organisation o);
@@ -649,7 +648,7 @@ public interface Serializer {
      * 
      * @param p
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializePerson(Person p)
                ;
@@ -659,7 +658,7 @@ public interface Serializer {
      * 
      * @param id
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeinstructionDetails(
             InstructionDetails id);
@@ -669,7 +668,7 @@ public interface Serializer {
      * 
      * @param ism
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeISMTransition(
             ISMTransition ism);
@@ -679,7 +678,7 @@ public interface Serializer {
      * 
      * @param a
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException 
+     * 
      */
     RMObjectSerializationClient serializeActivity(
             Activity a);
@@ -689,7 +688,7 @@ public interface Serializer {
      *
      * @param d
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeDvOrdered(DvOrdered d);
 
@@ -698,7 +697,16 @@ public interface Serializer {
      *
      * @param d
      * @return Instância de RMObjectSerializationClient para chaining
-     * @throws UnsupportedEncodingException
+     *
      */
     RMObjectSerializationClient serializeDvInterval(DvInterval d);
+
+    /**
+     * Serializador de DvQuantified.
+     *
+     * @param d
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeDvQuantified(DvQuantified d);
 }

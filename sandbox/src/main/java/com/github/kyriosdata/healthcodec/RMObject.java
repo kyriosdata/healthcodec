@@ -14,6 +14,7 @@
  */
 package com.github.kyriosdata.healthcodec;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -1842,6 +1843,8 @@ public class RMObject {
                     throw new IllegalArgumentException(
                             "otherReferenceRanges vazio");
                 }
+                this.otherReferenceRanges =
+                        new ArrayList<ReferenceRange>(otherReferenceRanges);
             } else {
                 this.otherReferenceRanges = null;
             }
@@ -1927,6 +1930,24 @@ public class RMObject {
 
         public DvInterval getRange() {
             return range;
+        }
+    }
+
+    public static class DvQuantified {
+        private final DvOrdered dvOrdered;
+        private final String magnitudeStatus;
+
+        public DvQuantified(DvOrdered dvOrdered, String magnitudeStatus) {
+            this.dvOrdered = dvOrdered;
+            this.magnitudeStatus = magnitudeStatus;
+        }
+
+        public DvOrdered getDvOrdered() {
+            return dvOrdered;
+        }
+
+        public String getMagnitudeStatus() {
+            return magnitudeStatus;
         }
     }
 }
