@@ -709,4 +709,13 @@ public interface Serializer {
      *
      */
     RMObjectSerializationClient serializeDvQuantified(DvQuantified d);
+
+    /**
+     * Serializador de DvAmount.
+     *
+     * @param d
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeDvAmount(DvAmount d);
 }

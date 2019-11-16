@@ -90,7 +90,9 @@ public enum RMObjectID {
     DVINTERVAL(68),
     REFERENCERANGE(69),
     DVORDERED(70),
-    DVQUANTIFIED(71);
+    DVQUANTIFIED(71),
+    DVAMOUNT(72);
+
     
     private final int value;
 

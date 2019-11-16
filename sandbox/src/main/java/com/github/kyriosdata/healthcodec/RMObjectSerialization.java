@@ -4951,6 +4951,58 @@ public class RMObjectSerialization {
         }
     }
 
+    public static class DvAmountSerializer {
+        protected int serialize(Buffer buffer, int offset, DvOrdered dvOrdered,
+                                double accuracy, boolean accuracyPercent){
+            int meta = offset;
+            int position = 3 * PrimitiveTypeSize.INT.getSize();
+
+            DvOrderedSerializer dos = new DvOrderedSerializer();
+            meta = writeHeader(buffer, meta, position);
+            position = dos.serialize(buffer, position, dvOrdered);
+
+            meta = writeHeader(buffer, meta, position);
+            buffer.writeDouble(position, accuracy);
+            position += PrimitiveTypeSize.DOUBLE.getSize();
+
+            writeHeader(buffer, meta, position);
+            buffer.writeBoolean(position, accuracyPercent);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            return position;
+        }
+
+        protected  int serialize(Buffer buffer, int offset, DvAmount dvAmount){
+            int position = offset;
+            DvAmountSerializer das = new DvAmountSerializer();
+
+            position = das.serialize(buffer, position, dvAmount.getDvOrdered(),
+                    dvAmount.getAccuracy(), dvAmount.isAccuracyPercent());
+
+            return position;
+        }
+
+        protected DvAmount deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            DvOrderedSerializer dos = new DvOrderedSerializer();
+            int dvOrderedPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvOrdered dvOrdered = dos.deserialize(buffer, dvOrderedPosition);
+
+            int accuracyPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            double accuracy = buffer.readDouble(accuracyPosition);
+
+            int accuracyPercentPosition = buffer.readInteger(position);
+            boolean accuracyPercent = buffer.readBoolean(
+                    accuracyPercentPosition);
+
+            return RMObjectFactory.newDvAmount(dvOrdered, accuracy,
+                    accuracyPercent);
+        }
+    }
+
     /**
      * Deserializa um map de Strings
      *

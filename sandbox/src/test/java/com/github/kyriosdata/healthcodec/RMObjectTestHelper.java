@@ -848,6 +848,14 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newDvQuantified(dvOrdered, magnitudeStatus);
     }
 
+    public static DvAmount dvAmount(){
+        DvOrdered dvOrdered = dvOrdered();
+        double accuracy = 5.000000;
+        boolean accuracyPercent = true;
+
+        return RMObjectFactory.newDvAmount(dvOrdered, accuracy, accuracyPercent);
+    }
+
     /**
      * Método que gera uma lista de DvIdentifier
      *

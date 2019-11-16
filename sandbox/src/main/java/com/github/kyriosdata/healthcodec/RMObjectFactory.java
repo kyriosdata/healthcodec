@@ -408,4 +408,10 @@ public class RMObjectFactory {
                                                String magnitudeStatus){
         return new DvQuantified(dvOrdered, magnitudeStatus);
     }
+
+    public static DvAmount newDvAmount(DvOrdered dvOrdered,
+                                       double accuracy,
+                                       boolean accuracyPercent){
+        return new DvAmount(dvOrdered, accuracy, accuracyPercent);
+    }
 }

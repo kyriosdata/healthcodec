@@ -2025,6 +2025,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de DvAmount.
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvAmount(DvAmount d) {
+        DvAmountSerializer s = new DvAmountSerializer();
+        register(DVAMOUNT, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvAmount
+     *
+     * @return nova instância de DvAmount
+     */
+    @Override
+    public DvAmount deserializeDvAmount() {
+        DvAmountSerializer d = new DvAmountSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVAMOUNT));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id

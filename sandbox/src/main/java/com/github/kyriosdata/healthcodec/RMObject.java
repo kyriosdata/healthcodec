@@ -1721,7 +1721,7 @@ public class RMObject {
 
         private final Actor actor;
 
-        public Person(Actor actor) {
+        protected Person(Actor actor) {
             this.actor = actor;
         }
 
@@ -1736,7 +1736,7 @@ public class RMObject {
         private final String activityId;
         private final ItemStructure wfDetails;
 
-        public InstructionDetails(LocatableRef instructionId,
+        protected InstructionDetails(LocatableRef instructionId,
                 String activityId, ItemStructure wfDetails) {
             if (instructionId == null) {
                 throw new IllegalArgumentException("null instructionId");
@@ -1768,7 +1768,7 @@ public class RMObject {
         private final DvCodedText transition;
         private final DvCodedText careflowStep;
 
-        public ISMTransition(DvCodedText currentState,
+        protected ISMTransition(DvCodedText currentState,
                 DvCodedText transition, DvCodedText careflowStep) {
             if (currentState == null) {
                 throw new IllegalArgumentException("null currentState");
@@ -1797,7 +1797,7 @@ public class RMObject {
         private final DvParsable timing;
         private final String actionArchetypeId;
 
-        public Activity(Locatable locatable, ItemStructure description, 
+        protected Activity(Locatable locatable, ItemStructure description,
                 DvParsable timing, String actionArchetypeId) {
             if (description == null) {
                 throw new IllegalArgumentException("null description");
@@ -1836,7 +1836,7 @@ public class RMObject {
         private final DvInterval normalRange;
         private final CodePhrase normalStatus;
 
-        public DvOrdered(List<ReferenceRange> otherReferenceRanges,
+        protected DvOrdered(List<ReferenceRange> otherReferenceRanges,
                          DvInterval normalRange, CodePhrase normalStatus) {
             if (otherReferenceRanges != null) {
                 if (otherReferenceRanges.isEmpty()) {
@@ -1873,7 +1873,7 @@ public class RMObject {
         private boolean lowerIncluded;
         private boolean upperIncluded;
 
-        public Interval(DvOrdered lower, DvOrdered upper) {
+        protected Interval(DvOrdered lower, DvOrdered upper) {
             this.lower = lower;
             this.upper = upper;
             this.lowerIncluded = true;
@@ -1900,7 +1900,7 @@ public class RMObject {
     public static class DvInterval {
         private final Interval interval;
 
-        public DvInterval(DvOrdered lower, DvOrdered upper) {
+        protected DvInterval(DvOrdered lower, DvOrdered upper) {
             this.interval = new Interval(lower, upper);
         }
 
@@ -1913,7 +1913,7 @@ public class RMObject {
         private final DvText meaning;
         private final DvInterval range;
 
-        public ReferenceRange(DvText meaning, DvInterval range) {
+        protected ReferenceRange(DvText meaning, DvInterval range) {
             if(meaning == null){
                 throw new IllegalArgumentException("null meaning");
             }
@@ -1937,7 +1937,7 @@ public class RMObject {
         private final DvOrdered dvOrdered;
         private final String magnitudeStatus;
 
-        public DvQuantified(DvOrdered dvOrdered, String magnitudeStatus) {
+        protected DvQuantified(DvOrdered dvOrdered, String magnitudeStatus) {
             this.dvOrdered = dvOrdered;
             this.magnitudeStatus = magnitudeStatus;
         }
@@ -1950,4 +1950,30 @@ public class RMObject {
             return magnitudeStatus;
         }
     }
+
+    public static class DvAmount {
+        private final DvOrdered dvOrdered;
+        private final double accuracy;
+        private final boolean accuracyPercent;
+
+        protected DvAmount(DvOrdered dvOrdered, double accuracy,
+                        boolean accuracyPercent) {
+            this.dvOrdered = dvOrdered;
+            this.accuracy = accuracy;
+            this.accuracyPercent = accuracyPercent;
+        }
+
+        public DvOrdered getDvOrdered() {
+            return dvOrdered;
+        }
+
+        public double getAccuracy() {
+            return accuracy;
+        }
+
+        public boolean isAccuracyPercent() {
+            return accuracyPercent;
+        }
+    }
+
 }

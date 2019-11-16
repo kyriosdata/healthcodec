@@ -469,7 +469,13 @@ public interface Deserializer {
 
     /**
      * Deserializador de DvQuantified.
-     * @return nova instância de DvInterval
+     * @return nova instância de DvQuantified
      */
     RMObject.DvQuantified deserializeDvQuantified();
+
+    /**
+     * Deserializador de DvAmount.
+     * @return nova instância de DvAmount
+     */
+    RMObject.DvAmount deserializeDvAmount();
 }
