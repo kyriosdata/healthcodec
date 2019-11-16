@@ -115,10 +115,6 @@ public class RMObjectFactory {
         return new LocatableRef(id, namespace, type, path);
     }
 
-    public static ProportionKind newPropotionKind(int value) {
-        return new ProportionKind(value);
-    }
-
     public static AccessGroupRef newAccessGroupRef(ObjectID id) {
         return new AccessGroupRef(id);
     }
@@ -424,5 +420,19 @@ public class RMObjectFactory {
 
     public static DvCount newDvCount(DvAmount dvAmount, int magnitude){
         return new DvCount(dvAmount, magnitude);
+    }
+
+    public static DvProportion newDvProportion(DvAmount dvAmount,
+                                                double numerator,
+                                                double denominator,
+                                                ProportionKind type,
+                                                int precision){
+        return new DvProportion(dvAmount, numerator, denominator, type,
+                precision);
+    }
+
+    public static DvQuantity newDvQuantity(DvAmount dvAmount, String units,
+                                           double magnitude, int precision){
+        return new DvQuantity(dvAmount, units, magnitude, precision);
     }
 }

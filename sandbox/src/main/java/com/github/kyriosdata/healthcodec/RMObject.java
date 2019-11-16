@@ -422,17 +422,47 @@ public class RMObject {
         }
     }
 
-    public static class ProportionKind {
+    public enum ProportionKind {
+        RATIO(0),
+        UNITARY(1),
+        PERCENT(2),
+        FRACTION(3),
+        INTEGER_FRACTION(4);
 
-        private final int value;
-
-        protected ProportionKind(int value) {
+        ProportionKind(int value) {
             this.value = value;
         }
 
         public int getValue() {
             return value;
         }
+
+        public String toString() {
+            return Integer.toString(value);
+        }
+
+        public static ProportionKind fromValue(int value) {
+            switch (value) {
+                case 0:
+                    return RATIO;
+                case 1:
+                    return UNITARY;
+                case 2:
+                    return PERCENT;
+                case 3:
+                    return FRACTION;
+                case 4:
+                    return INTEGER_FRACTION;
+                default:
+                    throw new IllegalArgumentException("unknown value");
+            }
+        }
+
+        public static ProportionKind valueOf(int value) {
+            return fromValue(value);
+        }
+
+        private int value;
     }
 
     public static class AccessGroupRef {
@@ -687,7 +717,7 @@ public class RMObject {
         }
     }
 
-    public static enum Match {
+    public enum Match {
         NARROWER("<"),
         EQUIVALENT("="),
         BROADER(">"),
@@ -2022,6 +2052,108 @@ public class RMObject {
 
         public int getMagnitude() {
             return magnitude;
+        }
+    }
+
+    public static class DvProportion {
+        private final DvAmount dvAmount;
+        private final double numerator;
+        private final double denominator;
+        private final ProportionKind type;
+        private final int precision;
+
+        public DvAmount getDvAmount() {
+            return dvAmount;
+        }
+
+        public double getNumerator() {
+            return numerator;
+        }
+
+        public double getDenominator() {
+            return denominator;
+        }
+
+        public ProportionKind getType() {
+            return type;
+        }
+
+        public int getPrecision() {
+            return precision;
+        }
+
+        public DvProportion(DvAmount dvAmount, double numerator,
+                            double denominator, ProportionKind type,
+                            int precision) {
+            if(type == null) {
+                throw new IllegalArgumentException("null type");
+            } else if(type == ProportionKind.UNITARY) {
+                if(denominator != 1) {
+                    throw new IllegalArgumentException(
+                            "denominator for unitary proportion must be 1");
+                }
+            } else if(type == ProportionKind.PERCENT) {
+                if(denominator != 100) {
+                    throw new IllegalArgumentException(
+                            "denominator for unitary proportion must be 100");
+                }
+            } else if(type == ProportionKind.FRACTION ||
+                    type == ProportionKind.INTEGER_FRACTION) {
+
+                if(! bothIntegral(numerator, denominator)) {
+                    throw new IllegalArgumentException(
+                            "both numberator and denominator must be integral for " +
+                                    "fraction or integer fraction proportion");
+                }
+            }
+
+
+
+            this.dvAmount = dvAmount;
+            this.numerator = numerator;
+            this.denominator = denominator;
+            this.type = type;
+            this.precision = precision;
+        }
+
+        private boolean bothIntegral(double num1, double num2) {
+            return (Math.floor(num1) == num1) && (Math.floor(num2) == num2);
+        }
+    }
+
+    public static class DvQuantity {
+        private final DvAmount dvAmount;
+        private final String units;
+        private final double magnitude;
+        private final int precision;
+
+        public DvQuantity(DvAmount dvAmount, String units, double magnitude,
+                          int precision) {
+
+            if (precision < -1) {
+                throw new IllegalArgumentException("negative precision");
+            }
+
+            this.dvAmount = dvAmount;
+            this.units = units;
+            this.magnitude = magnitude;
+            this.precision = precision;
+        }
+
+        public DvAmount getDvAmount() {
+            return dvAmount;
+        }
+
+        public String getUnits() {
+            return units;
+        }
+
+        public double getMagnitude() {
+            return magnitude;
+        }
+
+        public int getPrecision() {
+            return precision;
         }
     }
 }

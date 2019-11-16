@@ -825,27 +825,21 @@ public class RMObjectSerialization {
 
     static class ProportionKindSerializer {
 
-        protected int serialize(Buffer buffer, int offset, int value){
-            int position = offset;
-            
-            buffer.writeInteger(position, value);
-            position += PrimitiveTypeSize.INT.getSize();
-            
-            return position;
-        }
-        
         protected int serialize(Buffer buffer, int offset, ProportionKind p){
             int position = offset;
-            ProportionKindSerializer ps = new ProportionKindSerializer();
             
-            position = ps.serialize(buffer, position, p.getValue());
+            buffer.writeInteger(position, p.getValue());
+            position += PrimitiveTypeSize.INT.getSize();
             
             return position;
         }
 
         protected ProportionKind deserialize(Buffer buffer, int offset){
             int value = buffer.readInteger(offset);
-            return RMObjectFactory.newPropotionKind(value);
+
+            ProportionKind p = ProportionKind.valueOf(value);
+
+            return p;
         }
     }
 
@@ -1637,8 +1631,7 @@ public class RMObjectSerialization {
             return position;
         }
 
-        protected Match deserialize(Buffer buffer, int offset)
-                throws IllegalAccessException {
+        protected Match deserialize(Buffer buffer, int offset){
             int position = offset;
             String value = stringDeserialization(buffer, position);
 
@@ -1699,11 +1692,7 @@ public class RMObjectSerialization {
             int matchPosition = buffer.readInteger(position);
             position += PrimitiveTypeSize.INT.getSize();
             Match match = null;
-            try {
-                match = ms.deserialize(buffer, matchPosition);
-            } catch (IllegalAccessException ex){
-                //
-            }
+            match = ms.deserialize(buffer, matchPosition);
 
             boolean hasPurpose = buffer.readBoolean(position);
             position += BOOLEAN.getSize();
@@ -4770,6 +4759,133 @@ public class RMObjectSerialization {
 
             return RMObjectFactory.newDvOrdered(otherReferenceRanges,
                     normalRange, normalStatus);
+        }
+    }
+
+    public static class DvProportionSerializer {
+        protected int serialize(Buffer buffer, int offset, DvAmount dvAmount,
+                                double numerator, double denominator,
+                                ProportionKind type, int precision){
+            int meta = offset;
+            int position = offset + 5 * PrimitiveTypeSize.INT.getSize();
+
+            DvAmountSerializer das = new DvAmountSerializer();
+            ProportionKindSerializer pks = new ProportionKindSerializer();
+
+            meta = writeHeader(buffer, meta ,position);
+            position = das.serialize(buffer, position, dvAmount);
+
+            meta = writeHeader(buffer, meta, position);
+            buffer.writeDouble(position, numerator);
+            position += PrimitiveTypeSize.DOUBLE.getSize();
+
+            meta = writeHeader(buffer, meta, position);
+            buffer.writeDouble(position, denominator);
+            position += PrimitiveTypeSize.DOUBLE.getSize();
+
+            meta = writeHeader(buffer, meta, position);
+            position = pks.serialize(buffer, position, type);
+
+            writeHeader(buffer, meta, position);
+            buffer.writeInteger(position, precision);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, DvProportion d){
+            int position = offset;
+            DvProportionSerializer dps = new DvProportionSerializer();
+
+            position = dps.serialize(buffer, position, d.getDvAmount(),
+                    d.getNumerator(), d.getDenominator(), d.getType(),
+                    d.getPrecision());
+
+            return position;
+        }
+
+        protected DvProportion deserialize(Buffer buffer, int position){
+            DvAmountSerializer das = new DvAmountSerializer();
+            ProportionKindSerializer pks = new ProportionKindSerializer();
+
+            int dvAmountPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvAmount dvAmount = das.deserialize(buffer, dvAmountPosition);
+
+            int numeratorPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            double numerator = buffer.readDouble(numeratorPosition);
+
+            int denominatorPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            double denominator = buffer.readDouble(denominatorPosition);
+
+            int typePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            ProportionKind type = pks.deserialize(buffer, typePosition);
+
+            int precisionPosition = buffer.readInteger(position);
+            int precision = buffer.readInteger(precisionPosition);
+
+            return RMObjectFactory.newDvProportion(dvAmount, numerator,
+                    denominator, type, precision);
+        }
+    }
+
+    public static class DvQuantitySerializer {
+        protected int serialize(Buffer buffer, int offset, DvAmount dvAmount,
+                                String units, double magnitude, int precision){
+            int meta = offset;
+            int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
+
+            DvAmountSerializer das = new DvAmountSerializer();
+            meta = writeHeader(buffer, meta, position);
+            position = das.serialize(buffer, position, dvAmount);
+
+            meta = writeHeader(buffer, meta, position);
+            position = stringSerialization(buffer, position, units);
+
+            meta = writeHeader(buffer, meta, position);
+            buffer.writeDouble(position, magnitude);
+            position += PrimitiveTypeSize.DOUBLE.getSize();
+
+            writeHeader(buffer, meta, position);
+            buffer.writeInteger(position, precision);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, DvQuantity d){
+            int position = offset;
+            DvQuantitySerializer dqs = new DvQuantitySerializer();
+            position = dqs.serialize(buffer, position, d.getDvAmount(),
+                    d.getUnits(), d.getMagnitude(), d.getPrecision());
+
+            return position;
+        }
+
+        protected DvQuantity deserialize(Buffer buffer, int offset){
+            int position = offset;
+            DvAmountSerializer das = new DvAmountSerializer();
+
+            int dvAmountSerialize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvAmount dvAmount = das.deserialize(buffer, dvAmountSerialize);
+
+            int unitsPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            String units = stringDeserialization(buffer, unitsPosition);
+
+            int magnitudePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            double magnitude = buffer.readDouble(magnitudePosition);
+
+            int precisionPosition = buffer.readInteger(position);
+            int precision = buffer.readInteger(precisionPosition);
+
+            return RMObjectFactory.newDvQuantity(dvAmount, units, magnitude,
+                    precision);
         }
     }
     

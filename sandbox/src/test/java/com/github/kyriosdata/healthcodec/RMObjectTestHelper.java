@@ -206,7 +206,7 @@ public class RMObjectTestHelper {
      * @return instância de ProportionKind
      */
     public static ProportionKind proportionKind(){
-        return RMObjectFactory.newPropotionKind(1);
+        return ProportionKind.FRACTION;
     }
 
     /**
@@ -882,11 +882,46 @@ public class RMObjectTestHelper {
                 value,symbol);
     }
 
+    /**
+     * Cria uma instância de DvCount com valor fixo
+     *
+     * @return nova instância de DvCount
+     */
     public static DvCount dvCount(){
         DvAmount dvAmount = dvAmount();
         int magnitude = 10;
 
         return RMObjectFactory.newDvCount(dvAmount, magnitude);
+    }
+
+    /**
+     * Cria uma instância de DvProportion com valor fixo
+     *
+     * @return nova instância de DvProportion
+     */
+    public static DvProportion dvProportion(){
+        DvAmount dvAmount = dvAmount();
+        double numerator = 5.000000;
+        double denominator = 2.000000;
+        ProportionKind type = ProportionKind.FRACTION;
+        int precision = 2;
+
+        return RMObjectFactory.newDvProportion(dvAmount, numerator, denominator,
+                type, precision);
+    }
+
+    /**
+     * Cria uma instância de DvQuantity com valor fixo
+     *
+     * @return nova instância de DvQuantity
+     */
+    public static DvQuantity dvQuantity(){
+        String units = "units";
+        double magnitude = 5.000000;
+        int precision = 2;
+
+        return RMObjectFactory.newDvQuantity(dvAmount(), units, magnitude,
+                precision);
     }
 
     /**

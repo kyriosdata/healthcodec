@@ -736,4 +736,22 @@ public interface Serializer {
      *
      */
     RMObjectSerializationClient serializeDvCount(DvCount d);
+
+    /**
+     * Serializador de DvProportion.
+     *
+     * @param d
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeDvProportion(DvProportion d);
+
+    /**
+     * Serializador de DvQuantity.
+     *
+     * @param d
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeDvQuantity(DvQuantity d);
 }

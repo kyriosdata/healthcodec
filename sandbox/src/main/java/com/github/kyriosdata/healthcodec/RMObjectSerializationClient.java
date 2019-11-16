@@ -2103,6 +2103,53 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de DvProportion.
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvProportion(DvProportion d) {
+        DvProportionSerializer s = new DvProportionSerializer();
+        register(DVPROPORTION, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvProportion
+     *
+     * @return nova instância de DvProportion
+     */
+    @Override
+    public DvProportion deserializeDvProportion() {
+        DvProportionSerializer d = new DvProportionSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVPROPORTION));
+    }
+
+    /**
+     * Serializador de serializeDvQuantity.
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvQuantity(DvQuantity d) {
+        DvQuantitySerializer s = new DvQuantitySerializer();
+        register(DVQUANTITY, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    @Override
+    public DvQuantity deserializeDvQuantity() {
+        DvQuantitySerializer d = new DvQuantitySerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVQUANTITY));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id
