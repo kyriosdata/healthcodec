@@ -4908,7 +4908,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, DvOrdered dvOrdered,
                                 String magnitudeStatus){
             int meta = offset;
-            int position = 2 * PrimitiveTypeSize.INT.getSize() +
+            int position = offset +  2 * PrimitiveTypeSize.INT.getSize() +
                     PrimitiveTypeSize.BOOLEAN.getSize();
             DvOrderedSerializer dos = new DvOrderedSerializer();
             boolean hasMagnitudeStatus = magnitudeStatus != null;
@@ -4955,7 +4955,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, DvOrdered dvOrdered,
                                 double accuracy, boolean accuracyPercent){
             int meta = offset;
-            int position = 3 * PrimitiveTypeSize.INT.getSize();
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
 
             DvOrderedSerializer dos = new DvOrderedSerializer();
             meta = writeHeader(buffer, meta, position);
@@ -5002,6 +5002,117 @@ public class RMObjectSerialization {
                     accuracyPercent);
         }
     }
+
+    public static class DvOrdinalSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                List<ReferenceRange> otherReferenceRanges,
+                                DvInterval normalRange, int value,
+                                DvCodedText symbol){
+            int meta = offset;
+            int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
+
+            ReferenceRangeSerializer rrs = new ReferenceRangeSerializer();
+            DvIntervalSerializer dis = new DvIntervalSerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = rrs.listSerialize(buffer, position, otherReferenceRanges);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dis.serialize(buffer, position, normalRange);
+
+            meta = writeHeader(buffer, meta, position);
+            buffer.writeInteger(position, value);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            writeHeader(buffer, meta, position);
+            position = dcs.serialize(buffer, position, symbol);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, DvOrdinal dvOrdinal){
+            int position = offset;
+            DvOrdinalSerializer dos = new DvOrdinalSerializer();
+            position = dos.serialize(buffer, position,
+                    dvOrdinal.getOtherReferenceRanges(),
+                    dvOrdinal.getNormalRange(), dvOrdinal.getValue(),
+                    dvOrdinal.getSymbol());
+
+            return position;
+        }
+
+        protected DvOrdinal deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            ReferenceRangeSerializer rrs = new ReferenceRangeSerializer();
+            DvIntervalSerializer dis = new DvIntervalSerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+
+            int otherReferencesPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            List<ReferenceRange> otherReferences = rrs.deserializeList(buffer,
+                    otherReferencesPosition);
+
+            int normalRangePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvInterval normalRange = dis.deserialize(buffer, normalRangePosition);
+
+            int valuePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            int value = buffer.readInteger(valuePosition);
+
+            int symbolPosition = buffer.readInteger(position);
+            DvCodedText symbol = dcs.deserialize(buffer, symbolPosition);
+
+            return RMObjectFactory.newDvOrdinal(otherReferences, normalRange,
+                    value, symbol);
+        }
+    }
+
+    public static class DvCountSerializer {
+        protected int serialize(Buffer buffer, int offset, DvAmount dvAmount,
+                                int magnitude){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
+
+            DvAmountSerializer das = new DvAmountSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = das.serialize(buffer, position, dvAmount);
+
+            writeHeader(buffer, meta, position);
+            buffer.writeInteger(position, magnitude);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, DvCount d){
+            int position = offset;
+            DvCountSerializer dcs = new DvCountSerializer();
+
+            position = dcs.serialize(buffer, position, d.getDvAmount(),
+                    d.getMagnitude());
+
+            return position;
+        }
+
+        protected DvCount deserialize(Buffer buffer, int offset){
+            int position = offset;
+            DvAmountSerializer das = new DvAmountSerializer();
+
+            int dvAmountPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvAmount dvAmount = das.deserialize(buffer, dvAmountPosition);
+
+            int magnitudePosition = buffer.readInteger(position);
+            int magnitude = buffer.readInteger(magnitudePosition);
+
+            return RMObjectFactory.newDvCount(dvAmount, magnitude);
+        }
+    }
+
 
     /**
      * Deserializa um map de Strings

@@ -11,7 +11,9 @@ public class ReferenceRangeTest {
 
     public static void testValidReferenceRange(ReferenceRange referenceRange){
         DvTextTest.testValidDvText(referenceRange.getMeaning());
-        assertEquals(null, referenceRange.getRange().getInterval().getLower());
-        assertEquals(null, referenceRange.getRange().getInterval().getUpper());
+        assertEquals(null, referenceRange.getRange().getInterval().
+                getLower());
+        assertEquals(null, referenceRange.getRange().getInterval().
+                getUpper());
     }
 }

@@ -46,17 +46,17 @@ public class RMObject {
         private final String type;
 
         protected DvIdentifier(String issuer, String assigner, String id,
-                String type) {
-            if(issuer == null || issuer.isEmpty()){
+                               String type) {
+            if (issuer == null || issuer.isEmpty()) {
                 throw new IllegalArgumentException("issuer vazio ou null");
             }
-            if(assigner == null || assigner.isEmpty()){
+            if (assigner == null || assigner.isEmpty()) {
                 throw new IllegalArgumentException("assigner vazio ou null");
             }
-            if(id == null || id.isEmpty()){
+            if (id == null || id.isEmpty()) {
                 throw new IllegalArgumentException("id vazio ou null");
             }
-            if(type == null || type.isEmpty()){
+            if (type == null || type.isEmpty()) {
                 throw new IllegalArgumentException("type vazio ou null");
             }
             this.issuer = issuer;
@@ -81,12 +81,12 @@ public class RMObject {
             return type;
         }
     }
-    
+
     public static class UID {
         private final String value;
 
         protected UID(String value) {
-            if(value.isEmpty()){
+            if (value.isEmpty()) {
                 throw new IllegalArgumentException("value vazio");
             }
             this.value = value;
@@ -146,7 +146,7 @@ public class RMObject {
         private final String scheme;
 
         protected GenericID(String value, String scheme) {
-            if(scheme.isEmpty()) {
+            if (scheme.isEmpty()) {
                 throw new IllegalArgumentException("scheme vazio");
             }
             this.objectID = RMObjectFactory.newObjectID(value);
@@ -182,9 +182,9 @@ public class RMObject {
         private final ObjectID objectID;
 
         protected TerminologyID(String name, String version) {
-            String nameVersion = name + ( version == null ?
-                "" : "(" + version + ")" );
-            
+            String nameVersion = name + (version == null ?
+                    "" : "(" + version + ")");
+
             this.name = name;
             this.version = version;
             this.objectID = RMObjectFactory.newObjectID(nameVersion);
@@ -209,10 +209,10 @@ public class RMObject {
         private final String codeString;
 
         protected CodePhrase(TerminologyID terminologyID, String codeString) {
-            if(terminologyID == null) {
+            if (terminologyID == null) {
                 throw new IllegalArgumentException("null terminologyId");
             }
-            if(codeString.isEmpty()) {
+            if (codeString.isEmpty()) {
                 throw new IllegalArgumentException("codeString vazio");
             }
             this.terminologyID = terminologyID;
@@ -233,7 +233,7 @@ public class RMObject {
         private final String value;
 
         protected DVURI(String value) {
-            if(value == null || value.isEmpty()){
+            if (value == null || value.isEmpty()) {
                 throw new IllegalArgumentException("codeString null ou vazio");
             }
             this.value = value;
@@ -392,9 +392,9 @@ public class RMObject {
 
         private final ObjectRef objectRef;
         private final String path;
-        
+
         protected LocatableRef(ObjectVersionID id, String namespace, String type,
-                String path) {
+                               String path) {
             if (id == null) {
                 throw new IllegalArgumentException("null id");
             }
@@ -408,15 +408,15 @@ public class RMObject {
                 throw new IllegalArgumentException("path vazio");
             }
             this.objectRef = RMObjectFactory.newObjectRef(
-                    RMObjectFactory.newObjectID(id.getUIDBasedID().getValue()), 
+                    RMObjectFactory.newObjectID(id.getUIDBasedID().getValue()),
                     namespace, type);
             this.path = path;
         }
-        
+
         public ObjectRef getObjectRef() {
             return objectRef;
         }
-        
+
         public String getPath() {
             return path;
         }
@@ -436,14 +436,14 @@ public class RMObject {
     }
 
     public static class AccessGroupRef {
-        
+
         private final ObjectRef objectRef;
 
         protected AccessGroupRef(ObjectID id) {
-            if(id == null){
+            if (id == null) {
                 throw new IllegalArgumentException("null id");
             }
-            this.objectRef = RMObjectFactory.newObjectRef(id, 
+            this.objectRef = RMObjectFactory.newObjectRef(id,
                     "ACCESS_CONTROL", "ACCESS_GROUP");
         }
 
@@ -459,15 +459,15 @@ public class RMObject {
         private final List<DvIdentifier> identifiers;
 
         protected PartyIdentified(PartyRef externalRef, String name,
-                List<DvIdentifier> identifiers) {
-            if(externalRef == null && name == null && identifiers == null) {
+                                  List<DvIdentifier> identifiers) {
+            if (externalRef == null && name == null && identifiers == null) {
                 throw new IllegalArgumentException(
                         "externalRef, name, identifiers todos vazios");
             }
-            if(name != null && name.isEmpty()) {
+            if (name != null && name.isEmpty()) {
                 throw new IllegalArgumentException("name vazio");
             }
-            if(identifiers != null && identifiers.size() == 0) {
+            if (identifiers != null && identifiers.size() == 0) {
                 throw new IllegalArgumentException("identifiers vazios");
             }
             this.externalRef = externalRef;
@@ -544,7 +544,7 @@ public class RMObject {
         private final String value;
 
         protected UIDBasedID(String value) {
-            if(value.isEmpty()){
+            if (value.isEmpty()) {
                 throw new IllegalArgumentException("value vazio");
             }
             this.value = value;
@@ -561,8 +561,8 @@ public class RMObject {
         private final String value;
         private final String formalism;
 
-        protected DvParsable(DvEncapsulated dvEncapsulated, String value, 
-                String formalism) {
+        protected DvParsable(DvEncapsulated dvEncapsulated, String value,
+                             String formalism) {
             if (value == null) {
                 throw new IllegalArgumentException("null value");
             }
@@ -577,7 +577,7 @@ public class RMObject {
         public DvEncapsulated getDvEncapsulated() {
             return dvEncapsulated;
         }
-        
+
         public String getValue() {
             return value;
         }
@@ -592,7 +592,7 @@ public class RMObject {
         private final DvParsable value;
 
         protected DvTimeSpecification(DvParsable value) {
-            if(value == null) {
+            if (value == null) {
                 throw new IllegalArgumentException("null value");
             }
             this.value = value;
@@ -727,7 +727,7 @@ public class RMObject {
         public final DvCodedText purpose;
 
         protected TermMapping(CodePhrase target,
-                Match match, DvCodedText purpose) {
+                              Match match, DvCodedText purpose) {
             if (target == null) {
                 throw new IllegalArgumentException("null target");
             }
@@ -762,9 +762,9 @@ public class RMObject {
         private final CodePhrase charset;
 
         protected DvText(String value,
-                List<TermMapping> mappings,
-                String formatting,
-                DVURI hyperlink, CodePhrase language, CodePhrase charset) {
+                         List<TermMapping> mappings,
+                         String formatting,
+                         DVURI hyperlink, CodePhrase language, CodePhrase charset) {
             if (mappings != null && mappings.isEmpty()) {
                 throw new IllegalArgumentException("mapping vazio");
             }
@@ -833,13 +833,13 @@ public class RMObject {
         private final DVEHRURI target;
 
         protected Link(DvText meaning, DvText type, DVEHRURI target) {
-            if(meaning == null) {
+            if (meaning == null) {
                 throw new IllegalArgumentException("null meaning");
             }
-            if(type == null) {
+            if (type == null) {
                 throw new IllegalArgumentException("null type");
             }
-            if(target == null) {
+            if (target == null) {
                 throw new IllegalArgumentException("null target");
             }
             this.meaning = meaning;
@@ -1298,8 +1298,8 @@ public class RMObject {
         private final List<Element> items;
 
         protected ItemList(UIDBasedID uid, String archetypeNodeId, DvText name,
-                Archetyped archetypeDetails, FeederAudit feederAudit,
-                Set<Link> links, List<Element> items) {
+                           Archetyped archetypeDetails, FeederAudit feederAudit,
+                           Set<Link> links, List<Element> items) {
             this.uid = uid;
             this.archetypeNodeId = archetypeNodeId;
             this.name = name;
@@ -1357,7 +1357,7 @@ public class RMObject {
         private final Element item;
 
         protected ItemSingle(ItemStructure itemStructure, Element item) {
-            if(item == null) {
+            if (item == null) {
                 throw new IllegalArgumentException("item null");
             }
             this.itemStructure = itemStructure;
@@ -1442,7 +1442,7 @@ public class RMObject {
         private final ObjectRef target;
 
         protected PartyRelationship(Locatable locatable,
-                ItemStructure details, ObjectRef source, ObjectRef target) {
+                                    ItemStructure details, ObjectRef source, ObjectRef target) {
             if (locatable == null) {
                 throw new IllegalArgumentException("null locatable");
             }
@@ -1531,8 +1531,8 @@ public class RMObject {
         private final ItemStructure details;
 
         protected Party(Locatable locatable, Set<PartyIdentity> identities,
-                Set<Contact> contacts, Set<PartyRelationship> relationships,
-                Set<LocatableRef> reverseRelationships, ItemStructure details) {
+                        Set<Contact> contacts, Set<PartyRelationship> relationships,
+                        Set<LocatableRef> reverseRelationships, ItemStructure details) {
             if (locatable == null) {
                 throw new IllegalArgumentException("null locatable");
             }
@@ -1610,7 +1610,7 @@ public class RMObject {
         private final PartyRef performer;
 
         protected Role(Party party, List<Capability> capabilities,
-                PartyRef performer) {
+                       PartyRef performer) {
             if (capabilities != null && capabilities.size() == 0) {
                 throw new IllegalArgumentException("capabilities vazio");
             }
@@ -1737,7 +1737,7 @@ public class RMObject {
         private final ItemStructure wfDetails;
 
         protected InstructionDetails(LocatableRef instructionId,
-                String activityId, ItemStructure wfDetails) {
+                                     String activityId, ItemStructure wfDetails) {
             if (instructionId == null) {
                 throw new IllegalArgumentException("null instructionId");
             }
@@ -1769,7 +1769,7 @@ public class RMObject {
         private final DvCodedText careflowStep;
 
         protected ISMTransition(DvCodedText currentState,
-                DvCodedText transition, DvCodedText careflowStep) {
+                                DvCodedText transition, DvCodedText careflowStep) {
             if (currentState == null) {
                 throw new IllegalArgumentException("null currentState");
             }
@@ -1790,7 +1790,7 @@ public class RMObject {
             return careflowStep;
         }
     }
-    
+
     public static class Activity {
         private final Locatable locatable;
         private final ItemStructure description;
@@ -1798,14 +1798,14 @@ public class RMObject {
         private final String actionArchetypeId;
 
         protected Activity(Locatable locatable, ItemStructure description,
-                DvParsable timing, String actionArchetypeId) {
+                           DvParsable timing, String actionArchetypeId) {
             if (description == null) {
                 throw new IllegalArgumentException("null description");
             }
             if (timing == null) {
                 throw new IllegalArgumentException("null timing");
             }
-            if(actionArchetypeId.isEmpty()) {
+            if (actionArchetypeId.isEmpty()) {
                 throw new IllegalArgumentException("actionArchetypeId vazio");
             }
             this.locatable = locatable;
@@ -1837,7 +1837,7 @@ public class RMObject {
         private final CodePhrase normalStatus;
 
         protected DvOrdered(List<ReferenceRange> otherReferenceRanges,
-                         DvInterval normalRange, CodePhrase normalStatus) {
+                            DvInterval normalRange, CodePhrase normalStatus) {
             if (otherReferenceRanges != null) {
                 if (otherReferenceRanges.isEmpty()) {
                     throw new IllegalArgumentException(
@@ -1914,7 +1914,7 @@ public class RMObject {
         private final DvInterval range;
 
         protected ReferenceRange(DvText meaning, DvInterval range) {
-            if(meaning == null){
+            if (meaning == null) {
                 throw new IllegalArgumentException("null meaning");
             }
             if (range == null) {
@@ -1957,7 +1957,7 @@ public class RMObject {
         private final boolean accuracyPercent;
 
         protected DvAmount(DvOrdered dvOrdered, double accuracy,
-                        boolean accuracyPercent) {
+                           boolean accuracyPercent) {
             this.dvOrdered = dvOrdered;
             this.accuracy = accuracy;
             this.accuracyPercent = accuracyPercent;
@@ -1976,4 +1976,52 @@ public class RMObject {
         }
     }
 
+    public static class DvOrdinal {
+        private final List<ReferenceRange> otherReferenceRanges;
+        private final DvInterval normalRange;
+        private final int value;
+        private final DvCodedText symbol;
+
+        public List<ReferenceRange> getOtherReferenceRanges() {
+            return otherReferenceRanges;
+        }
+
+        public DvInterval getNormalRange() {
+            return normalRange;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public DvCodedText getSymbol() {
+            return symbol;
+        }
+
+        public DvOrdinal(List<ReferenceRange> otherReferenceRanges,
+                         DvInterval normalRange, int value, DvCodedText symbol) {
+            this.otherReferenceRanges = otherReferenceRanges;
+            this.normalRange = normalRange;
+            this.value = value;
+            this.symbol = symbol;
+        }
+    }
+
+    public static class DvCount {
+        private final DvAmount dvAmount;
+        private final int magnitude;
+
+        public DvCount(DvAmount dvAmount, int magnitude) {
+            this.dvAmount = dvAmount;
+            this.magnitude = magnitude;
+        }
+
+        public DvAmount getDvAmount() {
+            return dvAmount;
+        }
+
+        public int getMagnitude() {
+            return magnitude;
+        }
+    }
 }

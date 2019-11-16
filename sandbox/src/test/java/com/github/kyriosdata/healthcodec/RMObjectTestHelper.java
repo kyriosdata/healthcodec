@@ -841,6 +841,11 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newReferenceRange(meaning, range);
     }
 
+    /**
+     * Cria uma instância de DvQuantified com valor fixo
+     *
+     * @return nova instância de DvQuantified
+     */
     public static DvQuantified dvQuantified(){
         DvOrdered dvOrdered = dvOrdered();
         String magnitudeStatus = "magnitudeStatus";
@@ -848,12 +853,40 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newDvQuantified(dvOrdered, magnitudeStatus);
     }
 
+    /**
+     * Cria uma instância de DvAmount com valor fixo
+     *
+     * @return nova instância de DvAmount
+     */
     public static DvAmount dvAmount(){
         DvOrdered dvOrdered = dvOrdered();
         double accuracy = 5.000000;
         boolean accuracyPercent = true;
 
         return RMObjectFactory.newDvAmount(dvOrdered, accuracy, accuracyPercent);
+    }
+
+    /**
+     * Cria uma instância de DvOrdinal com valor fixo
+     *
+     * @return nova instância de DvOrdinal
+     */
+    public static DvOrdinal dvOrdinal(){
+        List<ReferenceRange> otherReferences = referenceRangeList(
+                false);
+        DvInterval normalRange = dvInterval();
+        int value = 10;
+        DvCodedText symbol = dvCodedText();
+
+        return RMObjectFactory.newDvOrdinal(otherReferences,normalRange,
+                value,symbol);
+    }
+
+    public static DvCount dvCount(){
+        DvAmount dvAmount = dvAmount();
+        int magnitude = 10;
+
+        return RMObjectFactory.newDvCount(dvAmount, magnitude);
     }
 
     /**

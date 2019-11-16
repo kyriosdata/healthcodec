@@ -414,4 +414,15 @@ public class RMObjectFactory {
                                        boolean accuracyPercent){
         return new DvAmount(dvOrdered, accuracy, accuracyPercent);
     }
+
+    public static DvOrdinal newDvOrdinal(List<ReferenceRange>
+                                                 otherReferenceRanges,
+                                         DvInterval normalRange, int value,
+                                         DvCodedText symbol){
+        return new DvOrdinal(otherReferenceRanges, normalRange, value, symbol);
+    }
+
+    public static DvCount newDvCount(DvAmount dvAmount, int magnitude){
+        return new DvCount(dvAmount, magnitude);
+    }
 }

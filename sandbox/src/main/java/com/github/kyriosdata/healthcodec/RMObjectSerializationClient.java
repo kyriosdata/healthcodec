@@ -2051,6 +2051,58 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de DvOrdinal.
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvOrdinal(DvOrdinal d) {
+        DvOrdinalSerializer s = new DvOrdinalSerializer();
+        register(DVORDINAL, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvOrdinal
+     *
+     * @return nova instância de DvOrdinal
+     */
+    @Override
+    public DvOrdinal deserializeDvOrdinal() {
+        DvOrdinalSerializer d = new DvOrdinalSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVORDINAL));
+    }
+
+    /**
+     * Serializador de DvCount.
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvCount(DvCount d) {
+        DvCountSerializer s = new DvCountSerializer();
+        register(DVCOUNT, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvCount
+     *
+     * @return nova instância de DvCount
+     */
+    @Override
+    public DvCount deserializeDvCount() {
+        DvCountSerializer d = new DvCountSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVCOUNT));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id

@@ -478,4 +478,16 @@ public interface Deserializer {
      * @return nova instância de DvAmount
      */
     RMObject.DvAmount deserializeDvAmount();
+
+    /**
+     * Deserializador de DvOrdinal.
+     * @return nova instância de DvOrdinal
+     */
+    RMObject.DvOrdinal deserializeDvOrdinal();
+
+    /**
+     * Deserializador de DvCount.
+     * @return nova instância de DvCount
+     */
+    RMObject.DvCount deserializeDvCount();
 }
