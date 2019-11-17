@@ -2156,4 +2156,122 @@ public class RMObject {
             return precision;
         }
     }
+
+    public static class DvDuration {
+        private final DvAmount dvAmount;
+        private final String value;
+
+        public DvDuration(DvAmount dvAmount, String value) {
+            this.dvAmount = dvAmount;
+            this.value = value;
+        }
+
+        public DvAmount getDvAmount() {
+            return dvAmount;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public static class DvAbsoluteQuantityWithDvQuantity {
+        private final DvQuantified dvQuantified;
+        private final DvQuantity dvQuantity;
+        private RMObjectID id;
+
+        public DvAbsoluteQuantityWithDvQuantity(DvQuantified dvQuantified,
+                                                DvQuantity dvQuantity) {
+            this.dvQuantified = dvQuantified;
+            this.dvQuantity = dvQuantity;
+            this.id = RMObjectID.DVQUANTITY;
+        }
+
+        public DvQuantified getDvQuantified() {
+            return dvQuantified;
+        }
+
+        public DvQuantity getDvQuantity() {
+            return dvQuantity;
+        }
+
+        public RMObjectID getId() {
+            return id;
+        }
+    }
+
+    public static class DvAbsoluteQuantityWithDvCount {
+        private final DvQuantified dvQuantified;
+        private final DvCount dvCount;
+        private RMObjectID id;
+
+        public DvAbsoluteQuantityWithDvCount(DvQuantified dvQuantified,
+                                             DvCount dvCount) {
+            this.dvQuantified = dvQuantified;
+            this.dvCount = dvCount;
+            this.id = RMObjectID.DVCOUNT;
+        }
+
+        public DvQuantified getDvQuantified() {
+            return dvQuantified;
+        }
+
+        public DvCount getDvCount() {
+            return dvCount;
+        }
+
+        public RMObjectID getId() {
+            return id;
+        }
+    }
+
+    public static class DvAbsoluteQuantityWithDvProportion {
+        private final DvQuantified dvQuantified;
+        private final DvProportion dvProportion;
+        private RMObjectID id;
+
+        public DvAbsoluteQuantityWithDvProportion(DvQuantified dvQuantified,
+                                                  DvProportion dvProportion) {
+            this.dvQuantified = dvQuantified;
+            this.dvProportion = dvProportion;
+            this.id = RMObjectID.DVPROPORTION;
+        }
+
+        public DvQuantified getDvQuantified() {
+            return dvQuantified;
+        }
+
+        public DvProportion getDvProportion() {
+            return dvProportion;
+        }
+
+        public RMObjectID getId() {
+            return id;
+        }
+    }
+
+    public static class DvAbsoluteQuantityWithDvDuration {
+        private final DvQuantified dvQuantified;
+        private final DvDuration dvDuration;
+        private RMObjectID id;
+
+        public DvAbsoluteQuantityWithDvDuration(DvQuantified dvQuantified,
+                                                DvDuration dvDuration) {
+            this.dvQuantified = dvQuantified;
+            this.dvDuration = dvDuration;
+            this.id = RMObjectID.DVPROPORTION;
+        }
+
+        public DvQuantified getDvQuantified() {
+            return dvQuantified;
+        }
+
+        public DvDuration getDvDuration() {
+            return dvDuration;
+        }
+
+        public RMObjectID getId() {
+            return id;
+        }
+    }
 }

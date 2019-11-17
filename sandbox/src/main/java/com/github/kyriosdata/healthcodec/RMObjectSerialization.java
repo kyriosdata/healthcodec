@@ -4888,6 +4888,196 @@ public class RMObjectSerialization {
                     precision);
         }
     }
+
+    public static class DvDurationSerializer {
+        protected int serialize(Buffer buffer, int offset, DvAmount dvAmount,
+                                String value){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
+
+            DvAmountSerializer das = new DvAmountSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = das.serialize(buffer, position, dvAmount);
+
+            writeHeader(buffer, meta, position);
+            position = stringSerialization(buffer, position, value);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, DvDuration d){
+            int position = offset;
+
+            DvDurationSerializer dds = new DvDurationSerializer();
+
+            position = dds.serialize(buffer, position, d.getDvAmount(),
+                    d.getValue());
+
+            return position;
+        }
+
+        protected DvDuration deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            DvAmountSerializer das = new DvAmountSerializer();
+
+            int dvAmountPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvAmount dvAmount = das.deserialize(buffer, dvAmountPosition);
+
+            int valuePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            String value = stringDeserialization(buffer, valuePosition);
+
+            return RMObjectFactory.newDvDuration(dvAmount, value);
+        }
+    }
+
+    public static class DvAbsoluteQuantitySerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                DvAbsoluteQuantityWithDvCount d){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
+
+            DvQuantifiedSerializer dfs = new DvQuantifiedSerializer();
+            DvCountSerializer dcs = new DvCountSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = dfs.serialize(buffer, position, d.getDvQuantified());
+
+            writeHeader(buffer, meta, position);
+            position = dcs.serialize(buffer, position, d.getDvCount());
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                DvAbsoluteQuantityWithDvDuration d){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
+
+            DvQuantifiedSerializer dfs = new DvQuantifiedSerializer();
+            DvDurationSerializer dds = new DvDurationSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = dfs.serialize(buffer, position, d.getDvQuantified());
+
+            writeHeader(buffer, meta, position);
+            position = dds.serialize(buffer, position, d.getDvDuration());
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                DvAbsoluteQuantityWithDvProportion d){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
+
+            DvQuantifiedSerializer dfs = new DvQuantifiedSerializer();
+            DvProportionSerializer dps = new DvProportionSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = dfs.serialize(buffer, position, d.getDvQuantified());
+
+            writeHeader(buffer, meta, position);
+            position = dps.serialize(buffer, position, d.getDvProportion());
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                DvAbsoluteQuantityWithDvQuantity d){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
+
+            DvQuantifiedSerializer dfs = new DvQuantifiedSerializer();
+            DvQuantitySerializer dqs = new DvQuantitySerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = dfs.serialize(buffer, position, d.getDvQuantified());
+
+            writeHeader(buffer, meta, position);
+            position = dqs.serialize(buffer, position, d.getDvQuantity());
+
+            return position;
+        }
+
+        protected DvAbsoluteQuantityWithDvCount deserializeDvCount(Buffer buffer,
+                                                            int offset){
+            int position = offset;
+
+            DvQuantifiedSerializer dfs = new DvQuantifiedSerializer();
+            DvCountSerializer dcs = new DvCountSerializer();
+
+            int dvQuantifiedPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvQuantified dvQuantified = dfs.deserialize(buffer,
+                    dvQuantifiedPosition);
+
+            int dvCountPosition = buffer.readInteger(position);
+            DvCount dvCount = dcs.deserialize(buffer, dvCountPosition);
+
+            return RMObjectFactory.newDvAbsoluteQuantity(dvQuantified, dvCount);
+        }
+
+        protected DvAbsoluteQuantityWithDvDuration deserializeDvDuration(
+                Buffer buffer, int offset){
+            int position = offset;
+
+            DvQuantifiedSerializer dfs = new DvQuantifiedSerializer();
+            DvDurationSerializer dds = new DvDurationSerializer();
+
+            int dvQuantifiedPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvQuantified dvQuantified = dfs.deserialize(buffer,
+                    dvQuantifiedPosition);
+
+            int dvDurationPosition = buffer.readInteger(position);
+            DvDuration dvDuration = dds.deserialize(buffer, dvDurationPosition);
+
+            return RMObjectFactory.newDvAbsoluteQuantity(dvQuantified,
+                    dvDuration);
+        }
+
+        protected DvAbsoluteQuantityWithDvProportion deserializeDvProportion(
+                Buffer buffer, int offset){
+            int position = offset;
+
+            DvQuantifiedSerializer dfs = new DvQuantifiedSerializer();
+            DvProportionSerializer dps = new DvProportionSerializer();
+
+            int dvQuantifiedPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvQuantified dvQuantified = dfs.deserialize(buffer,
+                    dvQuantifiedPosition);
+
+            int dvProportionPosition = buffer.readInteger(position);
+            DvProportion dvProportion= dps.deserialize(buffer, dvProportionPosition);
+
+            return RMObjectFactory.newDvAbsoluteQuantity(dvQuantified,
+                    dvProportion);
+        }
+
+        protected DvAbsoluteQuantityWithDvQuantity deserializeDvQuantity(
+                Buffer buffer, int offset){
+            int position = offset;
+
+            DvQuantifiedSerializer dfs = new DvQuantifiedSerializer();
+            DvQuantitySerializer dqs = new DvQuantitySerializer();
+
+            int dvQuantifiedPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvQuantified dvQuantified = dfs.deserialize(buffer,
+                    dvQuantifiedPosition);
+
+            int dvQuantityPosition = buffer.readInteger(position);
+            DvQuantity dvQuantity = dqs.deserialize(buffer, dvQuantityPosition);
+
+            return RMObjectFactory.newDvAbsoluteQuantity(dvQuantified,
+                    dvQuantity);
+        }
+    }
     
     /**
      * Serializa uma única String value

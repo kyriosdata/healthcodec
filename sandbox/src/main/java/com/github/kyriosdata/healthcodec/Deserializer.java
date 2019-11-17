@@ -502,4 +502,38 @@ public interface Deserializer {
      * @return nova instância de DvQuantity
      */
     RMObject.DvQuantity deserializeDvQuantity();
+
+    /**
+     * Deserializador de DvDuration.
+     * @return nova instância de DvDuration
+     */
+    RMObject.DvDuration deserializeDvDuration();
+
+    /**
+     * Deserializador de DvAbsoluteQuantity.
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    RMObject.DvAbsoluteQuantityWithDvCount
+        deserializeDvAbsoluteQuantityDvCount();
+
+    /**
+     * Deserializador de DvAbsoluteQuantity.
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    RMObject.DvAbsoluteQuantityWithDvDuration
+        deserializeDvAbsoluteQuantityDvDuration();
+
+    /**
+     * Deserializador de DvAbsoluteQuantity.
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    RMObject.DvAbsoluteQuantityWithDvProportion
+        deserializeDvAbsoluteQuantityDvProportion();
+
+    /**
+     * Deserializador de DvAbsoluteQuantity.
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    RMObject.DvAbsoluteQuantityWithDvQuantity
+        deserializeDvAbsoluteQuantityDvQuantity();
 }

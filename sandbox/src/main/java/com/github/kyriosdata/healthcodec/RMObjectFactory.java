@@ -435,4 +435,28 @@ public class RMObjectFactory {
                                            double magnitude, int precision){
         return new DvQuantity(dvAmount, units, magnitude, precision);
     }
+
+    public static DvDuration newDvDuration(DvAmount dvAmount, String value){
+        return new DvDuration(dvAmount, value);
+    }
+
+    public static DvAbsoluteQuantityWithDvCount newDvAbsoluteQuantity(
+            DvQuantified dvQuantified, DvCount dvCount){
+        return new DvAbsoluteQuantityWithDvCount(dvQuantified, dvCount);
+    }
+
+    public static DvAbsoluteQuantityWithDvQuantity newDvAbsoluteQuantity(
+            DvQuantified dvQuantified, DvQuantity dvQuantity){
+        return new DvAbsoluteQuantityWithDvQuantity(dvQuantified, dvQuantity);
+    }
+
+    public static DvAbsoluteQuantityWithDvProportion newDvAbsoluteQuantity(
+            DvQuantified dvQuantified, DvProportion dvProportion){
+        return new DvAbsoluteQuantityWithDvProportion(dvQuantified, dvProportion);
+    }
+
+    public static DvAbsoluteQuantityWithDvDuration newDvAbsoluteQuantity(
+            DvQuantified dvQuantified, DvDuration dvDuration){
+        return new DvAbsoluteQuantityWithDvDuration(dvQuantified,dvDuration);
+    }
 }

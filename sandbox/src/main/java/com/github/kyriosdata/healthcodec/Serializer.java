@@ -754,4 +754,53 @@ public interface Serializer {
      *
      */
     RMObjectSerializationClient serializeDvQuantity(DvQuantity d);
+
+    /**
+     * Serializador de DvDuration.
+     *
+     * @param d
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeDvDuration(DvDuration d);
+
+    /**
+     * Serializador de DvAbsoluteQuantity.
+     *
+     * @param d
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeDvAbsoluteQuantity(
+            DvAbsoluteQuantityWithDvCount d);
+
+    /**
+     * Serializador de DvAbsoluteQuantity.
+     *
+     * @param d
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeDvAbsoluteQuantity(
+            DvAbsoluteQuantityWithDvDuration d);
+
+    /**
+     * Serializador de DvAbsoluteQuantity.
+     *
+     * @param d
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeDvAbsoluteQuantity(
+            DvAbsoluteQuantityWithDvProportion d);
+
+    /**
+     * Serializador de DvAbsoluteQuantity.
+     *
+     * @param d
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeDvAbsoluteQuantity(
+            DvAbsoluteQuantityWithDvQuantity d);
 }

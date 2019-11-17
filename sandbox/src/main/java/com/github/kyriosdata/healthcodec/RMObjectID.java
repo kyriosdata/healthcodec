@@ -19,6 +19,7 @@ package com.github.kyriosdata.healthcodec;
  * @author Gabriel
  */
 public enum RMObjectID {
+    UNKNOWN(-1),
     DVBOOLEAN(0),
     DVIDENTIFIER(1),
     INTERNETID(2),
@@ -95,13 +96,27 @@ public enum RMObjectID {
     DVORDINAL(73),
     DVCOUNT(74),
     DVPROPORTION(75),
-    DVQUANTITY(76);
+    DVQUANTITY(76),
+    DVDURATION(77),
+    DVABSOLUTEQUANTITY(78);
 
     
     private final int value;
 
-    private RMObjectID(int value) {
+    RMObjectID(int value) {
         this.value = value;
+    }
+
+    public static RMObjectID fromValue(int value) {
+        if (value >  0) {
+            for (RMObjectID id : values()) {
+                if(id.getValue() == value){
+                    return id;
+                }
+            }
+        }
+
+        return UNKNOWN;
     }
 
     public int getValue() {

@@ -925,6 +925,67 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de DvAbsoluteQuantity com valor fixo
+     *
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    public static DvAbsoluteQuantityWithDvCount dvAQDvCount(){
+        DvQuantified dvQuantified = dvQuantified();
+        DvCount dvCount = dvCount();
+
+        return RMObjectFactory.newDvAbsoluteQuantity(dvQuantified, dvCount);
+    }
+
+    /**
+     * Cria uma instância de DvAbsoluteQuantity com valor fixo
+     *
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    public static DvAbsoluteQuantityWithDvDuration dvAQDvDuration(){
+        DvQuantified dvQuantified = dvQuantified();
+        DvDuration dvDuration = dvDuration();
+
+        return RMObjectFactory.newDvAbsoluteQuantity(dvQuantified, dvDuration);
+    }
+
+    /**
+     * Cria uma instância de DvAbsoluteQuantity com valor fixo
+     *
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    public static DvAbsoluteQuantityWithDvProportion dvAQDvProportion(){
+        DvQuantified dvQuantified = dvQuantified();
+        DvProportion dvProportion = dvProportion();
+
+        return RMObjectFactory.newDvAbsoluteQuantity(dvQuantified, dvProportion);
+    }
+
+    /**
+     * Cria uma instância de DvAbsoluteQuantity com valor fixo
+     *
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    public static  DvAbsoluteQuantityWithDvQuantity dvAQDvQuantity(){
+        DvQuantified dvQuantified = dvQuantified();
+        DvQuantity dvQuantity = dvQuantity();
+
+        return RMObjectFactory.newDvAbsoluteQuantity(dvQuantified, dvQuantity);
+    }
+
+    /**
+     * Cria uma instância de DvDuration com valor fixo
+     *
+     * @return nova instância de DvDuration
+     */
+    public static DvDuration dvDuration(){
+        DvAmount dvAmount = dvAmount();
+        String value = "value";
+
+        return RMObjectFactory.newDvDuration(dvAmount, value);
+    }
+
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia

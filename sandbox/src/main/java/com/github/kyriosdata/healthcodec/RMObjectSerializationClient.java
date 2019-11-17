@@ -2129,7 +2129,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
-     * Serializador de serializeDvQuantity.
+     * Serializador de DvQuantity.
      *
      * @param d
      * @return instância de RMObjectSerializationClient atual
@@ -2143,10 +2143,149 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         return this;
     }
 
+    /**
+     * Deserializador de DvQuantity
+     *
+     * @return nova instância de DvQuantity
+     */
     @Override
     public DvQuantity deserializeDvQuantity() {
         DvQuantitySerializer d = new DvQuantitySerializer();
         return d.deserialize(buffer, getOffsetFromID(DVQUANTITY));
+    }
+
+    /**
+     * Serializador de DvDuration.
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvDuration(DvDuration d) {
+        DvDurationSerializer s = new DvDurationSerializer();
+        register(DVDURATION, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvDuration
+     *
+     * @return nova instância de DvDuration
+     */
+    @Override
+    public DvDuration deserializeDvDuration() {
+        DvDurationSerializer d = new DvDurationSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVDURATION));
+    }
+
+    /**
+     * Serializador de DvAbsoluteQuantity com DvCount.
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvAbsoluteQuantity(
+            DvAbsoluteQuantityWithDvCount d) {
+        DvAbsoluteQuantitySerializer s = new DvAbsoluteQuantitySerializer();
+        register(DVABSOLUTEQUANTITY, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvAbsoluteQuantity com DvCount
+     *
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    @Override
+    public DvAbsoluteQuantityWithDvCount deserializeDvAbsoluteQuantityDvCount() {
+        DvAbsoluteQuantitySerializer d = new DvAbsoluteQuantitySerializer();
+        return d.deserializeDvCount(buffer, getOffsetFromID(DVABSOLUTEQUANTITY));
+    }
+
+    /**
+     * Serializador de DvAbsoluteQuantity com DvDuration.
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvAbsoluteQuantity(
+            DvAbsoluteQuantityWithDvDuration d) {
+        DvAbsoluteQuantitySerializer s = new DvAbsoluteQuantitySerializer();
+        register(DVABSOLUTEQUANTITY, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvAbsoluteQuantity com DvDuration
+     *
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    @Override
+    public DvAbsoluteQuantityWithDvDuration deserializeDvAbsoluteQuantityDvDuration() {
+        DvAbsoluteQuantitySerializer d = new DvAbsoluteQuantitySerializer();
+        return d.deserializeDvDuration(buffer, getOffsetFromID(DVABSOLUTEQUANTITY));
+    }
+
+    /**
+     * Serializador de DvAbsoluteQuantity com DvProportion.
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvAbsoluteQuantity(
+            DvAbsoluteQuantityWithDvProportion d) {
+        DvAbsoluteQuantitySerializer s = new DvAbsoluteQuantitySerializer();
+        register(DVABSOLUTEQUANTITY, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvAbsoluteQuantity com DvProportion
+     *
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    @Override
+    public DvAbsoluteQuantityWithDvProportion deserializeDvAbsoluteQuantityDvProportion() {
+        DvAbsoluteQuantitySerializer d = new DvAbsoluteQuantitySerializer();
+        return d.deserializeDvProportion(buffer, getOffsetFromID(DVABSOLUTEQUANTITY));
+    }
+
+    /**
+     * Serializador de DvAbsoluteQuantity com DvProportion.
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvAbsoluteQuantity(
+            DvAbsoluteQuantityWithDvQuantity d) {
+        DvAbsoluteQuantitySerializer s = new DvAbsoluteQuantitySerializer();
+        register(DVABSOLUTEQUANTITY, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvAbsoluteQuantity com DvProportion
+     *
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    @Override
+    public DvAbsoluteQuantityWithDvQuantity deserializeDvAbsoluteQuantityDvQuantity() {
+        DvAbsoluteQuantitySerializer d = new DvAbsoluteQuantitySerializer();
+        return d.deserializeDvQuantity(buffer, getOffsetFromID(DVABSOLUTEQUANTITY));
     }
 
     /**
