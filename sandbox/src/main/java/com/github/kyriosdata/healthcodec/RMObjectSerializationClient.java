@@ -2289,6 +2289,110 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de DvDate.
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvDate(DvDate d) {
+        DvDateSerializer s = new DvDateSerializer();
+        register(DVDATE, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvDate
+     *
+     * @return nova instância de DvDate
+     */
+    @Override
+    public DvDate deserializeDvDate() {
+        DvDateSerializer d = new DvDateSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVDATE));
+    }
+
+    /**
+     * Serializador de DvTime.
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvTime(DvTime d) {
+        DvTimeSerializer s = new DvTimeSerializer();
+        register(DVTIME, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvTime.
+     *
+     * @return nova instância de DvTime
+     */
+    @Override
+    public DvTime deserializeDvTime() {
+        DvTimeSerializer d = new DvTimeSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVTIME));
+    }
+
+    /**
+     * Serializador de DvTime.
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvDateTime(DvDateTime d) {
+        DvDateTimeSerializer s = new DvDateTimeSerializer();
+        register(DVDATETIME, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvDateTime.
+     *
+     * @return nova instância de DvDateTime
+     */
+    @Override
+    public DvDateTime deserializeDvDateTime() {
+        DvDateTimeSerializer d = new DvDateTimeSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVDATETIME));
+    }
+
+    /**
+     * Serializador de DvTemporal.
+     *
+     * @param d
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeDvTemporal(DvTemporal d) {
+        DvTemporalSerializer s = new DvTemporalSerializer();
+        register(DVTEMPORAL, offset);
+        setOffset(s.serialize(buffer, offset, d));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de DvTemporal.
+     *
+     * @return nova instância de DvTemporal
+     */
+    @Override
+    public DvTemporal deserializeDvTemporal() {
+        DvTemporalSerializer d = new DvTemporalSerializer();
+        return d.deserialize(buffer, getOffsetFromID(DVTEMPORAL));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id

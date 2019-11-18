@@ -2274,4 +2274,136 @@ public class RMObject {
             return id;
         }
     }
+
+    public static class DvTemporal {
+        private final DvAbsoluteQuantityWithDvDuration dvAbsoluteQuantity;
+        private final String value;
+
+        public DvTemporal(DvAbsoluteQuantityWithDvDuration dvAbsoluteQuantity,
+                          String value) {
+            this.dvAbsoluteQuantity = dvAbsoluteQuantity;
+            this.value = value;
+        }
+
+        public DvAbsoluteQuantityWithDvDuration getDvAbsoluteQuantity() {
+            return dvAbsoluteQuantity;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public static class DvDateTime {
+        private final boolean isPartial;
+        private final boolean minuteKnown;
+        private final boolean secondKnown;
+        private final boolean fractionalSecKnown;
+        private final DvTemporal dvTemporal;
+        private final DvDate dateTime;
+
+        public DvDateTime(boolean isPartial, boolean minuteKnown,
+                          boolean secondKnown, boolean fractionalSecKnown,
+                          DvTemporal dvTemporal, DvDate dateTime) {
+            this.isPartial = isPartial;
+            this.minuteKnown = minuteKnown;
+            this.secondKnown = secondKnown;
+            this.fractionalSecKnown = fractionalSecKnown;
+            this.dvTemporal = dvTemporal;
+            this.dateTime = dateTime;
+        }
+
+        public boolean isPartial() {
+            return isPartial;
+        }
+
+        public boolean isMinuteKnown() {
+            return minuteKnown;
+        }
+
+        public boolean isSecondKnown() {
+            return secondKnown;
+        }
+
+        public boolean isFractionalSecKnown() {
+            return fractionalSecKnown;
+        }
+
+        public DvTemporal getDvTemporal() {
+            return dvTemporal;
+        }
+
+        public DvDate getDateTime() {
+            return dateTime;
+        }
+    }
+
+    public static class DvTime {
+        private final boolean isPartial;
+        private final boolean minuteKnown;
+        private final boolean secondKnown;
+        private final boolean fractionalSecKnown;
+        private final DvTemporal dvTemporal;
+
+        public DvTime(boolean isPartial, boolean minuteKnown,
+                          boolean secondKnown, boolean fractionalSecKnown,
+                          DvTemporal dvTemporal) {
+            this.isPartial = isPartial;
+            this.minuteKnown = minuteKnown;
+            this.secondKnown = secondKnown;
+            this.fractionalSecKnown = fractionalSecKnown;
+            this.dvTemporal = dvTemporal;
+        }
+
+        public boolean isPartial() {
+            return isPartial;
+        }
+
+        public boolean isMinuteKnown() {
+            return minuteKnown;
+        }
+
+        public boolean isSecondKnown() {
+            return secondKnown;
+        }
+
+        public boolean isFractionalSecKnown() {
+            return fractionalSecKnown;
+        }
+
+        public DvTemporal getDvTemporal() {
+            return dvTemporal;
+        }
+    }
+
+    public static class DvDate {
+        private final boolean dayKnown;
+        private final boolean monthKnown;
+        private final boolean isPartial;
+        private final DvTemporal dvTemporal;
+
+        public DvDate(boolean dayKnown, boolean monthKnown, boolean isPartial,
+                      DvTemporal dvTemporal) {
+            this.dayKnown = dayKnown;
+            this.monthKnown = monthKnown;
+            this.isPartial = isPartial;
+            this.dvTemporal = dvTemporal;
+        }
+
+        public boolean isDayKnown() {
+            return dayKnown;
+        }
+
+        public boolean isMonthKnown() {
+            return monthKnown;
+        }
+
+        public boolean isPartial() {
+            return isPartial;
+        }
+
+        public DvTemporal getDvTemporal() {
+            return dvTemporal;
+        }
+    }
 }

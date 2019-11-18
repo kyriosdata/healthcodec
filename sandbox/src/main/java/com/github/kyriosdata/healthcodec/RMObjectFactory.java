@@ -459,4 +459,32 @@ public class RMObjectFactory {
             DvQuantified dvQuantified, DvDuration dvDuration){
         return new DvAbsoluteQuantityWithDvDuration(dvQuantified,dvDuration);
     }
+
+    public static DvTemporal newDvTemporal(
+            DvAbsoluteQuantityWithDvDuration dvAbsoluteQuantity, String value){
+        return new DvTemporal(dvAbsoluteQuantity, value);
+    }
+
+    public static DvDate newDvDate(boolean dayKnown, boolean monthKnown,
+                                   boolean isPartial, DvTemporal dvTemporal){
+        return new DvDate(isPartial, monthKnown, isPartial, dvTemporal);
+    }
+
+    public static DvTime newDvTime(boolean isPartial, boolean minuteKnown,
+                                   boolean secondKnown, boolean fractionalSecKnown,
+                                   DvTemporal dvTemporal){
+        return new DvTime(isPartial, minuteKnown, secondKnown,
+                fractionalSecKnown, dvTemporal);
+    }
+
+    public static DvDateTime newDvDateTime(boolean isPartial,
+                                            boolean minuteKnown,
+                                            boolean secondKnown,
+                                            boolean fractionalSecKnown,
+                                            DvTemporal dvTemporal,
+                                            DvDate dateTime){
+        return new DvDateTime(isPartial, minuteKnown, secondKnown,
+                fractionalSecKnown,dvTemporal, dateTime);
+    }
+
 }

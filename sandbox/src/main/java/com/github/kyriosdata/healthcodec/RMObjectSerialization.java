@@ -4939,12 +4939,11 @@ public class RMObjectSerialization {
                                 DvAbsoluteQuantityWithDvCount d){
             int meta = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
-
-            DvQuantifiedSerializer dfs = new DvQuantifiedSerializer();
+            DvQuantifiedSerializer dqs = new DvQuantifiedSerializer();
             DvCountSerializer dcs = new DvCountSerializer();
 
             meta = writeHeader(buffer, meta, position);
-            position = dfs.serialize(buffer, position, d.getDvQuantified());
+            position = dqs.serialize(buffer, position, d.getDvQuantified());
 
             writeHeader(buffer, meta, position);
             position = dcs.serialize(buffer, position, d.getDvCount());
@@ -5076,6 +5075,252 @@ public class RMObjectSerialization {
 
             return RMObjectFactory.newDvAbsoluteQuantity(dvQuantified,
                     dvQuantity);
+        }
+    }
+
+    public static class DvDateSerializer {
+        protected int serialize(Buffer buffer, int offset, boolean dayKnown,
+                                boolean monthKnown, boolean isPartial,
+                                DvTemporal dvTemporal){
+            int position = offset;
+            DvTemporalSerializer dts = new DvTemporalSerializer();
+
+            buffer.writeBoolean(position, dayKnown);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            buffer.writeBoolean(position, monthKnown);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            buffer.writeBoolean(position, isPartial);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            position = dts.serialize(buffer, position, dvTemporal);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, DvDate dvDate){
+            int position = offset;
+
+            DvDateSerializer dds = new DvDateSerializer();
+
+            position = dds.serialize(buffer, position, dvDate.isDayKnown(),
+                    dvDate.isMonthKnown(), dvDate.isPartial(),
+                    dvDate.getDvTemporal());
+
+            return position;
+        }
+
+        protected DvDate deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            DvTemporalSerializer dts = new DvTemporalSerializer();
+
+            boolean dayKnown = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            boolean monthKnown = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            boolean isPartial = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            DvTemporal dvTemporal = dts.deserialize(buffer, position);
+
+            return RMObjectFactory.newDvDate(dayKnown, monthKnown, isPartial,
+                    dvTemporal);
+
+        }
+    }
+
+    public static class DvTemporalSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                DvAbsoluteQuantityWithDvDuration dvAbsoluteQuantity,
+                                String value){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
+            DvAbsoluteQuantitySerializer das = new DvAbsoluteQuantitySerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = das.serialize(buffer, position, dvAbsoluteQuantity);
+
+            writeHeader(buffer, meta, position);
+            position = stringSerialization(buffer, position, value);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, DvTemporal dvTemporal){
+           int position = offset;
+
+            DvTemporalSerializer das = new DvTemporalSerializer();
+
+            position = das.serialize(buffer, position,
+                    dvTemporal.getDvAbsoluteQuantity(), dvTemporal.getValue());
+
+            return position;
+        }
+
+        protected DvTemporal deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            int dvAbsoluteQuantityPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvAbsoluteQuantitySerializer das = new DvAbsoluteQuantitySerializer();
+
+            DvAbsoluteQuantityWithDvDuration d = das.deserializeDvDuration(buffer,
+                    dvAbsoluteQuantityPosition);
+
+            int valuePosition = buffer.readInteger(position);
+            String value = stringDeserialization(buffer, valuePosition);
+
+            return RMObjectFactory.newDvTemporal(d, value);
+        }
+
+    }
+
+
+    public static class DvTimeSerializer {
+        protected int serialize(Buffer buffer, int offset, boolean isPartial,
+                                boolean minuteKnown, boolean secondKnown,
+                                boolean fractionalSecKnown,
+                                DvTemporal dvTemporal){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
+            DvTemporalSerializer dts = new DvTemporalSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, dvTemporal);
+
+            writeHeader(buffer, meta, position);
+
+            buffer.writeBoolean(position, isPartial);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            buffer.writeBoolean(position, minuteKnown);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            buffer.writeBoolean(position, secondKnown);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            buffer.writeBoolean(position, fractionalSecKnown);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, DvTime dvTime){
+            int position = offset;
+            DvTimeSerializer dds = new DvTimeSerializer();
+
+            position = dds.serialize(buffer, position, dvTime.isPartial(),
+                    dvTime.isMinuteKnown(), dvTime.isSecondKnown(),
+                    dvTime.isFractionalSecKnown(), dvTime.getDvTemporal());
+
+            return position;
+        }
+
+        protected DvTime deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            DvTemporalSerializer dts = new DvTemporalSerializer();
+            DvDateSerializer dds = new DvDateSerializer();
+
+            int dvTemporalPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvTemporal dvTemporal = dts.deserialize(buffer, dvTemporalPosition);
+
+            int firstBooleanPosition = buffer.readInteger(position);
+
+            boolean isPartial = buffer.readBoolean(firstBooleanPosition);
+            firstBooleanPosition += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean minuteKnown = buffer.readBoolean(firstBooleanPosition);
+            firstBooleanPosition += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean secondKnown = buffer.readBoolean(firstBooleanPosition);
+            firstBooleanPosition += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean fractionalSecKnown = buffer.readBoolean(firstBooleanPosition);
+
+            return RMObjectFactory.newDvTime(isPartial, minuteKnown,
+                    secondKnown, fractionalSecKnown, dvTemporal);
+
+        }
+    }
+
+    public static class DvDateTimeSerializer {
+        protected int serialize(Buffer buffer, int offset, boolean isPartial,
+                                boolean minuteKnown, boolean secondKnown,
+                                boolean fractionalSecKnown,
+                                DvTemporal dvTemporal, DvDate dateTime){
+            int meta = offset;
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
+            DvTemporalSerializer dts = new DvTemporalSerializer();
+            DvDateSerializer dds = new DvDateSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, dvTemporal);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dds.serialize(buffer, position, dateTime);
+
+            writeHeader(buffer, meta, position);
+
+            buffer.writeBoolean(position, isPartial);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            buffer.writeBoolean(position, minuteKnown);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            buffer.writeBoolean(position, secondKnown);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            buffer.writeBoolean(position, fractionalSecKnown);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, DvDateTime dvDateTime){
+            int position = offset;
+            DvDateTimeSerializer dds = new DvDateTimeSerializer();
+
+            position = dds.serialize(buffer, position, dvDateTime.isPartial(),
+                    dvDateTime.isMinuteKnown(), dvDateTime.isSecondKnown(),
+                    dvDateTime.isFractionalSecKnown(), dvDateTime.getDvTemporal(),
+                    dvDateTime.getDateTime());
+
+            return position;
+        }
+
+        protected DvDateTime deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            DvTemporalSerializer dts = new DvTemporalSerializer();
+            DvDateSerializer dds = new DvDateSerializer();
+
+            int dvTemporalPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvTemporal dvTemporal = dts.deserialize(buffer, dvTemporalPosition);
+
+            int dateTimePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDate dateTime = dds.deserialize(buffer, dateTimePosition);
+
+            int firstBooleanPosition = buffer.readInteger(position);
+
+            boolean isPartial = buffer.readBoolean(firstBooleanPosition);
+            firstBooleanPosition += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean minuteKnown = buffer.readBoolean(firstBooleanPosition);
+            firstBooleanPosition += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean secondKnown = buffer.readBoolean(firstBooleanPosition);
+            firstBooleanPosition += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean fractionalSecKnown = buffer.readBoolean(firstBooleanPosition);
+
+            return RMObjectFactory.newDvDateTime(isPartial, minuteKnown,
+                    secondKnown, fractionalSecKnown, dvTemporal, dateTime);
         }
     }
     
@@ -5230,7 +5475,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, DvQuantified d){
             int position = offset;
             DvQuantifiedSerializer dqs = new DvQuantifiedSerializer();
-            dqs.serialize(buffer, position, d.getDvOrdered(),
+            position = dqs.serialize(buffer, position, d.getDvOrdered(),
                     d.getMagnitudeStatus());
 
             return position;
@@ -5240,12 +5485,12 @@ public class RMObjectSerialization {
             int position = offset;
             DvOrderedSerializer dos = new DvOrderedSerializer();
 
-            int dvOrederedPosition = buffer.readInteger(position);
+            int dvOrderedPosition = buffer.readInteger(position);
             position += PrimitiveTypeSize.INT.getSize();
-            DvOrdered dvOrdered = dos.deserialize(buffer, dvOrederedPosition);
+            DvOrdered dvOrdered = dos.deserialize(buffer, dvOrderedPosition);
 
             boolean hasMagnitudeStatus = buffer.readBoolean(position);
-            position +=PrimitiveTypeSize.BOOLEAN.getSize();
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
             String magnitudeStatus = null;
             if(hasMagnitudeStatus){
                 int magnitudeStatusPosition = buffer.readInteger(position);

@@ -536,4 +536,28 @@ public interface Deserializer {
      */
     RMObject.DvAbsoluteQuantityWithDvQuantity
         deserializeDvAbsoluteQuantityDvQuantity();
+
+    /**
+     * Deserializador de DvDate.
+     * @return nova instância de DvDate
+     */
+    RMObject.DvDate deserializeDvDate();
+
+    /**
+     * Deserializador de DvTime.
+     * @return nova instância de DvTime
+     */
+    RMObject.DvTime deserializeDvTime();
+
+    /**
+     * Deserializador de DvDateTime.
+     * @return nova instância de DvDateTime
+     */
+    RMObject.DvDateTime deserializeDvDateTime();
+
+    /**
+     * Deserializador de DvTemporal.
+     * @return nova instância de DvTemporal
+     */
+    RMObject.DvTemporal deserializeDvTemporal();
 }

@@ -49,7 +49,7 @@ public class DvAbsoluteQuantityTest {
     void testDvAbsoluteQuantityWithDvCountTest(){
         DvAbsoluteQuantityWithDvCount d = RMObjectTestHelper.dvAQDvCount();
         s.serializeDvAbsoluteQuantity(d);
-        s.deserializeDvAbsoluteQuantityDvCount();
+        d = s.deserializeDvAbsoluteQuantityDvCount();
 
         testValidDvAbsoluteQuantity(d);
     }
@@ -58,7 +58,7 @@ public class DvAbsoluteQuantityTest {
     void testDvAbsoluteQuantityWithDvQuantityTest(){
         DvAbsoluteQuantityWithDvQuantity d = RMObjectTestHelper.dvAQDvQuantity();
         s.serializeDvAbsoluteQuantity(d);
-        s.deserializeDvAbsoluteQuantityDvQuantity();
+        d = s.deserializeDvAbsoluteQuantityDvQuantity();
 
         testValidDvAbsoluteQuantity(d);
     }
@@ -67,7 +67,7 @@ public class DvAbsoluteQuantityTest {
     void testDvAbsoluteQuantityWithDvProportionTest(){
         DvAbsoluteQuantityWithDvProportion d = RMObjectTestHelper.dvAQDvProportion();
         s.serializeDvAbsoluteQuantity(d);
-        s.deserializeDvAbsoluteQuantityDvProportion();
+        d = s.deserializeDvAbsoluteQuantityDvProportion();
 
         testValidDvAbsoluteQuantity(d);
     }
@@ -76,7 +76,7 @@ public class DvAbsoluteQuantityTest {
     void testDvAbsoluteQuantityWithDvDurationTest(){
         DvAbsoluteQuantityWithDvDuration d = RMObjectTestHelper.dvAQDvDuration();
         s.serializeDvAbsoluteQuantity(d);
-        s.deserializeDvAbsoluteQuantityDvDuration();
+        d = s.deserializeDvAbsoluteQuantityDvDuration();
 
         testValidDvAbsoluteQuantity(d);
     }

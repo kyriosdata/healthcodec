@@ -984,6 +984,54 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newDvDuration(dvAmount, value);
     }
 
+    /**
+     * Cria uma instância de DvTemporal com valor fixo
+     *
+     * @return nova instância de DvTemporal
+     */
+    public static DvTemporal dvTemporal(){
+        DvAbsoluteQuantityWithDvDuration d = dvAQDvDuration();
+        String value = "HH:mm:ss";
+
+        return RMObjectFactory.newDvTemporal(d, value);
+
+    }
+
+    /**
+     * Cria uma instância de DvDate com valor fixo
+     *
+     * @return nova instância de DvDate
+     */
+    public static DvDate dvDate(){
+        DvTemporal dvTemporal = dvTemporal();
+        return RMObjectFactory.newDvDate(true, false,
+                true, dvTemporal);
+    }
+
+    /**
+     * Cria uma instância de DvDateTime com valor fixo
+     *
+     * @return nova instância de DvDateTime
+     */
+    public static DvDateTime dvDateTime(){
+        DvTemporal dvTemporal = dvTemporal();
+        DvDate dateTime = dvDate();
+
+        return RMObjectFactory.newDvDateTime(true, false,
+                true, false, dvTemporal,
+                dateTime);
+    }
+
+    /**
+     * Cria uma instância de DvTime com valor fixo
+     *
+     * @return nova instância de DvTime
+     */
+    public static DvTime dvTime(){
+        DvTemporal dvTemporal = dvTemporal();
+        return RMObjectFactory.newDvTime(true, false,
+                true, false, dvTemporal);
+    }
 
     /**
      * Método que gera uma lista de DvIdentifier

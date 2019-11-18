@@ -98,7 +98,11 @@ public enum RMObjectID {
     DVPROPORTION(75),
     DVQUANTITY(76),
     DVDURATION(77),
-    DVABSOLUTEQUANTITY(78);
+    DVABSOLUTEQUANTITY(78),
+    DVDATE(79),
+    DVTIME(80),
+    DVDATETIME(81),
+    DVTEMPORAL(82);
 
     
     private final int value;

@@ -803,4 +803,40 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeDvAbsoluteQuantity(
             DvAbsoluteQuantityWithDvQuantity d);
+
+    /**
+     * Serializador de DvDate.
+     *
+     * @param d
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeDvDate(DvDate d);
+
+    /**
+     * Serializador de DvTime.
+     *
+     * @param d
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeDvTime(DvTime d);
+
+    /**
+     * Serializador de DvDateTime.
+     *
+     * @param d
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeDvDateTime(DvDateTime d);
+
+    /**
+     * Serializador de DvTemporal.
+     *
+     * @param d
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeDvTemporal(DvTemporal d);
 }
