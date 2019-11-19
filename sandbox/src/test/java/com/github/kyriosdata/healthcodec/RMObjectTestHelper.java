@@ -1045,6 +1045,19 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de Contribution com valor fixo.
+     *
+     * @return nova instância de Contribution
+     */
+    public static Contribution contribution(){
+        ObjectID uid = objectID();
+        Set<ObjectRef> versions = objectRefSet(false);
+        AuditDetails audit = auditDetails();
+
+        return RMObjectFactory.newContribution(uid, versions, audit);
+    }
+
+    /**
      * Cria uma instância de RevisionHistoryItem com valor fixo
      *
      * @return nova instância de RevisionHistoryItem
@@ -1285,6 +1298,23 @@ public class RMObjectTestHelper {
         }
         DVEHRURI d = RMObjectTestHelper.dVEHRURI();
         set.add(d);
+
+        return set;
+    }
+
+    /**
+     * Método que gera um set de ObjectRef
+     *
+     * @param emptySet cria um set vazio
+     * @return set
+     */
+    public static Set<ObjectRef> objectRefSet(boolean emptySet){
+        Set<ObjectRef> set = new HashSet<>();
+        if(emptySet){
+            return set;
+        }
+        ObjectRef o = RMObjectTestHelper.objectRef();
+        set.add(o);
 
         return set;
     }

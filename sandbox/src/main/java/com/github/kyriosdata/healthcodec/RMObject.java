@@ -2576,4 +2576,42 @@ public class RMObject {
             return items;
         }
     }
+
+    public static class Contribution {
+        private final ObjectID uid;
+        private final Set<ObjectRef> versions;
+        private final AuditDetails audit;
+
+        public Contribution(ObjectID uid, Set<ObjectRef> versions,
+                            AuditDetails audit) {
+            if (uid == null) {
+                throw new IllegalArgumentException("null uid");
+            }
+            if (audit == null) {
+                throw new IllegalArgumentException("null audit");
+            }
+            if (audit.getDescription() == null) {
+                throw new IllegalArgumentException("null audit description");
+            }
+            if (versions == null || versions.isEmpty()) {
+                throw new IllegalArgumentException("invalid versions");
+            }
+            this.uid = uid;
+            this.versions = versions;
+            this.audit = audit;
+        }
+
+        public ObjectID getUid() {
+            return uid;
+        }
+
+        public Set<ObjectRef> getVersions() {
+            return versions;
+        }
+
+        public AuditDetails getAudit() {
+            return audit;
+        }
+    }
+
 }

@@ -742,6 +742,47 @@ public class RMObjectSerialization {
             
             return RMObjectFactory.newObjectRef(id, namespace, type);
         }
+
+        protected int setSerializer(Buffer buffer, int offset,
+                                    Set<ObjectRef> items) {
+            int setSize = items.size();
+            int position = offset + (setSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+            int meta = offset;
+            ObjectRefSerializer ors = new ObjectRefSerializer();
+
+            meta = writeHeader(buffer, meta, setSize);
+            Iterator<ObjectRef> it = items.iterator();
+
+            while (it.hasNext()){
+                ObjectRef or = it.next();
+                int objectRefPosition = position;
+                meta = writeHeader(buffer, meta, objectRefPosition);
+                position = ors.serialize(buffer, position, or);
+            }
+
+            return position;
+        }
+
+        protected Set<ObjectRef> setDeserializer(Buffer buffer, int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            ObjectRefSerializer ors = new ObjectRefSerializer();
+            Set<ObjectRef> items = new HashSet<>();
+
+            for (int i = 0; i < listSize; i++){
+                int orPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+
+                ObjectRef or = ors.deserialize(buffer, orPosition);
+                items.add(or);
+            }
+
+            return items;
+        }
     }
 
     static class LocatableRefSerializer {
@@ -6098,6 +6139,62 @@ public class RMObjectSerialization {
                     position);
 
             return RMObjectFactory.newRevisionHistory(items);
+        }
+    }
+
+    public static class ContributionSerializer {
+        protected int serialize(Buffer buffer, int offset, ObjectID uid,
+                                Set<ObjectRef> versions, AuditDetails audit){
+            int meta = offset;
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
+
+            ObjectIDSerializer ois = new ObjectIDSerializer();
+            ObjectRefSerializer ors = new ObjectRefSerializer();
+            AuditDetailsSerializer ads = new AuditDetailsSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = ois.serialize(buffer, position, uid);
+
+            meta = writeHeader(buffer, meta, position);
+            position = ors.setSerializer(buffer, position, versions);
+
+            writeHeader(buffer, meta, position);
+            position = ads.serialize(buffer, position, audit);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, Contribution c){
+            int position = offset;
+
+            ContributionSerializer cs = new ContributionSerializer();
+
+            position = cs.serialize(buffer, position, c.getUid(),
+                    c.getVersions(), c.getAudit());
+
+            return position;
+        }
+
+        protected Contribution deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            ObjectIDSerializer ois = new ObjectIDSerializer();
+            ObjectRefSerializer ors = new ObjectRefSerializer();
+            AuditDetailsSerializer ads = new AuditDetailsSerializer();
+
+            int uidPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            ObjectID uid = ois.deserialize(buffer, uidPosition);
+
+            int versionPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            Set<ObjectRef> versions = ors.setDeserializer(buffer,
+                    versionPosition);
+
+            int auditPosition = buffer.readInteger(position);
+            AuditDetails audit = ads.deserialize(buffer, auditPosition);
+
+            return RMObjectFactory.newContribution(uid, versions, audit);
         }
     }
 

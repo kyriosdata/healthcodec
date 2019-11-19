@@ -521,4 +521,10 @@ public class RMObjectFactory {
         return new RevisionHistory(items);
     }
 
+    public static Contribution newContribution(ObjectID uid,
+                                               Set<ObjectRef> versions,
+                                               AuditDetails audit){
+        return new Contribution(uid, versions, audit);
+    }
+
 }

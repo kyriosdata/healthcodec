@@ -887,4 +887,14 @@ public interface Serializer {
     RMObjectSerializationClient serializeRevisionHistory(
             RevisionHistory r);
 
+    /**
+     * Serializador de Contribution.
+     *
+     * @param r
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeContribution(
+            Contribution c);
+
 }

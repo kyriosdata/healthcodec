@@ -2525,6 +2525,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de Contribution.
+     *
+     * @param c
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeContribution(Contribution c) {
+        ContributionSerializer s = new ContributionSerializer();
+        register(CONTRIBUTION, offset);
+        setOffset(s.serialize(buffer, offset, c));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Contribution.
+     *
+     * @return nova instância de Contribution
+     */
+    @Override
+    public Contribution deserializeContribution() {
+        ContributionSerializer d = new ContributionSerializer();
+        return d.deserialize(buffer, getOffsetFromID(CONTRIBUTION));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id

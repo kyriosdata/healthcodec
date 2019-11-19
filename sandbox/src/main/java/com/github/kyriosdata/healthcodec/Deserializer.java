@@ -587,7 +587,13 @@ public interface Deserializer {
 
     /**
      * Deserializador de RevisionHistory.
-     * @return nova instância de RevisionHistoryItem
+     * @return nova instância de RevisionHistory
      */
     RMObject.RevisionHistory deserializeRevisionHistory();
+
+    /**
+     * Deserializador de Contribution.
+     * @return nova instância de Contribution
+     */
+    RMObject.Contribution deserializeContribution();
 }
