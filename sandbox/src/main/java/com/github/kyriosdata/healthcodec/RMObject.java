@@ -2406,4 +2406,174 @@ public class RMObject {
             return dvTemporal;
         }
     }
+
+    public static class Participation {
+        private final PartyProxy performer;
+        private final DvText function;
+        private final DvCodedText mode;
+        private final DvInterval time;
+
+        public PartyProxy getPerformer() {
+            return performer;
+        }
+
+        public DvText getFunction() {
+            return function;
+        }
+
+        public DvCodedText getMode() {
+            return mode;
+        }
+
+        public DvInterval getTime() {
+            return time;
+        }
+
+        public Participation(PartyProxy performer, DvText function,
+                             DvCodedText mode, DvInterval time) {
+            if (performer == null) {
+                throw new IllegalArgumentException("null performer");
+            }
+            if (function == null) {
+                throw new IllegalArgumentException("null function");
+            }
+            if (mode == null) {
+                throw new IllegalArgumentException("null mode");
+            }
+            this.performer = performer;
+            this.function = function;
+            this.mode = mode;
+            this.time = time;
+        }
+    }
+
+    public static class AuditDetails {
+        private final String timePosition;
+        private final PartyProxy committer;
+        private final DvDateTime timeCommitted;
+        private final DvCodedText changeType;
+        private final DvText description;
+
+        public AuditDetails(String timePosition, PartyProxy committer,
+                            DvDateTime timeCommitted, DvCodedText changeType,
+                            DvText description) {
+            this.timePosition = timePosition;
+            this.committer = committer;
+            this.timeCommitted = timeCommitted;
+            this.changeType = changeType;
+            this.description = description;
+        }
+
+        public String getTimePosition() {
+            return timePosition;
+        }
+
+        public PartyProxy getCommitter() {
+            return committer;
+        }
+
+        public DvDateTime getTimeCommitted() {
+            return timeCommitted;
+        }
+
+        public DvCodedText getChangeType() {
+            return changeType;
+        }
+
+        public DvText getDescription() {
+            return description;
+        }
+    }
+
+    public static class Attestation {
+        private final AuditDetails auditDetails;
+        private final DvMultimedia attestedView;
+        private final String proof;
+        private final Set<DVEHRURI> items;
+        private final DvText reason;
+        private final boolean isPending;
+
+        public Attestation(AuditDetails auditDetails, DvMultimedia attestedView,
+                           String proof, Set<DVEHRURI> items, DvText reason,
+                           boolean isPending) {
+            if (items != null && items.isEmpty()) {
+                throw new IllegalArgumentException("empty items");
+            }
+            if (reason == null) {
+                throw new IllegalArgumentException("null reason");
+            }
+
+            this.auditDetails = auditDetails;
+            this.attestedView = attestedView;
+            this.proof = proof;
+            this.items = items;
+            this.reason = reason;
+            this.isPending = isPending;
+        }
+
+        public AuditDetails getAuditDetails() {
+            return auditDetails;
+        }
+
+        public DvMultimedia getAttestedView() {
+            return attestedView;
+        }
+
+        public String getProof() {
+            return proof;
+        }
+
+        public Set<DVEHRURI> getItems() {
+            return items;
+        }
+
+        public DvText getReason() {
+            return reason;
+        }
+
+        public boolean isPending() {
+            return isPending;
+        }
+    }
+
+    public static class RevisionHistoryItem {
+        private final List<AuditDetails> audits;
+        private final ObjectVersionID versionID;
+
+        public RevisionHistoryItem(List<AuditDetails> audits,
+                                   ObjectVersionID versionID) {
+            if (audits == null || audits.size() == 0) {
+                throw new IllegalArgumentException("empty audits");
+            }
+            if (versionID == null) {
+                throw new IllegalArgumentException("null versionId");
+            }
+
+            this.audits = audits;
+            this.versionID = versionID;
+        }
+
+        public List<AuditDetails> getAudits() {
+            return audits;
+        }
+
+        public ObjectVersionID getVersionID() {
+            return versionID;
+        }
+    }
+
+    public static class RevisionHistory {
+        private final List<RevisionHistoryItem> items;
+
+        public RevisionHistory(List<RevisionHistoryItem> items) {
+            if (items == null || items.size() == 0) {
+                throw new IllegalArgumentException("empty items");
+            }
+            this.items = items;
+        }
+
+        public List<RevisionHistoryItem> getItems() {
+            return items;
+        }
+    }
 }

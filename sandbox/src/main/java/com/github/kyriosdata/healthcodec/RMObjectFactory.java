@@ -467,7 +467,7 @@ public class RMObjectFactory {
 
     public static DvDate newDvDate(boolean dayKnown, boolean monthKnown,
                                    boolean isPartial, DvTemporal dvTemporal){
-        return new DvDate(isPartial, monthKnown, isPartial, dvTemporal);
+        return new DvDate(dayKnown, monthKnown, isPartial, dvTemporal);
     }
 
     public static DvTime newDvTime(boolean isPartial, boolean minuteKnown,
@@ -485,6 +485,40 @@ public class RMObjectFactory {
                                             DvDate dateTime){
         return new DvDateTime(isPartial, minuteKnown, secondKnown,
                 fractionalSecKnown,dvTemporal, dateTime);
+    }
+
+    public static Participation newParticipation(PartyProxy performer,
+                                                 DvText function,
+                                                 DvCodedText mode,
+                                                 DvInterval time){
+        return new Participation(performer, function, mode, time);
+    }
+
+    public static AuditDetails newAuditDetails(String timePosition,
+                                               PartyProxy committer,
+                                               DvDateTime timeCommitted,
+                                               DvCodedText changeType,
+                                               DvText description){
+        return new AuditDetails(timePosition, committer, timeCommitted,
+                changeType, description);
+    }
+
+    public static Attestation newAttestation(AuditDetails auditDetails,
+                                             DvMultimedia attestedView,
+                                             String proof, Set<DVEHRURI> items,
+                                             DvText reason, boolean isPending){
+        return new Attestation(auditDetails, attestedView, proof, items, reason,
+                isPending);
+    }
+
+    public static RevisionHistoryItem newRevisionHistoryItem(
+            List<AuditDetails> audits, ObjectVersionID versionID){
+        return new RevisionHistoryItem(audits, versionID);
+    }
+
+    public static RevisionHistory newRevisionHistory(
+            List<RevisionHistoryItem> items){
+        return new RevisionHistory(items);
     }
 
 }

@@ -560,4 +560,34 @@ public interface Deserializer {
      * @return nova instância de DvTemporal
      */
     RMObject.DvTemporal deserializeDvTemporal();
+
+    /**
+     * Deserializador de Participation.
+     * @return nova instância de Participation
+     */
+    RMObject.Participation deserializeParticipation();
+
+    /**
+     * Deserializador de AuditDetails.
+     * @return nova instância de AuditDetails
+     */
+    RMObject.AuditDetails deserializeAuditDetails();
+
+    /**
+     * Deserializador de Attestation.
+     * @return nova instância de Attestation
+     */
+    RMObject.Attestation deserializeAttestation();
+
+    /**
+     * Deserializador de RevisionHistoryItem.
+     * @return nova instância de RevisionHistoryItem
+     */
+    RMObject.RevisionHistoryItem deserializeRevisionHistoryItem();
+
+    /**
+     * Deserializador de RevisionHistory.
+     * @return nova instância de RevisionHistoryItem
+     */
+    RMObject.RevisionHistory deserializeRevisionHistory();
 }

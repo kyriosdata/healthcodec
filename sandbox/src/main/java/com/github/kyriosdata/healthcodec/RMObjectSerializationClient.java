@@ -2393,6 +2393,138 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de Participation.
+     *
+     * @param p
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeParticipation(Participation p) {
+        ParticipationSerializer s = new ParticipationSerializer();
+        register(PARTICIPATION, offset);
+        setOffset(s.serialize(buffer, offset, p));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Participation.
+     *
+     * @return nova instância de Participation
+     */
+    @Override
+    public Participation deserializeParticipation() {
+        ParticipationSerializer d = new ParticipationSerializer();
+        return d.deserialize(buffer, getOffsetFromID(PARTICIPATION));
+    }
+
+    /**
+     * Serializador de AuditDetails.
+     *
+     * @param a
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeAuditDetails(AuditDetails a) {
+        AuditDetailsSerializer s = new AuditDetailsSerializer();
+        register(AUDITDETAILS, offset);
+        setOffset(s.serialize(buffer, offset, a));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de AuditDetails.
+     *
+     * @return nova instância de AuditDetails
+     */
+    @Override
+    public AuditDetails deserializeAuditDetails() {
+        AuditDetailsSerializer d = new AuditDetailsSerializer();
+        return d.deserialize(buffer, getOffsetFromID(AUDITDETAILS));
+    }
+
+    /**
+     * Serializador de AuditDetails.
+     *
+     * @param a
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeAttestation(Attestation a) {
+        AttestationSerializer s = new AttestationSerializer();
+        register(ATTESTATION, offset);
+        setOffset(s.serialize(buffer, offset, a));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Attestation.
+     *
+     * @return nova instância de Attestation
+     */
+    @Override
+    public Attestation deserializeAttestation() {
+        AttestationSerializer d = new AttestationSerializer();
+        return d.deserialize(buffer, getOffsetFromID(ATTESTATION));
+    }
+
+    /**
+     * Serializador de RevisionHistoryItem.
+     *
+     * @param r
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeRevisionHistoryItem(
+            RevisionHistoryItem r) {
+        RevisionHistoryItemSerializer s = new RevisionHistoryItemSerializer();
+        register(REVISIONHISTORYITEM, offset);
+        setOffset(s.serialize(buffer, offset, r));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de RevisionHistoryItem.
+     *
+     * @return nova instância de RevisionHistoryItem
+     */
+    @Override
+    public RevisionHistoryItem deserializeRevisionHistoryItem() {
+        RevisionHistoryItemSerializer d = new RevisionHistoryItemSerializer();
+        return d.deserialize(buffer, getOffsetFromID(REVISIONHISTORYITEM));
+    }
+
+    /**
+     * Serializador de RevisionHistory.
+     *
+     * @param r
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeRevisionHistory(
+            RevisionHistory r) {
+        RevisionHistorySerializer s = new RevisionHistorySerializer();
+        register(REVISIONHISTORY, offset);
+        setOffset(s.serialize(buffer, offset, r));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de RevisionHistory.
+     *
+     * @return nova instância de RevisionHistory
+     */
+    @Override
+    public RevisionHistory deserializeRevisionHistory() {
+        RevisionHistorySerializer d = new RevisionHistorySerializer();
+        return d.deserialize(buffer, getOffsetFromID(REVISIONHISTORY));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id

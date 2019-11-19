@@ -839,4 +839,52 @@ public interface Serializer {
      *
      */
     RMObjectSerializationClient serializeDvTemporal(DvTemporal d);
+
+    /**
+     * Serializador de Participation.
+     *
+     * @param p
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeParticipation(Participation p);
+
+    /**
+     * Serializador de AuditDetails.
+     *
+     * @param a
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeAuditDetails(AuditDetails a);
+
+    /**
+     * Serializador de Attestation.
+     *
+     * @param a
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeAttestation(Attestation a);
+
+    /**
+     * Serializador de RevisionHistoryItem.
+     *
+     * @param r
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeRevisionHistoryItem(
+            RevisionHistoryItem r);
+
+    /**
+     * Serializador de RevisionHistory.
+     *
+     * @param r
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeRevisionHistory(
+            RevisionHistory r);
+
 }

@@ -468,6 +468,47 @@ public class RMObjectSerialization {
 
             return RMObjectFactory.newDVEHRURI(value);
         }
+
+        protected int setSerializer(Buffer buffer, int offset,
+                                    Set<DVEHRURI> items) {
+            int setSize = items.size();
+            int position = offset + (setSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+            int meta = offset;
+            DVEHRURISerializer des = new DVEHRURISerializer();
+
+            meta = writeHeader(buffer, meta, setSize);
+            Iterator<DVEHRURI> it = items.iterator();
+
+            while (it.hasNext()){
+                DVEHRURI d = it.next();
+                int dvPosition = position;
+                meta = writeHeader(buffer, meta, dvPosition);
+                position = des.serialize(buffer, position, d);
+            }
+
+            return position;
+        }
+
+        protected Set<DVEHRURI> setDeserializer(Buffer buffer, int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            DVEHRURISerializer des = new DVEHRURISerializer();
+            Set<DVEHRURI> dves = new HashSet<>();
+
+            for (int i = 0; i < listSize; i++){
+                int dvPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+
+                DVEHRURI dv = des.deserialize(buffer, dvPosition);
+                dves.add(dv);
+            }
+
+            return dves;
+        }
     }
 
     static class VersionTreeIDSerializer {
@@ -5664,6 +5705,401 @@ public class RMObjectSerialization {
         }
     }
 
+    public static class ParticipationSerializer {
+        protected int serialize(Buffer buffer, int offset, PartyProxy performer,
+                                DvText function, DvCodedText mode,
+                                DvInterval time){
+            int meta = offset;
+            int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
+
+            PartyProxySerializer pps = new PartyProxySerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+            DvIntervalSerializer dis = new DvIntervalSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = pps.serialize(buffer, position, performer);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, function);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dcs.serialize(buffer, position, mode);
+
+            writeHeader(buffer, meta, position);
+            position = dis.serialize(buffer, position, time);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, Participation p){
+            int position = offset;
+
+            ParticipationSerializer ps = new ParticipationSerializer();
+
+            position = ps.serialize(buffer, position, p.getPerformer(),
+                    p.getFunction(), p.getMode(), p.getTime());
+
+            return position;
+        }
+
+        protected Participation deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            PartyProxySerializer pps = new PartyProxySerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+            DvIntervalSerializer dis = new DvIntervalSerializer();
+
+            int performerPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            PartyProxy performer = pps.deserialize(buffer, performerPosition);
+
+            int functionPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvText function = dts.deserialize(buffer, functionPosition);
+
+            int modePosition= buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvCodedText mode = dcs.deserialize(buffer, modePosition);
+
+            int timePosition = buffer.readInteger(position);
+            DvInterval time = dis.deserialize(buffer, timePosition);
+
+            return RMObjectFactory.newParticipation(performer, function, mode,
+                    time);
+        }
+    }
+
+    public static class AuditDetailsSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                String timePosition, PartyProxy committer,
+                                DvDateTime timeCommitted,
+                                DvCodedText changeType, DvText description){
+            int meta = offset;
+            int position = offset + 5 * PrimitiveTypeSize.INT.getSize();
+
+            PartyProxySerializer pps = new PartyProxySerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+            DvDateTimeSerializer dds = new DvDateTimeSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = stringSerialization(buffer, position, timePosition);
+
+            meta = writeHeader(buffer, meta, position);
+            position = pps.serialize(buffer, position, committer);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dds.serialize(buffer, position,
+                    timeCommitted);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dcs.serialize(buffer, position, changeType);
+
+            writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, description);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, AuditDetails a){
+            int position = offset;
+
+            AuditDetailsSerializer ads = new AuditDetailsSerializer();
+
+            position = ads.serialize(buffer, position, a.getTimePosition(),
+                    a.getCommitter(), a.getTimeCommitted(),
+                    a.getChangeType(), a.getDescription());
+
+            return position;
+        }
+
+        protected AuditDetails deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            PartyProxySerializer pps = new PartyProxySerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+            DvDateTimeSerializer dds = new DvDateTimeSerializer();
+
+            int timePositionPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            String timePosition = stringDeserialization(buffer,
+                    timePositionPosition);
+
+            int committerPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            PartyProxy committer = pps.deserialize(buffer,
+                    committerPosition);
+
+            int timeCommittedPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDateTime timeCommitted = dds.deserialize(buffer,
+                    timeCommittedPosition);
+
+            int changeTypePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvCodedText changeType = dcs.deserialize(buffer,
+                    changeTypePosition);
+
+            int descriptionPosition = buffer.readInteger(position);
+            DvText description = dts.deserialize(buffer,
+                    descriptionPosition);
+
+            return RMObjectFactory.newAuditDetails(timePosition,
+                    committer, timeCommitted, changeType, description);
+        }
+
+        protected int listSerialize(
+                Buffer buffer, int offset, List<AuditDetails> items)
+        {
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            AuditDetailsSerializer dis = new AuditDetailsSerializer();
+
+            for (AuditDetails a : items){
+                meta = writeHeader(buffer, meta, position);
+                position = dis.serialize(buffer, position, a);
+            }
+
+            return position;
+        }
+
+        protected List<AuditDetails> deserializeList(Buffer buffer, int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            List<AuditDetails> list = new ArrayList<>();
+            AuditDetailsSerializer dis = new AuditDetailsSerializer();
+
+            for (int i = 0; i < listSize; i++){
+                int auditDetailsPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                AuditDetails a = dis.deserialize(buffer, auditDetailsPosition);
+                list.add(a);
+            }
+
+            return list;
+        }
+    }
+
+    public static class AttestationSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                AuditDetails auditDetails,
+                                DvMultimedia attestedView, String proof,
+                                Set<DVEHRURI> items, DvText reason,
+                                boolean isPending){
+            int meta = offset;
+            int position = offset + 6 * PrimitiveTypeSize.INT.getSize();
+
+            AuditDetailsSerializer ads = new AuditDetailsSerializer();
+            DvMultimediaSerializer dms = new DvMultimediaSerializer();
+            DVEHRURISerializer des = new DVEHRURISerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = ads.serialize(buffer, position, auditDetails);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dms.serialize(buffer, position, attestedView);
+
+            meta = writeHeader(buffer, meta, position);
+            position = stringSerialization(buffer, position, proof);
+
+            meta = writeHeader(buffer, meta, position);
+            position = des.setSerializer(buffer, position, items);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, reason);
+
+            writeHeader(buffer, meta, position);
+            buffer.writeBoolean(position, isPending);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, Attestation a){
+            int position = offset;
+
+            AttestationSerializer as = new AttestationSerializer();
+
+            position = as.serialize(buffer, position, a.getAuditDetails(),
+                    a.getAttestedView(), a.getProof(), a.getItems(),
+                    a.getReason(), a.isPending());
+
+            return position;
+        }
+
+        protected Attestation deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            AuditDetailsSerializer ads = new AuditDetailsSerializer();
+            DvMultimediaSerializer dms = new DvMultimediaSerializer();
+            DVEHRURISerializer des = new DVEHRURISerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+
+            int auditDetailsPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            AuditDetails auditDetails = ads.deserialize(buffer,
+                    auditDetailsPosition);
+
+            int attestedViewPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvMultimedia attestedView = dms.deserialize(buffer,
+                    attestedViewPosition);
+
+            int proofPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            String proof = stringDeserialization(buffer, proofPosition);
+
+            int itemsPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            Set<DVEHRURI> items = des.setDeserializer(buffer, itemsPosition);
+
+            int reasonPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvText reason = dts.deserialize(buffer, reasonPosition);
+
+            int isPendingPosition = buffer.readInteger(position);
+            boolean isPending = buffer.readBoolean(isPendingPosition);
+
+            return RMObjectFactory.newAttestation(auditDetails, attestedView,
+                    proof, items, reason, isPending);
+        }
+    }
+
+    public static class RevisionHistoryItemSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                List<AuditDetails> audits,
+                                ObjectVersionID versionID){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
+
+            AuditDetailsSerializer ads = new AuditDetailsSerializer();
+            ObjectVersionIDSerializer ovs = new ObjectVersionIDSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = ads.listSerialize(buffer, position, audits);
+
+            writeHeader(buffer, meta, position);
+            position = ovs.serialize(buffer, position, versionID);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, RevisionHistoryItem r){
+            int position = offset;
+            RevisionHistoryItemSerializer rhs = new RevisionHistoryItemSerializer();
+
+            position = rhs.serialize(buffer, position, r.getAudits(),
+                    r.getVersionID());
+
+            return position;
+        }
+
+        protected RevisionHistoryItem deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            AuditDetailsSerializer ads = new AuditDetailsSerializer();
+            ObjectVersionIDSerializer ovs = new ObjectVersionIDSerializer();
+
+            int auditsPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            List<AuditDetails> audits = ads.deserializeList(buffer,
+                    auditsPosition);
+
+            int versionIDPosition = buffer.readInteger(position);
+            ObjectVersionID versionID = ovs.deserialize(buffer,
+                    versionIDPosition);
+
+            return RMObjectFactory.newRevisionHistoryItem(audits, versionID);
+        }
+
+        protected int listSerialize(
+                Buffer buffer, int offset, List<RevisionHistoryItem> items)
+        {
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            RevisionHistoryItemSerializer rhs =
+                    new RevisionHistoryItemSerializer();
+
+            for (RevisionHistoryItem r : items){
+                meta = writeHeader(buffer, meta, position);
+                position = rhs.serialize(buffer, position, r);
+            }
+
+            return position;
+        }
+
+        protected List<RevisionHistoryItem> deserializeList(Buffer buffer,
+                                                            int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            List<RevisionHistoryItem> list = new ArrayList<>();
+            RevisionHistoryItemSerializer dis =
+                    new RevisionHistoryItemSerializer();
+
+            for (int i = 0; i < listSize; i++){
+                int revisionHistoryItemPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                RevisionHistoryItem r = dis.deserialize(buffer,
+                        revisionHistoryItemPosition);
+                list.add(r);
+            }
+
+            return list;
+        }
+    }
+
+    public static class RevisionHistorySerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                List<RevisionHistoryItem> items){
+            int position = offset;
+            RevisionHistoryItemSerializer rhs =
+                    new RevisionHistoryItemSerializer();
+
+            position = rhs.listSerialize(buffer, position, items);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, RevisionHistory r){
+            int position = offset;
+
+            RevisionHistorySerializer rhs = new RevisionHistorySerializer();
+
+            position = rhs.serialize(buffer, position, r.getItems());
+
+            return position;
+        }
+
+        protected RevisionHistory deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            RevisionHistoryItemSerializer rhs =
+                    new RevisionHistoryItemSerializer();
+
+            List<RevisionHistoryItem> items = rhs.deserializeList(buffer,
+                    position);
+
+            return RMObjectFactory.newRevisionHistory(items);
+        }
+    }
 
     /**
      * Deserializa um map de Strings

@@ -102,7 +102,12 @@ public enum RMObjectID {
     DVDATE(79),
     DVTIME(80),
     DVDATETIME(81),
-    DVTEMPORAL(82);
+    DVTEMPORAL(82),
+    PARTICIPATION(83),
+    AUDITDETAILS(84),
+    ATTESTATION(85),
+    REVISIONHISTORYITEM(86),
+    REVISIONHISTORY(87);
 
     
     private final int value;

@@ -998,6 +998,77 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de Participation com valor fixo
+     *
+     * @return nova instância de Participation
+     */
+    public static Participation participation(){
+        PartyProxy performer = partyProxy();
+        DvText function = dvText();
+        DvCodedText mode = dvCodedText();
+        DvInterval time = dvInterval();
+
+        return RMObjectFactory.newParticipation(performer, function, mode,
+                time);
+    }
+
+    /**
+     * Cria uma instância de AuditDetails com valor fixo
+     *
+     * @return nova instância de AuditDetails
+     */
+    public static AuditDetails auditDetails(){
+        String timePosition = "timePosition";
+        PartyProxy committer = partyProxy();
+        DvDateTime timeCommitted = dvDateTime();
+        DvCodedText changeType = dvCodedText();
+        DvText description = dvText();
+
+        return RMObjectFactory.newAuditDetails(timePosition, committer,
+                timeCommitted, changeType, description);
+    }
+
+    /**
+     * Cria uma instância de Attestation com valor fixo
+     *
+     * @return nova instância de Attestation
+     */
+    public static Attestation attestation() {
+        AuditDetails auditDetails = auditDetails();
+        DvMultimedia attestedView = dvMultimedia();
+        String proof = "proof";
+        Set<DVEHRURI> items = dvehruriSet(false);
+        DvText reason = dvText();
+
+        return RMObjectFactory.newAttestation(auditDetails, attestedView,
+                proof, items, reason, true);
+    }
+
+    /**
+     * Cria uma instância de RevisionHistoryItem com valor fixo
+     *
+     * @return nova instância de RevisionHistoryItem
+     */
+    public static RevisionHistoryItem revisionHistoryItem(){
+        List<AuditDetails> audits = auditDetailsList(false);
+        ObjectVersionID versionID = objectVersionID();
+
+        return RMObjectFactory.newRevisionHistoryItem(audits, versionID);
+    }
+
+    /**
+     * Cria uma instância de RevisionHistory com valor fixo
+     *
+     * @return nova instância de RevisionHistory
+     */
+    public static RevisionHistory revisionHistory(){
+        List<RevisionHistoryItem> items = revisionHistoryItemList(
+                false);
+
+        return RMObjectFactory.newRevisionHistory(items);
+    }
+
+    /**
      * Cria uma instância de DvDate com valor fixo
      *
      * @return nova instância de DvDate
@@ -1054,6 +1125,25 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Método que gera uma lista de RevisionHistoryItem
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    public static List<RevisionHistoryItem> revisionHistoryItemList(
+            boolean emptyList){
+        List<RevisionHistoryItem> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        RevisionHistoryItem r = revisionHistoryItem();
+
+        list.add(r);
+
+        return list;
+    }
+
+    /**
      * Método que gera uma lista de ReferenceRange
      *
      * @param emptyList cria uma lista vazia
@@ -1097,6 +1187,24 @@ public class RMObjectTestHelper {
         list.add(tm);
         list.add(tm);
         list.add(tm);
+
+        return list;
+    }
+
+    /**
+     * Método que gera uma lista de AuditDetails
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    public static List<AuditDetails> auditDetailsList(boolean emptyList){
+        List<AuditDetails> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        AuditDetails a = auditDetails();
+
+        list.add(a);
 
         return list;
     }
@@ -1160,6 +1268,23 @@ public class RMObjectTestHelper {
         set.add(l);
         set.add(l);
         set.add(l);
+
+        return set;
+    }
+
+    /**
+     * Método que gera um set de DVEHRURI
+     *
+     * @param emptySet cria um set vazio
+     * @return set
+     */
+    public static Set<DVEHRURI> dvehruriSet(boolean emptySet){
+        Set<DVEHRURI> set = new HashSet<>();
+        if(emptySet){
+            return set;
+        }
+        DVEHRURI d = RMObjectTestHelper.dVEHRURI();
+        set.add(d);
 
         return set;
     }
