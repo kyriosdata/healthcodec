@@ -108,7 +108,8 @@ public enum RMObjectID {
     ATTESTATION(85),
     REVISIONHISTORYITEM(86),
     REVISIONHISTORY(87),
-    CONTRIBUTION(88);
+    CONTRIBUTION(88),
+    FOLDER(89);
 
     
     private final int value;

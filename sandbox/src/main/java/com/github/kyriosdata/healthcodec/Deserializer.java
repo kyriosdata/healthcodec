@@ -596,4 +596,10 @@ public interface Deserializer {
      * @return nova instância de Contribution
      */
     RMObject.Contribution deserializeContribution();
+
+    /**
+     * Deserializador de Folder.
+     * @return nova instância de Folder
+     */
+    RMObject.Folder deserializeFolder();
 }

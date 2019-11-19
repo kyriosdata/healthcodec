@@ -783,6 +783,46 @@ public class RMObjectSerialization {
 
             return items;
         }
+
+        protected int listSerialize(
+                Buffer buffer, int offset, List<ObjectRef> items)
+        {
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            ObjectRefSerializer dis = new ObjectRefSerializer();
+
+            for (ObjectRef o : items){
+                meta = writeHeader(buffer, meta, position);
+                position = dis.serialize(buffer, position, o);
+            }
+
+            return position;
+        }
+
+        protected List<ObjectRef> deserializeList(Buffer buffer, int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            List<ObjectRef> list = new ArrayList<>();
+            ObjectRefSerializer dis = new ObjectRefSerializer();
+
+            for (int i = 0; i < listSize; i++){
+                int objectRefPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                ObjectRef o = dis.deserialize(buffer, objectRefPosition);
+                list.add(o);
+            }
+
+            return list;
+        }
+
+
     }
 
     static class LocatableRefSerializer {
@@ -6195,6 +6235,109 @@ public class RMObjectSerialization {
             AuditDetails audit = ads.deserialize(buffer, auditPosition);
 
             return RMObjectFactory.newContribution(uid, versions, audit);
+        }
+    }
+
+    public static class FolderSerializer {
+        protected int serialize(Buffer buffer, int offset, Locatable locatable,
+                                List<Folder> folders, List<ObjectRef> items){
+            int meta = offset;
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
+
+            LocatableSerializer ls = new LocatableSerializer();
+            FolderSerializer fs = new FolderSerializer();
+            ObjectRefSerializer ors = new ObjectRefSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = ls.serialize(buffer, position, locatable);
+
+            meta = writeHeader(buffer, meta, position);
+            position = fs.listSerialize(buffer, position, folders);
+
+            writeHeader(buffer, meta, position);
+            position = ors.listSerialize(buffer, position, items);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, Folder f){
+            int position = offset;
+
+            FolderSerializer fs = new FolderSerializer();
+
+            position = fs.serialize(buffer, position, f.getLocatable(),
+                    f.getFolders(), f.getItems());
+
+            return position;
+        }
+
+        protected Folder deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            LocatableSerializer ls = new LocatableSerializer();
+            FolderSerializer fs = new FolderSerializer();
+            ObjectRefSerializer ors = new ObjectRefSerializer();
+
+            int locatablePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            Locatable locatable = ls.deserialize(buffer, locatablePosition);
+
+            int foldersPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            List<Folder> folders = fs.deserializeList(buffer, foldersPosition);
+
+            int itemsPosition = buffer.readInteger(position);
+            List<ObjectRef> items = ors.deserializeList(buffer, itemsPosition);
+
+            return RMObjectFactory.newFolder(locatable, folders, items);
+        }
+
+        protected int listSerialize(
+                Buffer buffer, int offset, List<Folder> folders)
+        {
+            int meta = offset;
+            if(folders == null){
+                int position = offset;
+                buffer.writeInteger(position, -1);
+                position += PrimitiveTypeSize.INT.getSize();
+
+                return position;
+            }
+            int listSize = folders.size();
+            int position = offset + (listSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            FolderSerializer dis = new FolderSerializer();
+
+            for (Folder f : folders){
+                meta = writeHeader(buffer, meta, position);
+                position = dis.serialize(buffer, position, f);
+            }
+
+            return position;
+        }
+
+        protected List<Folder> deserializeList(Buffer buffer, int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            List<Folder> folders = new ArrayList<>();
+            FolderSerializer fs = new FolderSerializer();
+
+            for (int i = 0; i < listSize; i++){
+                int folderPosition = buffer.readInteger(position);
+                if(folderPosition == -1){
+                    break;
+                }
+                position += PrimitiveTypeSize.INT.getSize();
+                Folder f = fs.deserialize(buffer, folderPosition);
+                folders.add(f);
+            }
+
+            return folders.size() > 0 ? folders : null;
         }
     }
 

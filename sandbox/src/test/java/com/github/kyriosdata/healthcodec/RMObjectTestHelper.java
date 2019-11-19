@@ -1118,6 +1118,19 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de Folder com valor fixo
+     *
+     * @return nova instância de Folder
+     */
+    public static Folder folder(){
+        Locatable locatable = locatable();
+        List<Folder> folders = folderList(false);
+        List<ObjectRef> items = objectRefList(false);
+
+        return RMObjectFactory.newFolder(locatable, folders, items);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
@@ -1133,6 +1146,41 @@ public class RMObjectTestHelper {
         list.add(id);
         list.add(id);
         list.add(id);
+
+        return list;
+    }
+
+    /**
+     * Método que gera uma lista de ObjectRef
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    public static List<ObjectRef> objectRefList(boolean emptyList){
+        List<ObjectRef> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        ObjectRef or = objectRef();
+        list.add(or);
+
+        return list;
+    }
+
+    /**
+     * Método que gera uma lista de Folder
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    public static List<Folder> folderList(boolean emptyList){
+        List<Folder> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        Folder f = RMObjectFactory.newFolder(locatable(), null,
+                objectRefList(false));
+        list.add(f);
 
         return list;
     }

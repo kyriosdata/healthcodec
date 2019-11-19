@@ -527,4 +527,8 @@ public class RMObjectFactory {
         return new Contribution(uid, versions, audit);
     }
 
+    public static Folder newFolder(Locatable locatable, List<Folder> folders,
+                                   List<ObjectRef> items){
+        return new Folder(locatable, folders, items);
+    }
 }

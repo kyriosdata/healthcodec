@@ -2551,6 +2551,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de Folder.
+     *
+     * @param f
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeFolder(Folder f) {
+        FolderSerializer s = new FolderSerializer();
+        register(FOLDER, offset);
+        setOffset(s.serialize(buffer, offset, f));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Folder.
+     *
+     * @return nova instância de Folder
+     */
+    @Override
+    public Folder deserializeFolder() {
+        FolderSerializer d = new FolderSerializer();
+        return d.deserialize(buffer, getOffsetFromID(FOLDER));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id
@@ -2585,9 +2611,5 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     private void setOffset(int pos) {
         this.offset = pos;
-    }
-
-    public byte[] getBuffer(){
-        return buffer.data();
     }
 }

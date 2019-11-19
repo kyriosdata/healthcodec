@@ -890,11 +890,21 @@ public interface Serializer {
     /**
      * Serializador de Contribution.
      *
-     * @param r
+     * @param c
      * @return Instância de RMObjectSerializationClient para chaining
      *
      */
     RMObjectSerializationClient serializeContribution(
             Contribution c);
+
+    /**
+     * Serializador de Folder.
+     *
+     * @param f
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeFolder(
+            Folder f);
 
 }

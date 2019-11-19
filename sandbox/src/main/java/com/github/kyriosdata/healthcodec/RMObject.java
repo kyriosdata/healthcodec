@@ -2028,7 +2028,7 @@ public class RMObject {
             return symbol;
         }
 
-        public DvOrdinal(List<ReferenceRange> otherReferenceRanges,
+        protected DvOrdinal(List<ReferenceRange> otherReferenceRanges,
                          DvInterval normalRange, int value, DvCodedText symbol) {
             this.otherReferenceRanges = otherReferenceRanges;
             this.normalRange = normalRange;
@@ -2041,7 +2041,7 @@ public class RMObject {
         private final DvAmount dvAmount;
         private final int magnitude;
 
-        public DvCount(DvAmount dvAmount, int magnitude) {
+        protected DvCount(DvAmount dvAmount, int magnitude) {
             this.dvAmount = dvAmount;
             this.magnitude = magnitude;
         }
@@ -2062,7 +2062,7 @@ public class RMObject {
         private final ProportionKind type;
         private final int precision;
 
-        public DvAmount getDvAmount() {
+        protected DvAmount getDvAmount() {
             return dvAmount;
         }
 
@@ -2082,7 +2082,7 @@ public class RMObject {
             return precision;
         }
 
-        public DvProportion(DvAmount dvAmount, double numerator,
+        protected DvProportion(DvAmount dvAmount, double numerator,
                             double denominator, ProportionKind type,
                             int precision) {
             if(type == null) {
@@ -2127,7 +2127,7 @@ public class RMObject {
         private final double magnitude;
         private final int precision;
 
-        public DvQuantity(DvAmount dvAmount, String units, double magnitude,
+        protected DvQuantity(DvAmount dvAmount, String units, double magnitude,
                           int precision) {
 
             if (precision < -1) {
@@ -2161,7 +2161,7 @@ public class RMObject {
         private final DvAmount dvAmount;
         private final String value;
 
-        public DvDuration(DvAmount dvAmount, String value) {
+        protected DvDuration(DvAmount dvAmount, String value) {
             this.dvAmount = dvAmount;
             this.value = value;
         }
@@ -2180,7 +2180,7 @@ public class RMObject {
         private final DvQuantity dvQuantity;
         private RMObjectID id;
 
-        public DvAbsoluteQuantityWithDvQuantity(DvQuantified dvQuantified,
+        protected DvAbsoluteQuantityWithDvQuantity(DvQuantified dvQuantified,
                                                 DvQuantity dvQuantity) {
             this.dvQuantified = dvQuantified;
             this.dvQuantity = dvQuantity;
@@ -2205,7 +2205,7 @@ public class RMObject {
         private final DvCount dvCount;
         private RMObjectID id;
 
-        public DvAbsoluteQuantityWithDvCount(DvQuantified dvQuantified,
+        protected DvAbsoluteQuantityWithDvCount(DvQuantified dvQuantified,
                                              DvCount dvCount) {
             this.dvQuantified = dvQuantified;
             this.dvCount = dvCount;
@@ -2230,7 +2230,7 @@ public class RMObject {
         private final DvProportion dvProportion;
         private RMObjectID id;
 
-        public DvAbsoluteQuantityWithDvProportion(DvQuantified dvQuantified,
+        protected DvAbsoluteQuantityWithDvProportion(DvQuantified dvQuantified,
                                                   DvProportion dvProportion) {
             this.dvQuantified = dvQuantified;
             this.dvProportion = dvProportion;
@@ -2255,7 +2255,7 @@ public class RMObject {
         private final DvDuration dvDuration;
         private RMObjectID id;
 
-        public DvAbsoluteQuantityWithDvDuration(DvQuantified dvQuantified,
+        protected DvAbsoluteQuantityWithDvDuration(DvQuantified dvQuantified,
                                                 DvDuration dvDuration) {
             this.dvQuantified = dvQuantified;
             this.dvDuration = dvDuration;
@@ -2279,7 +2279,7 @@ public class RMObject {
         private final DvAbsoluteQuantityWithDvDuration dvAbsoluteQuantity;
         private final String value;
 
-        public DvTemporal(DvAbsoluteQuantityWithDvDuration dvAbsoluteQuantity,
+        protected DvTemporal(DvAbsoluteQuantityWithDvDuration dvAbsoluteQuantity,
                           String value) {
             this.dvAbsoluteQuantity = dvAbsoluteQuantity;
             this.value = value;
@@ -2302,7 +2302,7 @@ public class RMObject {
         private final DvTemporal dvTemporal;
         private final DvDate dateTime;
 
-        public DvDateTime(boolean isPartial, boolean minuteKnown,
+        protected DvDateTime(boolean isPartial, boolean minuteKnown,
                           boolean secondKnown, boolean fractionalSecKnown,
                           DvTemporal dvTemporal, DvDate dateTime) {
             this.isPartial = isPartial;
@@ -2345,7 +2345,7 @@ public class RMObject {
         private final boolean fractionalSecKnown;
         private final DvTemporal dvTemporal;
 
-        public DvTime(boolean isPartial, boolean minuteKnown,
+        protected DvTime(boolean isPartial, boolean minuteKnown,
                           boolean secondKnown, boolean fractionalSecKnown,
                           DvTemporal dvTemporal) {
             this.isPartial = isPartial;
@@ -2382,7 +2382,7 @@ public class RMObject {
         private final boolean isPartial;
         private final DvTemporal dvTemporal;
 
-        public DvDate(boolean dayKnown, boolean monthKnown, boolean isPartial,
+        protected DvDate(boolean dayKnown, boolean monthKnown, boolean isPartial,
                       DvTemporal dvTemporal) {
             this.dayKnown = dayKnown;
             this.monthKnown = monthKnown;
@@ -2429,7 +2429,7 @@ public class RMObject {
             return time;
         }
 
-        public Participation(PartyProxy performer, DvText function,
+        protected Participation(PartyProxy performer, DvText function,
                              DvCodedText mode, DvInterval time) {
             if (performer == null) {
                 throw new IllegalArgumentException("null performer");
@@ -2454,7 +2454,7 @@ public class RMObject {
         private final DvCodedText changeType;
         private final DvText description;
 
-        public AuditDetails(String timePosition, PartyProxy committer,
+        protected AuditDetails(String timePosition, PartyProxy committer,
                             DvDateTime timeCommitted, DvCodedText changeType,
                             DvText description) {
             this.timePosition = timePosition;
@@ -2493,7 +2493,7 @@ public class RMObject {
         private final DvText reason;
         private final boolean isPending;
 
-        public Attestation(AuditDetails auditDetails, DvMultimedia attestedView,
+        protected Attestation(AuditDetails auditDetails, DvMultimedia attestedView,
                            String proof, Set<DVEHRURI> items, DvText reason,
                            boolean isPending) {
             if (items != null && items.isEmpty()) {
@@ -2540,7 +2540,7 @@ public class RMObject {
         private final List<AuditDetails> audits;
         private final ObjectVersionID versionID;
 
-        public RevisionHistoryItem(List<AuditDetails> audits,
+        protected RevisionHistoryItem(List<AuditDetails> audits,
                                    ObjectVersionID versionID) {
             if (audits == null || audits.size() == 0) {
                 throw new IllegalArgumentException("empty audits");
@@ -2565,7 +2565,7 @@ public class RMObject {
     public static class RevisionHistory {
         private final List<RevisionHistoryItem> items;
 
-        public RevisionHistory(List<RevisionHistoryItem> items) {
+        protected RevisionHistory(List<RevisionHistoryItem> items) {
             if (items == null || items.size() == 0) {
                 throw new IllegalArgumentException("empty items");
             }
@@ -2582,7 +2582,7 @@ public class RMObject {
         private final Set<ObjectRef> versions;
         private final AuditDetails audit;
 
-        public Contribution(ObjectID uid, Set<ObjectRef> versions,
+        protected Contribution(ObjectID uid, Set<ObjectRef> versions,
                             AuditDetails audit) {
             if (uid == null) {
                 throw new IllegalArgumentException("null uid");
@@ -2611,6 +2611,34 @@ public class RMObject {
 
         public AuditDetails getAudit() {
             return audit;
+        }
+    }
+
+    public static class Folder {
+        private final Locatable locatable;
+        private final List<Folder> folders;
+        private final List<ObjectRef> items;
+
+        protected Folder(Locatable locatable, List<Folder> folders,
+                      List<ObjectRef> items) {
+            if(folders != null && folders.size() == 0) {
+                throw new IllegalArgumentException("sub-folders vazios");
+            }
+            this.locatable = locatable;
+            this.folders = folders;
+            this.items = items;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public List<Folder> getFolders() {
+            return folders;
+        }
+
+        public List<ObjectRef> getItems() {
+            return items;
         }
     }
 
