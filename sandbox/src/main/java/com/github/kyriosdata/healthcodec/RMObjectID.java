@@ -112,7 +112,10 @@ public enum RMObjectID {
     FOLDER(89),
     AUTHOREDRESOURCE(90),
     RESOURCEDESCRIPTION(91),
-    EVENT(92);
+    EVENT(92),
+    INTERVALEVENT(93),
+    HISTORY(94),
+    POINTEVENT(95);
 
     
     private final int value;

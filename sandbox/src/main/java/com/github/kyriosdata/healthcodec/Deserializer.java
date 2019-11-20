@@ -632,4 +632,58 @@ public interface Deserializer {
      * @return nova instância de Event com ItemTable
      */
     RMObject.EventWithItemTable deserializeEventWithItemTable();
+
+    /**
+     * Deserializador de IntervalEvent com ItemTree.
+     * @return nova instância de IntervalEvent com ItemTree
+     */
+    RMObject.IntervalEventWithItemTree deserializeIntervalEventWithItemTree();
+
+    /**
+     * Deserializador de IntervalEvent com ItemSingle.
+     * @return nova instância de IntervalEvent com ItemSingle
+     */
+    RMObject.IntervalEventWithItemSingle deserializeIntervalEventWithItemSingle();
+
+    /**
+     * Deserializador de IntervalEvent com ItemTable.
+     * @return nova instância de IntervalEvent com ItemTable
+     */
+    RMObject.IntervalEventWithItemTable deserializeIntervalEventWithItemTable();
+
+    /**
+     * Deserializador de History com ItemTree.
+     * @return nova instância de History com ItemTree
+     */
+    RMObject.HistoryWithItemTree deserializeHistoryWithItemTree();
+
+    /**
+     * Deserializador de History com ItemSingle.
+     * @return nova instância de History com ItemSingle
+     */
+    RMObject.HistoryWithItemSingle deserializeHistoryWithItemSingle();
+
+    /**
+     * Deserializador de History com ItemTable.
+     * @return nova instância de History com ItemTable
+     */
+    RMObject.HistoryWithItemTable deserializeHistoryWithItemTable();
+
+    /**
+     * Deserializador de PointEvent com ItemTree.
+     * @return nova instância de PointEvent com ItemTree
+     */
+    RMObject.PointEventWithItemTree deserializePointEventWithItemTree();
+
+    /**
+     * Deserializador de PointEvent com ItemSingle.
+     * @return nova instância de PointEvent com ItemSingle
+     */
+    RMObject.PointEventWithItemSingle deserializePointEventWithItemSingle();
+
+    /**
+     * Deserializador de PointEvent com ItemTable.
+     * @return nova instância de PointEvent com ItemTable
+     */
+    RMObject.PointEventWithItemTable deserializePointEventWithItemTable();
 }

@@ -3038,6 +3038,12 @@ public class RMObject {
                                          DvDuration width,
                                          DvCodedText mathFunction,
                                          int sampleCount) {
+            if (width == null) {
+			throw new IllegalArgumentException("null width");
+            }
+            if (mathFunction == null) {
+                throw new IllegalArgumentException("null mathFunction");
+            }
             this.event = event;
             this.width = width;
             this.mathFunction = mathFunction;
@@ -3071,6 +3077,12 @@ public class RMObject {
                                            DvDuration width,
                                            DvCodedText mathFunction,
                                            int sampleCount) {
+            if (width == null) {
+			throw new IllegalArgumentException("null width");
+            }
+            if (mathFunction == null) {
+                throw new IllegalArgumentException("null mathFunction");
+            }
             this.event = event;
             this.width = width;
             this.mathFunction = mathFunction;
@@ -3104,6 +3116,12 @@ public class RMObject {
                                           DvDuration width,
                                           DvCodedText mathFunction,
                                           int sampleCount) {
+            if (width == null) {
+			throw new IllegalArgumentException("null width");
+            }
+            if (mathFunction == null) {
+                throw new IllegalArgumentException("null mathFunction");
+            }
             this.event = event;
             this.width = width;
             this.mathFunction = mathFunction;

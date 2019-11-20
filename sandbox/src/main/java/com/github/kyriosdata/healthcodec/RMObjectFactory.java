@@ -596,6 +596,27 @@ public class RMObjectFactory {
                 duration, summary);
     }
 
+    public static IntervalEventWithItemTree newIntervalEventWithItemTree(
+            EventWithItemTree event, DvDuration width, DvCodedText mathFunction,
+            int sampleCount){
+        return new IntervalEventWithItemTree(event, width, mathFunction,
+                sampleCount);
+    }
+
+    public static IntervalEventWithItemSingle newIntervalEventWithItemSingle(
+            EventWithItemSingle event, DvDuration width, DvCodedText mathFunction,
+            int sampleCount){
+        return new IntervalEventWithItemSingle(event, width, mathFunction,
+                sampleCount);
+    }
+
+    public static IntervalEventWithItemTable newIntervalEventWithItemTable(
+            EventWithItemTable event, DvDuration width, DvCodedText mathFunction,
+            int sampleCount){
+        return new IntervalEventWithItemTable(event, width, mathFunction,
+                sampleCount);
+    }
+
     public static PointEventWithItemTree newPointEventWithItemTree(
             EventWithItemTree event){
         return new PointEventWithItemTree(event);

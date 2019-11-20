@@ -1173,6 +1173,180 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de Event com ItemTree e com valor fixo.
+     *
+     * @return nova instância de Event.
+     */
+    public static EventWithItemTree eventWithItemTree(){
+        Locatable locatable = locatable();
+        DvDateTime time = dvDateTime();
+        ItemTree data = itemTree();
+        ItemStructure state = itemStructure();
+
+        return RMObjectFactory.newEventWithItemTree(locatable, time,
+                data, state);
+    }
+
+    /**
+     * Cria uma instância de Event com ItemSingle e com valor fixo.
+     *
+     * @return nova instância de Event.
+     */
+    public static EventWithItemSingle eventWithItemSingle(){
+        Locatable locatable = locatable();
+        DvDateTime time = dvDateTime();
+        ItemSingle data = itemSingle();
+        ItemStructure state = itemStructure();
+
+        return RMObjectFactory.newEventWithItemSingle(locatable, time,
+                data, state);
+    }
+
+    /**
+     * Cria uma instância de Event com ItemTable e com valor fixo.
+     *
+     * @return nova instância de Event.
+     */
+    public static EventWithItemTable eventWithItemTable(){
+        Locatable locatable = locatable();
+        DvDateTime time = dvDateTime();
+        ItemTable data = itemTable();
+        ItemStructure state = itemStructure();
+
+        return RMObjectFactory.newEventWithItemTable(locatable, time,
+                data, state);
+    }
+
+    /**
+     * Cria uma instância de History com ItemTree e com valor fixo.
+     *
+     * @return nova instância de History.
+     */
+    public static HistoryWithItemTree historyWithItemTree(){
+        DataStructure dataStructure = dataStructure();
+        DvDateTime origin = dvDateTime();
+        List<EventWithItemTree> events = eventWithItemTreeList(false);
+        DvDuration period = dvDuration();
+        DvDuration duration = dvDuration();
+        ItemStructure summary = itemStructure();
+
+        return RMObjectFactory.newHistoryWithItemTree(dataStructure,
+                origin, events, period, duration, summary);
+    }
+
+    /**
+     * Cria uma instância de History com ItemSingle e com valor fixo.
+     *
+     * @return nova instância de History.
+     */
+    public static HistoryWithItemSingle historyWithItemSingle(){
+        DataStructure dataStructure = dataStructure();
+        DvDateTime origin = dvDateTime();
+        List<EventWithItemSingle> events = eventWithItemSingleList(false);
+        DvDuration period = dvDuration();
+        DvDuration duration = dvDuration();
+        ItemStructure summary = itemStructure();
+
+        return RMObjectFactory.newHistoryWithItemSingle(dataStructure,
+                origin, events, period, duration, summary);
+    }
+
+    /**
+     * Cria uma instância de History com ItemTable e com valor fixo.
+     *
+     * @return nova instância de History.
+     */
+    public static HistoryWithItemTable historyWithItemTable(){
+        DataStructure dataStructure = dataStructure();
+        DvDateTime origin = dvDateTime();
+        List<EventWithItemTable> events = eventWithItemTableList(false);
+        DvDuration period = dvDuration();
+        DvDuration duration = dvDuration();
+        ItemStructure summary = itemStructure();
+
+        return RMObjectFactory.newHistoryWithItemTable(dataStructure,
+                origin, events, period, duration, summary);
+    }
+
+    /**
+     * Cria uma instância de PointEvent com ItemTree e com valor fixo.
+     *
+     * @return nova instância de PointEvent.
+     */
+    public static PointEventWithItemTree pointEventWithItemTree(){
+        EventWithItemTree event = eventWithItemTree();
+
+        return RMObjectFactory.newPointEventWithItemTree(event);
+    }
+
+    /**
+     * Cria uma instância de PointEvent com ItemSingle e com valor fixo.
+     *
+     * @return nova instância de PointEvent.
+     */
+    public static PointEventWithItemSingle pointEventWithItemSingle(){
+        EventWithItemSingle event = eventWithItemSingle();
+
+        return RMObjectFactory.newPointEventWithItemSingle(event);
+    }
+
+    /**
+     * Cria uma instância de PointEvent com ItemTable e com valor fixo.
+     *
+     * @return nova instância de PointEvent.
+     */
+    public static PointEventWithItemTable pointEventWithItemTable(){
+        EventWithItemTable event = eventWithItemTable();
+
+        return RMObjectFactory.newPointEventWithItemTable(event);
+    }
+
+    /**
+     * Cria uma instância de IntervalEvent com ItemTree e com valor fixo.
+     *
+     * @return nova instância de IntervalEvent.
+     */
+    public static IntervalEventWithItemTree intervalEventWithItemTree(){
+        EventWithItemTree event = eventWithItemTree();
+        DvDuration width = dvDuration();
+        DvCodedText mathFunction = dvCodedText();
+        int sampleCount = 10;
+
+        return RMObjectFactory.newIntervalEventWithItemTree(event, width,
+                mathFunction, sampleCount);
+    }
+
+    /**
+     * Cria uma instância de IntervalEvent com ItemSingle e com valor fixo.
+     *
+     * @return nova instância de IntervalEvent.
+     */
+    public static IntervalEventWithItemSingle intervalEventWithItemSingle(){
+        EventWithItemSingle event = eventWithItemSingle();
+        DvDuration width = dvDuration();
+        DvCodedText mathFunction = dvCodedText();
+        int sampleCount = 10;
+
+        return RMObjectFactory.newIntervalEventWithItemSingle(event, width,
+                mathFunction, sampleCount);
+    }
+
+    /**
+     * Cria uma instância de IntervalEvent com ItemTable e com valor fixo.
+     *
+     * @return nova instância de IntervalEvent.
+     */
+    public static IntervalEventWithItemTable intervalEventWithItemTable(){
+        EventWithItemTable event = eventWithItemTable();
+        DvDuration width = dvDuration();
+        DvCodedText mathFunction = dvCodedText();
+        int sampleCount = 10;
+
+        return RMObjectFactory.newIntervalEventWithItemTable(event, width,
+                mathFunction, sampleCount);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
@@ -1188,6 +1362,60 @@ public class RMObjectTestHelper {
         list.add(id);
         list.add(id);
         list.add(id);
+
+        return list;
+    }
+
+    /**
+     * Método que gera uma lista de EventWithItemTree
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    public static List<EventWithItemTree> eventWithItemTreeList(
+            boolean emptyList){
+        List<EventWithItemTree> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        EventWithItemTree e = eventWithItemTree();
+        list.add(e);
+
+        return list;
+    }
+
+    /**
+     * Método que gera uma lista de EventWithItemSingle
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    public static List<EventWithItemSingle> eventWithItemSingleList(
+            boolean emptyList){
+        List<EventWithItemSingle> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        EventWithItemSingle e = eventWithItemSingle();
+        list.add(e);
+
+        return list;
+    }
+
+    /**
+     * Método que gera uma lista de EventWithItemTable
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    public static List<EventWithItemTable> eventWithItemTableList(
+            boolean emptyList){
+        List<EventWithItemTable> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        EventWithItemTable e = eventWithItemTable();
+        list.add(e);
 
         return list;
     }

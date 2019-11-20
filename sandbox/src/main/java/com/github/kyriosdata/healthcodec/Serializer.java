@@ -952,4 +952,88 @@ public interface Serializer {
      *
      */
     RMObjectSerializationClient serializeEvent(EventWithItemTable e);
+
+    /**
+     * Serializador de IntervalEvent com ItemTree.
+     *
+     * @param i
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeIntervalEvent(
+            IntervalEventWithItemTree i);
+
+    /**
+     * Serializador de IntervalEvent com ItemSingle.
+     *
+     * @param i
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeIntervalEvent(
+            IntervalEventWithItemSingle i);
+
+    /**
+     * Serializador de IntervalEvent com ItemTable.
+     *
+     * @param i
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeIntervalEvent(
+            IntervalEventWithItemTable i);
+
+    /**
+     * Serializador de History com ItemTree.
+     *
+     * @param h
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeHistory(HistoryWithItemTree h);
+
+    /**
+     * Serializador de History com ItemSingle.
+     *
+     * @param h
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeHistory(HistoryWithItemSingle h);
+
+    /**
+     * Serializador de History com ItemTable.
+     *
+     * @param h
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeHistory(HistoryWithItemTable h);
+
+    /**
+     * Serializador de PointEvent com ItemTree.
+     *
+     * @param p
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializePointEvent(PointEventWithItemTree p);
+
+    /**
+     * Serializador de PointEvent com ItemSingle.
+     *
+     * @param p
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializePointEvent(PointEventWithItemSingle p);
+
+    /**
+     * Serializador de PointEvent com ItemTable.
+     *
+     * @param p
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializePointEvent(PointEventWithItemTable p);
 }

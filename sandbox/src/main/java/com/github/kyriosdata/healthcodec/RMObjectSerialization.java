@@ -3511,7 +3511,7 @@ public class RMObjectSerialization {
             ItemStructure is = iss.deserialize(buffer, itemStructurePosition);
 
             boolean hasItems = buffer.readBoolean(position);
-            position += BOOLEAN.getSize();
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
             List<Item> items = null;
             if (hasItems){
                 int itemsPosition = buffer.readInteger(position);
@@ -6659,7 +6659,7 @@ public class RMObjectSerialization {
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
             int locatablePosition = buffer.readInteger(position);
-            position = PrimitiveTypeSize.INT.getSize();
+            position += PrimitiveTypeSize.INT.getSize();
             Locatable locatable = ls.deserialize(buffer, locatablePosition);
 
             int timePosition = buffer.readInteger(position);
@@ -6723,7 +6723,7 @@ public class RMObjectSerialization {
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
             int locatablePosition = buffer.readInteger(position);
-            position = PrimitiveTypeSize.INT.getSize();
+            position += PrimitiveTypeSize.INT.getSize();
             Locatable locatable = ls.deserialize(buffer, locatablePosition);
 
             int timePosition = buffer.readInteger(position);
@@ -6787,7 +6787,7 @@ public class RMObjectSerialization {
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
             int locatablePosition = buffer.readInteger(position);
-            position = PrimitiveTypeSize.INT.getSize();
+            position += PrimitiveTypeSize.INT.getSize();
             Locatable locatable = ls.deserialize(buffer, locatablePosition);
 
             int timePosition = buffer.readInteger(position);
@@ -6826,8 +6826,8 @@ public class RMObjectSerialization {
             return position;
         }
 
-        protected List<EventWithItemTree> deserializeListOfItemTree(Buffer buffer,
-                                                          int offset){
+        protected List<EventWithItemTree> deserializeListOfItemTree(
+                Buffer buffer, int offset){
             int position = offset;
             int listSize = buffer.readInteger(position);
             position += PrimitiveTypeSize.INT.getSize();
@@ -6934,7 +6934,13 @@ public class RMObjectSerialization {
                                 DvDuration period, DvDuration duration,
                                 ItemStructure summary) {
             int meta = offset;
-            int position = offset + 6 * PrimitiveTypeSize.INT.getSize();
+            int position = offset + 6 * PrimitiveTypeSize.INT.getSize() +
+                    4 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasEvents = events != null;
+            boolean hasPeriod = period != null;
+            boolean hasDuration = duration != null;
+            boolean hasSummary = summary != null;
 
             DataStructureSerializer dss = new DataStructureSerializer();
             DvDateTimeSerializer dts = new DvDateTimeSerializer();
@@ -6948,17 +6954,25 @@ public class RMObjectSerialization {
             meta = writeHeader(buffer, meta, position);
             position = dts.serialize(buffer, position, origin);
 
-            meta = writeHeader(buffer, meta, position);
-            position = es.listSerializeItemTree(buffer, position, events);
+            meta = writeHeader(buffer, meta, hasEvents, position);
+            if(hasEvents){
+                position = es.listSerializeItemTree(buffer, position, events);
+            }
 
-            meta = writeHeader(buffer, meta, position);
-            position = dds.serialize(buffer, position, period);
+            meta = writeHeader(buffer, meta, hasPeriod, position);
+            if(hasPeriod){
+                position = dds.serialize(buffer, position, period);
+            }
 
-            meta = writeHeader(buffer, meta, position);
-            position = dds.serialize(buffer, position, duration);
+            meta = writeHeader(buffer, meta, hasDuration, position);
+            if(hasDuration){
+                position = dds.serialize(buffer, position, duration);
+            }
 
-            writeHeader(buffer, meta, position);
-            position = iss.serialize(buffer, position, summary);
+            writeHeader(buffer, meta, hasSummary, position);
+            if(hasSummary){
+                position = iss.serialize(buffer, position, summary);
+            }
 
             return position;
         }
@@ -6987,36 +7001,64 @@ public class RMObjectSerialization {
             position += PrimitiveTypeSize.INT.getSize();
             DataStructure dataStructure = dss.deserialize(buffer,
                     dataStructurePosition);
+
             int originPosition = buffer.readInteger(position);
             position += PrimitiveTypeSize.INT.getSize();
             DvDateTime origin = dts.deserialize(buffer, originPosition);
 
-            int eventsPosition = buffer.readInteger(position);
-            position += PrimitiveTypeSize.INT.getSize();
-            List<EventWithItemTree> events = es.deserializeListOfItemTree(buffer,
-                    eventsPosition);
-            int periodPosition = buffer.readInteger(position);
-            position += PrimitiveTypeSize.INT.getSize();
-            DvDuration period = dds.deserialize(buffer, periodPosition);
+            boolean hasEvents = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            List<EventWithItemTree> events = null;
+            if(hasEvents){
+                int eventsPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                events = es.deserializeListOfItemTree(buffer, eventsPosition);
+            }
 
-            int durationPosition = buffer.readInteger(position);
-            position += PrimitiveTypeSize.INT.getSize();
-            DvDuration duration = dds.deserialize(buffer, durationPosition);
 
-            int summaryPosition = buffer.readInteger(position);
-            ItemStructure summary = iss.deserialize(buffer, summaryPosition);
+            boolean hasPeriod = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvDuration period = null;
+            if(hasPeriod){
+                int periodPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                period = dds.deserialize(buffer, periodPosition);
+            }
+
+            boolean hasDuration = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvDuration duration = null;
+            if(hasDuration){
+                int durationPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                duration = dds.deserialize(buffer, durationPosition);
+            }
+
+            boolean hasSummary = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            ItemStructure summary = null;
+            if(hasSummary){
+                int summaryPosition = buffer.readInteger(position);
+                summary = iss.deserialize(buffer, summaryPosition);
+            }
 
             return RMObjectFactory.newHistoryWithItemTree(dataStructure,
                     origin, events, period, duration, summary);
         }
 
         protected int serializeItemSingle(Buffer buffer, int offset,
-                                DataStructure dataStructure, DvDateTime origin,
-                                List<EventWithItemSingle> events,
-                                DvDuration period, DvDuration duration,
-                                ItemStructure summary) {
+                                          DataStructure dataStructure, DvDateTime origin,
+                                          List<EventWithItemSingle> events,
+                                          DvDuration period, DvDuration duration,
+                                          ItemStructure summary) {
             int meta = offset;
-            int position = offset + 6 * PrimitiveTypeSize.INT.getSize();
+            int position = offset + 6 * PrimitiveTypeSize.INT.getSize() +
+                    4 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasEvents = events != null;
+            boolean hasPeriod = period != null;
+            boolean hasDuration = duration != null;
+            boolean hasSummary = summary != null;
 
             DataStructureSerializer dss = new DataStructureSerializer();
             DvDateTimeSerializer dts = new DvDateTimeSerializer();
@@ -7030,17 +7072,25 @@ public class RMObjectSerialization {
             meta = writeHeader(buffer, meta, position);
             position = dts.serialize(buffer, position, origin);
 
-            meta = writeHeader(buffer, meta, position);
-            position = es.listSerializeItemSingle(buffer, position, events);
+            meta = writeHeader(buffer, meta, hasEvents, position);
+            if(hasEvents){
+                position = es.listSerializeItemSingle(buffer, position, events);
+            }
 
-            meta = writeHeader(buffer, meta, position);
-            position = dds.serialize(buffer, position, period);
+            meta = writeHeader(buffer, meta, hasPeriod, position);
+            if(hasPeriod){
+                position = dds.serialize(buffer, position, period);
+            }
 
-            meta = writeHeader(buffer, meta, position);
-            position = dds.serialize(buffer, position, duration);
+            meta = writeHeader(buffer, meta, hasDuration, position);
+            if(hasDuration){
+                position = dds.serialize(buffer, position, duration);
+            }
 
-            writeHeader(buffer, meta, position);
-            position = iss.serialize(buffer, position, summary);
+            writeHeader(buffer, meta, hasSummary, position);
+            if(hasSummary){
+                position = iss.serialize(buffer, position, summary);
+            }
 
             return position;
         }
@@ -7073,32 +7123,58 @@ public class RMObjectSerialization {
             position += PrimitiveTypeSize.INT.getSize();
             DvDateTime origin = dts.deserialize(buffer, originPosition);
 
-            int eventsPosition = buffer.readInteger(position);
-            position += PrimitiveTypeSize.INT.getSize();
-            List<EventWithItemSingle> events = es.deserializeListOfItemSingle(buffer,
-                    eventsPosition);
-            int periodPosition = buffer.readInteger(position);
-            position += PrimitiveTypeSize.INT.getSize();
-            DvDuration period = dds.deserialize(buffer, periodPosition);
+            boolean hasEvents = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            List<EventWithItemSingle> events = null;
+            if(hasEvents){
+                int eventsPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                events = es.deserializeListOfItemSingle(buffer, eventsPosition);
+            }
 
-            int durationPosition = buffer.readInteger(position);
-            position += PrimitiveTypeSize.INT.getSize();
-            DvDuration duration = dds.deserialize(buffer, durationPosition);
+            boolean hasPeriod = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvDuration period = null;
+            if(hasPeriod){
+                int periodPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                period = dds.deserialize(buffer, periodPosition);
+            }
 
-            int summaryPosition = buffer.readInteger(position);
-            ItemStructure summary = iss.deserialize(buffer, summaryPosition);
+            boolean hasDuration = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvDuration duration = null;
+            if(hasDuration){
+                int durationPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                duration = dds.deserialize(buffer, durationPosition);
+            }
+
+            boolean hasSummary = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            ItemStructure summary = null;
+            if(hasSummary){
+                int summaryPosition = buffer.readInteger(position);
+                summary = iss.deserialize(buffer, summaryPosition);
+            }
 
             return RMObjectFactory.newHistoryWithItemSingle(dataStructure,
                     origin, events, period, duration, summary);
         }
 
         protected int serializeItemTable(Buffer buffer, int offset,
-                                DataStructure dataStructure, DvDateTime origin,
-                                List<EventWithItemTable> events,
-                                DvDuration period, DvDuration duration,
-                                ItemStructure summary) {
+                                         DataStructure dataStructure, DvDateTime origin,
+                                         List<EventWithItemTable> events,
+                                         DvDuration period, DvDuration duration,
+                                         ItemStructure summary) {
             int meta = offset;
-            int position = offset + 6 * PrimitiveTypeSize.INT.getSize();
+            int position = offset + 6 * PrimitiveTypeSize.INT.getSize() +
+                    4 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasEvents = events != null;
+            boolean hasPeriod = period != null;
+            boolean hasDuration = duration != null;
+            boolean hasSummary = summary != null;
 
             DataStructureSerializer dss = new DataStructureSerializer();
             DvDateTimeSerializer dts = new DvDateTimeSerializer();
@@ -7112,17 +7188,25 @@ public class RMObjectSerialization {
             meta = writeHeader(buffer, meta, position);
             position = dts.serialize(buffer, position, origin);
 
-            meta = writeHeader(buffer, meta, position);
-            position = es.listSerializeItemTable(buffer, position, events);
+            meta = writeHeader(buffer, meta, hasEvents, position);
+            if(hasEvents){
+                position = es.listSerializeItemTable(buffer, position, events);
+            }
 
-            meta = writeHeader(buffer, meta, position);
-            position = dds.serialize(buffer, position, period);
+            meta = writeHeader(buffer, meta, hasPeriod, position);
+            if(hasPeriod){
+                position = dds.serialize(buffer, position, period);
+            }
 
-            meta = writeHeader(buffer, meta, position);
-            position = dds.serialize(buffer, position, duration);
+            meta = writeHeader(buffer, meta, hasDuration, position);
+            if(hasDuration){
+                position = dds.serialize(buffer, position, duration);
+            }
 
-            writeHeader(buffer, meta, position);
-            position = iss.serialize(buffer, position, summary);
+            writeHeader(buffer, meta, hasSummary, position);
+            if(hasSummary){
+                position = iss.serialize(buffer, position, summary);
+            }
 
             return position;
         }
@@ -7155,23 +7239,301 @@ public class RMObjectSerialization {
             position += PrimitiveTypeSize.INT.getSize();
             DvDateTime origin = dts.deserialize(buffer, originPosition);
 
-            int eventsPosition = buffer.readInteger(position);
-            position += PrimitiveTypeSize.INT.getSize();
-            List<EventWithItemTable> events = es.deserializeListOfItemTable(buffer,
-                    eventsPosition);
-            int periodPosition = buffer.readInteger(position);
-            position += PrimitiveTypeSize.INT.getSize();
-            DvDuration period = dds.deserialize(buffer, periodPosition);
+            boolean hasEvents = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            List<EventWithItemTable> events = null;
+            if(hasEvents){
+                int eventsPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                events = es.deserializeListOfItemTable(buffer, eventsPosition);
+            }
 
-            int durationPosition = buffer.readInteger(position);
-            position += PrimitiveTypeSize.INT.getSize();
-            DvDuration duration = dds.deserialize(buffer, durationPosition);
+            boolean hasPeriod = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvDuration period = null;
+            if(hasPeriod){
+                int periodPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                period = dds.deserialize(buffer, periodPosition);
+            }
 
-            int summaryPosition = buffer.readInteger(position);
-            ItemStructure summary = iss.deserialize(buffer, summaryPosition);
+            boolean hasDuration = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvDuration duration = null;
+            if(hasDuration){
+                int durationPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                duration = dds.deserialize(buffer, durationPosition);
+            }
+
+            boolean hasSummary = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            ItemStructure summary = null;
+            if(hasSummary){
+                int summaryPosition = buffer.readInteger(position);
+                summary = iss.deserialize(buffer, summaryPosition);
+            }
 
             return RMObjectFactory.newHistoryWithItemTable(dataStructure,
                     origin, events, period, duration, summary);
+        }
+    }
+
+    public static class IntervalEventSerializer {
+        protected int serializeItemTree(Buffer buffer, int offset,
+                                EventWithItemTree event, DvDuration width,
+                                DvCodedText mathFunction, int sampleCount){
+            int meta = offset;
+            int position = offset + 4 * PrimitiveTypeSize.INT.getSize() +
+                    2 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasWidth = width != null;
+            boolean hasMathFunction = mathFunction != null;
+
+            EventSerializer es = new EventSerializer();
+            DvDurationSerializer dds = new DvDurationSerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = es.serialize(buffer, position, event);
+
+            meta = writeHeader(buffer, meta, hasWidth, position);
+            if(hasWidth){
+                position = dds.serialize(buffer, position, width);
+            }
+
+            meta = writeHeader(buffer, meta, hasMathFunction, position);
+            if(hasMathFunction){
+                position = dcs.serialize(buffer, position, mathFunction);
+            }
+
+            writeHeader(buffer, meta, position);
+            buffer.writeInteger(position, sampleCount);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                IntervalEventWithItemTree i){
+            int position = offset;
+
+            IntervalEventSerializer ies = new IntervalEventSerializer();
+
+            position = ies.serializeItemTree(buffer, position, i.getEvent(),
+                    i.getWidth(), i.getMathFunction(), i.getSampleCount());
+
+            return position;
+        }
+
+        protected IntervalEventWithItemTree deserializeItemTree(Buffer buffer,
+                                                        int offset){
+            int position = offset;
+
+            EventSerializer es = new EventSerializer();
+            DvDurationSerializer dds = new DvDurationSerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+
+            int eventPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            EventWithItemTree event = es.deserializeItemTree(buffer,
+                    eventPosition);
+
+            boolean hasWidth = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvDuration width = null;
+            if(hasWidth){
+                int widthPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                width = dds.deserialize(buffer, widthPosition);
+            }
+
+            boolean hasMathFunction = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvCodedText mathFunction = null;
+            if(hasMathFunction){
+                int mathFunctionPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                mathFunction = dcs.deserialize(buffer, mathFunctionPosition);
+            }
+
+            int sampleCountPosition = buffer.readInteger(position);
+            int sampleCount = buffer.readInteger(sampleCountPosition);
+
+            return RMObjectFactory.newIntervalEventWithItemTree(event, width,
+                    mathFunction, sampleCount);
+        }
+
+        protected int serializeItemSingle(Buffer buffer, int offset,
+                                          EventWithItemSingle event,
+                                          DvDuration width,
+                                          DvCodedText mathFunction,
+                                          int sampleCount){
+            int meta = offset;
+            int position = offset + 4 * PrimitiveTypeSize.INT.getSize() +
+                    2 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasWidth = width != null;
+            boolean hasMathFunction = mathFunction != null;
+
+            EventSerializer es = new EventSerializer();
+            DvDurationSerializer dds = new DvDurationSerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = es.serialize(buffer, position, event);
+
+            meta = writeHeader(buffer, meta, hasWidth, position);
+            if(hasWidth){
+                position = dds.serialize(buffer, position, width);
+            }
+
+            meta = writeHeader(buffer, meta, hasMathFunction, position);
+            if(hasMathFunction){
+                position = dcs.serialize(buffer, position, mathFunction);
+            }
+
+            writeHeader(buffer, meta, position);
+            buffer.writeInteger(position, sampleCount);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                IntervalEventWithItemSingle i){
+            int position = offset;
+
+            IntervalEventSerializer ies = new IntervalEventSerializer();
+
+            position = ies.serializeItemSingle(buffer, position, i.getEvent(),
+                    i.getWidth(), i.getMathFunction(), i.getSampleCount());
+
+            return position;
+        }
+
+        protected IntervalEventWithItemSingle deserializeItemSingle(
+                Buffer buffer, int offset){
+            int position = offset;
+
+            EventSerializer es = new EventSerializer();
+            DvDurationSerializer dds = new DvDurationSerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+
+            int eventPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            EventWithItemSingle event = es.deserializeItemSingle(buffer,
+                    eventPosition);
+
+            boolean hasWidth = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvDuration width = null;
+            if(hasWidth){
+                int widthPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                width = dds.deserialize(buffer, widthPosition);
+            }
+
+            boolean hasMathFunction = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvCodedText mathFunction = null;
+            if(hasMathFunction){
+                int mathFunctionPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                mathFunction = dcs.deserialize(buffer, mathFunctionPosition);
+            }
+
+            int sampleCountPosition = buffer.readInteger(position);
+            int sampleCount = buffer.readInteger(sampleCountPosition);
+
+            return RMObjectFactory.newIntervalEventWithItemSingle(event, width,
+                    mathFunction, sampleCount);
+        }
+
+        protected int serializeItemTable(Buffer buffer, int offset,
+                                         EventWithItemTable event,
+                                         DvDuration width,
+                                         DvCodedText mathFunction,
+                                         int sampleCount){
+            int meta = offset;
+            int position = offset + 4 * PrimitiveTypeSize.INT.getSize() +
+                    2 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasWidth = width != null;
+            boolean hasMathFunction = mathFunction != null;
+
+            EventSerializer es = new EventSerializer();
+            DvDurationSerializer dds = new DvDurationSerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = es.serialize(buffer, position, event);
+
+            meta = writeHeader(buffer, meta, hasWidth, position);
+            if(hasWidth){
+                position = dds.serialize(buffer, position, width);
+            }
+
+            meta = writeHeader(buffer, meta, hasMathFunction, position);
+            if(hasMathFunction){
+                position = dcs.serialize(buffer, position, mathFunction);
+            }
+
+            writeHeader(buffer, meta, position);
+            buffer.writeInteger(position, sampleCount);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                IntervalEventWithItemTable i){
+            int position = offset;
+
+            IntervalEventSerializer ies = new IntervalEventSerializer();
+
+            position = ies.serializeItemTable(buffer, position, i.getEvent(),
+                    i.getWidth(), i.getMathFunction(), i.getSampleCount());
+
+            return position;
+        }
+
+        protected IntervalEventWithItemTable deserializeItemTable(Buffer buffer,
+                                                                  int offset){
+            int position = offset;
+
+            EventSerializer es = new EventSerializer();
+            DvDurationSerializer dds = new DvDurationSerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+
+            int eventPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            EventWithItemTable event = es.deserializeItemTable(buffer,
+                    eventPosition);
+
+            boolean hasWidth = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvDuration width = null;
+            if(hasWidth){
+                int widthPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                width = dds.deserialize(buffer, widthPosition);
+            }
+
+            boolean hasMathFunction = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvCodedText mathFunction = null;
+            if(hasMathFunction){
+                int mathFunctionPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                mathFunction = dcs.deserialize(buffer, mathFunctionPosition);
+            }
+
+            int sampleCountPosition = buffer.readInteger(position);
+            int sampleCount = buffer.readInteger(sampleCountPosition);
+
+            return RMObjectFactory.newIntervalEventWithItemTable(event, width,
+                    mathFunction, sampleCount);
         }
     }
 

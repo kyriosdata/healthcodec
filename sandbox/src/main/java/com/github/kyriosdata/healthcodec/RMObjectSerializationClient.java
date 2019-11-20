@@ -22,6 +22,8 @@ import com.github.kyriosdata.healthcodec.RMObject.UID;
 import com.github.kyriosdata.healthcodec.RMObject.UUID;
 import com.github.kyriosdata.healthcodec.RMObjectSerialization.*;
 
+import java.util.List;
+
 import static com.github.kyriosdata.healthcodec.RMObjectID.*;
 import static com.github.kyriosdata.healthcodec.RMObjectID.DVEHRURI;
 import static com.github.kyriosdata.healthcodec.RMObjectID.DVURI;
@@ -2706,6 +2708,257 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     public EventWithItemTable deserializeEventWithItemTable() {
         EventSerializer d = new EventSerializer();
         return d.deserializeItemTable(buffer, getOffsetFromID(EVENT));
+    }
+
+    /**
+     * Serializador de IntevalEvent com ItemTree.
+     *
+     * @param i
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeIntervalEvent(
+            IntervalEventWithItemTree i) {
+        IntervalEventSerializer s = new IntervalEventSerializer();
+        register(INTERVALEVENT, offset);
+        setOffset(s.serialize(buffer, offset, i));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Event com ItemTable.
+     *
+     * @return nova instância de Event com ItemTable
+     */
+    @Override
+    public IntervalEventWithItemTree deserializeIntervalEventWithItemTree() {
+        IntervalEventSerializer d = new IntervalEventSerializer();
+        return d.deserializeItemTree(buffer, getOffsetFromID(INTERVALEVENT));
+    }
+
+    /**
+     * Serializador de IntevalEvent com ItemSingle.
+     *
+     * @param i
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeIntervalEvent(
+            IntervalEventWithItemSingle i) {
+        IntervalEventSerializer s = new IntervalEventSerializer();
+        register(INTERVALEVENT, offset);
+        setOffset(s.serialize(buffer, offset, i));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Event com ItemTable.
+     *
+     * @return nova instância de Event com ItemTable
+     */
+    @Override
+    public IntervalEventWithItemSingle deserializeIntervalEventWithItemSingle() {
+        IntervalEventSerializer d = new IntervalEventSerializer();
+        return d.deserializeItemSingle(buffer, getOffsetFromID(INTERVALEVENT));
+    }
+
+    /**
+     * Serializador de IntevalEvent com ItemTable.
+     *
+     * @param i
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeIntervalEvent(
+            IntervalEventWithItemTable i) {
+        IntervalEventSerializer s = new IntervalEventSerializer();
+        register(INTERVALEVENT, offset);
+        setOffset(s.serialize(buffer, offset, i));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Event com ItemTable.
+     *
+     * @return nova instância de Event com ItemTable
+     */
+    @Override
+    public IntervalEventWithItemTable deserializeIntervalEventWithItemTable() {
+        IntervalEventSerializer d = new IntervalEventSerializer();
+        return d.deserializeItemTable(buffer, getOffsetFromID(INTERVALEVENT));
+    }
+
+    /**
+     * Serializador de History com ItemTree.
+     *
+     * @param h
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeHistory(HistoryWithItemTree h) {
+        HistorySerializer s = new HistorySerializer();
+        register(HISTORY, offset);
+        setOffset(s.serialize(buffer, offset, h));
+
+        return this;
+    }
+
+    public void testEventS(List<EventWithItemTree> l){
+        EventSerializer es = new EventSerializer();
+        register(EVENT, offset);
+        setOffset(es.listSerializeItemTree(buffer, offset, l));
+    }
+
+    public List<EventWithItemTree> testEventD(){
+        EventSerializer es = new EventSerializer();
+        return es.deserializeListOfItemTree(buffer, getOffsetFromID(EVENT));
+    }
+
+    /**
+     * Deserializador de History com ItemTree.
+     *
+     * @return nova instância de History com ItemTable
+     */
+    @Override
+    public HistoryWithItemTree deserializeHistoryWithItemTree() {
+        HistorySerializer d = new HistorySerializer();
+        return d.deserializeItemTree(buffer, getOffsetFromID(HISTORY));
+    }
+
+    /**
+     * Serializador de History com ItemSingle.
+     *
+     * @param h
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeHistory(HistoryWithItemSingle h) {
+        HistorySerializer s = new HistorySerializer();
+        register(HISTORY, offset);
+        setOffset(s.serialize(buffer, offset, h));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de History com ItemSingle.
+     *
+     * @return nova instância de History com ItemTable
+     */
+    @Override
+    public HistoryWithItemSingle deserializeHistoryWithItemSingle() {
+        HistorySerializer d = new HistorySerializer();
+        return d.deserializeItemSingle(buffer, getOffsetFromID(HISTORY));
+    }
+
+    /**
+     * Serializador de History com ItemTable.
+     *
+     * @param h
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeHistory(HistoryWithItemTable h) {
+        HistorySerializer s = new HistorySerializer();
+        register(HISTORY, offset);
+        setOffset(s.serialize(buffer, offset, h));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de History com ItemTable.
+     *
+     * @return nova instância de History com ItemTable
+     */
+    @Override
+    public HistoryWithItemTable deserializeHistoryWithItemTable() {
+        HistorySerializer d = new HistorySerializer();
+        return d.deserializeItemTable(buffer, getOffsetFromID(HISTORY));
+    }
+
+    /**
+     * Serializador de PointEvent com ItemTree.
+     *
+     * @param p
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializePointEvent(
+            PointEventWithItemTree p) {
+        PointEventSerializer s = new PointEventSerializer();
+        register(POINTEVENT, offset);
+        setOffset(s.serialize(buffer, offset, p));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de PointEvent com ItemTree.
+     *
+     * @return nova instância de PointEvent com ItemTree
+     */
+    @Override
+    public PointEventWithItemTree deserializePointEventWithItemTree() {
+        PointEventSerializer d = new PointEventSerializer();
+        return d.deserializeItemTree(buffer, getOffsetFromID(POINTEVENT));
+    }
+
+    /**
+     * Serializador de PointEvent com ItemSingle.
+     *
+     * @param p
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializePointEvent(
+            PointEventWithItemSingle p) {
+        PointEventSerializer s = new PointEventSerializer();
+        register(POINTEVENT, offset);
+        setOffset(s.serialize(buffer, offset, p));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de PointEvent com ItemSingle.
+     *
+     * @return nova instância de PointEvent com ItemSingle
+     */
+    @Override
+    public PointEventWithItemSingle deserializePointEventWithItemSingle() {
+        PointEventSerializer d = new PointEventSerializer();
+        return d.deserializeItemSingle(buffer, getOffsetFromID(POINTEVENT));
+    }
+
+    /**
+     * Serializador de PointEvent com ItemTable.
+     *
+     * @param p
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializePointEvent(
+            PointEventWithItemTable p) {
+        PointEventSerializer s = new PointEventSerializer();
+        register(POINTEVENT, offset);
+        setOffset(s.serialize(buffer, offset, p));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de PointEvent com ItemTable.
+     *
+     * @return nova instância de PointEvent com ItemTable
+     */
+    @Override
+    public PointEventWithItemTable deserializePointEventWithItemTable() {
+        PointEventSerializer d = new PointEventSerializer();
+        return d.deserializeItemTable(buffer, getOffsetFromID(POINTEVENT));
     }
 
     /**
