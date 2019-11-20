@@ -2577,6 +2577,138 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de AuthoredResource.
+     *
+     * @param a
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeAuthoredResource(
+            AuthoredResource a) {
+        AuthoredResourceSerializer s = new AuthoredResourceSerializer();
+        register(AUTHOREDRESOURCE, offset);
+        setOffset(s.serialize(buffer, offset, a));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de AuthoredResource.
+     *
+     * @return nova instância de AuthoredResource
+     */
+    @Override
+    public AuthoredResource deserializeAuthoredResource() {
+        AuthoredResourceSerializer d = new AuthoredResourceSerializer();
+        return d.deserialize(buffer, getOffsetFromID(AUTHOREDRESOURCE));
+    }
+
+    /**
+     * Serializador de ResourceDescription.
+     *
+     * @param r
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeResourceDescription(
+            ResourceDescription r) {
+        ResourceDescriptionSerializer s = new ResourceDescriptionSerializer();
+        register(RESOURCEDESCRIPTION, offset);
+        setOffset(s.serialize(buffer, offset, r));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de ResourceDescription.
+     *
+     * @return nova instância de ResourceDescription
+     */
+    @Override
+    public ResourceDescription deserializeResourceDescription() {
+        ResourceDescriptionSerializer d = new ResourceDescriptionSerializer();
+        return d.deserialize(buffer, getOffsetFromID(RESOURCEDESCRIPTION));
+    }
+
+    /**
+     * Serializador de Event com ItemTree.
+     *
+     * @param e
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeEvent(EventWithItemTree e) {
+        EventSerializer s = new EventSerializer();
+        register(EVENT, offset);
+        setOffset(s.serialize(buffer, offset, e));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Event com ItemTree.
+     *
+     * @return nova instância de Event com ItemTree
+     */
+    @Override
+    public EventWithItemTree deserializeEventWithItemTree() {
+        EventSerializer d = new EventSerializer();
+        return d.deserializeItemTree(buffer, getOffsetFromID(EVENT));
+    }
+
+    /**
+     * Serializador de Event com ItemSingle.
+     *
+     * @param e
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeEvent(EventWithItemSingle e) {
+        EventSerializer s = new EventSerializer();
+        register(EVENT, offset);
+        setOffset(s.serialize(buffer, offset, e));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Event com ItemSingle.
+     *
+     * @return nova instância de Event com ItemSingle
+     */
+    @Override
+    public EventWithItemSingle deserializeEventWithItemSingle() {
+        EventSerializer d = new EventSerializer();
+        return d.deserializeItemSingle(buffer, getOffsetFromID(EVENT));
+    }
+
+    /**
+     * Serializador de Event com ItemTable.
+     *
+     * @param e
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeEvent(EventWithItemTable e) {
+        EventSerializer s = new EventSerializer();
+        register(EVENT, offset);
+        setOffset(s.serialize(buffer, offset, e));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Event com ItemTable.
+     *
+     * @return nova instância de Event com ItemTable
+     */
+    @Override
+    public EventWithItemTable deserializeEventWithItemTable() {
+        EventSerializer d = new EventSerializer();
+        return d.deserializeItemTable(buffer, getOffsetFromID(EVENT));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id

@@ -531,4 +531,83 @@ public class RMObjectFactory {
                                    List<ObjectRef> items){
         return new Folder(locatable, folders, items);
     }
+
+    public static AuthoredResource newAuthoredResource(
+            CodePhrase originalLanguage,
+            Map<String, TranslationDetails> translations,
+            ResourceDescription description,
+            RevisionHistory revisionHistory, boolean isControlled){
+        return new AuthoredResource(originalLanguage, translations, description,
+                revisionHistory, isControlled);
+    }
+
+    public static ResourceDescription newResourceDescription(
+            Map<String, String> originalAuthor,List<String> otherContributors,
+            String lifecycleState, List<ResourceDescriptionItem> details,
+            String resourcePackageUri, Map<String, String> otherDetails,
+            AuthoredResource parentResource){
+        return new ResourceDescription(originalAuthor, otherContributors,
+                lifecycleState, details, resourcePackageUri, otherDetails,
+                parentResource);
+    }
+
+    public static EventWithItemTree newEventWithItemTree(Locatable locatable,
+                                                         DvDateTime time,
+                                                         ItemTree data,
+                                                         ItemStructure state){
+        return new EventWithItemTree(locatable, time, data, state);
+    }
+
+    public static EventWithItemSingle newEventWithItemSingle(Locatable locatable,
+                                                            DvDateTime time,
+                                                            ItemSingle data,
+                                                            ItemStructure state){
+        return new EventWithItemSingle(locatable, time, data, state);
+    }
+
+    public static EventWithItemTable newEventWithItemTable(Locatable locatable,
+                                                           DvDateTime time,
+                                                           ItemTable data,
+                                                           ItemStructure state){
+        return new EventWithItemTable(locatable, time, data, state);
+    }
+
+    public static HistoryWithItemTree newHistoryWithItemTree(
+            DataStructure dataStructure,DvDateTime origin,
+            List<EventWithItemTree> events, DvDuration period,
+            DvDuration duration, ItemStructure summary){
+        return new HistoryWithItemTree(dataStructure, origin, events, period,
+                duration, summary);
+    }
+
+    public static HistoryWithItemSingle newHistoryWithItemSingle(
+            DataStructure dataStructure,DvDateTime origin,
+            List<EventWithItemSingle> events, DvDuration period,
+            DvDuration duration, ItemStructure summary){
+        return new HistoryWithItemSingle(dataStructure, origin, events, period,
+                duration, summary);
+    }
+
+    public static HistoryWithItemTable newHistoryWithItemTable(
+            DataStructure dataStructure,DvDateTime origin,
+            List<EventWithItemTable> events, DvDuration period,
+            DvDuration duration, ItemStructure summary){
+        return new HistoryWithItemTable(dataStructure, origin, events, period,
+                duration, summary);
+    }
+
+    public static PointEventWithItemTree newPointEventWithItemTree(
+            EventWithItemTree event){
+        return new PointEventWithItemTree(event);
+    }
+
+    public static PointEventWithItemSingle newPointEventWithItemSingle(
+            EventWithItemSingle event){
+        return new PointEventWithItemSingle(event);
+    }
+
+    public static PointEventWithItemTable newPointEventWithItemTable(
+            EventWithItemTable event){
+        return new PointEventWithItemTable(event);
+    }
 }

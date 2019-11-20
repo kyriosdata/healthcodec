@@ -1131,6 +1131,48 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de ResourceDescription com valor fixo
+     *
+     * @return nova instância de ResourceDescription
+     */
+    public static ResourceDescription resourceDescription(){
+        Map<String, String> originalAuthor = stringStringMap(false);
+        List<String> otherContributors = stringList(false);
+        String lifecycleState = "lifecycleState";
+        List<ResourceDescriptionItem> details = resourceDescriptionItemList(
+                false);
+        String resourcePackageUri = "resourcePackageUri";
+        Map<String, String> otherDetails = stringStringMap(false);
+        AuthoredResource parentResource = authoredResource();
+
+        return RMObjectFactory.newResourceDescription(originalAuthor,
+                otherContributors, lifecycleState, details, resourcePackageUri,
+                otherDetails, parentResource);
+    }
+
+    /**
+     * Cria uma instância de AuthoredResource com valor fixo
+     *
+     * @return nova instância de AuthoredResource
+     */
+    public static AuthoredResource authoredResource(){
+        CodePhrase originalLanguage = codePhrase();
+        Map<String, TranslationDetails> translations =
+                stringTranslationDetailsMap(false);
+        ResourceDescription description = RMObjectFactory.
+                newResourceDescription(stringStringMap(false),
+                        stringList(false),"lifecycleState",
+                        resourceDescriptionItemList(false),
+                        "resourcePackageUri",
+                        stringStringMap(false), null);
+
+        RevisionHistory revisionHistory = revisionHistory();
+
+        return RMObjectFactory.newAuthoredResource(originalLanguage,
+                translations, description, revisionHistory, true);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
@@ -1163,6 +1205,24 @@ public class RMObjectTestHelper {
         }
         ObjectRef or = objectRef();
         list.add(or);
+
+        return list;
+    }
+
+    /**
+     * Método que gera uma lista de ResourceDescriptionItem
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    public static List<ResourceDescriptionItem> resourceDescriptionItemList(
+            boolean emptyList){
+        List<ResourceDescriptionItem> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        ResourceDescriptionItem rdi = resourceDescriptionItem();
+        list.add(rdi);
 
         return list;
     }
@@ -1380,7 +1440,7 @@ public class RMObjectTestHelper {
         if(emptySet){
             return set;
         }
-        PartyIdentity p =RMObjectFactory.newPartyIdentity(
+        PartyIdentity p = RMObjectFactory.newPartyIdentity(
                 RMObjectFactory.newLocatable(
                         RMObjectTestHelper.uIDBasedID(),
                         "archetypeNodeId",
@@ -1604,6 +1664,26 @@ public class RMObjectTestHelper {
         map.put("key1", "value");
         map.put("key2", "value");
         map.put("key3", "value");
+
+        return map;
+    }
+
+    /**
+     * Método que gera um map de String, TranslationDetails
+     *
+     * @param emptyMap map vazio
+     *
+     * @return map
+     */
+    public static Map<String, TranslationDetails> stringTranslationDetailsMap(
+            boolean emptyMap){
+        Map<String, TranslationDetails> map = new HashMap<>();
+        if(emptyMap){
+            return map;
+        }
+        map.put("key1", translationDetails());
+        map.put("key2", translationDetails());
+        map.put("key3", translationDetails());
 
         return map;
     }

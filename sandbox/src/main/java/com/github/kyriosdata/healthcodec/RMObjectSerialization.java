@@ -6373,6 +6373,909 @@ public class RMObjectSerialization {
         return map;
     }
 
+    public static class AuthoredResourceSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                CodePhrase originalLanguage,
+                                Map<String, TranslationDetails> translations,
+                                ResourceDescription description,
+                                RevisionHistory revisionHistory,
+                                boolean isControlled){
+            int meta = offset;
+            int position = offset + 5 * PrimitiveTypeSize.INT.getSize() +
+                    2 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            TranslationDetailsSerializer tds =
+                    new TranslationDetailsSerializer();
+            ResourceDescriptionSerializer rds =
+                    new ResourceDescriptionSerializer();
+            RevisionHistorySerializer rhs = new RevisionHistorySerializer();
+
+            boolean hasDescription = description != null;
+            boolean hasRevisionHistory = revisionHistory != null;
+
+            meta = writeHeader(buffer, meta, position);
+            position = cps.serialize(buffer, position, originalLanguage);
+
+            meta = writeHeader(buffer, meta, position);
+            position = tds.mapSerialization(buffer, position, translations);
+
+            meta = writeHeader(buffer, meta, hasDescription, position);
+            if(hasDescription){
+                position = rds.serialize(buffer, position, description);
+            }
+
+            meta = writeHeader(buffer, meta, hasRevisionHistory, position);
+            if(hasRevisionHistory){
+                position = rhs.serialize(buffer, position, revisionHistory);
+            }
+
+            writeHeader(buffer, meta, position);
+            buffer.writeBoolean(position, isControlled);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, AuthoredResource a){
+            int position = offset;
+            AuthoredResourceSerializer ars = new AuthoredResourceSerializer();
+
+            position = ars.serialize(buffer, position, a.getOriginalLanguage(),
+                    a.getTranslations(), a.getDescription(),
+                    a.getRevisionHistory(), a.isControlled());
+
+            return position;
+        }
+
+        protected AuthoredResource deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            TranslationDetailsSerializer tds =
+                    new TranslationDetailsSerializer();
+            ResourceDescriptionSerializer rds =
+                    new ResourceDescriptionSerializer();
+            RevisionHistorySerializer rhs = new RevisionHistorySerializer();
+
+
+            int originalLanguagePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            CodePhrase originalLanguage = cps.deserialize(buffer,
+                    originalLanguagePosition);
+
+            int translationsPositon = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            Map<String, TranslationDetails> translations =
+                    tds.mapDeserialization(buffer, translationsPositon);
+
+            boolean hasDescription = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            ResourceDescription description = null;
+            if(hasDescription){
+                int descriptionPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                description = rds.deserialize(buffer, descriptionPosition);
+            }
+
+            boolean hasRevisionHistory = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            RevisionHistory revisionHistory  = null;
+            if(hasRevisionHistory){
+                int revisionHistoryPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                revisionHistory = rhs.deserialize(buffer,
+                        revisionHistoryPosition);
+            }
+
+            int isControllerPosition = buffer.readInteger(position);
+            boolean isControlled = buffer.readBoolean(isControllerPosition);
+
+            return RMObjectFactory.newAuthoredResource(originalLanguage,
+                    translations, description, revisionHistory, isControlled);
+        }
+    }
+
+    public static class ResourceDescriptionSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                Map<String, String> originalAuthor,
+                                List<String> otherContributors,
+                                String lifecycleState,
+                                List<ResourceDescriptionItem> details,
+                                String resourcePackageUri,
+                                Map<String, String> otherDetails,
+                                AuthoredResource parentResource){
+            int meta = offset;
+            int position = offset + 7 * PrimitiveTypeSize.INT.getSize() +
+                    4 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasOtherContributors = otherContributors != null;
+            boolean hasResourcePackageUri = resourcePackageUri != null;
+            boolean hasOtherDetails = otherDetails != null;
+            boolean hasParentResource = parentResource != null;
+
+            ResourceDescriptionItemSerializer rds =
+                    new ResourceDescriptionItemSerializer();
+            AuthoredResourceSerializer ars = new AuthoredResourceSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = mapStringSerialization(buffer, position, originalAuthor);
+
+            meta = writeHeader(buffer, meta, hasOtherContributors, position);
+            if(hasOtherContributors){
+                position = listStringSerialization(buffer, position,
+                    otherContributors);
+            }
+
+            meta = writeHeader(buffer, meta, position);
+            position = stringSerialization(buffer, position, lifecycleState);
+
+            meta = writeHeader(buffer, meta, position);
+            position = rds.listSerialize(buffer, position, details);
+
+            meta = writeHeader(buffer, meta, hasResourcePackageUri, position);
+            if(hasResourcePackageUri){
+                position = stringSerialization(buffer, position,
+                        resourcePackageUri);
+            }
+
+            meta = writeHeader(buffer, meta, hasOtherDetails, position);
+            if(hasOtherDetails){
+                position = mapStringSerialization(buffer, position, otherDetails);
+            }
+
+            writeHeader(buffer, meta, hasParentResource, position);
+            if(hasParentResource){
+                position = ars.serialize(buffer, position, parentResource);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, ResourceDescription r){
+            int position = offset;
+            ResourceDescriptionSerializer ars =
+                    new ResourceDescriptionSerializer();
+
+            position = ars.serialize(buffer, position, r.getOriginalAuthor(),
+                    r.getOtherContributors(), r.getLifecycleState(),
+                    r.getDetails(), r.getResourcePackageUri(),
+                    r.getOtherDetails(), r.getParentResource());
+
+            return position;
+        }
+
+        protected ResourceDescription deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            ResourceDescriptionItemSerializer rds =
+                    new ResourceDescriptionItemSerializer();
+            AuthoredResourceSerializer ars = new AuthoredResourceSerializer();
+
+            int originalAuthorPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            Map<String, String> originalAuthor = mapStringDeserialization(
+                    buffer, originalAuthorPosition);
+
+            boolean hasOtherContributors = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            List<String> otherContributors = null;
+            if(hasOtherContributors){
+                int otherContributorsPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                otherContributors = listStringDeserialization(buffer,
+                        otherContributorsPosition);
+            }
+
+            int lifecicleStatePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            String lifecycleState = stringDeserialization(buffer,
+                    lifecicleStatePosition);
+
+            int detailsPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            List<ResourceDescriptionItem> details = rds.deserializeList(buffer,
+                    detailsPosition);
+
+            boolean hasResourcePackageUri = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            String resourcePackageUri = null;
+            if(hasResourcePackageUri){
+                int resourcePackageUriPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                resourcePackageUri = stringDeserialization(buffer,
+                        resourcePackageUriPosition);
+            }
+
+            boolean hasOtherDetails = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            Map<String, String> otherDetails = null;
+            if(hasOtherDetails){
+                int otherDetailsPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                otherDetails = mapStringDeserialization(buffer,
+                        otherDetailsPosition);
+            }
+
+            boolean hasParentResource = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            AuthoredResource parentResource = null;
+            if(hasParentResource){
+                int parentResourcePosition = buffer.readInteger(position);
+                parentResource = ars.deserialize(buffer,
+                        parentResourcePosition);
+            }
+
+            return RMObjectFactory.newResourceDescription(originalAuthor,
+                    otherContributors, lifecycleState, details,
+                    resourcePackageUri, otherDetails, parentResource);
+        }
+    }
+
+    public static class EventSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                        Locatable locatable, DvDateTime time,
+                                        ItemTree data, ItemStructure state){
+            int meta = offset;
+            int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
+
+            LocatableSerializer ls = new LocatableSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            ItemTreeSerializer its = new ItemTreeSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = ls.serialize(buffer, position, locatable);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, time);
+
+            meta = writeHeader(buffer, meta, position);
+            position = its.serialize(buffer, position, data);
+
+            writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, state);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, EventWithItemTree e){
+            int position = offset;
+            EventSerializer es = new EventSerializer();
+
+            position = es.serialize(buffer, position, e.getLocatable(),
+                    e.getTime(), e.getData(), e.getState());
+
+            return position;
+        }
+
+        protected EventWithItemTree deserializeItemTree(Buffer buffer,
+                                                        int offset){
+            int position = offset;
+
+            LocatableSerializer ls = new LocatableSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            ItemTreeSerializer its = new ItemTreeSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            int locatablePosition = buffer.readInteger(position);
+            position = PrimitiveTypeSize.INT.getSize();
+            Locatable locatable = ls.deserialize(buffer, locatablePosition);
+
+            int timePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDateTime time = dts.deserialize(buffer, timePosition);
+
+            int dataPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            ItemTree data = its.deserialize(buffer, dataPosition);
+
+            int statePosition = buffer.readInteger(position);
+            ItemStructure state = iss.deserialize(buffer, statePosition);
+
+            return RMObjectFactory.newEventWithItemTree(locatable, time,
+                    data, state);
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                Locatable locatable, DvDateTime time,
+                                ItemSingle data, ItemStructure state){
+            int meta = offset;
+            int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
+
+            LocatableSerializer ls = new LocatableSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            ItemSingleSerializer its = new ItemSingleSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = ls.serialize(buffer, position, locatable);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, time);
+
+            meta = writeHeader(buffer, meta, position);
+            position = its.serialize(buffer, position, data);
+
+            writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, state);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, EventWithItemSingle e){
+            int position = offset;
+            EventSerializer es = new EventSerializer();
+
+            position = es.serialize(buffer, position, e.getLocatable(),
+                    e.getTime(), e.getData(), e.getState());
+
+            return position;
+        }
+
+        protected EventWithItemSingle deserializeItemSingle(Buffer buffer,
+                                                            int offset){
+            int position = offset;
+
+            LocatableSerializer ls = new LocatableSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            ItemSingleSerializer its = new ItemSingleSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            int locatablePosition = buffer.readInteger(position);
+            position = PrimitiveTypeSize.INT.getSize();
+            Locatable locatable = ls.deserialize(buffer, locatablePosition);
+
+            int timePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDateTime time = dts.deserialize(buffer, timePosition);
+
+            int dataPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            ItemSingle data = its.deserialize(buffer, dataPosition);
+
+            int statePosition = buffer.readInteger(position);
+            ItemStructure state = iss.deserialize(buffer, statePosition);
+
+            return RMObjectFactory.newEventWithItemSingle(locatable, time,
+                    data, state);
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                Locatable locatable, DvDateTime time,
+                                ItemTable data, ItemStructure state){
+            int meta = offset;
+            int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
+
+            LocatableSerializer ls = new LocatableSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            ItemTableSerializer its = new ItemTableSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = ls.serialize(buffer, position, locatable);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, time);
+
+            meta = writeHeader(buffer, meta, position);
+            position = its.serialize(buffer, position, data);
+
+            writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, state);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, EventWithItemTable e){
+            int position = offset;
+            EventSerializer es = new EventSerializer();
+
+            position = es.serialize(buffer, position, e.getLocatable(),
+                    e.getTime(), e.getData(), e.getState());
+
+            return position;
+        }
+
+        protected EventWithItemTable deserializeItemTable(Buffer buffer,
+                                                          int offset){
+            int position = offset;
+
+            LocatableSerializer ls = new LocatableSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            ItemTableSerializer its = new ItemTableSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            int locatablePosition = buffer.readInteger(position);
+            position = PrimitiveTypeSize.INT.getSize();
+            Locatable locatable = ls.deserialize(buffer, locatablePosition);
+
+            int timePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDateTime time = dts.deserialize(buffer, timePosition);
+
+            int dataPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            ItemTable data = its.deserialize(buffer, dataPosition);
+
+            int statePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            ItemStructure state = iss.deserialize(buffer, statePosition);
+
+            return RMObjectFactory.newEventWithItemTable(locatable, time,
+                    data, state);
+        }
+
+        protected int listSerializeItemTree(
+                Buffer buffer, int offset, List<EventWithItemTree> items)
+        {
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            EventSerializer es = new EventSerializer();
+
+            for (EventWithItemTree e : items){
+                meta = writeHeader(buffer, meta, position);
+                position = es.serialize(buffer, position, e);
+            }
+
+            return position;
+        }
+
+        protected List<EventWithItemTree> deserializeListOfItemTree(Buffer buffer,
+                                                          int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            List<EventWithItemTree> list = new ArrayList<>();
+            EventSerializer es = new EventSerializer();
+
+            for (int i = 0; i < listSize; i++){
+                int eventPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                EventWithItemTree e = es.deserializeItemTree(buffer,
+                        eventPosition);
+                list.add(e);
+            }
+
+            return list;
+        }
+
+        protected int listSerializeItemSingle(
+                Buffer buffer, int offset, List<EventWithItemSingle> items)
+        {
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            EventSerializer es = new EventSerializer();
+
+            for (EventWithItemSingle e : items){
+                meta = writeHeader(buffer, meta, position);
+                position = es.serialize(buffer, position, e);
+            }
+
+            return position;
+        }
+
+        protected List<EventWithItemSingle> deserializeListOfItemSingle(Buffer buffer,
+                                                            int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            List<EventWithItemSingle> list = new ArrayList<>();
+            EventSerializer es = new EventSerializer();
+
+            for (int i = 0; i < listSize; i++){
+                int eventPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                EventWithItemSingle e = es.deserializeItemSingle(buffer,
+                        eventPosition);
+                list.add(e);
+            }
+
+            return list;
+        }
+
+        protected int listSerializeItemTable(
+                Buffer buffer, int offset, List<EventWithItemTable> items)
+        {
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            EventSerializer es = new EventSerializer();
+
+            for (EventWithItemTable e : items){
+                meta = writeHeader(buffer, meta, position);
+                position = es.serialize(buffer, position, e);
+            }
+
+            return position;
+        }
+
+        protected List<EventWithItemTable> deserializeListOfItemTable(Buffer buffer,
+                                                           int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            List<EventWithItemTable> list = new ArrayList<>();
+            EventSerializer es = new EventSerializer();
+
+            for (int i = 0; i < listSize; i++){
+                int eventPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                EventWithItemTable e = es.deserializeItemTable(buffer,
+                        eventPosition);
+                list.add(e);
+            }
+
+            return list;
+        }
+    }
+
+    public static class HistorySerializer {
+        protected int serializeItemTree(Buffer buffer, int offset,
+                                DataStructure dataStructure, DvDateTime origin,
+                                List<EventWithItemTree> events,
+                                DvDuration period, DvDuration duration,
+                                ItemStructure summary) {
+            int meta = offset;
+            int position = offset + 6 * PrimitiveTypeSize.INT.getSize();
+
+            DataStructureSerializer dss = new DataStructureSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            EventSerializer es = new EventSerializer();
+            DvDurationSerializer dds = new DvDurationSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = dss.serialize(buffer, position, dataStructure);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, origin);
+
+            meta = writeHeader(buffer, meta, position);
+            position = es.listSerializeItemTree(buffer, position, events);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dds.serialize(buffer, position, period);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dds.serialize(buffer, position, duration);
+
+            writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, summary);
+
+            return position;
+        }
+
+        int serialize(Buffer buffer, int offset, HistoryWithItemTree h){
+            int position = offset;
+            HistorySerializer hs = new HistorySerializer();
+
+            position = hs.serializeItemTree(buffer, position, h.getDataStructure(),
+                    h.getOrigin(), h.getEvents(), h.getPeriod(), h.getDuration(),
+                    h.getSummary());
+
+            return position;
+        }
+
+        HistoryWithItemTree deserializeItemTree(Buffer buffer, int offset){
+            int position = offset;
+
+            DataStructureSerializer dss = new DataStructureSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            EventSerializer es = new EventSerializer();
+            DvDurationSerializer dds = new DvDurationSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            int dataStructurePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DataStructure dataStructure = dss.deserialize(buffer,
+                    dataStructurePosition);
+            int originPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDateTime origin = dts.deserialize(buffer, originPosition);
+
+            int eventsPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            List<EventWithItemTree> events = es.deserializeListOfItemTree(buffer,
+                    eventsPosition);
+            int periodPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDuration period = dds.deserialize(buffer, periodPosition);
+
+            int durationPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDuration duration = dds.deserialize(buffer, durationPosition);
+
+            int summaryPosition = buffer.readInteger(position);
+            ItemStructure summary = iss.deserialize(buffer, summaryPosition);
+
+            return RMObjectFactory.newHistoryWithItemTree(dataStructure,
+                    origin, events, period, duration, summary);
+        }
+
+        protected int serializeItemSingle(Buffer buffer, int offset,
+                                DataStructure dataStructure, DvDateTime origin,
+                                List<EventWithItemSingle> events,
+                                DvDuration period, DvDuration duration,
+                                ItemStructure summary) {
+            int meta = offset;
+            int position = offset + 6 * PrimitiveTypeSize.INT.getSize();
+
+            DataStructureSerializer dss = new DataStructureSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            EventSerializer es = new EventSerializer();
+            DvDurationSerializer dds = new DvDurationSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = dss.serialize(buffer, position, dataStructure);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, origin);
+
+            meta = writeHeader(buffer, meta, position);
+            position = es.listSerializeItemSingle(buffer, position, events);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dds.serialize(buffer, position, period);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dds.serialize(buffer, position, duration);
+
+            writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, summary);
+
+            return position;
+        }
+
+        int serialize(Buffer buffer, int offset, HistoryWithItemSingle h){
+            int position = offset;
+            HistorySerializer hs = new HistorySerializer();
+
+            position = hs.serializeItemSingle(buffer, position, h.getDataStructure(),
+                    h.getOrigin(), h.getEvents(), h.getPeriod(), h.getDuration(),
+                    h.getSummary());
+
+            return position;
+        }
+
+        HistoryWithItemSingle deserializeItemSingle(Buffer buffer, int offset){
+            int position = offset;
+
+            DataStructureSerializer dss = new DataStructureSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            EventSerializer es = new EventSerializer();
+            DvDurationSerializer dds = new DvDurationSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            int dataStructurePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DataStructure dataStructure = dss.deserialize(buffer,
+                    dataStructurePosition);
+            int originPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDateTime origin = dts.deserialize(buffer, originPosition);
+
+            int eventsPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            List<EventWithItemSingle> events = es.deserializeListOfItemSingle(buffer,
+                    eventsPosition);
+            int periodPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDuration period = dds.deserialize(buffer, periodPosition);
+
+            int durationPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDuration duration = dds.deserialize(buffer, durationPosition);
+
+            int summaryPosition = buffer.readInteger(position);
+            ItemStructure summary = iss.deserialize(buffer, summaryPosition);
+
+            return RMObjectFactory.newHistoryWithItemSingle(dataStructure,
+                    origin, events, period, duration, summary);
+        }
+
+        protected int serializeItemTable(Buffer buffer, int offset,
+                                DataStructure dataStructure, DvDateTime origin,
+                                List<EventWithItemTable> events,
+                                DvDuration period, DvDuration duration,
+                                ItemStructure summary) {
+            int meta = offset;
+            int position = offset + 6 * PrimitiveTypeSize.INT.getSize();
+
+            DataStructureSerializer dss = new DataStructureSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            EventSerializer es = new EventSerializer();
+            DvDurationSerializer dds = new DvDurationSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = dss.serialize(buffer, position, dataStructure);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, origin);
+
+            meta = writeHeader(buffer, meta, position);
+            position = es.listSerializeItemTable(buffer, position, events);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dds.serialize(buffer, position, period);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dds.serialize(buffer, position, duration);
+
+            writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, summary);
+
+            return position;
+        }
+
+        int serialize(Buffer buffer, int offset, HistoryWithItemTable h){
+            int position = offset;
+            HistorySerializer hs = new HistorySerializer();
+
+            position = hs.serializeItemTable(buffer, position, h.getDataStructure(),
+                    h.getOrigin(), h.getEvents(), h.getPeriod(), h.getDuration(),
+                    h.getSummary());
+
+            return position;
+        }
+
+        HistoryWithItemTable deserializeItemTable(Buffer buffer, int offset){
+            int position = offset;
+
+            DataStructureSerializer dss = new DataStructureSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            EventSerializer es = new EventSerializer();
+            DvDurationSerializer dds = new DvDurationSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            int dataStructurePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DataStructure dataStructure = dss.deserialize(buffer,
+                    dataStructurePosition);
+            int originPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDateTime origin = dts.deserialize(buffer, originPosition);
+
+            int eventsPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            List<EventWithItemTable> events = es.deserializeListOfItemTable(buffer,
+                    eventsPosition);
+            int periodPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDuration period = dds.deserialize(buffer, periodPosition);
+
+            int durationPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDuration duration = dds.deserialize(buffer, durationPosition);
+
+            int summaryPosition = buffer.readInteger(position);
+            ItemStructure summary = iss.deserialize(buffer, summaryPosition);
+
+            return RMObjectFactory.newHistoryWithItemTable(dataStructure,
+                    origin, events, period, duration, summary);
+        }
+    }
+
+    public static class PointEventSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                        EventWithItemTree event){
+            int position = offset;
+
+            EventSerializer es = new EventSerializer();
+
+            position = es.serialize(buffer, position, event);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                PointEventWithItemTree p){
+            int position = offset;
+
+            PointEventSerializer pes = new PointEventSerializer();
+
+            position = pes.serialize(buffer, position, p.getEvent());
+
+            return position;
+        }
+
+        protected PointEventWithItemTree deserializeItemTree(Buffer buffer,
+                                                             int offset){
+            int position = offset;
+
+            EventSerializer es = new EventSerializer();
+
+            EventWithItemTree event = es.deserializeItemTree(buffer, position);
+
+            return RMObjectFactory.newPointEventWithItemTree(event);
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                EventWithItemSingle event){
+            int position = offset;
+
+            EventSerializer es = new EventSerializer();
+
+            position = es.serialize(buffer, position, event);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                PointEventWithItemSingle p){
+            int position = offset;
+
+            PointEventSerializer pes = new PointEventSerializer();
+
+            position = pes.serialize(buffer, position, p.getEvent());
+
+            return position;
+        }
+
+        protected PointEventWithItemSingle deserializeItemSingle(Buffer buffer,
+                                                                 int offset){
+            int position = offset;
+
+            EventSerializer es = new EventSerializer();
+
+            EventWithItemSingle event = es.deserializeItemSingle(buffer, position);
+
+            return RMObjectFactory.newPointEventWithItemSingle(event);
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                EventWithItemTable event){
+            int position = offset;
+
+            EventSerializer es = new EventSerializer();
+
+            position = es.serialize(buffer, position, event);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                PointEventWithItemTable p){
+            int position = offset;
+
+            PointEventSerializer pes = new PointEventSerializer();
+
+            position = pes.serialize(buffer, position, p.getEvent());
+
+            return position;
+        }
+
+        protected PointEventWithItemTable deserializeItemTable(Buffer buffer,
+                                                               int offset){
+            int position = offset;
+
+            EventSerializer es = new EventSerializer();
+
+            EventWithItemTable event = es.deserializeItemTable(buffer, position);
+
+            return RMObjectFactory.newPointEventWithItemTable(event);
+        }
+    }
+
     /**
      * Escreve o valor inteiro do header de um determinado parâmetro que será
      * serializado em uma posição do buffer

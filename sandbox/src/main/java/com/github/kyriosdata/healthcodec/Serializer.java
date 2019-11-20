@@ -907,4 +907,49 @@ public interface Serializer {
     RMObjectSerializationClient serializeFolder(
             Folder f);
 
+    /**
+     * Serializador de AuthoredResource.
+     *
+     * @param a
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeAuthoredResource(AuthoredResource a);
+
+    /**
+     * Serializador de ResourceDescription.
+     *
+     * @param r
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeResourceDescription(
+            ResourceDescription r);
+
+    /**
+     * Serializador de Event com ItemTree.
+     *
+     * @param e
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeEvent(EventWithItemTree e);
+
+    /**
+     * Serializador de Event com ItemSingle.
+     *
+     * @param e
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeEvent(EventWithItemSingle e);
+
+    /**
+     * Serializador de Event com ItemTable.
+     *
+     * @param e
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeEvent(EventWithItemTable e);
 }

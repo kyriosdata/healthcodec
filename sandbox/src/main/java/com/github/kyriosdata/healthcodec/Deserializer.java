@@ -602,4 +602,34 @@ public interface Deserializer {
      * @return nova instância de Folder
      */
     RMObject.Folder deserializeFolder();
+
+    /**
+     * Deserializador de AuthoredResource.
+     * @return nova instância de AuthoredResource
+     */
+    RMObject.AuthoredResource deserializeAuthoredResource();
+
+    /**
+     * Deserializador de ResourceDescription.
+     * @return nova instância de ResourceDescription
+     */
+    RMObject.ResourceDescription deserializeResourceDescription();
+
+    /**
+     * Deserializador de Event com ItemTree.
+     * @return nova instância de Event com ItemTree
+     */
+    RMObject.EventWithItemTree deserializeEventWithItemTree();
+
+    /**
+     * Deserializador de Event com ItemSingle.
+     * @return nova instância de Event com ItemSingle
+     */
+    RMObject.EventWithItemSingle deserializeEventWithItemSingle();
+
+    /**
+     * Deserializador de Event com ItemTable.
+     * @return nova instância de Event com ItemTable
+     */
+    RMObject.EventWithItemTable deserializeEventWithItemTable();
 }

@@ -2062,7 +2062,7 @@ public class RMObject {
         private final ProportionKind type;
         private final int precision;
 
-        protected DvAmount getDvAmount() {
+        public DvAmount getDvAmount() {
             return dvAmount;
         }
 
@@ -2642,4 +2642,524 @@ public class RMObject {
         }
     }
 
+    public static class ResourceDescription {
+        private final Map<String, String> originalAuthor;
+        private final List<String> otherContributors;
+        private final String lifecycleState;
+        private final List<ResourceDescriptionItem> details;
+        private final String resourcePackageUri;
+        private final Map<String, String> otherDetails;
+        private final AuthoredResource parentResource;
+
+        public ResourceDescription(Map<String, String> originalAuthor,
+                                   List<String> otherContributors,
+                                   String lifecycleState,
+                                   List<ResourceDescriptionItem> details,
+                                   String resourcePackageUri,
+                                   Map<String, String> otherDetails,
+                                   AuthoredResource parentResource) {
+            this.originalAuthor = originalAuthor;
+            this.otherContributors = otherContributors;
+            this.lifecycleState = lifecycleState;
+            this.details = details;
+            this.resourcePackageUri = resourcePackageUri;
+            this.otherDetails = otherDetails;
+            this.parentResource = parentResource;
+        }
+
+        public Map<String, String> getOriginalAuthor() {
+            return originalAuthor;
+        }
+
+        public List<String> getOtherContributors() {
+            return otherContributors;
+        }
+
+        public String getLifecycleState() {
+            return lifecycleState;
+        }
+
+        public List<ResourceDescriptionItem> getDetails() {
+            return details;
+        }
+
+        public String getResourcePackageUri() {
+            return resourcePackageUri;
+        }
+
+        public Map<String, String> getOtherDetails() {
+            return otherDetails;
+        }
+
+        public AuthoredResource getParentResource() {
+            return parentResource;
+        }
+    }
+
+    public static class AuthoredResource {
+        private final CodePhrase originalLanguage;
+        private final Map<String, TranslationDetails> translations;
+        private final ResourceDescription description;
+        private final RevisionHistory revisionHistory;
+        private final boolean isControlled;
+
+        public AuthoredResource(CodePhrase originalLanguage,
+                                Map<String, TranslationDetails> translations,
+                                ResourceDescription description,
+                                RevisionHistory revisionHistory,
+                                boolean isControlled) {
+            if (originalLanguage == null) {
+                throw new IllegalArgumentException("null originalLanguage");
+            }
+            if (translations != null) {
+                if (translations.isEmpty()) {
+                    throw new IllegalArgumentException("empty translations");
+                }
+                if (translations.containsKey(originalLanguage.getCodeString())) {
+                    throw new IllegalArgumentException(
+                            "original language in translations");
+                }
+            }
+            if (isControlled == (revisionHistory == null)) {
+                throw new IllegalArgumentException(
+                        "breach of revision history validity");
+            }
+            this.originalLanguage = originalLanguage;
+            this.translations = translations;
+            this.description = description;
+            this.revisionHistory = revisionHistory;
+            this.isControlled = isControlled;
+        }
+
+        public CodePhrase getOriginalLanguage() {
+            return originalLanguage;
+        }
+
+        public Map<String, TranslationDetails> getTranslations() {
+            return translations;
+        }
+
+        public ResourceDescription getDescription() {
+            return description;
+        }
+
+        public RevisionHistory getRevisionHistory() {
+            return revisionHistory;
+        }
+
+        public boolean isControlled() {
+            return isControlled;
+        }
+    }
+
+    public static class EventWithItemTree {
+        private final Locatable locatable;
+        private final DvDateTime time;
+        private final ItemTree data;
+        private final ItemStructure state;
+
+        public EventWithItemTree(Locatable locatable, DvDateTime time,
+                                 ItemTree data, ItemStructure state) {
+            if (time == null) {
+                throw new IllegalArgumentException("null time");
+            }
+            if (data == null) {
+                throw new IllegalArgumentException("null data");
+            }
+            this.locatable = locatable;
+            this.time = time;
+            this.data = data;
+            this.state = state;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public DvDateTime getTime() {
+            return time;
+        }
+
+        public ItemTree getData() {
+            return data;
+        }
+
+        public ItemStructure getState() {
+            return state;
+        }
+    }
+    public static class EventWithItemSingle {
+        private final Locatable locatable;
+        private final DvDateTime time;
+        private final ItemSingle data;
+        private final ItemStructure state;
+
+        public EventWithItemSingle(Locatable locatable, DvDateTime time,
+                                   ItemSingle data, ItemStructure state) {
+            if (time == null) {
+                throw new IllegalArgumentException("null time");
+            }
+            if (data == null) {
+                throw new IllegalArgumentException("null data");
+            }
+            this.locatable = locatable;
+            this.time = time;
+            this.data = data;
+            this.state = state;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public DvDateTime getTime() {
+            return time;
+        }
+
+        public ItemSingle getData() {
+            return data;
+        }
+
+        public ItemStructure getState() {
+            return state;
+        }
+    }
+
+    public static class EventWithItemTable {
+        private final Locatable locatable;
+        private final DvDateTime time;
+        private final ItemTable data;
+        private final ItemStructure state;
+
+        public EventWithItemTable(Locatable locatable, DvDateTime time,
+                                  ItemTable data, ItemStructure state) {
+            if (time == null) {
+                throw new IllegalArgumentException("null time");
+            }
+            if (data == null) {
+                throw new IllegalArgumentException("null data");
+            }
+            this.locatable = locatable;
+            this.time = time;
+            this.data = data;
+            this.state = state;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public DvDateTime getTime() {
+            return time;
+        }
+
+        public ItemTable getData() {
+            return data;
+        }
+
+        public ItemStructure getState() {
+            return state;
+        }
+    }
+
+
+    public static class HistoryWithItemTree {
+        private final DataStructure dataStructure;
+        private final DvDateTime origin;
+        private final List<EventWithItemTree> events;
+        private final DvDuration period;
+        private final DvDuration duration;
+        private final ItemStructure summary;
+
+        public HistoryWithItemTree(DataStructure dataStructure,
+                                   DvDateTime origin,
+                                   List<EventWithItemTree> events,
+                                   DvDuration period, DvDuration duration,
+                                   ItemStructure summary) {
+            if (origin == null) {
+                throw new IllegalArgumentException("null origin");
+            }
+            if (events != null && events.size() == 0) {
+                throw new IllegalArgumentException("empty events");
+            }
+            if (events == null && summary == null) {
+                throw new IllegalArgumentException("null events and summary");
+            }
+            this.dataStructure = dataStructure;
+            this.origin = origin;
+            this.events = events;
+            this.period = period;
+            this.duration = duration;
+            this.summary = summary;
+        }
+
+        public DataStructure getDataStructure() {
+            return dataStructure;
+        }
+
+        public DvDateTime getOrigin() {
+            return origin;
+        }
+
+        public List<EventWithItemTree> getEvents() {
+            return events;
+        }
+
+        public DvDuration getPeriod() {
+            return period;
+        }
+
+        public DvDuration getDuration() {
+            return duration;
+        }
+
+        public ItemStructure getSummary() {
+            return summary;
+        }
+    }
+
+    public static class HistoryWithItemSingle {
+        private final DataStructure dataStructure;
+        private final DvDateTime origin;
+        private final List<EventWithItemSingle> events;
+        private final DvDuration period;
+        private final DvDuration duration;
+        private final ItemStructure summary;
+
+        public HistoryWithItemSingle(DataStructure dataStructure,
+                                     DvDateTime origin,
+                                     List<EventWithItemSingle> events,
+                                     DvDuration period, DvDuration duration,
+                                     ItemStructure summary) {
+            if (origin == null) {
+                throw new IllegalArgumentException("null origin");
+            }
+            if (events != null && events.size() == 0) {
+                throw new IllegalArgumentException("empty events");
+            }
+            if (events == null && summary == null) {
+                throw new IllegalArgumentException("null events and summary");
+            }
+            this.dataStructure = dataStructure;
+            this.origin = origin;
+            this.events = events;
+            this.period = period;
+            this.duration = duration;
+            this.summary = summary;
+        }
+
+        public DataStructure getDataStructure() {
+            return dataStructure;
+        }
+
+        public DvDateTime getOrigin() {
+            return origin;
+        }
+
+        public List<EventWithItemSingle> getEvents() {
+            return events;
+        }
+
+        public DvDuration getPeriod() {
+            return period;
+        }
+
+        public DvDuration getDuration() {
+            return duration;
+        }
+
+        public ItemStructure getSummary() {
+            return summary;
+        }
+    }
+
+    public static class HistoryWithItemTable {
+        private final DataStructure dataStructure;
+        private final DvDateTime origin;
+        private final List<EventWithItemTable> events;
+        private final DvDuration period;
+        private final DvDuration duration;
+        private final ItemStructure summary;
+
+        public HistoryWithItemTable(DataStructure dataStructure,
+                                    DvDateTime origin,
+                                    List<EventWithItemTable> events,
+                                    DvDuration period, DvDuration duration,
+                                    ItemStructure summary) {
+            if (origin == null) {
+                throw new IllegalArgumentException("null origin");
+            }
+            if (events != null && events.size() == 0) {
+                throw new IllegalArgumentException("empty events");
+            }
+            if (events == null && summary == null) {
+                throw new IllegalArgumentException("null events and summary");
+            }
+            this.dataStructure = dataStructure;
+            this.origin = origin;
+            this.events = events;
+            this.period = period;
+            this.duration = duration;
+            this.summary = summary;
+        }
+
+        public DataStructure getDataStructure() {
+            return dataStructure;
+        }
+
+        public DvDateTime getOrigin() {
+            return origin;
+        }
+
+        public List<EventWithItemTable> getEvents() {
+            return events;
+        }
+
+        public DvDuration getPeriod() {
+            return period;
+        }
+
+        public DvDuration getDuration() {
+            return duration;
+        }
+
+        public ItemStructure getSummary() {
+            return summary;
+        }
+    }
+
+    public static class IntervalEventWithItemTree {
+        private final EventWithItemTree event;
+        private final DvDuration width;
+        private final DvCodedText mathFunction;
+        private final int sampleCount;
+
+        public IntervalEventWithItemTree(EventWithItemTree event,
+                                         DvDuration width,
+                                         DvCodedText mathFunction,
+                                         int sampleCount) {
+            this.event = event;
+            this.width = width;
+            this.mathFunction = mathFunction;
+            this.sampleCount = sampleCount;
+        }
+
+        public EventWithItemTree getEvent() {
+            return event;
+        }
+
+        public DvDuration getWidth() {
+            return width;
+        }
+
+        public DvCodedText getMathFunction() {
+            return mathFunction;
+        }
+
+        public int getSampleCount() {
+            return sampleCount;
+        }
+    }
+
+    public static class IntervalEventWithItemSingle {
+        private final EventWithItemSingle event;
+        private final DvDuration width;
+        private final DvCodedText mathFunction;
+        private final int sampleCount;
+
+        public IntervalEventWithItemSingle(EventWithItemSingle event,
+                                           DvDuration width,
+                                           DvCodedText mathFunction,
+                                           int sampleCount) {
+            this.event = event;
+            this.width = width;
+            this.mathFunction = mathFunction;
+            this.sampleCount = sampleCount;
+        }
+
+        public EventWithItemSingle getEvent() {
+            return event;
+        }
+
+        public DvDuration getWidth() {
+            return width;
+        }
+
+        public DvCodedText getMathFunction() {
+            return mathFunction;
+        }
+
+        public int getSampleCount() {
+            return sampleCount;
+        }
+    }
+
+    public static class IntervalEventWithItemTable {
+        private final EventWithItemTable event;
+        private final DvDuration width;
+        private final DvCodedText mathFunction;
+        private final int sampleCount;
+
+        public IntervalEventWithItemTable(EventWithItemTable event,
+                                          DvDuration width,
+                                          DvCodedText mathFunction,
+                                          int sampleCount) {
+            this.event = event;
+            this.width = width;
+            this.mathFunction = mathFunction;
+            this.sampleCount = sampleCount;
+        }
+
+        public EventWithItemTable getEvent() {
+            return event;
+        }
+
+        public DvDuration getWidth() {
+            return width;
+        }
+
+        public DvCodedText getMathFunction() {
+            return mathFunction;
+        }
+
+        public int getSampleCount() {
+            return sampleCount;
+        }
+    }
+
+    public static class PointEventWithItemTree {
+        private final EventWithItemTree event;
+
+        public PointEventWithItemTree(EventWithItemTree event) {
+            this.event = event;
+        }
+
+        public EventWithItemTree getEvent() {
+            return event;
+        }
+    }
+
+    public static class PointEventWithItemSingle {
+        private final EventWithItemSingle event;
+
+        public PointEventWithItemSingle(EventWithItemSingle event) {
+            this.event = event;
+        }
+
+        public EventWithItemSingle getEvent() {
+            return event;
+        }
+    }
+
+    public static class PointEventWithItemTable {
+        private final EventWithItemTable event;
+
+        public PointEventWithItemTable(EventWithItemTable event) {
+            this.event = event;
+        }
+
+        public EventWithItemTable getEvent() {
+            return event;
+        }
+    }
 }
