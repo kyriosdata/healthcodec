@@ -5791,7 +5791,10 @@ public class RMObjectSerialization {
                                 DvText function, DvCodedText mode,
                                 DvInterval time){
             int meta = offset;
-            int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
+            int position = offset + 4 * PrimitiveTypeSize.INT.getSize() +
+                    PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasTime = time != null;
 
             PartyProxySerializer pps = new PartyProxySerializer();
             DvTextSerializer dts = new DvTextSerializer();
@@ -5807,7 +5810,7 @@ public class RMObjectSerialization {
             meta = writeHeader(buffer, meta, position);
             position = dcs.serialize(buffer, position, mode);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, meta, hasTime, position);
             position = dis.serialize(buffer, position, time);
 
             return position;
@@ -5844,11 +5847,56 @@ public class RMObjectSerialization {
             position += PrimitiveTypeSize.INT.getSize();
             DvCodedText mode = dcs.deserialize(buffer, modePosition);
 
-            int timePosition = buffer.readInteger(position);
-            DvInterval time = dis.deserialize(buffer, timePosition);
+            boolean hasTime = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvInterval time = null;
+            if(hasTime){
+                int timePosition = buffer.readInteger(position);
+                time = dis.deserialize(buffer, timePosition);
+            }
 
             return RMObjectFactory.newParticipation(performer, function, mode,
                     time);
+        }
+
+        protected int listSerialize(
+                Buffer buffer, int offset, List<Participation> items)
+        {
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            ParticipationSerializer dis = new ParticipationSerializer();
+
+            for (Participation p : items){
+                meta = writeHeader(buffer, meta, position);
+                position = dis.serialize(buffer, position, p);
+            }
+
+            return position;
+        }
+
+        protected List<Participation> deserializeList(Buffer buffer,
+                                                      int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            List<Participation> list = new ArrayList<>();
+            ParticipationSerializer dis = new ParticipationSerializer();
+
+            for (int i = 0; i < listSize; i++){
+                int participationPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                Participation p = dis.deserialize(buffer,
+                        participationPosition);
+                list.add(p);
+            }
+
+            return list;
         }
     }
 
@@ -7635,6 +7683,404 @@ public class RMObjectSerialization {
             EventWithItemTable event = es.deserializeItemTable(buffer, position);
 
             return RMObjectFactory.newPointEventWithItemTable(event);
+        }
+    }
+
+    public static class ContentItemSerializer {
+        protected int serialize(Buffer buffer, int offset, Locatable locatable){
+            int position = offset;
+
+            LocatableSerializer l = new LocatableSerializer();
+
+            position = l.serialize(buffer, position, locatable);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, ContentItem c){
+            int position = offset;
+
+            ContentItemSerializer cis = new ContentItemSerializer();
+
+            position = cis.serialize(buffer, position, c.getLocatable());
+
+            return position;
+        }
+
+        protected ContentItem deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            LocatableSerializer l = new LocatableSerializer();
+
+            Locatable locatable = l.deserialize(buffer, position);
+
+            return RMObjectFactory.newContentItem(locatable);
+        }
+    }
+
+    public static class EntrySerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                ContentItem contentItem, CodePhrase language,
+                                CodePhrase encoding, PartyProxy subject,
+                                PartyProxy provider, ObjectRef workflowId,
+                                List<Participation> otherParticipations){
+            int meta = offset;
+            int position = offset + 7 * PrimitiveTypeSize.INT.getSize() +
+                3 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasProvider = provider != null;
+            boolean hasWorkflowId = workflowId != null;
+            boolean hasOtherParticipations = otherParticipations != null;
+
+            ContentItemSerializer cis = new ContentItemSerializer();
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            PartyProxySerializer pps = new PartyProxySerializer();
+            ObjectRefSerializer ors = new ObjectRefSerializer();
+            ParticipationSerializer ps = new ParticipationSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = cis.serialize(buffer, position, contentItem);
+
+            meta = writeHeader(buffer, meta, position);
+            position = cps.serialize(buffer, position, language);
+
+            meta = writeHeader(buffer, meta, position);
+            position = cps.serialize(buffer, position, encoding);
+
+            meta = writeHeader(buffer, meta, position);
+            position = pps.serialize(buffer, position, subject);
+
+            meta = writeHeader(buffer, meta, hasProvider, position);
+            if(hasProvider){
+                position = pps.serialize(buffer, position, provider);
+            }
+
+            meta = writeHeader(buffer, meta, hasWorkflowId, position);
+            if(hasWorkflowId){
+                position = ors.serialize(buffer, position, workflowId);
+            }
+
+            writeHeader(buffer, meta, hasOtherParticipations, position);
+            if(hasOtherParticipations){
+                position = ps.listSerialize(buffer, position, otherParticipations);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, Entry e){
+            int position = offset;
+
+            EntrySerializer es = new EntrySerializer();
+
+            position = es.serialize(buffer, position, e.getContentItem(),
+                    e.getLanguage(), e.getEncoding(), e.getSubject(),
+                    e.getProvider(), e.getWorkflowId(),
+                    e.getOtherParticipations());
+
+            return position;
+        }
+
+        protected Entry deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            ContentItemSerializer cis = new ContentItemSerializer();
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            PartyProxySerializer pps = new PartyProxySerializer();
+            ObjectRefSerializer ors = new ObjectRefSerializer();
+            ParticipationSerializer ps = new ParticipationSerializer();
+
+            int contentItemPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            ContentItem contentItem = cis.deserialize(buffer,
+                    contentItemPosition);
+
+            int languagePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            CodePhrase language = cps.deserialize(buffer, languagePosition);
+
+            int encodingPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            CodePhrase encoding = cps.deserialize(buffer, encodingPosition);
+
+            int subjectPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            PartyProxy subject = pps.deserialize(buffer, subjectPosition);
+
+            boolean hasProvider = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            PartyProxy provider = null;
+            if(hasProvider){
+                int providerPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                provider = pps.deserialize(buffer, providerPosition);
+            }
+
+            boolean hasWorkflowId = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            ObjectRef workflowId = null;
+            if(hasWorkflowId){
+                int workflowIdPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                workflowId = ors.deserialize(buffer, workflowIdPosition);
+            }
+
+            boolean hasOtherParticipation = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            List<Participation> otherParticipations = null;
+            if(hasOtherParticipation){
+                int otherParticipationsPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.BOOLEAN.getSize();
+                otherParticipations = ps.deserializeList(buffer,
+                        otherParticipationsPosition);
+            }
+
+            return RMObjectFactory.newEntry(contentItem, language, encoding,
+                    subject, provider, workflowId, otherParticipations);
+        }
+    }
+
+    public static class CareEntrySerializer {
+        protected int serialize(Buffer buffer, int offset, Entry entry,
+                                ItemStructure protocol, ObjectRef guidelineId){
+            int meta = offset;
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
+                    + 2 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasProtocol = protocol != null;
+            boolean hasGuidelineId = guidelineId != null;
+
+            EntrySerializer es = new EntrySerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            ObjectRefSerializer ors = new ObjectRefSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = es.serialize(buffer, position, entry);
+
+            meta = writeHeader(buffer, meta, hasProtocol, position);
+            if(hasProtocol){
+                position = iss.serialize(buffer, position, protocol);
+            }
+
+            writeHeader(buffer, meta, hasGuidelineId, position);
+            if(hasGuidelineId){
+                position = ors.serialize(buffer, position, guidelineId);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, CareEntry c){
+            int position = offset;
+
+            CareEntrySerializer ces = new CareEntrySerializer();
+
+            position = ces.serialize(buffer, position, c.getEntry(),
+                    c.getProtocol(), c.getGuidelineId());
+
+            return position;
+        }
+
+        protected CareEntry deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            EntrySerializer es = new EntrySerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            ObjectRefSerializer ors = new ObjectRefSerializer();
+
+            int entryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            Entry entry = es.deserialize(buffer, entryPosition);
+
+            boolean hasProtocol = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            ItemStructure protocol = null;
+            if(hasProtocol){
+                int protocolPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                protocol = iss.deserialize(buffer, protocolPosition);
+            }
+
+            boolean hasGuidelineId = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            ObjectRef guidelineId = null;
+            if(hasGuidelineId){
+                int guidelineIdPosition = buffer.readInteger(position);
+                guidelineId = ors.deserialize(buffer, guidelineIdPosition);
+            }
+
+            return RMObjectFactory.newCareEntry(entry, protocol, guidelineId);
+        }
+    }
+
+    public static class ActionSerializer {
+        protected int serialize(Buffer buffer, int offset, DvDateTime time,
+                                ItemStructure description,
+                                ISMTransition ismTransition,
+                                InstructionDetails instructionDetails){
+            int meta = offset;
+            int position = offset + 4 * PrimitiveTypeSize.INT.getSize()
+                + PrimitiveTypeSize.BOOLEAN.getSize();
+            boolean hasInstructionDetails = instructionDetails != null;
+
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            ISMTransitionSerializer its = new ISMTransitionSerializer();
+            InstructionDetailsSerializer ids = new
+                    InstructionDetailsSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, time);
+
+            meta = writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, description);
+
+            meta = writeHeader(buffer, meta, position);
+            position = its.serialize(buffer, position, ismTransition);
+
+            meta = writeHeader(buffer, meta, hasInstructionDetails, position);
+            if(hasInstructionDetails){
+                position = ids.serialize(buffer, position, instructionDetails);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, Action a){
+            int position = offset;
+
+            ActionSerializer as = new ActionSerializer();
+
+            position = as.serialize(buffer, position, a.getTime(),
+                    a.getDescription(), a.getIsmTransition(),
+                    a.getInstructionDetails());
+
+            return position;
+        }
+
+        protected Action deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+            ISMTransitionSerializer its = new ISMTransitionSerializer();
+            InstructionDetailsSerializer ids = new
+                    InstructionDetailsSerializer();
+
+            int timePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDateTime time = dts.deserialize(buffer, timePosition);
+
+            int descriptionPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            ItemStructure description = iss.deserialize(buffer,
+                    descriptionPosition);
+
+            int ismTransitionPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            ISMTransition ismTransition = its.deserialize(buffer,
+                    ismTransitionPosition);
+
+            boolean hasInstructionDetails = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            InstructionDetails instructionDetails = null;
+            if(hasInstructionDetails){
+                int instructionDetailsPosition = buffer.readInteger(position);
+                instructionDetails = ids.deserialize(buffer,
+                        instructionDetailsPosition);
+            }
+
+            return RMObjectFactory.newAction(time,description,ismTransition,
+                    instructionDetails);
+        }
+    }
+
+    public static class AdminEntrySerializer {
+        protected int serialize(Buffer buffer, int offset, Entry entry,
+                                ItemStructure data){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
+            EntrySerializer es = new EntrySerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = es.serialize(buffer, position, entry);
+
+            writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, data);
+
+            return position;
+
+        }
+
+        protected int serialize(Buffer buffer, int offset, AdminEntry a){
+            int position = offset;
+            AdminEntrySerializer aes = new AdminEntrySerializer();
+
+            position = aes.serialize(buffer, position, a.getEntry(),
+                    a.getData());
+
+            return position;
+        }
+
+        protected AdminEntry deserialize(Buffer buffer, int offset){
+            int position = offset;
+            EntrySerializer es = new EntrySerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            int entryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            Entry entry = es.deserialize(buffer, entryPosition);
+
+            int dataPosition = buffer.readInteger(position);
+            ItemStructure data = iss.deserialize(buffer, dataPosition);
+
+            return RMObjectFactory.newAdminEntry(entry, data);
+        }
+    }
+
+    public static class EvaluationSerializer {
+        protected int serialize(Buffer buffer, int offset, CareEntry careEntry,
+                                ItemStructure data){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
+            CareEntrySerializer es = new CareEntrySerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = es.serialize(buffer, position, careEntry);
+
+            writeHeader(buffer, meta, position);
+            position = iss.serialize(buffer, position, data);
+
+            return position;
+
+        }
+
+        protected int serialize(Buffer buffer, int offset, Evaluation e){
+            int position = offset;
+            EvaluationSerializer es = new EvaluationSerializer();
+
+            position = es.serialize(buffer, position, e.getCareEntry(),
+                    e.getData());
+
+            return position;
+        }
+
+        protected Evaluation deserialize(Buffer buffer, int offset){
+            int position = offset;
+            CareEntrySerializer ces = new CareEntrySerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            int careEntryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            CareEntry careEntry = ces.deserialize(buffer,
+                    careEntryPosition);
+
+            int dataPosition = buffer.readInteger(position);
+            ItemStructure data = iss.deserialize(buffer, dataPosition);
+
+            return RMObjectFactory.newEvaluation(careEntry, data);
         }
     }
 

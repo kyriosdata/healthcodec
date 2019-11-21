@@ -1347,6 +1347,88 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de ContentItem com valor fixo.
+     *
+     * @return nova instância de IntervalEvent.
+     */
+    public static  ContentItem contentItem(){
+        Locatable locatable = locatable();
+
+        return RMObjectFactory.newContentItem(locatable);
+    }
+
+    /**
+     * Cria uma instância de Entry com valor fixo.
+     *
+     * @return nova instância de Entry.
+     */
+    public static Entry entry(){
+        ContentItem contentItem = contentItem();
+        CodePhrase language = codePhrase();
+        CodePhrase encoding = codePhrase();
+        PartyProxy subject = partyProxy();
+        PartyProxy provider = partyProxy();
+        ObjectRef workflowId = objectRef();
+        List<Participation> otherParticipations = participationList(
+                false);
+
+        return RMObjectFactory.newEntry(contentItem, language, encoding,
+                subject, provider, workflowId, otherParticipations);
+    }
+
+    /**
+     * Cria uma instância de CareEntry com valor fixo.
+     *
+     * @return nova instância de CareEntry.
+     */
+    public static CareEntry careEntry(){
+        Entry entry = entry();
+        ItemStructure protocol = itemStructure();
+        ObjectRef guidelineId = objectRef();
+
+        return RMObjectFactory.newCareEntry(entry, protocol, guidelineId);
+    }
+
+    /**
+     * Cria uma instância de Action com valor fixo.
+     *
+     * @return nova instância de Action.
+     */
+    public static Action action(){
+        DvDateTime time = dvDateTime();
+        ItemStructure description = itemStructure();
+        ISMTransition ismTransition = iSMTransition();
+        InstructionDetails instructionDetails = instructionDetails();
+
+        return RMObjectFactory.newAction(time, description, ismTransition,
+                instructionDetails);
+    }
+
+    /**
+     * Cria uma instância de AdminEntry com valor fixo.
+     *
+     * @return nova instância de AdminEntry.
+     */
+    public static AdminEntry adminEntry(){
+        Entry entry = entry();
+        ItemStructure data = itemStructure();
+
+        return RMObjectFactory.newAdminEntry(entry, data);
+    }
+
+    /**
+     * Cria uma instância de Evaluation com valor fixo.
+     *
+     * @return nova instância de Evaluation.
+     */
+    public static Evaluation evaluation(){
+        CareEntry careEntry = careEntry();
+        ItemStructure data = itemStructure();
+
+        return RMObjectFactory.newEvaluation(careEntry, data);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
@@ -1362,6 +1444,23 @@ public class RMObjectTestHelper {
         list.add(id);
         list.add(id);
         list.add(id);
+
+        return list;
+    }
+
+    /**
+     * Método que gera uma lista de Participation.
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    public static List<Participation> participationList(boolean emptyList){
+        List<Participation> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        Participation p = participation();
+        list.add(p);
 
         return list;
     }

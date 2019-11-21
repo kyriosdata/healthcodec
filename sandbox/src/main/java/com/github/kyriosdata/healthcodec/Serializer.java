@@ -1036,4 +1036,58 @@ public interface Serializer {
      *
      */
     RMObjectSerializationClient serializePointEvent(PointEventWithItemTable p);
+
+    /**
+     * Serializador de ContentItem.
+     *
+     * @param c
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeContentItem(ContentItem c);
+
+    /**
+     * Serializador de Entry.
+     *
+     * @param e
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeEntry(Entry e);
+
+    /**
+     * Serializador de CareEntry.
+     *
+     * @param e
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeCareEntry(CareEntry e);
+
+    /**
+     * Serializador de Action.
+     *
+     * @param a
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeAction(Action a);
+
+    /**
+     * Serializador de AdminEntry.
+     *
+     * @param a
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeAdminEntry(AdminEntry a);
+
+    /**
+     * Serializador de Evaluation.
+     *
+     * @param a
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeEvaluation(Evaluation a);
 }

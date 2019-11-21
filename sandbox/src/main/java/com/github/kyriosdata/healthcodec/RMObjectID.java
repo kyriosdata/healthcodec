@@ -115,7 +115,13 @@ public enum RMObjectID {
     EVENT(92),
     INTERVALEVENT(93),
     HISTORY(94),
-    POINTEVENT(95);
+    POINTEVENT(95),
+    CONTENTITEM(96),
+    ENTRY(97),
+    CAREENTRY(98),
+    ACTION(99),
+    ADMINENTRY(100),
+    EVALUATION(101);
 
     
     private final int value;

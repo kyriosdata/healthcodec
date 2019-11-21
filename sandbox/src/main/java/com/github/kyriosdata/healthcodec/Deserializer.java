@@ -686,4 +686,40 @@ public interface Deserializer {
      * @return nova instância de PointEvent com ItemTable
      */
     RMObject.PointEventWithItemTable deserializePointEventWithItemTable();
+
+    /**
+     * Deserializador de ContentItem.
+     * @return nova instância de ContentItem
+     */
+    RMObject.ContentItem deserializeContentItem();
+
+    /**
+     * Deserializador de Entry.
+     * @return nova instância de Entry
+     */
+    RMObject.Entry deserializeEntry();
+
+    /**
+     * Deserializador de CareEntry.
+     * @return nova instância de CareEntry
+     */
+    RMObject.CareEntry deserializeCareEntry();
+
+    /**
+     * Deserializador de Action.
+     * @return nova instância de Action
+     */
+    RMObject.Action deserializeAction();
+
+    /**
+     * Deserializador de AdminEntry.
+     * @return nova instância de AdminEntry
+     */
+    RMObject.AdminEntry deserializeAdminEntry();
+
+    /**
+     * Deserializador de Evaluation.
+     * @return nova instância de Evaluation
+     */
+    RMObject.Evaluation deserializeEvaluation();
 }

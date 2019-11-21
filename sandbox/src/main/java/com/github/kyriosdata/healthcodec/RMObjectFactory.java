@@ -631,4 +631,36 @@ public class RMObjectFactory {
             EventWithItemTable event){
         return new PointEventWithItemTable(event);
     }
+
+    public static ContentItem newContentItem(Locatable locatable){
+        return new ContentItem(locatable);
+    }
+
+    public static Entry newEntry(ContentItem contentItem, CodePhrase language,
+                                 CodePhrase encoding, PartyProxy subject,
+                                 PartyProxy provider, ObjectRef workflowId,
+                                 List<Participation> otherParticipations){
+        return new Entry(contentItem, language, encoding, subject, provider,
+                workflowId, otherParticipations);
+    }
+
+    public static CareEntry newCareEntry(Entry entry, ItemStructure protocol,
+                                         ObjectRef guidelineId){
+        return new CareEntry(entry, protocol, guidelineId);
+    }
+
+    public static Action newAction(DvDateTime time, ItemStructure description,
+                                   ISMTransition ismTransition,
+                                   InstructionDetails instructionDetails){
+        return new Action(time, description, ismTransition, instructionDetails);
+    }
+
+    public static AdminEntry newAdminEntry(Entry entry, ItemStructure data){
+        return new AdminEntry(entry, data);
+    }
+
+    public static Evaluation newEvaluation(CareEntry careEntry,
+                                           ItemStructure data){
+        return new Evaluation(careEntry, data);
+    }
 }

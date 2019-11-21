@@ -3180,4 +3180,194 @@ public class RMObject {
             return event;
         }
     }
+
+    public static class ContentItem {
+        private final Locatable locatable;
+
+        public ContentItem(Locatable locatable) {
+            if(locatable == null){
+                throw new IllegalArgumentException("null locatable");
+            }
+            this.locatable = locatable;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+    }
+
+    public static class Entry {
+        private final ContentItem contentItem;
+        private final CodePhrase language;
+        private final CodePhrase encoding;
+        private final PartyProxy subject;
+        private final PartyProxy provider;
+        private final ObjectRef workflowId;
+        private final List<Participation> otherParticipations;
+
+        public ContentItem getContentItem() {
+            return contentItem;
+        }
+
+        public CodePhrase getLanguage() {
+            return language;
+        }
+
+        public CodePhrase getEncoding() {
+            return encoding;
+        }
+
+        public PartyProxy getSubject() {
+            return subject;
+        }
+
+        public PartyProxy getProvider() {
+            return provider;
+        }
+
+        public ObjectRef getWorkflowId() {
+            return workflowId;
+        }
+
+        public List<Participation> getOtherParticipations() {
+            return otherParticipations;
+        }
+
+        public Entry(ContentItem contentItem, CodePhrase language,
+                     CodePhrase encoding, PartyProxy subject,
+                     PartyProxy provider, ObjectRef workflowId,
+                     List<Participation> otherParticipations) {
+            if (language == null) {
+                throw new IllegalArgumentException("null language");
+            }
+            if (encoding == null) {
+                throw new IllegalArgumentException("null encoding");
+            }
+            if (subject == null) {
+                throw new IllegalArgumentException("null subject");
+            }
+            if (otherParticipations != null && otherParticipations.isEmpty()) {
+                throw new IllegalArgumentException("otherParticipations vazio");
+            }
+
+            this.contentItem = contentItem;
+            this.language = language;
+            this.encoding = encoding;
+            this.subject = subject;
+            this.provider = provider;
+            this.workflowId = workflowId;
+            this.otherParticipations = ( otherParticipations == null ? null :
+                    new ArrayList<Participation>(otherParticipations) );
+        }
+    }
+
+    public static class CareEntry {
+        private final Entry entry;
+        private final ItemStructure protocol;
+        private final ObjectRef guidelineId;
+
+        public CareEntry(Entry entry, ItemStructure protocol,
+                         ObjectRef guidelineId) {
+            this.entry = entry;
+            this.protocol = protocol;
+            this.guidelineId = guidelineId;
+        }
+
+        public Entry getEntry() {
+            return entry;
+        }
+
+        public ItemStructure getProtocol() {
+            return protocol;
+        }
+
+        public ObjectRef getGuidelineId() {
+            return guidelineId;
+        }
+    }
+
+    public static class Action {
+        private final DvDateTime time;
+        private final ItemStructure description;
+        private final ISMTransition ismTransition;
+        private final InstructionDetails instructionDetails;
+
+        public Action(DvDateTime time, ItemStructure description,
+                      ISMTransition ismTransition,
+                      InstructionDetails instructionDetails) {
+
+            if (time == null) {
+                throw new IllegalArgumentException("null time");
+            }
+            if (description == null) {
+                throw new IllegalArgumentException("null description");
+            }
+            if (ismTransition == null) {
+                throw new IllegalArgumentException("null ismTransition");
+            }
+
+            this.time = time;
+            this.description = description;
+            this.ismTransition = ismTransition;
+            this.instructionDetails = instructionDetails;
+        }
+
+        public DvDateTime getTime() {
+            return time;
+        }
+
+        public ItemStructure getDescription() {
+            return description;
+        }
+
+        public ISMTransition getIsmTransition() {
+            return ismTransition;
+        }
+
+        public InstructionDetails getInstructionDetails() {
+            return instructionDetails;
+        }
+    }
+
+    public static class AdminEntry {
+        private final Entry entry;
+        private final ItemStructure data;
+
+        public AdminEntry(Entry entry, ItemStructure data) {
+            if (data == null) {
+                throw new IllegalArgumentException("null data");
+            }
+            this.entry = entry;
+            this.data = data;
+        }
+
+        public Entry getEntry() {
+            return entry;
+        }
+
+        public ItemStructure getData() {
+            return data;
+        }
+    }
+
+    public static class Evaluation {
+        private final CareEntry careEntry;
+        private final ItemStructure data;
+
+        public Evaluation(CareEntry careEntry, ItemStructure data) {
+            if (data == null) {
+                throw new IllegalArgumentException("null data");
+            }
+            this.careEntry = careEntry;
+            this.data = data;
+        }
+
+        public CareEntry getCareEntry() {
+            return careEntry;
+        }
+
+        public ItemStructure getData() {
+            return data;
+        }
+    }
 }

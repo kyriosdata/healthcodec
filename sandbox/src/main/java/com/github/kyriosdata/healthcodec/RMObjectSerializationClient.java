@@ -2962,6 +2962,162 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de ContentItem.
+     *
+     * @param c
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeContentItem(ContentItem c) {
+        ContentItemSerializer s = new ContentItemSerializer();
+        register(CONTENTITEM, offset);
+        setOffset(s.serialize(buffer, offset, c));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de PointEvent com ItemTable.
+     *
+     * @return nova instância de PointEvent com ItemTable
+     */
+    @Override
+    public ContentItem deserializeContentItem() {
+        ContentItemSerializer d = new ContentItemSerializer();
+        return d.deserialize(buffer, getOffsetFromID(CONTENTITEM));
+    }
+
+    /**
+     * Serializador de Entry.
+     *
+     * @param e
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeEntry(Entry e) {
+        EntrySerializer s = new EntrySerializer();
+        register(ENTRY, offset);
+        setOffset(s.serialize(buffer, offset, e));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Entry.
+     *
+     * @return nova instância de Entry.
+     */
+    @Override
+    public Entry deserializeEntry() {
+        EntrySerializer d = new EntrySerializer();
+        return d.deserialize(buffer, getOffsetFromID(ENTRY));
+    }
+
+    /**
+     * Serializador de CareEntry.
+     *
+     * @param e
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeCareEntry(CareEntry e) {
+        CareEntrySerializer s = new CareEntrySerializer();
+        register(CAREENTRY, offset);
+        setOffset(s.serialize(buffer, offset, e));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de CareEntry.
+     *
+     * @return nova instância de CareEntry.
+     */
+    @Override
+    public CareEntry deserializeCareEntry() {
+        CareEntrySerializer d = new CareEntrySerializer();
+        return d.deserialize(buffer, getOffsetFromID(CAREENTRY));
+    }
+
+    /**
+     * Serializador de Action.
+     *
+     * @param a
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeAction(Action a) {
+        ActionSerializer s = new ActionSerializer();
+        register(ACTION, offset);
+        setOffset(s.serialize(buffer, offset, a));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Action.
+     *
+     * @return nova instância de Action.
+     */
+    @Override
+    public Action deserializeAction() {
+        ActionSerializer d = new ActionSerializer();
+        return d.deserialize(buffer, getOffsetFromID(ACTION));
+    }
+
+    /**
+     * Serializador de AdminEntry.
+     *
+     * @param a
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeAdminEntry(AdminEntry a) {
+        AdminEntrySerializer s = new AdminEntrySerializer();
+        register(ADMINENTRY, offset);
+        setOffset(s.serialize(buffer, offset, a));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de AdminEntry.
+     *
+     * @return nova instância de AdminEntry.
+     */
+    @Override
+    public AdminEntry deserializeAdminEntry() {
+        AdminEntrySerializer d = new AdminEntrySerializer();
+        return d.deserialize(buffer, getOffsetFromID(ADMINENTRY));
+    }
+
+    /**
+     * Serializador de Evaluation.
+     *
+     * @param a
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeEvaluation(Evaluation a) {
+        EvaluationSerializer s = new EvaluationSerializer();
+        register(EVALUATION, offset);
+        setOffset(s.serialize(buffer, offset, a));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Evaluation.
+     *
+     * @return nova instância de Evaluation.
+     */
+    @Override
+    public Evaluation deserializeEvaluation() {
+        EvaluationSerializer d = new EvaluationSerializer();
+        return d.deserialize(buffer, getOffsetFromID(EVALUATION));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id
