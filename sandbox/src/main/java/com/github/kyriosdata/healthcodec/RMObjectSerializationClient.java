@@ -3118,6 +3118,272 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de Instruction.
+     *
+     * @param i
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeInstruction(Instruction i) {
+        InstructionSerializer s = new InstructionSerializer();
+        register(INSTRUCTION, offset);
+        setOffset(s.serialize(buffer, offset, i));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Instruction.
+     *
+     * @return nova instância de Instruction.
+     */
+    @Override
+    public Instruction deserializeInstruction() {
+        InstructionSerializer d = new InstructionSerializer();
+        return d.deserialize(buffer, getOffsetFromID(INSTRUCTION));
+    }
+
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTree.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    @Override
+    public RMObjectSerializationClient serializeObservation(
+            ObservationWithItemTreeItemTree o) {
+        ObservationSerializer s = new ObservationSerializer();
+        register(OBSERVATION, offset);
+        setOffset(s.serialize(buffer, offset, o));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Observation com data ItemTree e state ItemTree.
+     * @return nova instância de Observation
+     */
+    @Override
+    public ObservationWithItemTreeItemTree deserializeObservationWithItemTreeItemTree() {
+        ObservationSerializer d = new ObservationSerializer();
+        return d.deserializeItemTreeItemTree(buffer,
+                getOffsetFromID(OBSERVATION));
+    }
+
+    /**
+     * Serializador de Observation com data ItemTree e state ItemSingle.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    @Override
+    public RMObjectSerializationClient serializeObservation(ObservationWithItemTreeItemSingle o) {
+        ObservationSerializer s = new ObservationSerializer();
+        register(OBSERVATION, offset);
+        setOffset(s.serialize(buffer, offset, o));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Observation com data ItemTree e state ItemSingle.
+     * @return nova instância de Observation
+     */
+    @Override
+    public ObservationWithItemTreeItemSingle deserializeObservationWithItemTreeItemSingle() {
+        ObservationSerializer d = new ObservationSerializer();
+        return d.deserializeItemTreeItemSingle(buffer,
+                getOffsetFromID(OBSERVATION));
+    }
+
+
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTable.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    @Override
+    public RMObjectSerializationClient serializeObservation(ObservationWithItemTreeItemTable o) {
+        ObservationSerializer s = new ObservationSerializer();
+        register(OBSERVATION, offset);
+        setOffset(s.serialize(buffer, offset, o));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Observation com data ItemTree e state ItemTable.
+     * @return nova instância de Observation
+     */
+    @Override
+    public ObservationWithItemTreeItemTable deserializeObservationWithItemTreeItemTable() {
+        ObservationSerializer d = new ObservationSerializer();
+        return d.deserializeItemTreeItemTable(buffer,
+                getOffsetFromID(OBSERVATION));
+    }
+
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTable.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    @Override
+    public RMObjectSerializationClient serializeObservation(ObservationWithItemSingleItemTree o) {
+        ObservationSerializer s = new ObservationSerializer();
+        register(OBSERVATION, offset);
+        setOffset(s.serialize(buffer, offset, o));
+
+        return this;
+    }
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTable.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    @Override
+    public RMObjectSerializationClient serializeObservation(ObservationWithItemSingleItemSingle o) {
+        ObservationSerializer s = new ObservationSerializer();
+        register(OBSERVATION, offset);
+        setOffset(s.serialize(buffer, offset, o));
+
+        return this;
+    }
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTable.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    @Override
+    public RMObjectSerializationClient serializeObservation(ObservationWithItemSingleItemTable o) {
+        ObservationSerializer s = new ObservationSerializer();
+        register(OBSERVATION, offset);
+        setOffset(s.serialize(buffer, offset, o));
+
+        return this;
+    }
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTable.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    @Override
+    public RMObjectSerializationClient serializeObservation(ObservationWithItemTableItemTree o) {
+        ObservationSerializer s = new ObservationSerializer();
+        register(OBSERVATION, offset);
+        setOffset(s.serialize(buffer, offset, o));
+
+        return this;
+    }
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTable.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    @Override
+    public RMObjectSerializationClient serializeObservation(ObservationWithItemTableItemSingle o) {
+        ObservationSerializer s = new ObservationSerializer();
+        register(OBSERVATION, offset);
+        setOffset(s.serialize(buffer, offset, o));
+
+        return this;
+    }
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTable.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    @Override
+    public RMObjectSerializationClient serializeObservation(ObservationWithItemTableItemTable o) {
+        ObservationSerializer s = new ObservationSerializer();
+        register(OBSERVATION, offset);
+        setOffset(s.serialize(buffer, offset, o));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Observation com data ItemSingle e state ItemTree.
+     * @return nova instância de Observation
+     */
+    @Override
+    public ObservationWithItemSingleItemTree deserializeObservationWithItemSingleItemTree() {
+        ObservationSerializer d = new ObservationSerializer();
+        return d.deserializeItemSingleItemTree(buffer,
+                getOffsetFromID(OBSERVATION));
+    }
+
+    /**
+     * Deserializador de Observation com data ItemSingle e state ItemSingle.
+     * @return nova instância de Observation
+     */
+    @Override
+    public ObservationWithItemSingleItemSingle deserializeObservationWithItemSingleItemSingle() {
+        ObservationSerializer d = new ObservationSerializer();
+        return d.deserializeItemSingleItemSingle(buffer,
+                getOffsetFromID(OBSERVATION));
+    }
+
+    /**
+     * Deserializador de Observation com data ItemSingle e state ItemTable.
+     * @return nova instância de Observation
+     */
+    @Override
+    public ObservationWithItemSingleItemTable deserializeObservationWithItemSingleItemTable() {
+        ObservationSerializer d = new ObservationSerializer();
+        return d.deserializeItemSingleItemTable(buffer,
+                getOffsetFromID(OBSERVATION));
+    }
+
+    /**
+     * Deserializador de Observation com data ItemTable e state ItemTable.
+     * @return nova instância de Observation
+     */
+    @Override
+    public ObservationWithItemTableItemTable deserializeObservationWithItemTableItemTable() {
+        ObservationSerializer d = new ObservationSerializer();
+        return d.deserializeItemTableItemTable(buffer,
+                getOffsetFromID(OBSERVATION));
+    }
+
+    /**
+     * Deserializador de Observation com data ItemTable e state ItemTree.
+     * @return nova instância de Observation
+     */
+    @Override
+    public ObservationWithItemTableItemTree deserializeObservationWithItemTableItemTree() {
+        ObservationSerializer d = new ObservationSerializer();
+        return d.deserializeItemTableItemTree(buffer,
+                getOffsetFromID(OBSERVATION));
+    }
+
+    /**
+     * Deserializador de Observation com data ItemTable e state ItemSingle.
+     * @return nova instância de Observation
+     */
+    @Override
+    public ObservationWithItemTableItemSingle deserializeObservationWithItemTableItemSingle() {
+        ObservationSerializer d = new ObservationSerializer();
+        return d.deserializeItemTableItemSingle(buffer,
+                getOffsetFromID(OBSERVATION));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id

@@ -432,7 +432,7 @@ public class RMObjectTestHelper {
      */
     public static Locatable locatable(){
         UIDBasedID uid = RMObjectTestHelper.uIDBasedID();
-        String archetypeNodeId = "archetypeNodeId";
+        String archetypeNodeId = "value";
         DvText name = RMObjectTestHelper.dvText();
         Archetyped archetypeDetails = RMObjectTestHelper.archetyped();
         FeederAudit feederAudit = RMObjectTestHelper.feederAudit();
@@ -552,7 +552,7 @@ public class RMObjectTestHelper {
     public static ItemList itemList(){
         return RMObjectFactory.newItemList(
                 RMObjectTestHelper.uIDBasedID(),
-                "archetypeNodeId",
+                "value",
                 RMObjectTestHelper.dvText(),
                 RMObjectTestHelper.archetyped(),
                 RMObjectTestHelper.feederAudit(),
@@ -1416,6 +1416,17 @@ public class RMObjectTestHelper {
         return RMObjectFactory.newAdminEntry(entry, data);
     }
 
+    public static Instruction instruction(){
+        CareEntry careEntry = careEntry();
+        DvText narrative = dvText();
+        List<Activity> activities = activityList(false);
+        DvDateTime expiryTime = dvDateTime();
+        DvParsable wfDefinition = dvParsable();
+
+        return RMObjectFactory.newInstruction(careEntry, narrative, activities,
+                expiryTime, wfDefinition);
+    }
+
     /**
      * Cria uma instância de Evaluation com valor fixo.
      *
@@ -1426,6 +1437,141 @@ public class RMObjectTestHelper {
         ItemStructure data = itemStructure();
 
         return RMObjectFactory.newEvaluation(careEntry, data);
+    }
+
+    /**
+     * Cria uma instância de Observation com data ItemTree e state
+     * ItemTree com valor fixo.
+     *
+     * @return nova instância de Evaluation.
+     */
+    public static ObservationWithItemTreeItemTree observationWithItemTreeItemTree(){
+        CareEntry careEntry = careEntry();
+        HistoryWithItemTree data = historyWithItemTree();
+        HistoryWithItemTree state = historyWithItemTree();
+
+        return RMObjectFactory.newObservationWithItemTreeItemTree(careEntry,
+                data, state);
+    }
+
+    /**
+     * Cria uma instância de Observation com data ItemTree e state
+     * ItemSingle
+     *
+     * @return nova instância de Evaluation.
+     */
+    public static ObservationWithItemTreeItemSingle observationWithItemTreeItemSingle(){
+        CareEntry careEntry = careEntry();
+        HistoryWithItemTree data = historyWithItemTree();
+        HistoryWithItemSingle state = historyWithItemSingle();
+
+        return RMObjectFactory.newObservationWithItemTreeItemSingle(careEntry,
+                data, state);
+    }
+
+    /**
+     * Cria uma instância de Observation com data ItemTree e state
+     * ItemTable
+     *
+     * @return nova instância de Evaluation.
+     */
+    public static ObservationWithItemTreeItemTable observationWithItemTreeItemTable(){
+        CareEntry careEntry = careEntry();
+        HistoryWithItemTree data = historyWithItemTree();
+        HistoryWithItemTable state = historyWithItemTable();
+
+        return RMObjectFactory.newObservationWithItemTreeItemTable(careEntry,
+                data, state);
+    }
+
+    /**
+     * Cria uma instância de Observation com data ItemSingle e state
+     * ItemTree
+     *
+     * @return nova instância de Evaluation.
+     */
+    public static ObservationWithItemSingleItemTree observationWithItemSingleItemTree(){
+        CareEntry careEntry = careEntry();
+        HistoryWithItemSingle data = historyWithItemSingle();
+        HistoryWithItemTree state = historyWithItemTree();
+
+        return RMObjectFactory.newObservationWithItemSingleItemTree(careEntry,
+                data, state);
+    }
+
+    /**
+     * Cria uma instância de Observation com data ItemSingle e state
+     * ItemSingle
+     *
+     * @return nova instância de Evaluation.
+     */
+    public static ObservationWithItemSingleItemSingle observationWithItemSingleItemSingle(){
+        CareEntry careEntry = careEntry();
+        HistoryWithItemSingle data = historyWithItemSingle();
+        HistoryWithItemSingle state = historyWithItemSingle();
+
+        return RMObjectFactory.newObservationWithItemSingleItemSingle(careEntry,
+                data, state);
+    }
+
+    /**
+     * Cria uma instância de Observation com data ItemTable e state
+     * ItemTable
+     *
+     * @return nova instância de Evaluation.
+     */
+    public static ObservationWithItemTableItemTable observationWithItemTableItemTable(){
+        CareEntry careEntry = careEntry();
+        HistoryWithItemTable data = historyWithItemTable();
+        HistoryWithItemTable state = historyWithItemTable();
+
+        return RMObjectFactory.newObservationWithItemTableItemTable(careEntry,
+                data, state);
+    }
+
+    /**
+     * Cria uma instância de Observation com data ItemTable e state
+     * ItemTree
+     *
+     * @return nova instância de Evaluation.
+     */
+    public static ObservationWithItemTableItemTree observationWithItemTableItemTree(){
+        CareEntry careEntry = careEntry();
+        HistoryWithItemTable data = historyWithItemTable();
+        HistoryWithItemTree state = historyWithItemTree();
+
+        return RMObjectFactory.newObservationWithItemTableItemTree(careEntry,
+                data, state);
+    }
+
+    /**
+     * Cria uma instância de Observation com data ItemSingle e state
+     * ItemTable
+     *
+     * @return nova instância de Evaluation.
+     */
+    public static ObservationWithItemSingleItemTable observationWithItemSingleItemTable(){
+        CareEntry careEntry = careEntry();
+        HistoryWithItemSingle data = historyWithItemSingle();
+        HistoryWithItemTable state = historyWithItemTable();
+
+        return RMObjectFactory.newObservationWithItemSingleItemTable(careEntry,
+                data, state);
+    }
+
+    /**
+     * Cria uma instância de Observation com data ItemTable e state
+     * ItemSingle
+     *
+     * @return nova instância de Evaluation.
+     */
+    public static ObservationWithItemTableItemSingle observationWithItemTableItemSingle(){
+        CareEntry careEntry = careEntry();
+        HistoryWithItemTable data = historyWithItemTable();
+        HistoryWithItemSingle state = historyWithItemSingle();
+
+        return RMObjectFactory.newObservationWithItemTableItemSingle(careEntry,
+                data, state);
     }
 
     /**
@@ -1444,6 +1590,23 @@ public class RMObjectTestHelper {
         list.add(id);
         list.add(id);
         list.add(id);
+
+        return list;
+    }
+
+    /**
+     * Método que gera uma lista de Activity
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    public static List<Activity> activityList(boolean emptyList){
+        List<Activity> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        Activity a = activity();
+        list.add(a);
 
         return list;
     }
@@ -1770,7 +1933,7 @@ public class RMObjectTestHelper {
         PartyIdentity p = RMObjectFactory.newPartyIdentity(
                 RMObjectFactory.newLocatable(
                         RMObjectTestHelper.uIDBasedID(),
-                        "archetypeNodeId",
+                        "value",
                         RMObjectFactory.newDvText(legalIdentity ?
                                         "legal identity" : "value",
                                 RMObjectTestHelper.

@@ -2355,8 +2355,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, UIDBasedID uid,
                 String archetypeNodeId, DvText name, Archetyped archetypeDetails,
-                FeederAudit feederAudit,
-                Set<Link> links) {
+                FeederAudit feederAudit, Set<Link> links) {
 
             int position = offset + (6 * PrimitiveTypeSize.INT.getSize())+ 5 *
                     BOOLEAN.getSize();
@@ -2371,14 +2370,13 @@ public class RMObjectSerialization {
             boolean hasUid = uid != null;
             if (hasUid){
                 meta = writeHeader(buffer, meta, hasUid, position);
-                position = uids.serialize(buffer, position, archetypeNodeId);
+                position = uids.serialize(buffer, position, uid);
             } else {
                 meta = writeHeader(buffer, meta, hasUid);
             }
 
             meta = writeHeader(buffer, meta, position);
-            position
-                    = stringSerialization(buffer, position, archetypeNodeId);
+            position = stringSerialization(buffer, position, archetypeNodeId);
 
             meta = writeHeader(buffer, meta, position);
             position = dts.serialize(buffer, position, name);
@@ -4531,7 +4529,7 @@ public class RMObjectSerialization {
                 ItemStructure description, DvParsable timing, 
                 String actionArchetypeId){
             int meta = offset;
-            int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
+            int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
             
             LocatableSerializer ls = new LocatableSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
@@ -4584,12 +4582,49 @@ public class RMObjectSerialization {
             DvParsable timing = dps.deserialize(buffer, timingPosition);
             
             int actionArchetypeIdPosition = buffer.readInteger(position);
-            position += PrimitiveTypeSize.INT.getSize();
             String actionArchetypeId = stringDeserialization(
                     buffer, actionArchetypeIdPosition);
             
             return RMObjectFactory.newActivity(locatable, description, 
                     timing, actionArchetypeId);
+        }
+
+        protected int listSerialize(
+                Buffer buffer, int offset, List<Activity> items)
+        {
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            ActivitySerializer as = new ActivitySerializer();
+
+            for (Activity a : items){
+                meta = writeHeader(buffer, meta, position);
+                position = as.serialize(buffer, position, a);
+            }
+
+            return position;
+        }
+
+        protected List<Activity> deserializeList(Buffer buffer, int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            List<Activity> list = new ArrayList<>();
+            ActivitySerializer dis = new ActivitySerializer();
+
+            for (int i = 0; i < listSize; i++){
+                int activityPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                Activity a = dis.deserialize(buffer, activityPosition);
+                list.add(a);
+            }
+
+            return list;
         }
     }
 
@@ -4821,13 +4856,19 @@ public class RMObjectSerialization {
             CodePhraseSerializer cps = new CodePhraseSerializer();
 
             meta = writeHeader(buffer, meta, hasOtherReferenceRanges, position);
-            position = rrs.listSerialize(buffer, position, otherReferenceRanges);
+            if(hasOtherReferenceRanges){
+                position = rrs.listSerialize(buffer, position, otherReferenceRanges);
+            }
 
             meta = writeHeader(buffer, meta, hasNormalRange, position);
-            position = dis.serialize(buffer, position, normalRange);
+            if(hasNormalRange){
+                position = dis.serialize(buffer, position, normalRange);
+            }
 
             writeHeader(buffer, meta, hasNormalStatus, position);
-            position = cps.serialize(buffer, position, normalStatus);
+            if(hasNormalStatus){
+                position = cps.serialize(buffer, position, normalStatus);
+            }
 
             return position;
         }
@@ -8081,6 +8122,682 @@ public class RMObjectSerialization {
             ItemStructure data = iss.deserialize(buffer, dataPosition);
 
             return RMObjectFactory.newEvaluation(careEntry, data);
+        }
+    }
+
+    public static class InstructionSerializer {
+        protected int serialize(Buffer buffer, int offset, CareEntry careEntry,
+                                DvText narrative, List<Activity> activities,
+                                DvDateTime expiryTime,DvParsable wfDefinition){
+            int meta = offset;
+            int position = offset + 5 * PrimitiveTypeSize.INT.getSize()
+                    + 3 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasActivities = activities != null;
+            boolean hasExpiryTime = expiryTime != null;
+            boolean hasWfDefinition = wfDefinition != null;
+
+            CareEntrySerializer ces = new CareEntrySerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+            ActivitySerializer as = new ActivitySerializer();
+            DvDateTimeSerializer ddts = new DvDateTimeSerializer();
+            DvParsableSerializer dps = new DvParsableSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = ces.serialize(buffer, position, careEntry);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, narrative);
+
+            meta = writeHeader(buffer, meta, hasActivities, position);
+            if(hasActivities){
+                position = as.listSerialize(buffer, position, activities);
+            }
+
+            meta = writeHeader(buffer, meta, hasExpiryTime, position);
+            if(hasExpiryTime){
+                position = ddts.serialize(buffer, position, expiryTime);
+            }
+
+            writeHeader(buffer, meta, hasWfDefinition, position);
+            if(hasWfDefinition){
+                position = dps.serialize(buffer, position, wfDefinition);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, Instruction i){
+            int position = offset;
+
+            InstructionSerializer is = new InstructionSerializer();
+
+            position = is.serialize(buffer, position, i.getCareEntry(),
+                    i.getNarrative(), i.getActivities(), i.getExpiryTime(),
+                    i.getWfDefinition());
+
+            return position;
+        }
+
+        protected Instruction deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            CareEntrySerializer ces = new CareEntrySerializer();
+            DvTextSerializer dts = new DvTextSerializer();
+            ActivitySerializer as = new ActivitySerializer();
+            DvDateTimeSerializer ddts = new DvDateTimeSerializer();
+            DvParsableSerializer dps = new DvParsableSerializer();
+
+            int careEntryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            CareEntry careEntry = ces.deserialize(buffer, careEntryPosition);
+
+            int narrativePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvText narrative = dts.deserialize(buffer, narrativePosition);
+
+            boolean hasActivities = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            List<Activity> activities = null;
+            if(hasActivities){
+                int activitiesPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                activities = as.deserializeList(buffer, activitiesPosition);
+            }
+
+            boolean hasExpiryTime = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvDateTime expiryTime = null;
+            if(hasExpiryTime){
+                int expiryTimePosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                expiryTime = ddts.deserialize(buffer, expiryTimePosition);
+            }
+
+            boolean hasWfDefinition = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvParsable wfDefinition = null;
+            if(hasWfDefinition){
+                int wfDefinitionPosition = buffer.readInteger(position);
+                wfDefinition = dps.deserialize(buffer, wfDefinitionPosition);
+            }
+
+            return RMObjectFactory.newInstruction(careEntry, narrative,
+                    activities, expiryTime, wfDefinition);
+        }
+    }
+
+    public static class ObservationSerializer {
+        protected int serializeItemTreeItemTree(Buffer buffer, int offset,
+                                CareEntry careEntry,
+                                HistoryWithItemTree data,
+                                HistoryWithItemTree state){
+            int meta = offset;
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
+                    + PrimitiveTypeSize.BOOLEAN.getSize();
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            boolean hasState = state != null;
+
+            meta = writeHeader(buffer, meta, position);
+            position = ces.serialize(buffer, position, careEntry);
+
+            meta = writeHeader(buffer, meta, position);
+            position = hs.serialize(buffer, position, data);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                ObservationWithItemTreeItemTree o){
+            int position = offset;
+
+            ObservationSerializer os = new ObservationSerializer();
+
+            position = os.serializeItemTreeItemTree(buffer, position,
+                    o.getCareEntry(), o.getData(), o.getState());
+
+            return position;
+        }
+
+        protected ObservationWithItemTreeItemTree
+            deserializeItemTreeItemTree(Buffer buffer, int offset){
+            int position = offset;
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            int careEntryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            CareEntry careEntry = ces.deserialize(buffer, careEntryPosition);
+
+            int dataPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            HistoryWithItemTree data = hs.deserializeItemTree(buffer,
+                    dataPosition);
+
+            return RMObjectFactory.newObservationWithItemTreeItemTree(careEntry,
+                    data, null);
+        }
+
+        protected int serializeItemTreeItemSingle(Buffer buffer, int offset,
+                                                  CareEntry careEntry,
+                                                  HistoryWithItemTree data,
+                                                  HistoryWithItemSingle state){
+            int meta = offset;
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
+                    + PrimitiveTypeSize.BOOLEAN.getSize();
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            boolean hasState = state != null;
+
+            meta = writeHeader(buffer, meta, position);
+            position = ces.serialize(buffer, position, careEntry);
+
+            meta = writeHeader(buffer, meta, position);
+            position = hs.serialize(buffer, position, data);
+
+            writeHeader(buffer, meta, hasState, position);
+            if(hasState){
+                position = hs.serialize(buffer, position, state);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                ObservationWithItemTreeItemSingle o){
+            int position = offset;
+
+            ObservationSerializer os = new ObservationSerializer();
+
+            position = os.serializeItemTreeItemSingle(buffer, position,
+                    o.getCareEntry(), o.getData(), o.getState());
+
+            return position;
+        }
+
+        protected ObservationWithItemTreeItemSingle
+            deserializeItemTreeItemSingle(Buffer buffer, int offset){
+            int position = offset;
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            int careEntryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            CareEntry careEntry = ces.deserialize(buffer, careEntryPosition);
+
+            int dataPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            HistoryWithItemTree data = hs.deserializeItemTree(buffer,
+                    dataPosition);
+
+            boolean hasState = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            HistoryWithItemSingle state = null;
+            if(hasState){
+                int statePosition = buffer.readInteger(position);
+                //state = hs.deserializeItemSingle(buffer, statePosition);
+            }
+
+            return RMObjectFactory.newObservationWithItemTreeItemSingle(careEntry,
+                    data, state);
+        }
+
+        protected int serializeItemTreeItemTable(Buffer buffer, int offset,
+                                                  CareEntry careEntry,
+                                                  HistoryWithItemTree data,
+                                                  HistoryWithItemTable state){
+            int meta = offset;
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
+                    + PrimitiveTypeSize.BOOLEAN.getSize();
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            boolean hasState = state != null;
+
+            meta = writeHeader(buffer, meta, position);
+            position = ces.serialize(buffer, position, careEntry);
+
+            meta = writeHeader(buffer, meta, position);
+            position = hs.serialize(buffer, position, data);
+
+            writeHeader(buffer, meta, hasState, position);
+            if(hasState){
+                position = hs.serialize(buffer, position, state);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                ObservationWithItemTreeItemTable o){
+            int position = offset;
+
+            ObservationSerializer os = new ObservationSerializer();
+
+            position = os.serializeItemTreeItemTable(buffer, position,
+                    o.getCareEntry(), o.getData(), o.getState());
+
+            return position;
+        }
+
+        protected ObservationWithItemTreeItemTable
+            deserializeItemTreeItemTable(Buffer buffer, int offset){
+            int position = offset;
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            int careEntryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            CareEntry careEntry = ces.deserialize(buffer, careEntryPosition);
+
+            int dataPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            HistoryWithItemTree data = hs.deserializeItemTree(buffer,
+                    dataPosition);
+
+            boolean hasState = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            HistoryWithItemTable state = null;
+            if(hasState){
+                int statePosition = buffer.readInteger(position);
+                //state = hs.deserializeItemTable(buffer, statePosition);
+            }
+
+            return RMObjectFactory.newObservationWithItemTreeItemTable(careEntry,
+                    data, state);
+        }
+
+        protected int serializeItemSingleItemTree(Buffer buffer, int offset,
+                                                  CareEntry careEntry,
+                                                  HistoryWithItemSingle data,
+                                                  HistoryWithItemTree state){
+            int meta = offset;
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
+                    + PrimitiveTypeSize.BOOLEAN.getSize();
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            boolean hasState = state != null;
+
+            meta = writeHeader(buffer, meta, position);
+            position = ces.serialize(buffer, position, careEntry);
+
+            meta = writeHeader(buffer, meta, position);
+            position = hs.serialize(buffer, position, data);
+
+            writeHeader(buffer, meta, hasState, position);
+            if(hasState){
+                position = hs.serialize(buffer, position, state);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                ObservationWithItemSingleItemTree o){
+            int position = offset;
+
+            ObservationSerializer os = new ObservationSerializer();
+
+            position = os.serializeItemSingleItemTree(buffer, position,
+                    o.getCareEntry(), o.getData(), o.getState());
+
+            return position;
+        }
+
+        protected ObservationWithItemSingleItemTree
+        deserializeItemSingleItemTree(Buffer buffer, int offset){
+            int position = offset;
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            int careEntryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            CareEntry careEntry = ces.deserialize(buffer, careEntryPosition);
+
+            int dataPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            HistoryWithItemSingle data = hs.deserializeItemSingle(buffer,
+                    dataPosition);
+
+            boolean hasState = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            HistoryWithItemTree state = null;
+            if(hasState){
+                int statePosition = buffer.readInteger(position);
+                //state = hs.deserializeItemTree(buffer, statePosition);
+            }
+
+            return RMObjectFactory.newObservationWithItemSingleItemTree(careEntry,
+                    data, state);
+        }
+
+        protected int serializeItemSingleItemSingle(Buffer buffer, int offset,
+                                                    CareEntry careEntry,
+                                                    HistoryWithItemSingle data,
+                                                    HistoryWithItemSingle state){
+            int meta = offset;
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
+                    + PrimitiveTypeSize.BOOLEAN.getSize();
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            boolean hasState = state != null;
+
+            meta = writeHeader(buffer, meta, position);
+            position = ces.serialize(buffer, position, careEntry);
+
+            meta = writeHeader(buffer, meta, position);
+            position = hs.serialize(buffer, position, data);
+
+            writeHeader(buffer, meta, hasState, position);
+            if(hasState){
+                position = hs.serialize(buffer, position, state);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                ObservationWithItemSingleItemSingle o){
+            int position = offset;
+
+            ObservationSerializer os = new ObservationSerializer();
+
+            position = os.serializeItemSingleItemSingle(buffer, position,
+                    o.getCareEntry(), o.getData(), o.getState());
+
+            return position;
+        }
+
+        protected ObservationWithItemSingleItemSingle
+        deserializeItemSingleItemSingle(Buffer buffer, int offset){
+            int position = offset;
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            int careEntryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            CareEntry careEntry = ces.deserialize(buffer, careEntryPosition);
+
+            int dataPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            HistoryWithItemSingle data = hs.deserializeItemSingle(buffer,
+                    dataPosition);
+
+            boolean hasState = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            HistoryWithItemSingle state = null;
+            if(hasState){
+                int statePosition = buffer.readInteger(position);
+                //state = hs.deserializeItemSingle(buffer, statePosition);
+            }
+
+            return RMObjectFactory.newObservationWithItemSingleItemSingle(careEntry,
+                    data, state);
+        }
+
+        protected int serializeItemSingleItemTable(Buffer buffer, int offset,
+                                                   CareEntry careEntry,
+                                                   HistoryWithItemSingle data,
+                                                   HistoryWithItemTable state){
+            int meta = offset;
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
+                    + PrimitiveTypeSize.BOOLEAN.getSize();
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            boolean hasState = state != null;
+
+            meta = writeHeader(buffer, meta, position);
+            position = ces.serialize(buffer, position, careEntry);
+
+            meta = writeHeader(buffer, meta, position);
+            position = hs.serialize(buffer, position, data);
+
+            writeHeader(buffer, meta, hasState, position);
+            if(hasState){
+                position = hs.serialize(buffer, position, state);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                ObservationWithItemSingleItemTable o){
+            int position = offset;
+
+            ObservationSerializer os = new ObservationSerializer();
+
+            position = os.serializeItemSingleItemTable(buffer, position,
+                    o.getCareEntry(), o.getData(), o.getState());
+
+            return position;
+        }
+
+        protected ObservationWithItemSingleItemTable
+        deserializeItemSingleItemTable(Buffer buffer, int offset){
+            int position = offset;
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            int careEntryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            CareEntry careEntry = ces.deserialize(buffer, careEntryPosition);
+
+            int dataPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            HistoryWithItemSingle data = hs.deserializeItemSingle(buffer,
+                    dataPosition);
+
+            boolean hasState = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            HistoryWithItemTable state = null;
+            if(hasState){
+                int statePosition = buffer.readInteger(position);
+                //state = hs.deserializeItemTable(buffer, statePosition);
+            }
+
+            return RMObjectFactory.newObservationWithItemSingleItemTable(careEntry,
+                    data, state);
+        }
+
+        protected int serializeItemTableItemTree(Buffer buffer, int offset,
+                                                 CareEntry careEntry,
+                                                 HistoryWithItemTable data,
+                                                 HistoryWithItemTree state){
+            int meta = offset;
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
+                    + PrimitiveTypeSize.BOOLEAN.getSize();
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            boolean hasState = state != null;
+
+            meta = writeHeader(buffer, meta, position);
+            position = ces.serialize(buffer, position, careEntry);
+
+            meta = writeHeader(buffer, meta, position);
+            position = hs.serialize(buffer, position, data);
+
+            writeHeader(buffer, meta, hasState, position);
+            if(hasState){
+                position = hs.serialize(buffer, position, state);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                ObservationWithItemTableItemTree o){
+            int position = offset;
+
+            ObservationSerializer os = new ObservationSerializer();
+
+            position = os.serializeItemTableItemTree(buffer, position,
+                    o.getCareEntry(), o.getData(), o.getState());
+
+            return position;
+        }
+
+        protected ObservationWithItemTableItemTree
+        deserializeItemTableItemTree(Buffer buffer, int offset){
+            int position = offset;
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            int careEntryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            CareEntry careEntry = ces.deserialize(buffer, careEntryPosition);
+
+            int dataPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            HistoryWithItemTable data = hs.deserializeItemTable(buffer,
+                    dataPosition);
+
+            boolean hasState = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            HistoryWithItemTree state = null;
+            if(hasState){
+                int statePosition = buffer.readInteger(position);
+                //state = hs.deserializeItemTree(buffer, statePosition);
+            }
+
+            return RMObjectFactory.newObservationWithItemTableItemTree(careEntry,
+                    data, state);
+        }
+
+        protected int serializeItemTableItemSingle(Buffer buffer, int offset,
+                                                   CareEntry careEntry,
+                                                   HistoryWithItemTable data,
+                                                   HistoryWithItemSingle state){
+            int meta = offset;
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
+                    + PrimitiveTypeSize.BOOLEAN.getSize();
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            boolean hasState = state != null;
+
+            meta = writeHeader(buffer, meta, position);
+            position = ces.serialize(buffer, position, careEntry);
+
+            meta = writeHeader(buffer, meta, position);
+            position = hs.serialize(buffer, position, data);
+
+            writeHeader(buffer, meta, hasState, position);
+            if(hasState){
+                position = hs.serialize(buffer, position, state);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                ObservationWithItemTableItemSingle o){
+            int position = offset;
+
+            ObservationSerializer os = new ObservationSerializer();
+
+            position = os.serializeItemTableItemSingle(buffer, position,
+                    o.getCareEntry(), o.getData(), o.getState());
+
+            return position;
+        }
+
+        protected ObservationWithItemTableItemSingle
+        deserializeItemTableItemSingle(Buffer buffer, int offset){
+            int position = offset;
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            int careEntryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            CareEntry careEntry = ces.deserialize(buffer, careEntryPosition);
+
+            int dataPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            HistoryWithItemTable data = hs.deserializeItemTable(buffer,
+                    dataPosition);
+
+            boolean hasState = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            HistoryWithItemSingle state = null;
+            if(hasState){
+                int statePosition = buffer.readInteger(position);
+                //state = hs.deserializeItemSingle(buffer, statePosition);
+            }
+
+            return RMObjectFactory.newObservationWithItemTableItemSingle(careEntry,
+                    data, state);
+        }
+
+        protected int serializeItemTableItemTable(Buffer buffer, int offset,
+                                                  CareEntry careEntry,
+                                                  HistoryWithItemTable data,
+                                                  HistoryWithItemTable state){
+            int meta = offset;
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
+                    + PrimitiveTypeSize.BOOLEAN.getSize();
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            boolean hasState = state != null;
+
+            meta = writeHeader(buffer, meta, position);
+            position = ces.serialize(buffer, position, careEntry);
+
+            meta = writeHeader(buffer, meta, position);
+            position = hs.serialize(buffer, position, data);
+
+            writeHeader(buffer, meta, hasState, position);
+            if(hasState){
+                position = hs.serialize(buffer, position, state);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                ObservationWithItemTableItemTable o){
+            int position = offset;
+
+            ObservationSerializer os = new ObservationSerializer();
+
+            position = os.serializeItemTableItemTable(buffer, position,
+                    o.getCareEntry(), o.getData(), o.getState());
+
+            return position;
+        }
+
+        protected ObservationWithItemTableItemTable
+        deserializeItemTableItemTable(Buffer buffer, int offset){
+            int position = offset;
+            CareEntrySerializer ces = new CareEntrySerializer();
+            HistorySerializer hs = new HistorySerializer();
+
+            int careEntryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            CareEntry careEntry = ces.deserialize(buffer, careEntryPosition);
+
+            int dataPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            HistoryWithItemTable data = hs.deserializeItemTable(buffer,
+                    dataPosition);
+
+            boolean hasState = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            HistoryWithItemTable state = null;
+            if(hasState){
+                int statePosition = buffer.readInteger(position);
+                //state = hs.deserializeItemTable(buffer, statePosition);
+            }
+
+            return RMObjectFactory.newObservationWithItemTableItemTable(careEntry,
+                    data, state);
         }
     }
 

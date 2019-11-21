@@ -18,7 +18,7 @@ public class ItemListTest {
 
     public static void testValidItemList(ItemList i){
         UIDBasedIDTest.testValidUIDBasedID(i.getUid());
-        assertEquals("archetypeNodeId", i.getArchetypeNodeId());
+        assertEquals("value", i.getArchetypeNodeId());
         DvTextTest.testValidDvText(i.getName());
         ArchetypedTest.testValidArchetyped(i.getArchetypeDetails());
         FeederAuditTest.testValidFeederAudit(i.getFeederAudit());

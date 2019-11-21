@@ -121,7 +121,9 @@ public enum RMObjectID {
     CAREENTRY(98),
     ACTION(99),
     ADMINENTRY(100),
-    EVALUATION(101);
+    EVALUATION(101),
+    INSTRUCTION(102),
+    OBSERVATION(103);
 
     
     private final int value;

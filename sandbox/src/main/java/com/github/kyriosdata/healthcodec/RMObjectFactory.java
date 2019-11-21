@@ -663,4 +663,76 @@ public class RMObjectFactory {
                                            ItemStructure data){
         return new Evaluation(careEntry, data);
     }
+
+    public static Instruction newInstruction(CareEntry careEntry,
+                                             DvText narrative,
+                                             List<Activity> activities,
+                                             DvDateTime expiryTime,
+                                             DvParsable wfDefinition){
+        return new Instruction(careEntry, narrative, activities, expiryTime,
+                wfDefinition);
+    }
+
+    public static ObservationWithItemTreeItemTree
+        newObservationWithItemTreeItemTree(CareEntry careEntry,
+                                           HistoryWithItemTree data,
+                                           HistoryWithItemTree state){
+        return new ObservationWithItemTreeItemTree(careEntry, data, state);
+    }
+
+    public static ObservationWithItemTreeItemSingle
+    newObservationWithItemTreeItemSingle(CareEntry careEntry,
+                                         HistoryWithItemTree data,
+                                         HistoryWithItemSingle state){
+        return new ObservationWithItemTreeItemSingle(careEntry, data, state);
+    }
+
+    public static ObservationWithItemTreeItemTable
+    newObservationWithItemTreeItemTable(CareEntry careEntry,
+                                        HistoryWithItemTree data,
+                                        HistoryWithItemTable state){
+        return new ObservationWithItemTreeItemTable(careEntry, data, state);
+    }
+
+    public static ObservationWithItemSingleItemTree
+    newObservationWithItemSingleItemTree(CareEntry careEntry,
+                                         HistoryWithItemSingle data,
+                                         HistoryWithItemTree state){
+        return new ObservationWithItemSingleItemTree(careEntry, data, state);
+    }
+
+    public static ObservationWithItemSingleItemSingle
+    newObservationWithItemSingleItemSingle(CareEntry careEntry,
+                                           HistoryWithItemSingle data,
+                                           HistoryWithItemSingle state){
+        return new ObservationWithItemSingleItemSingle(careEntry, data, state);
+    }
+
+    public static ObservationWithItemSingleItemTable
+    newObservationWithItemSingleItemTable(CareEntry careEntry,
+                                          HistoryWithItemSingle data,
+                                          HistoryWithItemTable state){
+        return new ObservationWithItemSingleItemTable(careEntry, data, state);
+    }
+
+    public static ObservationWithItemTableItemTree
+    newObservationWithItemTableItemTree(CareEntry careEntry,
+                                        HistoryWithItemTable data,
+                                        HistoryWithItemTree state){
+        return new ObservationWithItemTableItemTree(careEntry, data, state);
+    }
+
+    public static ObservationWithItemTableItemSingle
+    newObservationWithItemTableItemSingle(CareEntry careEntry,
+                                          HistoryWithItemTable data,
+                                          HistoryWithItemSingle state){
+        return new ObservationWithItemTableItemSingle(careEntry, data, state);
+    }
+
+    public static ObservationWithItemTableItemTable
+    newObservationWithItemTableItemTable(CareEntry careEntry,
+                                         HistoryWithItemTable data,
+                                         HistoryWithItemTable state){
+        return new ObservationWithItemTableItemTable(careEntry, data, state);
+    }
 }

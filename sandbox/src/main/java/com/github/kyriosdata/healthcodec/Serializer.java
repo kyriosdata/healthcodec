@@ -1090,4 +1090,98 @@ public interface Serializer {
      *
      */
     RMObjectSerializationClient serializeEvaluation(Evaluation a);
+
+    /**
+     * Serializador de Instruction.
+     *
+     * @param i
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeInstruction(Instruction i);
+
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTree.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeObservation(
+            ObservationWithItemTreeItemTree o);
+
+    /**
+     * Serializador de Observation com data ItemTree e state ItemSingle.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeObservation(
+            ObservationWithItemTreeItemSingle o);
+
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTable.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeObservation(ObservationWithItemTreeItemTable o);
+
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTable.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeObservation(ObservationWithItemSingleItemTree o);
+
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTable.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeObservation(ObservationWithItemSingleItemSingle o);
+
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTable.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeObservation(ObservationWithItemSingleItemTable o);
+
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTable.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeObservation(ObservationWithItemTableItemTree o);
+
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTable.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeObservation(ObservationWithItemTableItemSingle o);
+
+    /**
+     * Serializador de Observation com data ItemTree e state ItemTable.
+     *
+     * @param o
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeObservation(ObservationWithItemTableItemTable o);
+
+
 }

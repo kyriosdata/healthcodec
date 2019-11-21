@@ -15,8 +15,8 @@ public class LocatableTest {
     RMObjectSerializationClient s =  RMObjectSerializationClient.create();
 
     public static void testValidLocatable(Locatable l){
-        assertEquals("archetypeNodeId", l.getUid().getValue());
-        assertEquals("archetypeNodeId", l.getArchetypeNodeId());
+        assertEquals("value", l.getUid().getValue());
+        assertEquals("value", l.getArchetypeNodeId());
         DvTextTest.testValidDvText(l.getName());
         ArchetypedTest.testValidArchetyped(l.getArchetypeDetails());
         FeederAuditTest.testValidFeederAudit(l.getFeederAudit());
@@ -50,7 +50,7 @@ public class LocatableTest {
     void locatableNullNameTest(){
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectFactory.newLocatable(RMObjectTestHelper.uIDBasedID(),
-                    "archetypeNodeId",
+                    "value",
                     null,
                     RMObjectTestHelper.archetyped(),
                     RMObjectTestHelper.feederAudit(),
@@ -62,7 +62,7 @@ public class LocatableTest {
     void locatableEmptyLinksTest(){
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectFactory.newLocatable(RMObjectTestHelper.uIDBasedID(),
-                    "archetypeNodeId",
+                    "value",
                     RMObjectTestHelper.dvText(),
                     RMObjectTestHelper.archetyped(),
                     RMObjectTestHelper.feederAudit(),

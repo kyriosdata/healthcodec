@@ -722,4 +722,64 @@ public interface Deserializer {
      * @return nova instância de Evaluation
      */
     RMObject.Evaluation deserializeEvaluation();
+
+    /**
+     * Deserializador de Instruction.
+     * @return nova instância de Instruction
+     */
+    RMObject.Instruction deserializeInstruction();
+
+    /**
+     * Deserializador de Observation com data ItemTree e state ItemTree.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemTreeItemTree deserializeObservationWithItemTreeItemTree();
+
+    /**
+     * Deserializador de Observation com data ItemTree e state ItemSingle.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemTreeItemSingle deserializeObservationWithItemTreeItemSingle();
+
+    /**
+     * Deserializador de Observation com data ItemTree e state ItemTable.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemTreeItemTable deserializeObservationWithItemTreeItemTable();
+
+    /**
+     * Deserializador de Observation com data ItemSingle e state ItemTree.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemSingleItemTree deserializeObservationWithItemSingleItemTree();
+
+    /**
+     * Deserializador de Observation com data ItemSingle e state ItemSingle.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemSingleItemSingle deserializeObservationWithItemSingleItemSingle();
+
+    /**
+     * Deserializador de Observation com data ItemSingle e state ItemTable.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemSingleItemTable deserializeObservationWithItemSingleItemTable();
+
+    /**
+     * Deserializador de Observation com data ItemTable e state ItemTable.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemTableItemTable deserializeObservationWithItemTableItemTable();
+
+    /**
+     * Deserializador de Observation com data ItemTable e state ItemTree.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemTableItemTree deserializeObservationWithItemTableItemTree();
+
+    /**
+     * Deserializador de Observation com data ItemTable e state ItemSingle.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemTableItemSingle deserializeObservationWithItemTableItemSingle();
 }
