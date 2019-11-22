@@ -1213,9 +1213,27 @@ public interface Serializer {
     /**
      * Serializador de EHR.
      *
-     * @param c
+     * @param e
      * @return Instância de RMObjectSerializationClient para chaining
      *
      */
     RMObjectSerializationClient serializeEHR(EHR e);
+
+    /**
+     * Serializador de EHRStatus.
+     *
+     * @param e
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeEHRStatus(EHRStatus e);
+
+    /**
+     * Serializador de EHRAccess.
+     *
+     * @param e
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeEHRAccess(EHRAccess e);
 }

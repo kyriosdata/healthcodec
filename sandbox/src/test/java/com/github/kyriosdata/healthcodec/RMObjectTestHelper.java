@@ -218,6 +218,22 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de EHRStatus com valor fixo.
+     *
+     * @return instância de EHRStatus
+     */
+    public static EHRStatus ehrStatus(){
+        Locatable locatable = locatable();
+        PartySelf subject = partySelf();
+        boolean isQueryable = true;
+        boolean isModifiable = false;
+        ItemStructure otherDetails = itemStructure();
+
+        return RMObjectFactory.newEHRStatus(locatable, subject, isQueryable,
+                isModifiable, otherDetails);
+    }
+
+    /**
      * Cria uma instância de LocatableRef com valor fixo.
      *
      * @return instância de LocatableRef
@@ -1648,6 +1664,16 @@ public class RMObjectTestHelper {
 
         return RMObjectFactory.newComposition(locatable, content, language,
                 context, composer, category, territory);
+    }
+
+    /**
+     * Cria uma instância de EHRAccess com valor fixo
+     *
+     * @return nova instância de EHRAccess.
+     */
+    public static EHRAccess ehrAccess(){
+        Locatable locatable = locatable();
+        return RMObjectFactory.newEHRAccess(locatable);
     }
 
     /**

@@ -3486,6 +3486,58 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         return d.deserialize(buffer, getOffsetFromID(EHR));
     }
 
+    /**
+     * Serializador de EHRStatus.
+     *
+     * @param e
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeEHRStatus(EHRStatus e) {
+        EHRStatusSerializer s = new EHRStatusSerializer();
+        register(EHRSTATUS, offset);
+        setOffset(s.serialize(buffer, offset, e));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de EHRStatus.
+     *
+     * @return nova instância de EHRStatus.
+     */
+    @Override
+    public EHRStatus deserializeEHRStatus() {
+        EHRStatusSerializer d = new EHRStatusSerializer();
+        return d.deserialize(buffer, getOffsetFromID(EHRSTATUS));
+    }
+
+    /**
+     * Serializador de EHRAccess.
+     *
+     * @param e
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeEHRAccess(EHRAccess e) {
+        EHRAccessSerializer s = new EHRAccessSerializer();
+        register(EHRACCESS, offset);
+        setOffset(s.serialize(buffer, offset, e));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de EHRAccess.
+     *
+     * @return nova instância de EHRAccess.
+     */
+    @Override
+    public EHRAccess deserializeEHRAccess() {
+        EHRAccessSerializer d = new EHRAccessSerializer();
+        return d.deserialize(buffer, getOffsetFromID(EHRACCESS));
+    }
+
 
     /**
      * Método para registrar um determinado objeto no índice

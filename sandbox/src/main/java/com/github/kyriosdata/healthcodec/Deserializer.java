@@ -806,4 +806,16 @@ public interface Deserializer {
      * @return nova instância de EHR
      */
     RMObject.EHR deserializeEHR();
+
+    /**
+     * Deserializador de EHRStatus.
+     * @return nova instância de EHRStatus
+     */
+    RMObject.EHRStatus deserializeEHRStatus();
+
+    /**
+     * Deserializador de EHRAccess.
+     * @return nova instância de EHRAccess
+     */
+    RMObject.EHRAccess deserializeEHRAccess();
 }

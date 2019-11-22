@@ -767,4 +767,16 @@ public class RMObjectFactory {
         return new EHR(systemID, ehrID, timeCreated, contributions, ehrStatus,
                 directory, compositions);
     }
+
+    public static EHRStatus newEHRStatus(Locatable locatable, PartySelf subject,
+                                         boolean isQueryable,
+                                         boolean isModifiable,
+                                         ItemStructure otherDetails){
+        return new EHRStatus(locatable, subject, isQueryable,
+                isModifiable, otherDetails);
+    }
+
+    public static EHRAccess newEHRAccess(Locatable locatable){
+        return new EHRAccess(locatable);
+    }
 }

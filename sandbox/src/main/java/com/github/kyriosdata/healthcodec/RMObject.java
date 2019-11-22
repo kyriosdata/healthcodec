@@ -3952,4 +3952,63 @@ public class RMObject {
             this.compositions = compositions;
         }
     }
+
+    public static class EHRStatus {
+        private final Locatable locatable;
+        private final PartySelf subject;
+        private final boolean isQueryable;
+        private final boolean isModifiable;
+        private final ItemStructure otherDetails;
+
+        public EHRStatus(Locatable locatable, PartySelf subject,
+                         boolean isQueryable, boolean isModifiable,
+                         ItemStructure otherDetails) {
+            if(locatable == null){
+                throw new IllegalArgumentException("null locatable");
+            }
+            if (subject == null) {
+                throw new IllegalArgumentException("null subject");
+            }
+            this.locatable = locatable;
+            this.subject = subject;
+            this.isQueryable = isQueryable;
+            this.isModifiable = isModifiable;
+            this.otherDetails = otherDetails;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public PartySelf getSubject() {
+            return subject;
+        }
+
+        public boolean isQueryable() {
+            return isQueryable;
+        }
+
+        public boolean isModifiable() {
+            return isModifiable;
+        }
+
+        public ItemStructure getOtherDetails() {
+            return otherDetails;
+        }
+    }
+
+    public static class EHRAccess {
+        private final Locatable locatable;
+
+        public EHRAccess(Locatable locatable) {
+            if(locatable == null){
+                throw new IllegalArgumentException("null locatable");
+            }
+            this.locatable = locatable;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+    }
 }

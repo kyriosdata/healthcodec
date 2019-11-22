@@ -9231,6 +9231,128 @@ public class RMObjectSerialization {
         }
     }
 
+    public static class EHRStatusSerializer {
+        protected int serialize(Buffer buffer, int offset, Locatable locatable,
+                                PartySelf subject, boolean isQueryable,
+                                boolean isModifiable,ItemStructure otherDetails){
+            int meta = offset;
+            int position = offset + 5 * PrimitiveTypeSize.INT.getSize()
+                    + 2 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasSubject = subject != null;
+            boolean hasOtherDetails = otherDetails != null;
+
+            LocatableSerializer ls = new LocatableSerializer();
+            PartySelfSerializer pss = new PartySelfSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = ls.serialize(buffer, position, locatable);
+
+            meta = writeHeader(buffer, meta, hasSubject, position);
+            if(hasSubject){
+                position = pss.serialize(buffer, position, subject);
+            }
+
+            meta = writeHeader(buffer, meta, position);
+            buffer.writeBoolean(position, isQueryable);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            meta = writeHeader(buffer, meta, position);
+            buffer.writeBoolean(position, isModifiable);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            writeHeader(buffer, meta, hasOtherDetails, position);
+            position = iss.serialize(buffer, position, otherDetails);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, EHRStatus e){
+            int position = offset;
+
+            EHRStatusSerializer ess = new EHRStatusSerializer();
+
+            position = ess.serialize(buffer, position, e.getLocatable(),
+                    e.getSubject(), e.isQueryable(), e.isModifiable(),
+                    e.getOtherDetails());
+
+            return position;
+        }
+
+        protected EHRStatus deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            LocatableSerializer ls = new LocatableSerializer();
+            PartySelfSerializer pss = new PartySelfSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            int locatablePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            Locatable locatable = ls.deserialize(buffer, locatablePosition);
+
+            boolean hasSubject = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            PartySelf subject = null;
+            if(hasSubject){
+                int subjectPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                subject = pss.deserialize(buffer, subjectPosition);
+            }
+
+            int isQueryablePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            boolean isQueryable = buffer.readBoolean(isQueryablePosition);
+
+            int isModifiablePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            boolean isModifiable = buffer.readBoolean(isModifiablePosition);
+
+            boolean hasOtherDetails = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            ItemStructure otherDetails = null;
+            if(hasOtherDetails){
+                int hasOtherDetailsPosition = buffer.readInteger(position);
+                otherDetails = iss.deserialize(buffer, hasOtherDetailsPosition);
+            }
+
+            return RMObjectFactory.newEHRStatus(locatable, subject, isQueryable,
+                    isModifiable, otherDetails);
+        }
+    }
+
+    public static class EHRAccessSerializer {
+        protected int serialize(Buffer buffer, int offset, Locatable locatable){
+            int position = offset;
+
+            LocatableSerializer ls = new LocatableSerializer();
+
+            position = ls.serialize(buffer, position, locatable);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, EHRAccess e){
+            int position = offset;
+
+            EHRAccessSerializer es = new EHRAccessSerializer();
+
+            position = es.serialize(buffer, position, e.getLocatable());
+
+            return position;
+        }
+
+        protected EHRAccess deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            LocatableSerializer ls = new LocatableSerializer();
+
+            Locatable locatable = ls.deserialize(buffer, position);
+
+            return RMObjectFactory.newEHRAccess(locatable);
+        }
+    }
+
     /**
      * Escreve o valor inteiro do header de um determinado parâmetro que será
      * serializado em uma posição do buffer

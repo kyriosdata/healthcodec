@@ -127,7 +127,9 @@ public enum RMObjectID {
     SECTION(104),
     EVENTCONTEXT(105),
     COMPOSITION(106),
-    EHR(107);
+    EHR(107),
+    EHRSTATUS(108),
+    EHRACCESS(109);
 
     
     private final int value;
