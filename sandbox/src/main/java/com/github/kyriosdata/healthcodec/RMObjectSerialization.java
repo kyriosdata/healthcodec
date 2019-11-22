@@ -443,7 +443,7 @@ public class RMObjectSerialization {
         }
     }
 
-    static class DVEHRURISerializer {
+    static class DvEHRURISerializer {
 
         protected int serialize(Buffer buffer, int offset, String value)
                  {
@@ -452,37 +452,37 @@ public class RMObjectSerialization {
         }
 
         protected int serialize(Buffer buffer, int offset,
-                DVEHRURI dvehruri) {
-            DVEHRURISerializer des = new DVEHRURISerializer();
+                DvEHRURI DvEHRURI) {
+            DvEHRURISerializer des = new DvEHRURISerializer();
             int position = offset;
 
             position = des.serialize(buffer, position, 
-                    dvehruri.getDvuri().getValue());
+                    DvEHRURI.getDvuri().getValue());
 
             return position;
         }
 
-        protected DVEHRURI deserialize(Buffer buffer, int offset){
+        protected DvEHRURI deserialize(Buffer buffer, int offset){
             int position = offset;
             String value = stringDeserialization(buffer, position);
 
-            return RMObjectFactory.newDVEHRURI(value);
+            return RMObjectFactory.newDvEHRURI(value);
         }
 
         protected int setSerializer(Buffer buffer, int offset,
-                                    Set<DVEHRURI> items) {
+                                    Set<DvEHRURI> items) {
             int setSize = items.size();
             int position = offset + (setSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
             int meta = offset;
-            DVEHRURISerializer des = new DVEHRURISerializer();
+            DvEHRURISerializer des = new DvEHRURISerializer();
 
             meta = writeHeader(buffer, meta, setSize);
-            Iterator<DVEHRURI> it = items.iterator();
+            Iterator<DvEHRURI> it = items.iterator();
 
             while (it.hasNext()){
-                DVEHRURI d = it.next();
+                DvEHRURI d = it.next();
                 int dvPosition = position;
                 meta = writeHeader(buffer, meta, dvPosition);
                 position = des.serialize(buffer, position, d);
@@ -491,19 +491,19 @@ public class RMObjectSerialization {
             return position;
         }
 
-        protected Set<DVEHRURI> setDeserializer(Buffer buffer, int offset){
+        protected Set<DvEHRURI> setDeserializer(Buffer buffer, int offset){
             int position = offset;
             int listSize = buffer.readInteger(position);
             position += PrimitiveTypeSize.INT.getSize();
 
-            DVEHRURISerializer des = new DVEHRURISerializer();
-            Set<DVEHRURI> dves = new HashSet<>();
+            DvEHRURISerializer des = new DvEHRURISerializer();
+            Set<DvEHRURI> dves = new HashSet<>();
 
             for (int i = 0; i < listSize; i++){
                 int dvPosition = buffer.readInteger(position);
                 position += PrimitiveTypeSize.INT.getSize();
 
-                DVEHRURI dv = des.deserialize(buffer, dvPosition);
+                DvEHRURI dv = des.deserialize(buffer, dvPosition);
                 dves.add(dv);
             }
 
@@ -1873,13 +1873,13 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset,
                 DvText meaning,
                 DvText type,
-                DVEHRURI target) {
+                DvEHRURI target) {
 
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
             int meta = offset;
 
             DvTextSerializer dts = new DvTextSerializer();
-            DVEHRURISerializer des = new DVEHRURISerializer();
+            DvEHRURISerializer des = new DvEHRURISerializer();
 
             meta = writeHeader(buffer, meta, position);
             position = dts.serialize(buffer, position, meaning);
@@ -1909,7 +1909,7 @@ public class RMObjectSerialization {
         protected Link deserialize(Buffer buffer, int offset){
             int position = offset;
             DvTextSerializer dts = new DvTextSerializer();
-            DVEHRURISerializer des = new DVEHRURISerializer();
+            DvEHRURISerializer des = new DvEHRURISerializer();
 
             int meaningPosition = buffer.readInteger(position);
             position += PrimitiveTypeSize.INT.getSize();
@@ -1920,7 +1920,7 @@ public class RMObjectSerialization {
             DvText type = dts.deserialize(buffer, typePosition);
 
             int targetPosition = buffer.readInteger(position);
-            DVEHRURI target = des.deserialize(buffer, targetPosition);
+            DvEHRURI target = des.deserialize(buffer, targetPosition);
 
             return RMObjectFactory.newLink(meaning, type, target);
         }
@@ -6064,14 +6064,14 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset,
                                 AuditDetails auditDetails,
                                 DvMultimedia attestedView, String proof,
-                                Set<DVEHRURI> items, DvText reason,
+                                Set<DvEHRURI> items, DvText reason,
                                 boolean isPending){
             int meta = offset;
             int position = offset + 6 * PrimitiveTypeSize.INT.getSize();
 
             AuditDetailsSerializer ads = new AuditDetailsSerializer();
             DvMultimediaSerializer dms = new DvMultimediaSerializer();
-            DVEHRURISerializer des = new DVEHRURISerializer();
+            DvEHRURISerializer des = new DvEHRURISerializer();
             DvTextSerializer dts = new DvTextSerializer();
 
             meta = writeHeader(buffer, meta, position);
@@ -6113,7 +6113,7 @@ public class RMObjectSerialization {
 
             AuditDetailsSerializer ads = new AuditDetailsSerializer();
             DvMultimediaSerializer dms = new DvMultimediaSerializer();
-            DVEHRURISerializer des = new DVEHRURISerializer();
+            DvEHRURISerializer des = new DvEHRURISerializer();
             DvTextSerializer dts = new DvTextSerializer();
 
             int auditDetailsPosition = buffer.readInteger(position);
@@ -6132,7 +6132,7 @@ public class RMObjectSerialization {
 
             int itemsPosition = buffer.readInteger(position);
             position += PrimitiveTypeSize.INT.getSize();
-            Set<DVEHRURI> items = des.setDeserializer(buffer, itemsPosition);
+            Set<DvEHRURI> items = des.setDeserializer(buffer, itemsPosition);
 
             int reasonPosition = buffer.readInteger(position);
             position += PrimitiveTypeSize.INT.getSize();
@@ -9383,6 +9383,62 @@ public class RMObjectSerialization {
             ItemStructure itemStructure = iss.deserialize(buffer, position);
 
             return RMObjectFactory.newXTerminology(itemStructure);
+        }
+    }
+
+    public static class XCompositionSerializer {
+        protected int serialize(Buffer buffer, int offset, boolean primary,
+                                DvEHRURI originalPath, Composition composition){
+            int meta = offset;
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
+
+            DvEHRURISerializer ds = new DvEHRURISerializer();
+            CompositionSerializer cs = new CompositionSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            buffer.writeBoolean(position, primary);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            meta = writeHeader(buffer, meta, position);
+            position = ds.serialize(buffer, position, originalPath);
+
+            writeHeader(buffer, meta, position);
+            position = cs.serialize(buffer, position, composition);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, XComposition c){
+            int position = offset;
+
+            XCompositionSerializer xcs = new XCompositionSerializer();
+
+            position = xcs.serialize(buffer, position, c.isPrimary(),
+                    c.getOriginalPath(), c.getComposition());
+
+            return position;
+        }
+
+        protected XComposition deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            DvEHRURISerializer ds = new DvEHRURISerializer();
+            CompositionSerializer cs = new CompositionSerializer();
+
+            int primaryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            boolean primary = buffer.readBoolean(primaryPosition);
+
+            int originalPathPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvEHRURI originalPath = ds.deserialize(buffer, originalPathPosition);
+
+            int compositionPosition = buffer.readInteger(position);
+            Composition composition = cs.deserialize(buffer,
+                    compositionPosition);
+
+            return RMObjectFactory.newXComposition(primary, originalPath,
+                    composition);
         }
     }
 

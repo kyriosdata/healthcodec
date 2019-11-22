@@ -72,8 +72,8 @@ public class RMObjectFactory {
         return new DVURI(value);
     }
 
-    public static DVEHRURI newDVEHRURI(String value) {
-        return new DVEHRURI(value);
+    public static DvEHRURI newDvEHRURI(String value) {
+        return new DvEHRURI(value);
     }
 
     public static VersionTreeID newVersionTreeID(String value) {
@@ -187,7 +187,7 @@ public class RMObjectFactory {
         return new TermMapping(target, match, purpose);
     }
 
-    public static Link newLink(DvText meaning, DvText type, DVEHRURI target) {
+    public static Link newLink(DvText meaning, DvText type, DvEHRURI target) {
         return new Link(meaning, type, target);
     }
 
@@ -505,7 +505,7 @@ public class RMObjectFactory {
 
     public static Attestation newAttestation(AuditDetails auditDetails,
                                              DvMultimedia attestedView,
-                                             String proof, Set<DVEHRURI> items,
+                                             String proof, Set<DvEHRURI> items,
                                              DvText reason, boolean isPending){
         return new Attestation(auditDetails, attestedView, proof, items, reason,
                 isPending);
@@ -784,4 +784,9 @@ public class RMObjectFactory {
         return new XTerminology(itemStructure);
     }
 
+    public static XComposition newXComposition(boolean primary,
+                                               DvEHRURI originalPath,
+                                               Composition composition ){
+        return new XComposition(primary, originalPath, composition);
+    }
 }

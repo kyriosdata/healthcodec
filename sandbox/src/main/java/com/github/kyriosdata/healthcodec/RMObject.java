@@ -244,11 +244,11 @@ public class RMObject {
         }
     }
 
-    public static class DVEHRURI {
+    public static class DvEHRURI {
 
         private final DVURI dvuri;
 
-        protected DVEHRURI(String value) {
+        protected DvEHRURI(String value) {
             if (value == null || value.isEmpty()) {
                 throw new IllegalArgumentException("value is empty");
             }
@@ -860,9 +860,9 @@ public class RMObject {
 
         private final DvText meaning;
         private final DvText type;
-        private final DVEHRURI target;
+        private final DvEHRURI target;
 
-        protected Link(DvText meaning, DvText type, DVEHRURI target) {
+        protected Link(DvText meaning, DvText type, DvEHRURI target) {
             if (meaning == null) {
                 throw new IllegalArgumentException("null meaning");
             }
@@ -885,7 +885,7 @@ public class RMObject {
             return type;
         }
 
-        public DVEHRURI getTarget() {
+        public DvEHRURI getTarget() {
             return target;
         }
     }
@@ -2488,12 +2488,12 @@ public class RMObject {
         private final AuditDetails auditDetails;
         private final DvMultimedia attestedView;
         private final String proof;
-        private final Set<DVEHRURI> items;
+        private final Set<DvEHRURI> items;
         private final DvText reason;
         private final boolean isPending;
 
         protected Attestation(AuditDetails auditDetails, DvMultimedia attestedView,
-                              String proof, Set<DVEHRURI> items, DvText reason,
+                              String proof, Set<DvEHRURI> items, DvText reason,
                               boolean isPending) {
             if (items != null && items.isEmpty()) {
                 throw new IllegalArgumentException("empty items");
@@ -2522,7 +2522,7 @@ public class RMObject {
             return proof;
         }
 
-        public Set<DVEHRURI> getItems() {
+        public Set<DvEHRURI> getItems() {
             return items;
         }
 
@@ -4027,4 +4027,34 @@ public class RMObject {
         }
     }
 
+    public static class XComposition {
+        private final boolean primary;
+        private final DvEHRURI originalPath;
+        private final Composition composition;
+
+        public XComposition(boolean primary, DvEHRURI originalPath,
+                            Composition composition) {
+            if(originalPath == null) {
+                throw new IllegalArgumentException("null originalPath");
+            }
+            if(composition == null) {
+                throw new IllegalArgumentException("null composition");
+            }
+            this.primary = primary;
+            this.originalPath = originalPath;
+            this.composition = composition;
+        }
+
+        public boolean isPrimary() {
+            return primary;
+        }
+
+        public DvEHRURI getOriginalPath() {
+            return originalPath;
+        }
+
+        public Composition getComposition() {
+            return composition;
+        }
+    }
 }

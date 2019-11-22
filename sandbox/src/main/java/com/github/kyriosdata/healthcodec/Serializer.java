@@ -125,14 +125,14 @@ public interface Serializer {
             DVURI d);
 
     /**
-     * Serializador de DVEHRURI
+     * Serializador de DvEHRURI
      *
      * @param d
      * @return Instância de RMObjectSerializationClient para chaining
      *
      */
-    RMObjectSerializationClient serializeDVEHRURI(
-            DVEHRURI d);
+    RMObjectSerializationClient serializeDvEHRURI(
+            DvEHRURI d);
 
     /**
      * Serializador de VersionTreeID
@@ -1245,4 +1245,13 @@ public interface Serializer {
      *
      */
     RMObjectSerializationClient serializeXTerminology(XTerminology t);
+
+    /**
+     * Serializador de XComposition.
+     *
+     * @param t
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeXComposition(XComposition c);
 }

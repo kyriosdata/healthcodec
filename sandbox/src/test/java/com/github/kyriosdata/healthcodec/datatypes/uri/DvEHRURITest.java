@@ -1,6 +1,6 @@
 package com.github.kyriosdata.healthcodec.datatypes.uri;
 
-import com.github.kyriosdata.healthcodec.RMObject.DVEHRURI;
+import com.github.kyriosdata.healthcodec.RMObject.DvEHRURI;
 import com.github.kyriosdata.healthcodec.RMObjectFactory;
 import com.github.kyriosdata.healthcodec.RMObjectSerializationClient;
 import com.github.kyriosdata.healthcodec.RMObjectTestHelper;
@@ -11,30 +11,30 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class DvEHRURITest {
     RMObjectSerializationClient s =  RMObjectSerializationClient.create();
 
-    public static void testValidDvEHRURI(DVEHRURI d){
+    public static void testValidDvEHRURI(DvEHRURI d){
         DvURITest.testValidDvURI(d.getDvuri());
     }
 
     @Test
-    void dvEHRURIValidTest(){
-        DVEHRURI d = RMObjectTestHelper.dVEHRURI();
-        s.serializeDVEHRURI(d);
-        d = s.deserializeDVEHRURI();
+    void DvEHRURIValidTest(){
+        DvEHRURI d = RMObjectTestHelper.dvEHRURI();
+        s.serializeDvEHRURI(d);
+        d = s.deserializeDvEHRURI();
 
         testValidDvEHRURI(d);
     }
 
     @Test
-    void dvEHRURINullValueTest(){
+    void DvEHRURINullValueTest(){
         assertThrows(IllegalArgumentException.class, () -> {
-            RMObjectFactory.newDVEHRURI(null);
+            RMObjectFactory.newDvEHRURI(null);
         });
     }
 
     @Test
-    void dvEHRURIEmptyValueTest(){
+    void DvEHRURIEmptyValueTest(){
         assertThrows(IllegalArgumentException.class, () -> {
-            RMObjectFactory.newDVEHRURI("");
+            RMObjectFactory.newDvEHRURI("");
         });
     }
 }

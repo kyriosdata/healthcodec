@@ -115,12 +115,12 @@ public class RMObjectTestHelper {
     }
 
     /**
-     * Cria uma instância de DVEHRURI com valor fixo.
+     * Cria uma instância de DvEHRURI com valor fixo.
      *
-     * @return instância de DVEHRURI
+     * @return instância de DvEHRURI
      */
-    public static DVEHRURI dVEHRURI(){
-        return RMObjectFactory.newDVEHRURI("value");
+    public static DvEHRURI dvEHRURI(){
+        return RMObjectFactory.newDvEHRURI("value");
     }
 
     /**
@@ -398,7 +398,7 @@ public class RMObjectTestHelper {
      */
     public static Link link(){
         return RMObjectFactory.newLink(RMObjectTestHelper.dvText(),
-                RMObjectTestHelper.dvText(),RMObjectTestHelper.dVEHRURI());
+                RMObjectTestHelper.dvText(),RMObjectTestHelper.dvEHRURI());
     }
 
     /**
@@ -1081,7 +1081,7 @@ public class RMObjectTestHelper {
         AuditDetails auditDetails = auditDetails();
         DvMultimedia attestedView = dvMultimedia();
         String proof = "proof";
-        Set<DVEHRURI> items = dvehruriSet(false);
+        Set<DvEHRURI> items = DvEHRURISet(false);
         DvText reason = dvText();
 
         return RMObjectFactory.newAttestation(auditDetails, attestedView,
@@ -1688,6 +1688,20 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de XComposition com valor fixo
+     *
+     * @return nova instância de XComposition.
+     */
+    public static XComposition xComposition(){
+        boolean primary = true;
+        DvEHRURI originalPath = dvEHRURI();
+        Composition composition = composition();
+
+        return RMObjectFactory.newXComposition(primary, originalPath,
+                composition);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
@@ -2014,17 +2028,17 @@ public class RMObjectTestHelper {
     }
 
     /**
-     * Método que gera um set de DVEHRURI
+     * Método que gera um set de DvEHRURI
      *
      * @param emptySet cria um set vazio
      * @return set
      */
-    public static Set<DVEHRURI> dvehruriSet(boolean emptySet){
-        Set<DVEHRURI> set = new HashSet<>();
+    public static Set<DvEHRURI> DvEHRURISet(boolean emptySet){
+        Set<DvEHRURI> set = new HashSet<>();
         if(emptySet){
             return set;
         }
-        DVEHRURI d = RMObjectTestHelper.dVEHRURI();
+        DvEHRURI d = RMObjectTestHelper.dvEHRURI();
         set.add(d);
 
         return set;

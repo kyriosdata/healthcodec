@@ -30,7 +30,7 @@ public enum RMObjectID {
     TEMPLATEID(7),
     CODEPHRASE(8),
     DVURI(9),
-    DVEHRURI(10),
+    DvEHRURI(10),
     VERSIONTREEID(11),
     ARCHETYPEID(12),
     OBJECTVERSIONID(13),
@@ -130,7 +130,8 @@ public enum RMObjectID {
     EHR(107),
     EHRSTATUS(108),
     EHRACCESS(109),
-    XTERMINOLOGY(110);
+    XTERMINOLOGY(110),
+    XCOMPOSITION(111);
 
     
     private final int value;

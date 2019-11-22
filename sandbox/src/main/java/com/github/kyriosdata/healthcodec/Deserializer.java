@@ -98,11 +98,11 @@ public interface Deserializer {
     RMObject.DVURI deserializeDVURI();
 
     /**
-     * Deserializador de DVEHRURI
+     * Deserializador de DvEHRURI
      *
-     * @return Instância de DVEHRURI
+     * @return Instância de DvEHRURI
      */
-    RMObject.DVEHRURI deserializeDVEHRURI();
+    RMObject.DvEHRURI deserializeDvEHRURI();
 
     /**
      * Deserializador de VersionTreeID
@@ -824,4 +824,10 @@ public interface Deserializer {
      * @return nova instância de XTerminology
      */
     RMObject.XTerminology deserializeXTerminology();
+
+    /**
+     * Deserializador de XComposition.
+     * @return nova instância de XComposition
+     */
+    RMObject.XComposition deserializeXComposition();
 }

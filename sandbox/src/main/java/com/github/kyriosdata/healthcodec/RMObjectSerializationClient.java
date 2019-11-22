@@ -15,7 +15,7 @@
 package com.github.kyriosdata.healthcodec;
 
 import com.github.kyriosdata.healthcodec.RMObject.*;
-import com.github.kyriosdata.healthcodec.RMObject.DVEHRURI;
+import com.github.kyriosdata.healthcodec.RMObject.DvEHRURI;
 import com.github.kyriosdata.healthcodec.RMObject.DVURI;
 import com.github.kyriosdata.healthcodec.RMObject.ISO_OID;
 import com.github.kyriosdata.healthcodec.RMObject.UID;
@@ -25,7 +25,7 @@ import com.github.kyriosdata.healthcodec.RMObjectSerialization.*;
 import java.util.List;
 
 import static com.github.kyriosdata.healthcodec.RMObjectID.*;
-import static com.github.kyriosdata.healthcodec.RMObjectID.DVEHRURI;
+import static com.github.kyriosdata.healthcodec.RMObjectID.DvEHRURI;
 import static com.github.kyriosdata.healthcodec.RMObjectID.DVURI;
 import static com.github.kyriosdata.healthcodec.RMObjectID.ISO_OID;
 import static com.github.kyriosdata.healthcodec.RMObjectID.UID;
@@ -372,31 +372,31 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
-     * Serializador de DVEHRURI
+     * Serializador de DvEHRURI
      *
      * @param d
      * @return instância de RMObjectSerializationClient atual
      * @
      */
     @Override
-    public RMObjectSerializationClient serializeDVEHRURI(
-            DVEHRURI d)  {
-        DVEHRURISerializer s = new DVEHRURISerializer();
-        register(DVEHRURI, offset);
+    public RMObjectSerializationClient serializeDvEHRURI(
+            DvEHRURI d)  {
+        DvEHRURISerializer s = new DvEHRURISerializer();
+        register(DvEHRURI, offset);
         s.serialize(buffer, offset, d);
 
         return this;
     }
 
     /**
-     * Deserializador de DVEHRURI
+     * Deserializador de DvEHRURI
      *
-     * @return nova instânciade DVEHRURI
+     * @return nova instânciade DvEHRURI
      */
     @Override
-    public DVEHRURI deserializeDVEHRURI() {
-        DVEHRURISerializer d = new DVEHRURISerializer();
-        return d.deserialize(buffer, getOffsetFromID(DVEHRURI));
+    public DvEHRURI deserializeDvEHRURI() {
+        DvEHRURISerializer d = new DvEHRURISerializer();
+        return d.deserialize(buffer, getOffsetFromID(DvEHRURI));
     }
 
     /**
@@ -3564,6 +3564,31 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         return d.deserialize(buffer, getOffsetFromID(XTERMINOLOGY));
     }
 
+    /**
+     * Serializador de XComposition.
+     *
+     * @param c
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeXComposition(XComposition c) {
+        XCompositionSerializer s = new XCompositionSerializer();
+        register(XCOMPOSITION, offset);
+        setOffset(s.serialize(buffer, offset, c));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de XComposition.
+     *
+     * @return nova instância de XComposition.
+     */
+    @Override
+    public XComposition deserializeXComposition() {
+        XCompositionSerializer d = new XCompositionSerializer();
+        return d.deserialize(buffer, getOffsetFromID(XCOMPOSITION));
+    }
 
     /**
      * Método para registrar um determinado objeto no índice

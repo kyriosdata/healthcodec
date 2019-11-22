@@ -37,7 +37,7 @@ public class AttestationTest {
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectFactory.newAttestation(RMObjectTestHelper.auditDetails(),
                     RMObjectTestHelper.dvMultimedia(), "proof",
-                    RMObjectTestHelper.dvehruriSet(true),
+                    RMObjectTestHelper.DvEHRURISet(true),
                     RMObjectTestHelper.dvText(), true);
         });
     }
@@ -47,7 +47,7 @@ public class AttestationTest {
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectFactory.newAttestation(RMObjectTestHelper.auditDetails(),
                     RMObjectTestHelper.dvMultimedia(), "proof",
-                    RMObjectTestHelper.dvehruriSet(false),
+                    RMObjectTestHelper.DvEHRURISet(false),
                     null, true);
         });
     }

@@ -33,7 +33,7 @@ public class LinkTest {
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectFactory.newLink(null,
                     RMObjectTestHelper.dvText(),
-                    RMObjectTestHelper.dVEHRURI());
+                    RMObjectTestHelper.dvEHRURI());
         });
     }
 
@@ -42,7 +42,7 @@ public class LinkTest {
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectFactory.newLink(RMObjectTestHelper.dvText(),
                     null,
-                    RMObjectTestHelper.dVEHRURI());
+                    RMObjectTestHelper.dvEHRURI());
         });
     }
 
