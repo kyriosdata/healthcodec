@@ -123,7 +123,8 @@ public enum RMObjectID {
     ADMINENTRY(100),
     EVALUATION(101),
     INSTRUCTION(102),
-    OBSERVATION(103);
+    OBSERVATION(103),
+    SECTION(104);
 
     
     private final int value;

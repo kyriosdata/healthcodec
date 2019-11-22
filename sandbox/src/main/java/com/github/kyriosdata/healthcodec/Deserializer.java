@@ -782,4 +782,10 @@ public interface Deserializer {
      * @return nova instância de Observation
      */
     RMObject.ObservationWithItemTableItemSingle deserializeObservationWithItemTableItemSingle();
+
+    /**
+     * Deserializador de Section.
+     * @return nova instância de Section
+     */
+    RMObject.Section deserializeSection();
 }

@@ -7757,6 +7757,44 @@ public class RMObjectSerialization {
 
             return RMObjectFactory.newContentItem(locatable);
         }
+
+        protected int listSerialize(
+                Buffer buffer, int offset, List<ContentItem> items)
+        {
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            ContentItemSerializer dis = new ContentItemSerializer();
+
+            for (ContentItem c : items){
+                meta = writeHeader(buffer, meta, position);
+                position = dis.serialize(buffer, position, c);
+            }
+
+            return position;
+        }
+
+        protected List<ContentItem> deserializeList(Buffer buffer, int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            List<ContentItem> list = new ArrayList<>();
+            ContentItemSerializer dis = new ContentItemSerializer();
+
+            for (int i = 0; i < listSize; i++){
+                int contentItemPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                ContentItem c = dis.deserialize(buffer, contentItemPosition);
+                list.add(c);
+            }
+
+            return list;
+        }
     }
 
     public static class EntrySerializer {
@@ -8798,6 +8836,59 @@ public class RMObjectSerialization {
 
             return RMObjectFactory.newObservationWithItemTableItemTable(careEntry,
                     data, state);
+        }
+    }
+
+    public static class SectionSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                ContentItem contentItem, List<ContentItem> items){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize()
+                    + PrimitiveTypeSize.BOOLEAN.getSize();
+            boolean hasItems = items != null;
+
+            ContentItemSerializer cis = new ContentItemSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = cis.serialize(buffer, position, contentItem);
+
+            writeHeader(buffer, meta, hasItems, position);
+            if(hasItems){
+                position = cis.listSerialize(buffer, position, items);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, Section s){
+            int position = offset;
+
+            SectionSerializer ss = new SectionSerializer();
+
+            position = ss.serialize(buffer, position, s.getContentItem(),
+                    s.getItems());
+
+            return position;
+        }
+
+        protected Section deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            ContentItemSerializer cs = new ContentItemSerializer();
+
+            int contentItemPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            ContentItem contentItem = cs.deserialize(buffer, contentItemPosition);
+
+            boolean hasItems = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            List<ContentItem> items = null;
+            if(hasItems){
+                int itemsPosition = buffer.readInteger(position);
+                items = cs.deserializeList(buffer, itemsPosition);
+            }
+
+            return RMObjectFactory.newSection(contentItem, items);
         }
     }
 

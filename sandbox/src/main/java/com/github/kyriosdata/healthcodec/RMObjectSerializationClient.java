@@ -3384,6 +3384,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de Section.
+     *
+     * @param s
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeSection(Section s) {
+        SectionSerializer ss = new SectionSerializer();
+        register(SECTION, offset);
+        setOffset(ss.serialize(buffer, offset, s));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Section.
+     *
+     * @return nova instância de Section.
+     */
+    @Override
+    public Section deserializeSection() {
+        SectionSerializer d = new SectionSerializer();
+        return d.deserialize(buffer, getOffsetFromID(SECTION));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id

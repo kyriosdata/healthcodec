@@ -735,4 +735,9 @@ public class RMObjectFactory {
                                          HistoryWithItemTable state){
         return new ObservationWithItemTableItemTable(careEntry, data, state);
     }
+
+    public static Section newSection(ContentItem contentItem,
+                                     List<ContentItem> items){
+        return new Section(contentItem, items);
+    }
 }

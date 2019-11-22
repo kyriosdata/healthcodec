@@ -1575,6 +1575,18 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de Section com valor fixo
+     *
+     * @return nova instância de Section.
+     */
+    public static Section section(){
+        ContentItem contentItem = contentItem();
+        List<ContentItem> items = contentItemList(false);
+
+        return RMObjectFactory.newSection(contentItem, items);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
@@ -1624,6 +1636,23 @@ public class RMObjectTestHelper {
         }
         Participation p = participation();
         list.add(p);
+
+        return list;
+    }
+
+    /**
+     * Método que gera uma lista de Participation.
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    public static List<ContentItem> contentItemList(boolean emptyList){
+        List<ContentItem> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        ContentItem c = contentItem();
+        list.add(c);
 
         return list;
     }

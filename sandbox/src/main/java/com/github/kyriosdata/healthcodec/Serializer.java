@@ -1183,5 +1183,14 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeObservation(ObservationWithItemTableItemTable o);
 
+    /**
+     * Serializador de Section.
+     *
+     * @param s
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeSection(Section s);
+
 
 }

@@ -48,16 +48,16 @@ public class RMObject {
         protected DvIdentifier(String issuer, String assigner, String id,
                                String type) {
             if (issuer == null || issuer.isEmpty()) {
-                throw new IllegalArgumentException("issuer vazio ou null");
+                throw new IllegalArgumentException("issuer is empty ou null");
             }
             if (assigner == null || assigner.isEmpty()) {
-                throw new IllegalArgumentException("assigner vazio ou null");
+                throw new IllegalArgumentException("assigner is empty ou null");
             }
             if (id == null || id.isEmpty()) {
-                throw new IllegalArgumentException("id vazio ou null");
+                throw new IllegalArgumentException("id is empty ou null");
             }
             if (type == null || type.isEmpty()) {
-                throw new IllegalArgumentException("type vazio ou null");
+                throw new IllegalArgumentException("type is empty ou null");
             }
             this.issuer = issuer;
             this.assigner = assigner;
@@ -87,7 +87,7 @@ public class RMObject {
 
         protected UID(String value) {
             if (value.isEmpty()) {
-                throw new IllegalArgumentException("value vazio");
+                throw new IllegalArgumentException("value is empty");
             }
             this.value = value;
         }
@@ -147,7 +147,7 @@ public class RMObject {
 
         protected GenericID(String value, String scheme) {
             if (scheme.isEmpty()) {
-                throw new IllegalArgumentException("scheme vazio");
+                throw new IllegalArgumentException("scheme is empty");
             }
             this.objectID = RMObjectFactory.newObjectID(value);
             this.scheme = scheme;
@@ -213,7 +213,7 @@ public class RMObject {
                 throw new IllegalArgumentException("null terminologyId");
             }
             if (codeString.isEmpty()) {
-                throw new IllegalArgumentException("codeString vazio");
+                throw new IllegalArgumentException("codeString is empty");
             }
             this.terminologyID = terminologyID;
             this.codeString = codeString;
@@ -234,7 +234,7 @@ public class RMObject {
 
         protected DVURI(String value) {
             if (value == null || value.isEmpty()) {
-                throw new IllegalArgumentException("codeString null ou vazio");
+                throw new IllegalArgumentException("codeString null ou is empty");
             }
             this.value = value;
         }
@@ -250,7 +250,7 @@ public class RMObject {
 
         protected DVEHRURI(String value) {
             if (value == null || value.isEmpty()) {
-                throw new IllegalArgumentException("value vazio");
+                throw new IllegalArgumentException("value is empty");
             }
             this.dvuri = RMObjectFactory.newDVURI(value);
         }
@@ -266,7 +266,7 @@ public class RMObject {
 
         protected VersionTreeID(String value) {
             if (value == null || value.isEmpty()) {
-                throw new IllegalArgumentException("value vazio");
+                throw new IllegalArgumentException("value is empty");
             }
             this.value = value;
         }
@@ -282,7 +282,7 @@ public class RMObject {
 
         protected ArchetypeID(String value) {
             if (value == null || value.isEmpty()) {
-                throw new IllegalArgumentException("value vazio");
+                throw new IllegalArgumentException("value is empty");
             }
             this.objectID = RMObjectFactory.newObjectID(value);
         }
@@ -298,7 +298,7 @@ public class RMObject {
 
         protected ObjectVersionID(String value) {
             if (value == null || value.isEmpty()) {
-                throw new IllegalArgumentException("value vazio");
+                throw new IllegalArgumentException("value is empty");
             }
             this.uidBasedID = RMObjectFactory.newUIDBasedID(value);
         }
@@ -314,7 +314,7 @@ public class RMObject {
 
         protected HierObjectID(String value) {
             if (value == null || value.isEmpty()) {
-                throw new IllegalArgumentException("value vazio");
+                throw new IllegalArgumentException("value is empty");
             }
             this.uidBasedID = RMObjectFactory.newUIDBasedID(value);
         }
@@ -330,7 +330,7 @@ public class RMObject {
 
         protected ObjectID(String value) {
             if (value == null || value.isEmpty()) {
-                throw new IllegalArgumentException("value vazio");
+                throw new IllegalArgumentException("value is empty");
             }
             this.value = value;
         }
@@ -405,7 +405,7 @@ public class RMObject {
                 throw new IllegalArgumentException("null type");
             }
             if (path != null && path.isEmpty()) {
-                throw new IllegalArgumentException("path vazio");
+                throw new IllegalArgumentException("path is empty");
             }
             this.objectRef = RMObjectFactory.newObjectRef(
                     RMObjectFactory.newObjectID(id.getUIDBasedID().getValue()),
@@ -492,13 +492,13 @@ public class RMObject {
                                   List<DvIdentifier> identifiers) {
             if (externalRef == null && name == null && identifiers == null) {
                 throw new IllegalArgumentException(
-                        "externalRef, name, identifiers todos vazios");
+                        "externalRef, name, identifiers todos is emptys");
             }
             if (name != null && name.isEmpty()) {
-                throw new IllegalArgumentException("name vazio");
+                throw new IllegalArgumentException("name is empty");
             }
             if (identifiers != null && identifiers.size() == 0) {
-                throw new IllegalArgumentException("identifiers vazios");
+                throw new IllegalArgumentException("identifiers is emptys");
             }
             this.externalRef = externalRef;
             this.name = name;
@@ -530,7 +530,7 @@ public class RMObject {
                 throw new IllegalArgumentException("null archetypeId");
             }
             if (rmVersion.isEmpty()) {
-                throw new IllegalArgumentException("rmVersion vazio");
+                throw new IllegalArgumentException("rmVersion is empty");
             }
             this.archetypeId = archetypeId;
             this.templateId = templateId;
@@ -575,7 +575,7 @@ public class RMObject {
 
         protected UIDBasedID(String value) {
             if (value.isEmpty()) {
-                throw new IllegalArgumentException("value vazio");
+                throw new IllegalArgumentException("value is empty");
             }
             this.value = value;
         }
@@ -597,7 +597,7 @@ public class RMObject {
                 throw new IllegalArgumentException("null value");
             }
             if (formalism.isEmpty()) {
-                throw new IllegalArgumentException("formalism vazio");
+                throw new IllegalArgumentException("formalism is empty");
             }
             this.dvEncapsulated = dvEncapsulated;
             this.value = value;
@@ -796,10 +796,10 @@ public class RMObject {
                          String formatting,
                          DVURI hyperlink, CodePhrase language, CodePhrase charset) {
             if (mappings != null && mappings.isEmpty()) {
-                throw new IllegalArgumentException("mapping vazio");
+                throw new IllegalArgumentException("mapping is empty");
             }
             if (formatting != null && formatting.isEmpty()) {
-                throw new IllegalArgumentException("formatting vazio");
+                throw new IllegalArgumentException("formatting is empty");
             }
             this.value = value;
             this.mappings = mappings;
@@ -919,7 +919,7 @@ public class RMObject {
         protected DvParagraph(List<DvText> items) {
             if (items == null || items.size() == 0) {
                 throw new IllegalArgumentException(
-                        "null items ou items vazios");
+                        "null items ou items is emptys");
             }
             this.items = items;
         }
@@ -959,7 +959,7 @@ public class RMObject {
                 PartyProxy subject,
                 String versionID) {
             if (systemID.isEmpty()) {
-                throw new IllegalArgumentException("empty null ou vazio");
+                throw new IllegalArgumentException("empty null ou is empty");
             }
             this.systemID = systemID;
             this.provider = provider;
@@ -1010,11 +1010,11 @@ public class RMObject {
             if (originatingSystemItemIDs != null &&
                     originatingSystemItemIDs.size() == 0) {
                 throw new IllegalArgumentException(
-                        "originatingSystemItemIds vazio");
+                        "originatingSystemItemIds is empty");
             }
             if (feederSystemItemIDs != null &&
                     feederSystemItemIDs.size() == 0) {
-                throw new IllegalArgumentException("feederSystemItemIds vazio");
+                throw new IllegalArgumentException("feederSystemItemIds is empty");
             }
             this.originatingSystemAudit = originatingSystemAudit;
             this.originatingSystemItemIDs = originatingSystemItemIDs;
@@ -1067,7 +1067,7 @@ public class RMObject {
                 throw new IllegalArgumentException("null name");
             }
             if (links != null && links.isEmpty()) {
-                throw new IllegalArgumentException("links vazio");
+                throw new IllegalArgumentException("links is empty");
             }
             this.uid = uid;
             this.archetypeNodeId = archetypeNodeId;
@@ -1160,16 +1160,16 @@ public class RMObject {
                         "en");
             }
             if (purpose.isEmpty()) {
-                throw new IllegalArgumentException("purpose vazio");
+                throw new IllegalArgumentException("purpose is empty");
             }
             if (use != null && use.isEmpty()) {
-                throw new IllegalArgumentException("use vazio");
+                throw new IllegalArgumentException("use is empty");
             }
             if (misuse != null && misuse.isEmpty()) {
-                throw new IllegalArgumentException("misuse vazio");
+                throw new IllegalArgumentException("misuse is empty");
             }
             if (copyright != null && copyright.isEmpty()) {
-                throw new IllegalArgumentException("copyright vazio");
+                throw new IllegalArgumentException("copyright is empty");
             }
             this.language = language;
             this.purpose = purpose;
@@ -1536,7 +1536,7 @@ public class RMObject {
 
         protected Contact(Locatable locatable, List<Address> addresses) {
             if (addresses == null || addresses.size() == 0) {
-                throw new IllegalArgumentException("addresses null ou vazio");
+                throw new IllegalArgumentException("addresses null ou is empty");
             }
             this.locatable = locatable;
             this.addresses = addresses;
@@ -1567,14 +1567,14 @@ public class RMObject {
                 throw new IllegalArgumentException("null locatable");
             }
             if (identities == null || identities.isEmpty()) {
-                throw new IllegalArgumentException("identities null ou vazio");
+                throw new IllegalArgumentException("identities null ou is empty");
             }
             if (contacts != null && contacts.isEmpty()) {
-                throw new IllegalArgumentException("contacts vazio");
+                throw new IllegalArgumentException("contacts is empty");
             }
             if (relationships != null) {
                 if (relationships.isEmpty()) {
-                    throw new IllegalArgumentException("relationships vazio");
+                    throw new IllegalArgumentException("relationships is empty");
                 }
             }
             this.locatable = locatable;
@@ -1642,7 +1642,7 @@ public class RMObject {
         protected Role(Party party, List<Capability> capabilities,
                        PartyRef performer) {
             if (capabilities != null && capabilities.size() == 0) {
-                throw new IllegalArgumentException("capabilities vazio");
+                throw new IllegalArgumentException("capabilities is empty");
             }
             if (performer == null) {
                 throw new IllegalArgumentException("null performer");
@@ -1685,10 +1685,10 @@ public class RMObject {
                 throw new IllegalArgumentException("no legal identity");
             }
             if (roles != null && roles.isEmpty()) {
-                throw new IllegalArgumentException("roles vazio");
+                throw new IllegalArgumentException("roles is empty");
             }
             if (languages != null && languages.isEmpty()) {
-                throw new IllegalArgumentException("languages vazio");
+                throw new IllegalArgumentException("languages is empty");
             }
             this.party = party;
             this.roles = roles;
@@ -1772,7 +1772,7 @@ public class RMObject {
                 throw new IllegalArgumentException("null instructionId");
             }
             if (activityId.isEmpty()) {
-                throw new IllegalArgumentException("activityId null ou vazio");
+                throw new IllegalArgumentException("activityId null ou is empty");
             }
             this.instructionId = instructionId;
             this.activityId = activityId;
@@ -1836,7 +1836,7 @@ public class RMObject {
                 throw new IllegalArgumentException("null timing");
             }
             if (actionArchetypeId.isEmpty()) {
-                throw new IllegalArgumentException("actionArchetypeId vazio");
+                throw new IllegalArgumentException("actionArchetypeId is empty");
             }
             this.locatable = locatable;
             this.description = description;
@@ -1871,7 +1871,7 @@ public class RMObject {
             if (otherReferenceRanges != null) {
                 if (otherReferenceRanges.isEmpty()) {
                     throw new IllegalArgumentException(
-                            "otherReferenceRanges vazio");
+                            "otherReferenceRanges is empty");
                 }
                 this.otherReferenceRanges =
                         new ArrayList<ReferenceRange>(otherReferenceRanges);
@@ -2621,7 +2621,7 @@ public class RMObject {
         protected Folder(Locatable locatable, List<Folder> folders,
                          List<ObjectRef> items) {
             if (folders != null && folders.size() == 0) {
-                throw new IllegalArgumentException("sub-folders vazios");
+                throw new IllegalArgumentException("sub-folders is emptys");
             }
             this.locatable = locatable;
             this.folders = folders;
@@ -3247,7 +3247,7 @@ public class RMObject {
                 throw new IllegalArgumentException("null subject");
             }
             if (otherParticipations != null && otherParticipations.isEmpty()) {
-                throw new IllegalArgumentException("otherParticipations vazio");
+                throw new IllegalArgumentException("otherParticipations is empty");
             }
 
             this.contentItem = contentItem;
@@ -3702,6 +3702,32 @@ public class RMObject {
 
         public HistoryWithItemTable getState() {
             return state;
+        }
+    }
+    
+    public static class Section {
+        private final ContentItem contentItem;
+        private final List<ContentItem> items;
+
+        public ContentItem getContentItem() {
+            return contentItem;
+        }
+
+        public List<ContentItem> getItems() {
+            return items;
+        }
+
+        public Section(ContentItem contentItem, List<ContentItem> items) {
+            if(contentItem == null){
+                throw new IllegalArgumentException("null contentItem");
+            }
+            if (items != null && items.isEmpty()) {
+                throw new IllegalArgumentException("items is empty");
+            }
+
+
+            this.contentItem = contentItem;
+            this.items = items;
         }
     }
 }
