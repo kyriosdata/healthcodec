@@ -1587,6 +1587,24 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de EventContext com valor fixo
+     *
+     * @return nova instância de EventContext.
+     */
+    public static EventContext eventContext(){
+        PartyIdentified healthCareFacility = partyIdentified();
+        DvDateTime startTime = dvDateTime();
+        DvDateTime endTime = dvDateTime();
+        List<Participation> participations = participationList(false);
+        String location = "value";
+        DvCodedText setting = dvCodedText();
+        ItemStructure otherContext = itemStructure();
+
+        return RMObjectFactory.newEventContext(healthCareFacility, startTime,
+                endTime, participations, location, setting, otherContext);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia

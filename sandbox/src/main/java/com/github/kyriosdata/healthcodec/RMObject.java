@@ -3730,4 +3730,67 @@ public class RMObject {
             this.items = items;
         }
     }
+
+    public static class EventContext {
+        private final PartyIdentified healthCareFacility;
+        private final DvDateTime startTime;
+        private final DvDateTime endTime;
+        private final List<Participation> participations;
+        private final String location;
+        private final DvCodedText setting;
+        private final ItemStructure otherContext;
+
+        public EventContext(PartyIdentified healthCareFacility,
+                            DvDateTime startTime, DvDateTime endTime,
+                            List<Participation> participations, String location,
+                            DvCodedText setting, ItemStructure otherContext) {
+            if (startTime == null) {
+                throw new IllegalArgumentException("null startTime");
+            }
+            if (participations != null && participations.isEmpty()) {
+                throw new IllegalArgumentException("empty participations");
+            }
+            if (location != null && location.isEmpty()) {
+                throw new IllegalArgumentException("empty location");
+            }
+            if(setting == null) {
+                throw new IllegalArgumentException("null setting");
+            }
+            this.healthCareFacility = healthCareFacility;
+            this.startTime = startTime;
+            this.endTime = endTime;
+            this.participations = participations;
+            this.location = location;
+            this.setting = setting;
+            this.otherContext = otherContext;
+        }
+
+        public PartyIdentified getHealthCareFacility() {
+            return healthCareFacility;
+        }
+
+        public DvDateTime getStartTime() {
+            return startTime;
+        }
+
+        public DvDateTime getEndTime() {
+            return endTime;
+        }
+
+        public List<Participation> getParticipations() {
+            return participations;
+        }
+
+        public String getLocation() {
+            return location;
+        }
+
+        public DvCodedText getSetting() {
+            return setting;
+        }
+
+        public ItemStructure getOtherContext() {
+            return otherContext;
+        }
+    }
 }

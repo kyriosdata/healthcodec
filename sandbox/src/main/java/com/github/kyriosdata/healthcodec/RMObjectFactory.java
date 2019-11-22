@@ -740,4 +740,12 @@ public class RMObjectFactory {
                                      List<ContentItem> items){
         return new Section(contentItem, items);
     }
+
+    public static EventContext newEventContext(
+            PartyIdentified healthCareFacility,DvDateTime startTime,
+            DvDateTime endTime, List<Participation> participations,
+            String location, DvCodedText setting, ItemStructure otherContext){
+        return new EventContext(healthCareFacility, startTime, endTime,
+            participations, location, setting, otherContext);
+    }
 }

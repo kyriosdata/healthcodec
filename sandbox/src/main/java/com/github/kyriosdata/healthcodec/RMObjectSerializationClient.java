@@ -3410,6 +3410,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de EventContext.
+     *
+     * @param e
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeEventContext(EventContext e) {
+        EventContextSerializer s = new EventContextSerializer();
+        register(EVENTCONTEXT, offset);
+        setOffset(s.serialize(buffer, offset, e));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de EventContext.
+     *
+     * @return nova instância de EventContext.
+     */
+    @Override
+    public EventContext deserializeEventContext() {
+        EventContextSerializer d = new EventContextSerializer();
+        return d.deserialize(buffer, getOffsetFromID(EVENTCONTEXT));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id

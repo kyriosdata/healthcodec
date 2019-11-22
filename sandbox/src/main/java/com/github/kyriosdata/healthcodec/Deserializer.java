@@ -788,4 +788,10 @@ public interface Deserializer {
      * @return nova instância de Section
      */
     RMObject.Section deserializeSection();
+
+    /**
+     * Deserializador de EventContext.
+     * @return nova instância de EventContext
+     */
+    RMObject.EventContext deserializeEventContext();
 }

@@ -8892,6 +8892,144 @@ public class RMObjectSerialization {
         }
     }
 
+    public static class EventContextSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                PartyIdentified healthCareFacility,
+                                DvDateTime startTime, DvDateTime endTime,
+                                List<Participation> participations,
+                                String location, DvCodedText setting,
+                                ItemStructure otherContext){
+            int meta = offset;
+            int position = offset + 7 * PrimitiveTypeSize.INT.getSize()
+                + 5 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasHealthCareFacility = healthCareFacility != null;
+            boolean hasEndTime = endTime != null;
+            boolean hasParticipations = participations != null;
+            boolean hasLocation = location != null;
+            boolean hasOtherContext = otherContext != null;
+
+            PartyIdentifiedSerializer pis = new PartyIdentifiedSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            ParticipationSerializer ps = new ParticipationSerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            meta = writeHeader(buffer, meta, hasHealthCareFacility, position);
+            if(hasHealthCareFacility){
+                position = pis.serialize(buffer, position, healthCareFacility);
+            }
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, startTime);
+
+            meta = writeHeader(buffer, meta, hasEndTime, position);
+            if(hasEndTime){
+                position = dts.serialize(buffer, position, endTime);
+            }
+
+            meta = writeHeader(buffer, meta, hasParticipations, position);
+            if(hasParticipations){
+                position = ps.listSerialize(buffer, position, participations);
+            }
+
+            meta = writeHeader(buffer, meta, hasLocation, position);
+            if(hasLocation){
+                position = stringSerialization(buffer, position, location);
+            }
+
+            meta = writeHeader(buffer, meta, position);
+            position = dcs.serialize(buffer, position, setting);
+
+            meta = writeHeader(buffer, meta, hasOtherContext, position);
+            position = iss.serialize(buffer, position, otherContext);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, EventContext e){
+            int position = offset;
+
+            EventContextSerializer ecs = new EventContextSerializer();
+
+            position = ecs.serialize(buffer, position, e.getHealthCareFacility(),
+                    e.getStartTime(), e.getEndTime(), e.getParticipations(),
+                    e.getLocation(), e.getSetting(), e.getOtherContext());
+
+            return position;
+        }
+
+        protected EventContext deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            PartyIdentifiedSerializer pis = new PartyIdentifiedSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            ParticipationSerializer ps = new ParticipationSerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            boolean hasHealthCareFacility = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            PartyIdentified healthCareFacility = null;
+            if(hasHealthCareFacility){
+                int healthCareFacilityPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                healthCareFacility = pis.deserialize(buffer,
+                        healthCareFacilityPosition);
+            }
+            int startTimePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDateTime startTime = dts.deserialize(buffer, startTimePosition);
+
+            boolean hasEndTime = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvDateTime endTime = null;
+            if(hasEndTime){
+                int endTimePosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                endTime = dts.deserialize(buffer, endTimePosition);
+            }
+
+            boolean hasParticipations = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            List<Participation> participations = null;
+            if(hasParticipations){
+                int participationPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                participations = ps.deserializeList(buffer,
+                        participationPosition);
+            }
+
+            boolean hasLocation = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            String location = null;
+            if(hasLocation){
+                int locationPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                location = stringDeserialization(buffer,
+                        locationPosition);
+            }
+
+            int settingPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvCodedText setting = dcs.deserialize(buffer, settingPosition);
+
+            boolean hasOtherContext = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            ItemStructure otherContext = null;
+            if(hasOtherContext){
+                int otherContextPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+               otherContext = iss.deserialize(buffer,
+                        otherContextPosition);
+            }
+
+            return RMObjectFactory.newEventContext(healthCareFacility,
+                    startTime, endTime, participations, location, setting,
+                    otherContext);
+        }
+    }
+
     /**
      * Escreve o valor inteiro do header de um determinado parâmetro que será
      * serializado em uma posição do buffer

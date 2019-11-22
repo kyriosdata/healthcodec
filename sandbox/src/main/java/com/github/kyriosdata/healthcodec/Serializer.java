@@ -1192,5 +1192,14 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeSection(Section s);
 
+    /**
+     * Serializador de EventContext.
+     *
+     * @param e
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeEventContext(EventContext e);
+
 
 }

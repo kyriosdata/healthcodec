@@ -124,7 +124,8 @@ public enum RMObjectID {
     EVALUATION(101),
     INSTRUCTION(102),
     OBSERVATION(103),
-    SECTION(104);
+    SECTION(104),
+    EVENTCONTEXT(105);
 
     
     private final int value;
