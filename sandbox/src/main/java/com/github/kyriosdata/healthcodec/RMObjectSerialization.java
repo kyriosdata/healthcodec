@@ -9030,6 +9030,207 @@ public class RMObjectSerialization {
         }
     }
 
+    public static class CompositionSerializer {
+        protected int serialize(Buffer buffer, int offset, Locatable locatable,
+                                List<ContentItem> content, CodePhrase language,
+                                EventContext context, PartyProxy composer,
+                                DvCodedText category, CodePhrase territory){
+            int meta = offset;
+            int position = offset + 7 * PrimitiveTypeSize.INT.getSize()
+                + 2 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasContent = content != null;
+            boolean hasContext = context != null;
+
+            LocatableSerializer ls = new LocatableSerializer();
+            ContentItemSerializer cis = new ContentItemSerializer();
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            EventContextSerializer ecs = new EventContextSerializer();
+            PartyProxySerializer pps = new PartyProxySerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = ls.serialize(buffer, position, locatable);
+
+            meta = writeHeader(buffer, meta, hasContent, position);
+            if(hasContent){
+                position = cis.listSerialize(buffer, position, content);
+            }
+
+            meta = writeHeader(buffer, meta, position);
+            position = cps.serialize(buffer, position, language);
+
+            meta = writeHeader(buffer, meta, hasContext, position);
+            if(hasContext){
+                position = ecs.serialize(buffer, position, context);
+            }
+
+            meta = writeHeader(buffer, meta, position);
+            position = pps.serialize(buffer, position, composer);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dcs.serialize(buffer, position, category);
+
+            meta = writeHeader(buffer, meta, position);
+            position = cps.serialize(buffer, position ,territory);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, Composition c){
+            int position = offset;
+
+            CompositionSerializer cps = new CompositionSerializer();
+
+            position = cps.serialize(buffer, position, c.getLocatable(),
+                    c.getContent(), c.getLanguage(), c.getContext(),
+                    c.getComposer(), c.getCategory(), c.getTerritory());
+
+            return position;
+        }
+
+        protected Composition deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            LocatableSerializer ls = new LocatableSerializer();
+            ContentItemSerializer cis = new ContentItemSerializer();
+            CodePhraseSerializer cps = new CodePhraseSerializer();
+            EventContextSerializer ecs = new EventContextSerializer();
+            PartyProxySerializer pps = new PartyProxySerializer();
+            DvCodedTextSerializer dcs = new DvCodedTextSerializer();
+
+            int locatablePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            Locatable locatable = ls.deserialize(buffer, locatablePosition);
+
+            boolean hasContent = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            List<ContentItem> content = null;
+            if(hasContent){
+                int contentPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                content = cis.deserializeList(buffer, contentPosition);
+            }
+
+            int languagePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            CodePhrase language = cps.deserialize(buffer, languagePosition);
+
+            boolean hasContext = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            EventContext context = null;
+            if(hasContext){
+                int contextPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                context = ecs.deserialize(buffer, contextPosition);
+            }
+
+            int composerPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            PartyProxy composer = pps.deserialize(buffer, composerPosition);
+
+            int categoryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvCodedText category = dcs.deserialize(buffer, categoryPosition);
+
+            int territoryPosition = buffer.readInteger(position);
+            CodePhrase territory = cps.deserialize(buffer, territoryPosition);
+
+            return RMObjectFactory.newComposition(locatable, content, language,
+                    context, composer, category, territory);
+        }
+    }
+
+    public static class EHRSerializer {
+        protected int serialize(Buffer buffer, int offset, HierObjectID systemID,
+                                HierObjectID ehrID, DvDateTime timeCreated,
+                                List<ObjectRef> contributions,
+                                ObjectRef ehrStatus, ObjectRef directory,
+                                List<ObjectRef> compositions){
+            int meta = offset;
+            int position = offset + 7 * PrimitiveTypeSize.INT.getSize();
+
+            HierObjectIDSerializer hs = new HierObjectIDSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            ObjectRefSerializer ors = new ObjectRefSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = hs.serialize(buffer, position, systemID);
+
+            meta = writeHeader(buffer, meta, position);
+            position = hs.serialize(buffer, position, ehrID);
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, timeCreated);
+
+            meta = writeHeader(buffer, meta, position);
+            position = ors.listSerialize(buffer, position, contributions);
+
+            meta = writeHeader(buffer, meta, position);
+            position = ors.serialize(buffer, position, ehrStatus);
+
+            meta = writeHeader(buffer, meta, position);
+            position = ors.serialize(buffer, position, directory);
+
+            meta = writeHeader(buffer, meta, position);
+            position = ors.listSerialize(buffer, position, compositions);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, EHR e){
+            int position = offset;
+
+            EHRSerializer es = new EHRSerializer();
+
+            position = es.serialize(buffer, position, e.getSystemID(),
+                    e.getEhrID(), e.getTimeCreated(), e.getContributions(),
+                    e.getEhrStatus(), e.getDirectory(), e.getCompositions());
+
+            return position;
+        }
+
+        protected EHR deserialize(Buffer buffer, int offset){
+            int position = offset;
+            HierObjectIDSerializer hs = new HierObjectIDSerializer();
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            ObjectRefSerializer ors = new ObjectRefSerializer();
+
+            int systemIDposition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            HierObjectID systemID = hs.deserialize(buffer, systemIDposition);
+
+            int ehrIDposition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            HierObjectID ehrID = hs.deserialize(buffer, ehrIDposition);
+
+            int timeCreatedPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDateTime timeCreated = dts.deserialize(buffer,
+                    timeCreatedPosition);
+
+            int contributionsPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            List<ObjectRef> contributions = ors.deserializeList(buffer,
+                    contributionsPosition);
+
+            int ehrStatusPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            ObjectRef ehrStatus = ors.deserialize(buffer, ehrStatusPosition);
+
+            int directoryPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            ObjectRef directory = ors.deserialize(buffer, directoryPosition);
+
+            int compositionPosition = buffer.readInteger(position);
+            List<ObjectRef> compositions = ors.deserializeList(buffer,
+                    compositionPosition);
+
+            return RMObjectFactory.newEHR(systemID, ehrID, timeCreated,
+                    contributions, ehrStatus, directory, compositions);
+        }
+    }
+
     /**
      * Escreve o valor inteiro do header de um determinado parâmetro que será
      * serializado em uma posição do buffer

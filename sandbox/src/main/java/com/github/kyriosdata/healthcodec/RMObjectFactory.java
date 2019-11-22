@@ -748,4 +748,23 @@ public class RMObjectFactory {
         return new EventContext(healthCareFacility, startTime, endTime,
             participations, location, setting, otherContext);
     }
+
+    public static Composition newComposition(Locatable locatable,
+                                             List<ContentItem> content,
+                                             CodePhrase language,
+                                             EventContext context,
+                                             PartyProxy composer,
+                                             DvCodedText category,
+                                             CodePhrase territory){
+        return new Composition(locatable, content, language, context, composer,
+                category, territory);
+    }
+
+    public static EHR newEHR(HierObjectID systemID, HierObjectID ehrID,
+                             DvDateTime timeCreated, List<ObjectRef> contributions,
+                             ObjectRef ehrStatus, ObjectRef directory,
+                             List<ObjectRef> compositions){
+        return new EHR(systemID, ehrID, timeCreated, contributions, ehrStatus,
+                directory, compositions);
+    }
 }

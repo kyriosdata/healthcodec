@@ -3423,7 +3423,6 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
 
         return this;
     }
-
     /**
      * Deserializador de EventContext.
      *
@@ -3434,6 +3433,59 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         EventContextSerializer d = new EventContextSerializer();
         return d.deserialize(buffer, getOffsetFromID(EVENTCONTEXT));
     }
+
+    /**
+     * Serializador de Composition.
+     *
+     * @param c
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeComposition(Composition c) {
+        CompositionSerializer s = new CompositionSerializer();
+        register(COMPOSITION, offset);
+        setOffset(s.serialize(buffer, offset, c));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Composition.
+     *
+     * @return nova instância de Composition.
+     */
+    @Override
+    public Composition deserializeComposition() {
+        CompositionSerializer d = new CompositionSerializer();
+        return d.deserialize(buffer, getOffsetFromID(COMPOSITION));
+    }
+
+    /**
+     * Serializador de EHR.
+     *
+     * @param e
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeEHR(RMObject.EHR e) {
+        EHRSerializer s = new EHRSerializer();
+        register(EHR, offset);
+        setOffset(s.serialize(buffer, offset, e));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de EHR.
+     *
+     * @return nova instância de EHR.
+     */
+    @Override
+    public EHR deserializeEHR() {
+        EHRSerializer d = new EHRSerializer();
+        return d.deserialize(buffer, getOffsetFromID(EHR));
+    }
+
 
     /**
      * Método para registrar um determinado objeto no índice

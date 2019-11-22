@@ -190,6 +190,34 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de EHR com valor fixo.
+     *
+     * @return instância de EHR
+     */
+    public static EHR eHR(){
+        List<ObjectRef> contributions = new ArrayList<>();
+        ObjectRef contribution = RMObjectFactory.newObjectRef(objectID(),
+                "namespace", "CONTRIBUTION");
+        contributions.add(contribution);
+
+        List<ObjectRef> compositions = new ArrayList<>();
+        ObjectRef composition = RMObjectFactory.newObjectRef(objectID(),
+                "namespace", "VERSIONED_COMPOSITION");
+        compositions.add(composition);
+
+        HierObjectID systemID = hierObjectID();
+        HierObjectID ehrID = hierObjectID();
+        DvDateTime timeCreated = dvDateTime();
+        ObjectRef ehrStatus = objectRef();
+        ObjectRef directory = RMObjectFactory.newObjectRef(objectID(),
+                "namespace", "VERSIONED_FOLDER");
+        contributions.add(contribution);
+
+        return RMObjectFactory.newEHR(systemID, ehrID, timeCreated,
+                contributions, ehrStatus, directory, compositions);
+    }
+
+    /**
      * Cria uma instância de LocatableRef com valor fixo.
      *
      * @return instância de LocatableRef
@@ -1602,6 +1630,24 @@ public class RMObjectTestHelper {
 
         return RMObjectFactory.newEventContext(healthCareFacility, startTime,
                 endTime, participations, location, setting, otherContext);
+    }
+
+    /**
+     * Cria uma instância de Composition com valor fixo
+     *
+     * @return nova instância de Composition.
+     */
+    public static Composition composition(){
+        Locatable locatable = locatable();
+        List<ContentItem> content = contentItemList(false);
+        CodePhrase language = codePhrase();
+        EventContext context = eventContext();
+        PartyProxy composer = partyProxy();
+        DvCodedText category = dvCodedText();
+        CodePhrase territory = codePhrase();
+
+        return RMObjectFactory.newComposition(locatable, content, language,
+                context, composer, category, territory);
     }
 
     /**

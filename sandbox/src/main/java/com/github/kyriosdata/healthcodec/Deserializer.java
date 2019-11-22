@@ -794,4 +794,16 @@ public interface Deserializer {
      * @return nova instância de EventContext
      */
     RMObject.EventContext deserializeEventContext();
+
+    /**
+     * Deserializador de Composition.
+     * @return nova instância de Composition
+     */
+    RMObject.Composition deserializeComposition();
+
+    /**
+     * Deserializador de EHR.
+     * @return nova instância de EHR
+     */
+    RMObject.EHR deserializeEHR();
 }

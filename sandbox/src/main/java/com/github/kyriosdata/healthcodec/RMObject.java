@@ -3759,7 +3759,8 @@ public class RMObject {
             this.healthCareFacility = healthCareFacility;
             this.startTime = startTime;
             this.endTime = endTime;
-            this.participations = participations;
+            this.participations = ( participations == null ?
+                    null : new ArrayList<Participation>(participations) );
             this.location = location;
             this.setting = setting;
             this.otherContext = otherContext;
@@ -3791,6 +3792,164 @@ public class RMObject {
 
         public ItemStructure getOtherContext() {
             return otherContext;
+        }
+    }
+
+    public static class Composition {
+        private final Locatable locatable;
+        private final List<ContentItem> content;
+        private final CodePhrase language;
+        private final EventContext context;
+        private final PartyProxy composer;
+        private final DvCodedText category;
+        private final CodePhrase territory;
+
+        public Composition(Locatable locatable, List<ContentItem> content,
+                           CodePhrase language, EventContext context,
+                           PartyProxy composer, DvCodedText category,
+                           CodePhrase territory) {
+            if(locatable == null){
+                throw new IllegalArgumentException("null locatable");
+            }
+            if (content != null && content.isEmpty()) {
+                throw new IllegalArgumentException("empty content");
+            }
+            if (composer == null) {
+                throw new IllegalArgumentException("null composer");
+            }
+            if (language == null) {
+                throw new IllegalArgumentException("null language");
+            }
+            if (category == null) {
+                throw new IllegalArgumentException("null category");
+            }
+            if(category.getDefiningCode().getCodeString().equals("persistent")
+                    && context != null){
+                throw new IllegalArgumentException("invalid persistent category");
+            }
+            if (territory == null) {
+                throw new IllegalArgumentException("null territory");
+            }
+
+            this.locatable = locatable;
+            this.content = content;
+            this.language = language;
+            this.context = context;
+            this.composer = composer;
+            this.category = category;
+            this.territory = territory;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public List<ContentItem> getContent() {
+            return content;
+        }
+
+        public CodePhrase getLanguage() {
+            return language;
+        }
+
+        public EventContext getContext() {
+            return context;
+        }
+
+        public PartyProxy getComposer() {
+            return composer;
+        }
+
+        public DvCodedText getCategory() {
+            return category;
+        }
+
+        public CodePhrase getTerritory() {
+            return territory;
+        }
+    }
+
+    public static class EHR {
+        private final HierObjectID systemID;
+        private final HierObjectID ehrID;
+        private final DvDateTime timeCreated;
+        private final List<ObjectRef> contributions;
+        private final ObjectRef ehrStatus;
+        private final ObjectRef directory;
+        private final List<ObjectRef> compositions;
+
+        public HierObjectID getSystemID() {
+            return systemID;
+        }
+
+        public HierObjectID getEhrID() {
+            return ehrID;
+        }
+
+        public DvDateTime getTimeCreated() {
+            return timeCreated;
+        }
+
+        public List<ObjectRef> getContributions() {
+            return contributions;
+        }
+
+        public ObjectRef getEhrStatus() {
+            return ehrStatus;
+        }
+
+        public ObjectRef getDirectory() {
+            return directory;
+        }
+
+        public List<ObjectRef> getCompositions() {
+            return compositions;
+        }
+
+        public EHR(HierObjectID systemID, HierObjectID ehrID,
+                   DvDateTime timeCreated, List<ObjectRef> contributions,
+                   ObjectRef ehrStatus, ObjectRef directory,
+                   List<ObjectRef> compositions) {
+            if (systemID == null) {
+                throw new IllegalArgumentException("null systemID");
+            }
+            if (ehrID == null) {
+                throw new IllegalArgumentException("null ehrID");
+            }
+            if (timeCreated == null) {
+                throw new IllegalArgumentException("null timeCreated");
+            }
+            if (contributions == null) {
+                throw new IllegalArgumentException("null contributions");
+            }
+            for (ObjectRef ref : contributions) {
+                if (! "CONTRIBUTION".equals(ref.getType())) {
+                    throw new IllegalArgumentException(
+                            "non-contribution type object reference");
+                }
+            }
+            if (compositions == null) {
+                throw new IllegalArgumentException("null compositions");
+            }
+            for (ObjectRef ref : compositions) {
+                if (! "VERSIONED_COMPOSITION".equals(
+                        ref.getType())) {
+                    throw new IllegalArgumentException(
+                            "non-versioned_composition type object reference");
+                }
+            }
+            if (directory != null && !"VERSIONED_FOLDER".equals(
+                    directory.getType())) {
+                throw new IllegalArgumentException(
+                        "non-versioned_folder type object reference");
+            }
+            this.systemID = systemID;
+            this.ehrID = ehrID;
+            this.timeCreated = timeCreated;
+            this.contributions = contributions;
+            this.ehrStatus = ehrStatus;
+            this.directory = directory;
+            this.compositions = compositions;
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.github.kyriosdata.healthcodec.composition.content;
+package com.github.kyriosdata.healthcodec.composition;
 
 import com.github.kyriosdata.healthcodec.RMObject.EventContext;
 import com.github.kyriosdata.healthcodec.RMObjectFactory;

@@ -1201,5 +1201,21 @@ public interface Serializer {
      */
     RMObjectSerializationClient serializeEventContext(EventContext e);
 
+    /**
+     * Serializador de Composition.
+     *
+     * @param c
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeComposition(Composition c);
 
+    /**
+     * Serializador de EHR.
+     *
+     * @param c
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeEHR(EHR e);
 }
