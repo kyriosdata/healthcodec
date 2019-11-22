@@ -779,4 +779,9 @@ public class RMObjectFactory {
     public static EHRAccess newEHRAccess(Locatable locatable){
         return new EHRAccess(locatable);
     }
+
+    public static XTerminology newXTerminology(ItemStructure itemStructure){
+        return new XTerminology(itemStructure);
+    }
+
 }

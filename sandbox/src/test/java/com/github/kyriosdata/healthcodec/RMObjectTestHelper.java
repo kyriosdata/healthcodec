@@ -1677,6 +1677,17 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de XTerminology com valor fixo
+     *
+     * @return nova instância de XTerminology.
+     */
+    public static XTerminology xTerminology(){
+        ItemStructure itemStructure = itemStructure();
+
+        return RMObjectFactory.newXTerminology(itemStructure);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia

@@ -4011,4 +4011,20 @@ public class RMObject {
             return locatable;
         }
     }
+
+    public static class XTerminology {
+        private final ItemStructure itemStructure;
+
+        public XTerminology(ItemStructure itemStructure) {
+            if(itemStructure == null){
+                throw new IllegalArgumentException("null item structure");
+            }
+            this.itemStructure = itemStructure;
+        }
+
+        public ItemStructure getItemStructure() {
+            return itemStructure;
+        }
+    }
+
 }

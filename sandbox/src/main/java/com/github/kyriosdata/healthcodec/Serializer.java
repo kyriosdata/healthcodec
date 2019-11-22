@@ -1236,4 +1236,13 @@ public interface Serializer {
      *
      */
     RMObjectSerializationClient serializeEHRAccess(EHRAccess e);
+
+    /**
+     * Serializador de XTerminology.
+     *
+     * @param t
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeXTerminology(XTerminology t);
 }

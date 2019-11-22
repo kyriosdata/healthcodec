@@ -3538,6 +3538,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
         return d.deserialize(buffer, getOffsetFromID(EHRACCESS));
     }
 
+    /**
+     * Serializador de XTerminology.
+     *
+     * @param t
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeXTerminology(XTerminology t) {
+        XTerminologySerializer s = new XTerminologySerializer();
+        register(XTERMINOLOGY, offset);
+        setOffset(s.serialize(buffer, offset, t));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de XTerminology.
+     *
+     * @return nova instância de XTerminology.
+     */
+    @Override
+    public XTerminology deserializeXTerminology() {
+        XTerminologySerializer d = new XTerminologySerializer();
+        return d.deserialize(buffer, getOffsetFromID(XTERMINOLOGY));
+    }
+
 
     /**
      * Método para registrar um determinado objeto no índice

@@ -9353,6 +9353,39 @@ public class RMObjectSerialization {
         }
     }
 
+    public static class XTerminologySerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                ItemStructure itemStructure){
+            int position = offset;
+
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            position = iss.serialize(buffer, position, itemStructure);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, XTerminology t){
+            int position = offset;
+
+            XTerminologySerializer xts = new XTerminologySerializer();
+
+            position = xts.serialize(buffer, position, t.getItemStructure());
+
+            return position;
+        }
+
+        protected XTerminology deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            ItemStructure itemStructure = iss.deserialize(buffer, position);
+
+            return RMObjectFactory.newXTerminology(itemStructure);
+        }
+    }
+
     /**
      * Escreve o valor inteiro do header de um determinado parâmetro que será
      * serializado em uma posição do buffer

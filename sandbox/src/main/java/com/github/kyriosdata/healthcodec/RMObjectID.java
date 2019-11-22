@@ -129,7 +129,8 @@ public enum RMObjectID {
     COMPOSITION(106),
     EHR(107),
     EHRSTATUS(108),
-    EHRACCESS(109);
+    EHRACCESS(109),
+    XTERMINOLOGY(110);
 
     
     private final int value;

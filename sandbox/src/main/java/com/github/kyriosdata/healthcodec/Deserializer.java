@@ -818,4 +818,10 @@ public interface Deserializer {
      * @return nova instância de EHRAccess
      */
     RMObject.EHRAccess deserializeEHRAccess();
+
+    /**
+     * Deserializador de XTerminology.
+     * @return nova instância de XTerminology
+     */
+    RMObject.XTerminology deserializeXTerminology();
 }
