@@ -830,4 +830,10 @@ public interface Deserializer {
      * @return nova instância de XComposition
      */
     RMObject.XComposition deserializeXComposition();
+
+    /**
+     * Deserializador de XDemographics.
+     * @return nova instância de XDemographics
+     */
+    RMObject.XDemographics deserializeXDemographics();
 }

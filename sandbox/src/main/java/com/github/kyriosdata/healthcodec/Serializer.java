@@ -1249,9 +1249,18 @@ public interface Serializer {
     /**
      * Serializador de XComposition.
      *
-     * @param t
+     * @param c
      * @return Instância de RMObjectSerializationClient para chaining
      *
      */
     RMObjectSerializationClient serializeXComposition(XComposition c);
+
+    /**
+     * Serializador de XDemographics.
+     *
+     * @param c
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeXDemographics(XDemographics c);
 }

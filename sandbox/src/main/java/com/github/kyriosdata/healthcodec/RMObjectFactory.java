@@ -789,4 +789,9 @@ public class RMObjectFactory {
                                                Composition composition ){
         return new XComposition(primary, originalPath, composition);
     }
+
+    public static XDemographics newXDemographics(Map<ObjectID, Party> parties,
+                                                 ItemStructure details){
+        return new XDemographics(parties, details);
+    }
 }

@@ -1702,6 +1702,18 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de xDemographics com valor fixo
+     *
+     * @return nova instância de xDemographics.
+     */
+    public static XDemographics xDemographics(){
+        Map<ObjectID, Party> parties = objectIDPartyMap(false);
+        ItemStructure details = itemStructure();
+
+        return RMObjectFactory.newXDemographics(parties, details);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
@@ -1945,6 +1957,8 @@ public class RMObjectTestHelper {
 
         return list;
     }
+
+
 
     /**
      * Método que gera uma lista de AuditDetails
@@ -2298,6 +2312,25 @@ public class RMObjectTestHelper {
         map.put("key1", "value");
         map.put("key2", "value");
         map.put("key3", "value");
+
+        return map;
+    }
+
+    /**
+     * Método que gera um map de String, String
+     *
+     * @param emptyMap map vazio
+     *
+     * @return map
+     */
+    public static Map<ObjectID, Party> objectIDPartyMap(boolean emptyMap){
+        Map<ObjectID, Party> map = new HashMap<>();
+        if(emptyMap){
+            return map;
+        }
+        ObjectID key = objectID();
+        Party value = party(false);
+        map.put(key, value);
 
         return map;
     }

@@ -639,6 +639,62 @@ public class RMObjectSerialization {
 
             return RMObjectFactory.newObjectID(value);
         }
+
+        protected int mapSerialization(Buffer buffer, int offset,
+                                       Map<ObjectID, Party> map)
+        {
+            int meta = offset;
+            int mapSize = map.size();
+            int position = offset
+                    + mapSize * (2 * PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+            ObjectIDSerializer ois = new ObjectIDSerializer();
+            PartySerializer ps = new PartySerializer();
+
+            meta = writeHeader(buffer, meta, mapSize);
+            if (mapSize == 0){
+                return meta;
+            }
+
+            for (Map.Entry<ObjectID, Party> entry : map.entrySet()){
+                ObjectID key = entry.getKey();
+                Party value = entry.getValue();
+
+                meta = writeHeader(buffer, meta, position);
+                position = ois.serialize(buffer, position, key);
+                meta = writeHeader(buffer, meta, position);
+                position = ps.serialize(buffer, position, value);
+            }
+
+            return position;
+        }
+
+        protected Map<ObjectID, Party> mapDeserialization(
+                Buffer buffer, int offset){
+            int position = offset;
+            int mapSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            ObjectIDSerializer ois = new ObjectIDSerializer();
+            PartySerializer ps = new PartySerializer();
+            Map<ObjectID, Party> map = new HashMap<>();
+            if (mapSize == 0){
+                return map;
+            }
+
+            for (int i = 0; i < mapSize; i++){
+                int keyPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                int valuePosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                ObjectID key = ois.deserialize(buffer, keyPosition);
+                Party value = ps.deserialize(buffer, valuePosition);
+
+                map.put(key, value);
+            }
+
+            return map;
+        }
     }
 
     static class PartyRefSerializer {
@@ -9439,6 +9495,73 @@ public class RMObjectSerialization {
 
             return RMObjectFactory.newXComposition(primary, originalPath,
                     composition);
+        }
+    }
+
+    public static class XDemographicsSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                Map<ObjectID, Party> parties,
+                                ItemStructure details){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize()
+                    + 2 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasParties = parties != null;
+            boolean hasDetails = details != null;
+
+            ObjectIDSerializer ois = new ObjectIDSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            meta = writeHeader(buffer, meta, hasParties, position);
+            if(hasParties){
+                position = ois.mapSerialization(buffer, position, parties);
+            }
+
+            meta = writeHeader(buffer, meta, hasDetails, position);
+            if(hasDetails){
+                position = iss.serialize(buffer, position, details);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, XDemographics d){
+            int position = offset;
+
+            XDemographicsSerializer xds = new XDemographicsSerializer();
+
+            position = xds.serialize(buffer, position, d.getParties(),
+                    d.getDetails());
+
+            return position;
+        }
+
+        protected XDemographics deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            ObjectIDSerializer ois = new ObjectIDSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            boolean hasParties = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            Map<ObjectID, Party> parties = null;
+            if(hasParties){
+                int partiesPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                parties = ois.mapDeserialization(buffer,
+                        partiesPosition);
+            }
+
+            boolean hasDetails = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            ItemStructure details = null;
+            if(hasDetails){
+                int detailsPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.BOOLEAN.getSize();
+                details = iss.deserialize(buffer, detailsPosition);
+            }
+
+            return RMObjectFactory.newXDemographics(parties, details);
         }
     }
 

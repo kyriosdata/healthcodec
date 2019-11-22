@@ -3591,6 +3591,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de XComposition.
+     *
+     * @param c
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeXDemographics(XDemographics c) {
+        XDemographicsSerializer s = new XDemographicsSerializer();
+        register(XDEMOGRAPHICS, offset);
+        setOffset(s.serialize(buffer, offset, c));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de XComposition.
+     *
+     * @return nova instância de XComposition.
+     */
+    @Override
+    public XDemographics deserializeXDemographics() {
+        XDemographicsSerializer d = new XDemographicsSerializer();
+        return d.deserialize(buffer, getOffsetFromID(XDEMOGRAPHICS));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id

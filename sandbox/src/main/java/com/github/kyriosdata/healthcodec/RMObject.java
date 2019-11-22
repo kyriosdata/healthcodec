@@ -4057,4 +4057,27 @@ public class RMObject {
             return composition;
         }
     }
+
+    public static class XDemographics {
+        private final Map<ObjectID, Party> parties;
+        private final ItemStructure details;
+
+        public XDemographics(Map<ObjectID, Party> parties,
+                             ItemStructure details) {
+            if(parties != null && parties.isEmpty()) {
+                throw new IllegalArgumentException("empty paries");
+            }
+            this.parties = parties;
+            this.details = details;
+        }
+
+        public Map<ObjectID, Party> getParties() {
+            return parties;
+        }
+
+        public ItemStructure getDetails() {
+            return details;
+        }
+    }
+
 }
