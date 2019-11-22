@@ -3643,6 +3643,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de XAccessControl.
+     *
+     * @param a
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeXAccessControl(XAccessControl a) {
+        XAccessControlSerializer s = new XAccessControlSerializer();
+        register(XACCESSCONTROL, offset);
+        setOffset(s.serialize(buffer, offset, a));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de XAccessControl.
+     *
+     * @return nova instância de XAccessControl.
+     */
+    @Override
+    public XAccessControl deserializeXAccessControl() {
+        XAccessControlSerializer d = new XAccessControlSerializer();
+        return d.deserialize(buffer, getOffsetFromID(XACCESSCONTROL));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id

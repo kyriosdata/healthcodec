@@ -799,4 +799,9 @@ public class RMObjectFactory {
                                      List<XComposition> compositions){
         return new XFolder(locatable, folders, compositions);
     }
+
+    public static XAccessControl newXAccessControl(Map<ObjectID, Party> groups,
+                                                   ItemStructure details){
+        return new XAccessControl(groups, details);
+    }
 }

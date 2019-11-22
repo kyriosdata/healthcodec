@@ -9594,7 +9594,6 @@ public class RMObjectSerialization {
             ItemStructure details = null;
             if(hasDetails){
                 int detailsPosition = buffer.readInteger(position);
-                position += PrimitiveTypeSize.BOOLEAN.getSize();
                 details = iss.deserialize(buffer, detailsPosition);
             }
 
@@ -9713,6 +9712,72 @@ public class RMObjectSerialization {
             }
 
             return list;
+        }
+    }
+
+    public static class XAccessControlSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                Map<ObjectID, Party> groups,
+                                ItemStructure details){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize()
+                    + 2 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasParties = groups != null;
+            boolean hasDetails = details != null;
+
+            ObjectIDSerializer ois = new ObjectIDSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            meta = writeHeader(buffer, meta, hasParties, position);
+            if(hasParties){
+                position = ois.mapSerialization(buffer, position, groups);
+            }
+
+            writeHeader(buffer, meta, hasDetails, position);
+            if(hasDetails){
+                position = iss.serialize(buffer, position, details);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, XAccessControl d){
+            int position = offset;
+
+            XAccessControlSerializer xds = new XAccessControlSerializer();
+
+            position = xds.serialize(buffer, position, d.getGroups(),
+                    d.getDetails());
+
+            return position;
+        }
+
+        protected XAccessControl deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            ObjectIDSerializer ois = new ObjectIDSerializer();
+            ItemStructureSerializer iss = new ItemStructureSerializer();
+
+            boolean hasParties = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            Map<ObjectID, Party> groups = null;
+            if(hasParties){
+                int groupsPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                groups = ois.mapDeserialization(buffer,
+                        groupsPosition);
+            }
+
+            boolean hasDetails = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            ItemStructure details = null;
+            if(hasDetails){
+                int detailsPosition = buffer.readInteger(position);
+                details = iss.deserialize(buffer, detailsPosition);
+            }
+
+            return RMObjectFactory.newXAccessControl(groups, details);
         }
     }
 

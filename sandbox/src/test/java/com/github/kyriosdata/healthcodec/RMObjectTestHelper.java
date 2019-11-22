@@ -1727,6 +1727,18 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de XFolder com valor fixo
+     *
+     * @return nova instância de XFolder.
+     */
+    public static XAccessControl xAccessControl(){
+        Map<ObjectID, Party> groups = objectIDPartyMap(false);
+        ItemStructure details = itemStructure();
+
+        return RMObjectFactory.newXAccessControl(groups, details);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia

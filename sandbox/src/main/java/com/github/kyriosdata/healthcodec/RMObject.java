@@ -4114,4 +4114,26 @@ public class RMObject {
         }
     }
 
+    public static class XAccessControl {
+        private final Map<ObjectID, Party> groups;
+        private final ItemStructure details;
+
+        public XAccessControl(Map<ObjectID, Party> groups,
+                              ItemStructure details) {
+            if(groups != null && groups.isEmpty()) {
+                throw new IllegalArgumentException("empty groups");
+            }
+            this.groups = groups;
+            this.details = details;
+        }
+
+        public Map<ObjectID, Party> getGroups() {
+            return groups;
+        }
+
+        public ItemStructure getDetails() {
+            return details;
+        }
+    }
+
 }

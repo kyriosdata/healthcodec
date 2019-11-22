@@ -1272,4 +1272,13 @@ public interface Serializer {
      *
      */
     RMObjectSerializationClient serializeXFolder(XFolder f);
+
+    /**
+     * Serializador de XAccessControl.
+     *
+     * @param a
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeXAccessControl(XAccessControl a);
 }

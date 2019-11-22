@@ -133,7 +133,8 @@ public enum RMObjectID {
     XTERMINOLOGY(110),
     XCOMPOSITION(111),
     XDEMOGRAPHICS(112),
-    XFOLDER(113);
+    XFOLDER(113),
+    XACCESSCONTROL(114);
 
     
     private final int value;

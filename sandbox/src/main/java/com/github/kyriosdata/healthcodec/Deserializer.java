@@ -842,4 +842,10 @@ public interface Deserializer {
      * @return nova instância de XFolder
      */
     RMObject.XFolder deserializeXFolder();
+
+    /**
+     * Deserializador de XAccessControl.
+     * @return nova instância de XAccessControl
+     */
+    RMObject.XAccessControl deserializeXAccessControl();
 }
