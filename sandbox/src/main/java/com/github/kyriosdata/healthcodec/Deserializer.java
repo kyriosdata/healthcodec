@@ -836,4 +836,10 @@ public interface Deserializer {
      * @return nova instância de XDemographics
      */
     RMObject.XDemographics deserializeXDemographics();
+
+    /**
+     * Deserializador de XFolder.
+     * @return nova instância de XFolder
+     */
+    RMObject.XFolder deserializeXFolder();
 }

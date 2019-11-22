@@ -3617,6 +3617,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de XFolder.
+     *
+     * @param f
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeXFolder(XFolder f) {
+        XFolderSerializer s = new XFolderSerializer();
+        register(XFOLDER, offset);
+        setOffset(s.serialize(buffer, offset, f));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de XFolder.
+     *
+     * @return nova instância de XFolder.
+     */
+    @Override
+    public XFolder deserializeXFolder() {
+        XFolderSerializer d = new XFolderSerializer();
+        return d.deserialize(buffer, getOffsetFromID(XFOLDER));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id

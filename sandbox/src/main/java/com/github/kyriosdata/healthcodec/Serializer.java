@@ -1263,4 +1263,13 @@ public interface Serializer {
      *
      */
     RMObjectSerializationClient serializeXDemographics(XDemographics c);
+
+    /**
+     * Serializador de XFolder.
+     *
+     * @param f
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeXFolder(XFolder f);
 }

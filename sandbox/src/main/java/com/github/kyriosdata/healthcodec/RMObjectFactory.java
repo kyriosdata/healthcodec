@@ -794,4 +794,9 @@ public class RMObjectFactory {
                                                  ItemStructure details){
         return new XDemographics(parties, details);
     }
+
+    public static XFolder newXFolder(Locatable locatable, List<XFolder> folders,
+                                     List<XComposition> compositions){
+        return new XFolder(locatable, folders, compositions);
+    }
 }

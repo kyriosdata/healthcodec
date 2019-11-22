@@ -4080,4 +4080,38 @@ public class RMObject {
         }
     }
 
+    public static class XFolder {
+        private final Locatable locatable;
+        private final List<XFolder> folders;
+        private final List<XComposition> compositions;
+
+        public XFolder(Locatable locatable, List<XFolder> folders,
+                       List<XComposition> compositions) {
+            if(locatable == null){
+                throw new IllegalArgumentException("null locatable");
+            }
+            if (folders != null && folders.isEmpty()) {
+                throw new IllegalArgumentException("empty folders");
+            }
+            if (compositions != null && compositions.isEmpty()) {
+                throw new IllegalArgumentException("empty compositions");
+            }
+            this.locatable = locatable;
+            this.folders = folders;
+            this.compositions = compositions;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public List<XFolder> getFolders() {
+            return folders;
+        }
+
+        public List<XComposition> getCompositions() {
+            return compositions;
+        }
+    }
+
 }

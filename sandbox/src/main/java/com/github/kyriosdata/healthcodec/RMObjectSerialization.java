@@ -9496,6 +9496,43 @@ public class RMObjectSerialization {
             return RMObjectFactory.newXComposition(primary, originalPath,
                     composition);
         }
+
+        protected int listSerialize(
+                Buffer buffer, int offset, List<XComposition> items){
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            XCompositionSerializer xcs = new XCompositionSerializer();
+
+            for (XComposition c : items){
+                meta = writeHeader(buffer, meta, position);
+                position = xcs.serialize(buffer, position, c);
+            }
+
+            return position;
+        }
+
+        protected List<XComposition> deserializeList(Buffer buffer, int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            List<XComposition> list = new ArrayList<>();
+            XCompositionSerializer dis = new XCompositionSerializer();
+
+            for (int i = 0; i < listSize; i++){
+                int xCompositionPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                XComposition c = dis.deserialize(buffer, xCompositionPosition);
+                list.add(c);
+            }
+
+            return list;
+        }
     }
 
     public static class XDemographicsSerializer {
@@ -9562,6 +9599,120 @@ public class RMObjectSerialization {
             }
 
             return RMObjectFactory.newXDemographics(parties, details);
+        }
+    }
+
+    public static class XFolderSerializer {
+        protected int serialize(Buffer buffer, int offset, Locatable locatable,
+                                List<XFolder> folders,
+                                List<XComposition> compositions){
+            int meta = offset;
+            int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
+                    + 2 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasFolders = folders != null;
+            boolean hasCompositions = compositions != null;
+
+            LocatableSerializer ls = new LocatableSerializer();
+            XFolderSerializer xfs = new XFolderSerializer();
+            XCompositionSerializer xcs = new XCompositionSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = ls.serialize(buffer, position, locatable);
+
+            meta = writeHeader(buffer, meta, hasFolders, position);
+            if(hasFolders){
+                position = xfs.listSerialize(buffer, position, folders);
+            }
+
+            writeHeader(buffer, meta, hasCompositions, position);
+            if(hasCompositions){
+                position = xcs.listSerialize(buffer, position, compositions);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, XFolder f){
+            int position = offset;
+
+            XFolderSerializer xfs = new XFolderSerializer();
+
+            position = xfs.serialize(buffer, position, f.getLocatable(),
+                    f.getFolders(), f.getCompositions());
+
+            return position;
+        }
+
+        protected XFolder deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            LocatableSerializer ls = new LocatableSerializer();
+            XFolderSerializer xfs = new XFolderSerializer();
+            XCompositionSerializer xcs = new XCompositionSerializer();
+
+            int locatablePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            Locatable locatable = ls.deserialize(buffer, locatablePosition);
+
+            boolean hasFolders = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            List<XFolder> folders = null;
+            if(hasFolders){
+                int xFoldersPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                folders = xfs.deserializeList(buffer,
+                        xFoldersPosition);
+            }
+
+            boolean hasCompositions = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            List<XComposition> compositions = null;
+            if(hasCompositions){
+                int compositionPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                compositions = xcs.deserializeList(buffer,
+                        compositionPosition);
+            }
+
+            return RMObjectFactory.newXFolder(locatable, folders, compositions);
+        }
+
+        protected int listSerialize(
+                Buffer buffer, int offset, List<XFolder> items){
+            int meta = offset;
+            int listSize = items.size();
+            int position = offset + (listSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+
+            meta = writeHeader(buffer, meta, listSize);
+            XFolderSerializer xfs = new XFolderSerializer();
+
+            for (XFolder f : items){
+                meta = writeHeader(buffer, meta, position);
+                position = xfs.serialize(buffer, position, f);
+            }
+
+            return position;
+        }
+
+        protected List<XFolder> deserializeList(Buffer buffer, int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            List<XFolder> list = new ArrayList<>();
+            XFolderSerializer dis = new XFolderSerializer();
+
+            for (int i = 0; i < listSize; i++){
+                int xFolderPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                XFolder f = dis.deserialize(buffer, xFolderPosition);
+                list.add(f);
+            }
+
+            return list;
         }
     }
 

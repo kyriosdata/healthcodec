@@ -1714,6 +1714,19 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de XFolder com valor fixo
+     *
+     * @return nova instância de XFolder.
+     */
+    public static XFolder xFolder(){
+        Locatable locatable = locatable();
+        List<XFolder> folders = xFolderList(false);
+        List<XComposition> compositions = xCompositionList(false);
+
+        return RMObjectFactory.newXFolder(locatable, folders, compositions);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
@@ -1729,6 +1742,41 @@ public class RMObjectTestHelper {
         list.add(id);
         list.add(id);
         list.add(id);
+
+        return list;
+    }
+
+    /**
+     * Método que gera uma lista de XFolder
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    public static List<XFolder> xFolderList(boolean emptyList){
+        List<XFolder> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        XFolder f = RMObjectFactory.newXFolder(locatable(),
+                null, xCompositionList(false));
+        list.add(f);
+
+        return list;
+    }
+
+    /**
+     * Método que gera uma lista de XFolder
+     *
+     * @param emptyList cria uma lista vazia
+     * @return list
+     */
+    public static List<XComposition> xCompositionList(boolean emptyList){
+        List<XComposition> list = new ArrayList<>();
+        if(emptyList){
+            return list;
+        }
+        XComposition c = xComposition();
+        list.add(c);
 
         return list;
     }
