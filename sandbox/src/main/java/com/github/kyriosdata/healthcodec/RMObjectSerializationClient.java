@@ -3669,6 +3669,32 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de EHRExtract.
+     *
+     * @param e
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeEHRExtract(EHRExtract e) {
+        EHRExtractSerializer s = new EHRExtractSerializer();
+        register(EHREXTRACT, offset);
+        setOffset(s.serialize(buffer, offset, e));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de EHRExtract.
+     *
+     * @return nova instância de EHRExtract.
+     */
+    @Override
+    public EHRExtract deserializeEHRExtract() {
+        EHRExtractSerializer d = new EHRExtractSerializer();
+        return d.deserialize(buffer, getOffsetFromID(EHREXTRACT));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id
@@ -3703,5 +3729,9 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
      */
     private void setOffset(int pos) {
         this.offset = pos;
+    }
+
+    public byte[] getBuffer(){
+        return buffer.data();
     }
 }

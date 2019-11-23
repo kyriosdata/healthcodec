@@ -1739,6 +1739,29 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de EHRExtract com valor fixo
+     *
+     * @return nova instância de EHRExtract.
+     */
+    public static EHRExtract ehrExtract(){
+        DvDateTime timeCreated = dvDateTime();
+        String ehrId = "value";
+        PartyRef subjectOfCare = partyRef();
+        PartyRef originator = partyRef();
+        Set<Participation> otherParticipations = participationSet(false);
+        boolean includeMultimedia = false;
+        int followLinks = 10;
+        XFolder directory = null;
+        XTerminology terminology = xTerminology();
+        XDemographics demographics = xDemographics();
+        XAccessControl accessControl = xAccessControl();
+
+        return RMObjectFactory.newEHRExtract(timeCreated, ehrId, subjectOfCare,
+                originator, otherParticipations, includeMultimedia,
+                followLinks, directory, terminology, demographics, accessControl);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
@@ -2097,6 +2120,23 @@ public class RMObjectTestHelper {
         set.add(l);
         set.add(l);
         set.add(l);
+
+        return set;
+    }
+
+    /**
+     * Método que gera um set de Participation
+     *
+     * @param emptySet cria um set vazio
+     * @return set
+     */
+    public static Set<Participation> participationSet(boolean emptySet){
+        Set<Participation> set = new HashSet<>();
+        if(emptySet){
+            return set;
+        }
+        Participation p = participation();
+        set.add(p);
 
         return set;
     }

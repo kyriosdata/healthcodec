@@ -848,4 +848,10 @@ public interface Deserializer {
      * @return nova instância de XAccessControl
      */
     RMObject.XAccessControl deserializeXAccessControl();
+
+    /**
+     * Deserializador de EHRExtract.
+     * @return nova instância de EHRExtract
+     */
+    RMObject.EHRExtract deserializeEHRExtract();
 }

@@ -1281,4 +1281,13 @@ public interface Serializer {
      *
      */
     RMObjectSerializationClient serializeXAccessControl(XAccessControl a);
+
+    /**
+     * Serializador de EHRExtract.
+     *
+     * @param e
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeEHRExtract(EHRExtract e);
 }

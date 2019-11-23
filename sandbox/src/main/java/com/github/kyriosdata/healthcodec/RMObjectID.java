@@ -134,7 +134,8 @@ public enum RMObjectID {
     XCOMPOSITION(111),
     XDEMOGRAPHICS(112),
     XFOLDER(113),
-    XACCESSCONTROL(114);
+    XACCESSCONTROL(114),
+    EHREXTRACT(115);
 
     
     private final int value;

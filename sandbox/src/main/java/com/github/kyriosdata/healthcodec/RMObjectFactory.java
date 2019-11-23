@@ -804,4 +804,18 @@ public class RMObjectFactory {
                                                    ItemStructure details){
         return new XAccessControl(groups, details);
     }
+
+    public static EHRExtract newEHRExtract(DvDateTime timeCreated,
+                                           String ehrId, PartyRef subjectOfCare,
+                                           PartyRef originator,
+                                           Set<Participation> otherParticipations,
+                                           boolean includeMultimedia,
+                                           int followLinks, XFolder directory,
+                                           XTerminology terminology,
+                                           XDemographics demographics,
+                                           XAccessControl accessControl){
+        return new EHRExtract(timeCreated, ehrId, subjectOfCare, originator,
+                otherParticipations, includeMultimedia, followLinks, directory,
+                terminology, demographics, accessControl);
+    }
 }

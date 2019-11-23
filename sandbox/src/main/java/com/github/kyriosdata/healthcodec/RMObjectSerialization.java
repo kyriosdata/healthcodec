@@ -5995,6 +5995,48 @@ public class RMObjectSerialization {
 
             return list;
         }
+
+        protected int setSerializer(Buffer buffer, int offset,
+                                    Set<Participation> items) {
+            int setSize = items.size();
+            int position = offset + (setSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+            int meta = offset;
+            ParticipationSerializer des = new ParticipationSerializer();
+
+            meta = writeHeader(buffer, meta, setSize);
+            Iterator<Participation> it = items.iterator();
+
+            while (it.hasNext()){
+                Participation p = it.next();
+                int participationPosition = position;
+                meta = writeHeader(buffer, meta, participationPosition);
+                position = des.serialize(buffer, position, p);
+            }
+
+            return position;
+        }
+
+        protected Set<Participation> setDeserializer(Buffer buffer, int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            ParticipationSerializer des = new ParticipationSerializer();
+            Set<Participation> participations = new HashSet<>();
+
+            for (int i = 0; i < listSize; i++){
+                int participationPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+
+                Participation dv = des.deserialize(buffer,
+                        participationPosition);
+                participations.add(dv);
+            }
+
+            return participations;
+        }
     }
 
     public static class AuditDetailsSerializer {
@@ -9500,6 +9542,9 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<XComposition> items){
             int meta = offset;
+            if(items.size() == 0){
+                return offset;
+            }
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
@@ -9520,7 +9565,10 @@ public class RMObjectSerialization {
             int position = offset;
             int listSize = buffer.readInteger(position);
             position += PrimitiveTypeSize.INT.getSize();
-
+            if(listSize == 0){
+                List<XComposition> list = new ArrayList<>();
+                return list;
+            }
             List<XComposition> list = new ArrayList<>();
             XCompositionSerializer dis = new XCompositionSerializer();
 
@@ -9684,7 +9732,6 @@ public class RMObjectSerialization {
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
-
             meta = writeHeader(buffer, meta, listSize);
             XFolderSerializer xfs = new XFolderSerializer();
 
@@ -9779,6 +9826,219 @@ public class RMObjectSerialization {
 
             return RMObjectFactory.newXAccessControl(groups, details);
         }
+    }
+
+    public static class EHRExtractSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                DvDateTime timeCreated, String ehrId,
+                                PartyRef subjectOfCare, PartyRef originator,
+                                Set<Participation> otherParticipations,
+                                boolean includeMultimedia, int followLinks,
+                                XFolder directory, XTerminology terminology,
+                                XDemographics demographics,
+                                XAccessControl accessControl){
+            int meta = offset;
+            int position = offset + 11 * PrimitiveTypeSize.INT.getSize()
+                    + 9 * PrimitiveTypeSize.BOOLEAN.getSize();
+
+            boolean hasTimeCreated = timeCreated != null;
+            boolean hasEhrId = ehrId != null;
+            boolean hasSubjectOfCare = subjectOfCare != null;
+            boolean hasOriginator = originator != null;
+            boolean hasOtherParticipations = otherParticipations != null;
+            boolean hasDirectory = directory != null;
+            boolean hasTerminology = terminology != null;
+            boolean hasDemographics = demographics != null;
+            boolean hasAccessControl = accessControl != null;
+
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            PartyRefSerializer prs = new PartyRefSerializer();
+            ParticipationSerializer ps = new ParticipationSerializer();
+            XFolderSerializer xfs = new XFolderSerializer();
+            XTerminologySerializer xts = new XTerminologySerializer();
+            XDemographicsSerializer xds = new XDemographicsSerializer();
+            XAccessControlSerializer xas = new XAccessControlSerializer();
+
+            meta = writeHeader(buffer, meta, hasTimeCreated, position);
+            if(hasTimeCreated){
+                position = dts.serialize(buffer, position, timeCreated);
+            }
+
+            meta = writeHeader(buffer, meta, hasEhrId, position);
+            if(hasEhrId){
+                position = stringSerialization(buffer, position, ehrId);
+            }
+
+            meta = writeHeader(buffer, meta, hasSubjectOfCare, position);
+            if(hasSubjectOfCare){
+                position = prs.serialize(buffer, position, subjectOfCare);
+            }
+
+            meta = writeHeader(buffer, meta, hasOriginator, position);
+            if(hasOriginator){
+                position = prs.serialize(buffer, position, originator);
+            }
+
+            meta = writeHeader(buffer, meta, hasOtherParticipations, position);
+            if(hasOtherParticipations){
+                position = ps.setSerializer(buffer, position,
+                        otherParticipations);
+            }
+
+            meta = writeHeader(buffer, meta, position);
+            buffer.writeBoolean(position, includeMultimedia);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            meta = writeHeader(buffer, meta, position);
+            buffer.writeInteger(position, followLinks);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            meta = writeHeader(buffer, meta, hasDirectory, position);
+            if(hasDirectory){
+                position = xfs.serialize(buffer, position, directory);
+            }
+
+            meta = writeHeader(buffer, meta, hasTerminology, position);
+            if(hasTerminology){
+                position = xts.serialize(buffer, position, terminology);
+            }
+
+            meta = writeHeader(buffer, meta, hasDemographics, position);
+            if(hasDemographics){
+                position = xds.serialize(buffer, position, demographics);
+            }
+
+            writeHeader(buffer, meta, hasAccessControl, position);
+            if(hasAccessControl){
+                position = xas.serialize(buffer, position, accessControl);
+            }
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, EHRExtract e){
+            int position = offset;
+
+            EHRExtractSerializer es = new EHRExtractSerializer();
+
+            position = es.serialize(buffer, position, e.getTimeCreated(),
+                    e.getEhrId(), e.getSubjectOfCare(), e.getOriginator(),
+                    e.getOtherParticipations(), e.isIncludeMultimedia(),
+                    e.getFollowLinks(), e.getDirectory(), e.getTerminology(),
+                    e.getDemographics(), e.getAccessControl());
+
+            return position;
+        }
+
+        protected EHRExtract deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            PartyRefSerializer prs = new PartyRefSerializer();
+            ParticipationSerializer ps = new ParticipationSerializer();
+            XFolderSerializer xfs = new XFolderSerializer();
+            XTerminologySerializer xts = new XTerminologySerializer();
+            XDemographicsSerializer xds = new XDemographicsSerializer();
+            XAccessControlSerializer xas = new XAccessControlSerializer();
+
+            boolean hasTimeCreated = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            DvDateTime timeCreated = null;
+            if(hasTimeCreated){
+                int timeCreatedPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                timeCreated = dts.deserialize(buffer, timeCreatedPosition);
+            }
+
+            boolean hasEhrId = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            String ehrId = null;
+            if(hasEhrId){
+                int ehrIdPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                ehrId = stringDeserialization(buffer, ehrIdPosition);
+            }
+
+            boolean hasSubjectOfCare = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            PartyRef subjectOfCare = null;
+            if(hasSubjectOfCare){
+                int subjectOfCarePosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                subjectOfCare = prs.deserialize(buffer, subjectOfCarePosition);
+            }
+
+            boolean hasOriginator = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            PartyRef originator = null;
+            if(hasOriginator){
+                int originatorPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                originator = prs.deserialize(buffer, originatorPosition);
+            }
+
+            boolean hasOtherParticipations = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            Set<Participation> otherParticipations = null;
+            if(hasOtherParticipations){
+                int otherParticipationsPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                otherParticipations = ps.setDeserializer(buffer,
+                        otherParticipationsPosition);
+            }
+
+            int includeMultimediaPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            boolean includeMultimedia = buffer.readBoolean(
+                    includeMultimediaPosition);
+
+            int followLinksPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            int followLinks = buffer.readInteger(followLinksPosition);
+
+            boolean hasDirectory = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            XFolder directory = null;
+            if(hasDirectory){
+                int directoryPosition = buffer.readInteger(position);
+                System.out.println(directoryPosition);
+                position += PrimitiveTypeSize.INT.getSize();
+                directory = xfs.deserialize(buffer, directoryPosition);
+            }
+
+            boolean hasTerminology = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            XTerminology terminology = null;
+            if(hasTerminology){
+                int terminologyPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                terminology = xts.deserialize(buffer, terminologyPosition);
+            }
+
+            boolean hasDemographics = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            XDemographics demographics = null;
+            if(hasDemographics){
+                int demographicsPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                demographics = xds.deserialize(buffer, demographicsPosition);
+            }
+
+            boolean hasAccessControl = buffer.readBoolean(position);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            XAccessControl accessControl = null;
+            if(hasAccessControl){
+                int accessControlPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+                accessControl = xas.deserialize(buffer, accessControlPosition);
+            }
+
+            return RMObjectFactory.newEHRExtract(timeCreated, ehrId,
+                    subjectOfCare, originator, otherParticipations,
+                    includeMultimedia, followLinks, directory, terminology,
+                    demographics, accessControl);
+        }
+
     }
 
     /**

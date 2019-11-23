@@ -4136,4 +4136,83 @@ public class RMObject {
         }
     }
 
+    public static class EHRExtract {
+        private final DvDateTime timeCreated;
+        private final String ehrId;
+        private final PartyRef subjectOfCare;
+        private final PartyRef originator;
+        private final Set<Participation> otherParticipations;
+        private final boolean includeMultimedia;
+        private final int followLinks;
+        private final XFolder directory;
+        private final XTerminology terminology;
+        private final XDemographics demographics;
+        private final XAccessControl accessContro;
+
+        public DvDateTime getTimeCreated() {
+            return timeCreated;
+        }
+
+        public String getEhrId() {
+            return ehrId;
+        }
+
+        public PartyRef getSubjectOfCare() {
+            return subjectOfCare;
+        }
+
+        public PartyRef getOriginator() {
+            return originator;
+        }
+
+        public Set<Participation> getOtherParticipations() {
+            return otherParticipations;
+        }
+
+        public boolean isIncludeMultimedia() {
+            return includeMultimedia;
+        }
+
+        public int getFollowLinks() {
+            return followLinks;
+        }
+
+        public XFolder getDirectory() {
+            return directory;
+        }
+
+        public XTerminology getTerminology() {
+            return terminology;
+        }
+
+        public XDemographics getDemographics() {
+            return demographics;
+        }
+
+        public XAccessControl getAccessControl() {
+            return accessContro;
+        }
+
+        public EHRExtract(DvDateTime timeCreated, String ehrId,
+                          PartyRef subjectOfCare, PartyRef originator,
+                          Set<Participation> otherParticipations,
+                          boolean includeMultimedia, int followLinks,
+                          XFolder directory, XTerminology terminology,
+                          XDemographics demographics,
+                          XAccessControl accessControl) {
+            this.timeCreated = timeCreated;
+            this.ehrId = ehrId;
+            this.subjectOfCare = subjectOfCare;
+            this.originator = originator;
+            this.otherParticipations = otherParticipations;
+            this.includeMultimedia = includeMultimedia;
+            this.followLinks = followLinks;
+            this.directory = directory;
+            this.terminology = terminology;
+            this.demographics = demographics;
+            this.accessContro = accessControl;
+
+
+        }
+    }
 }
