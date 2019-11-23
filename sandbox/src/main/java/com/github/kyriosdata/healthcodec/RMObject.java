@@ -4211,8 +4211,149 @@ public class RMObject {
             this.terminology = terminology;
             this.demographics = demographics;
             this.accessContro = accessControl;
+        }
+    }
 
+    public static class GenericEntry {
+        private final ContentItem contentItem;
+        private final ItemTree data;
 
+        public GenericEntry(ContentItem contentItem, ItemTree data) {
+            if(contentItem == null){
+                throw new IllegalArgumentException("null contentItem");
+            }
+            this.contentItem = contentItem;
+            this.data = data;
+        }
+
+        public ContentItem getContentItem() {
+            return contentItem;
+        }
+
+        public ItemTree getData() {
+            return data;
+        }
+    }
+
+    public static class MessageContent {
+        private final Locatable locatable;
+
+        public MessageContent(Locatable locatable) {
+            if(locatable == null){
+                throw new IllegalArgumentException("null locatbale");
+            }
+            this.locatable = locatable;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+    }
+
+    public static class Message {
+        private final DvDateTime timeSent;
+        private final PartyRef sender;
+        private final PartyRef receiver;
+        private final PartyRef senderNode;
+        private final PartyRef receiverNode;
+        private final String sendersReference;
+        private final boolean initiator;
+        private final DvOrdinal urgency;
+        private final Attestation signature;
+        private final Set<Party> parties;
+        private final MessageContent content;
+
+        public DvDateTime getTimeSent() {
+            return timeSent;
+        }
+
+        public PartyRef getSender() {
+            return sender;
+        }
+
+        public PartyRef getReceiver() {
+            return receiver;
+        }
+
+        public PartyRef getSenderNode() {
+            return senderNode;
+        }
+
+        public PartyRef getReceiverNode() {
+            return receiverNode;
+        }
+
+        public String getSendersReference() {
+            return sendersReference;
+        }
+
+        public boolean isInitiator() {
+            return initiator;
+        }
+
+        public DvOrdinal getUrgency() {
+            return urgency;
+        }
+
+        public Attestation getSignature() {
+            return signature;
+        }
+
+        public Set<Party> getParties() {
+            return parties;
+        }
+
+        public MessageContent getContent() {
+            return content;
+        }
+
+        public Message(DvDateTime timeSent, PartyRef sender, PartyRef receiver,
+                       PartyRef senderNode, PartyRef receiverNode,
+                       String sendersReference, boolean initiator,
+                       DvOrdinal urgency, Attestation signature,
+                       Set<Party> parties, MessageContent content) {
+            if (timeSent == null) {
+                throw new IllegalArgumentException("timeSent null");
+            }
+            if (sender == null) {
+                throw new IllegalArgumentException("sender null");
+            }
+            if (receiver == null) {
+                throw new IllegalArgumentException("receiver null");
+            }
+            if (sendersReference.isEmpty()) {
+                throw new IllegalArgumentException(
+                        "null or empty sendersReference");
+            }
+            if (senderNode == null) {
+                throw new IllegalArgumentException("senderNode null");
+            }
+            if (receiverNode == null) {
+                throw new IllegalArgumentException("receiverNode null");
+            }
+            if (urgency == null) {
+                throw new IllegalArgumentException("urgency null");
+            }
+            if(signature == null){
+                throw new IllegalArgumentException("signature null");
+            }
+            if (parties != null && parties.isEmpty()) {
+                throw new IllegalArgumentException("empty parties");
+            }
+            if (content == null) {
+                throw new IllegalArgumentException("content null");
+            }
+            this.timeSent = timeSent;
+            this.sender = sender;
+            this.receiver = receiver;
+            this.senderNode = senderNode;
+            this.receiverNode = receiverNode;
+            this.sendersReference = sendersReference;
+            this.initiator = initiator;
+            this.urgency = urgency;
+            this.signature = signature;
+            this.parties = parties;
+            this.content = content;
         }
     }
 }

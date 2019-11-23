@@ -1762,6 +1762,52 @@ public class RMObjectTestHelper {
     }
 
     /**
+     * Cria uma instância de GenericEntry com valor fixo
+     *
+     * @return nova instância de GenericEntry.
+     */
+    public static GenericEntry genericEntry(){
+        ContentItem contentItem = contentItem();
+        ItemTree data = itemTree();
+
+        return RMObjectFactory.newGenericEntry(contentItem, data);
+    }
+
+    /**
+     * Cria uma instância de MessageContent com valor fixo
+     *
+     * @return nova instância de MessageContent.
+     */
+    public static MessageContent messageContent(){
+        Locatable locatable = locatable();
+
+        return RMObjectFactory.newMessageContent(locatable);
+    }
+
+    /**
+     * Cria uma instância de Message com valor fixo
+     *
+     * @return nova instância de Message.
+     */
+    public static Message message(){
+        DvDateTime timeSent = dvDateTime();
+        PartyRef sender = partyRef();
+        PartyRef receiver = partyRef();
+        PartyRef senderNode = partyRef();
+        PartyRef receiverNode = partyRef();
+        String sendersReference = "value";
+        boolean initiator = false;
+        DvOrdinal urgency = dvOrdinal();
+        Attestation signature = attestation();
+        Set<Party> parties = partySet(false);
+        MessageContent content = messageContent();
+
+        return RMObjectFactory.newMessage(timeSent, sender, receiver,
+                senderNode, receiverNode, sendersReference, initiator,
+                urgency, signature, parties, content);
+    }
+
+    /**
      * Método que gera uma lista de DvIdentifier
      *
      * @param emptyList cria uma lista vazia
@@ -2136,6 +2182,23 @@ public class RMObjectTestHelper {
             return set;
         }
         Participation p = participation();
+        set.add(p);
+
+        return set;
+    }
+
+    /**
+     * Método que gera um set de Participation
+     *
+     * @param emptySet cria um set vazio
+     * @return set
+     */
+    public static Set<Party> partySet(boolean emptySet){
+        Set<Party> set = new HashSet<>();
+        if(emptySet){
+            return set;
+        }
+        Party p = party(false);
         set.add(p);
 
         return set;

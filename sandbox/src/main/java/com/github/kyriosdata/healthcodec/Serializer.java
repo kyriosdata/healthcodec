@@ -1290,4 +1290,31 @@ public interface Serializer {
      *
      */
     RMObjectSerializationClient serializeEHRExtract(EHRExtract e);
+
+    /**
+     * Serializador de GenericEntry.
+     *
+     * @param g
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeGenericEntry(GenericEntry g);
+
+    /**
+     * Serializador de MessageContent.
+     *
+     * @param m
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeMessageContent(MessageContent m);
+
+    /**
+     * Serializador de Message.
+     *
+     * @param m
+     * @return Instância de RMObjectSerializationClient para chaining
+     *
+     */
+    RMObjectSerializationClient serializeMessage(Message m);
 }

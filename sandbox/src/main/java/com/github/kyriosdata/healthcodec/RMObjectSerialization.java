@@ -4053,6 +4053,47 @@ public class RMObjectSerialization {
             return RMObjectFactory.newParty(locatable, identities, 
                     contacts, relationships, reverseRelationships, details);
         }
+
+        protected int setSerializer(Buffer buffer, int offset,
+                                    Set<Party> items) {
+            int setSize = items.size();
+            int position = offset + (setSize *
+                    PrimitiveTypeSize.INT.getSize()) +
+                    PrimitiveTypeSize.INT.getSize();
+            int meta = offset;
+            PartySerializer ps = new PartySerializer();
+
+            meta = writeHeader(buffer, meta, setSize);
+            Iterator<Party> it = items.iterator();
+
+            while (it.hasNext()){
+                Party p = it.next();
+                int partyPosition = position;
+                meta = writeHeader(buffer, meta, partyPosition);
+                position = ps.serialize(buffer, position, p);
+            }
+
+            return position;
+        }
+
+        protected Set<Party> setDeserializer(Buffer buffer, int offset){
+            int position = offset;
+            int listSize = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+
+            PartySerializer des = new PartySerializer();
+            Set<Party> parties = new HashSet<>();
+
+            for (int i = 0; i < listSize; i++){
+                int partyPosition = buffer.readInteger(position);
+                position += PrimitiveTypeSize.INT.getSize();
+
+                Party p = des.deserialize(buffer, partyPosition);
+                parties.add(p);
+            }
+
+            return parties;
+        }
     }
     
     public static class CapabilitySerializer {
@@ -10038,7 +10079,215 @@ public class RMObjectSerialization {
                     includeMultimedia, followLinks, directory, terminology,
                     demographics, accessControl);
         }
+    }
 
+    public static class GenericEntrySerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                ContentItem contentItem, ItemTree data){
+            int meta = offset;
+            int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
+
+            ContentItemSerializer cis = new ContentItemSerializer();
+            ItemTreeSerializer its = new ItemTreeSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = cis.serialize(buffer, position, contentItem);
+
+            writeHeader(buffer, meta, position);
+            position = its.serialize(buffer, position, data);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, GenericEntry g){
+            int position = offset;
+
+            GenericEntrySerializer ges = new GenericEntrySerializer();
+
+            position = ges.serialize(buffer, position, g.getContentItem(),
+                    g.getData());
+
+            return position;
+        }
+
+        protected GenericEntry deserialize(Buffer buffer, int offset){
+            int position = offset;
+            ContentItemSerializer cis = new ContentItemSerializer();
+            ItemTreeSerializer its = new ItemTreeSerializer();
+
+            int contentItemPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            ContentItem contentItem = cis.deserialize(buffer,
+                    contentItemPosition);
+
+            int dataPosition = buffer.readInteger(position);
+            ItemTree data = its.deserialize(buffer, dataPosition);
+
+            return RMObjectFactory.newGenericEntry(contentItem, data);
+        }
+    }
+
+    public static class MessageContentSerializer {
+        protected int serialize(Buffer buffer, int offset, Locatable locatable){
+            int position = offset;
+
+            LocatableSerializer ls = new LocatableSerializer();
+
+            position = ls.serialize(buffer, position, locatable);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset,
+                                MessageContent messageContent){
+            int position = offset;
+
+            MessageContentSerializer mcs = new MessageContentSerializer();
+
+            position = mcs.serialize(buffer, position,
+                    messageContent.getLocatable());
+
+            return position;
+        }
+
+        protected MessageContent deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            LocatableSerializer ls = new LocatableSerializer();
+
+            Locatable locatable = ls.deserialize(buffer, position);
+
+            return RMObjectFactory.newMessageContent(locatable);
+        }
+    }
+
+    public static class MessageSerializer {
+        protected int serialize(Buffer buffer, int offset,
+                                DvDateTime timeSent, PartyRef sender,
+                                PartyRef receiver,PartyRef senderNode,
+                                PartyRef receiverNode,String sendersReference,
+                                boolean initiator, DvOrdinal urgency,
+                                Attestation signature,Set<Party> parties,
+                                MessageContent content){
+            int meta = offset;
+            int position = offset + 11 * PrimitiveTypeSize.INT.getSize();
+
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            PartyRefSerializer prs = new PartyRefSerializer();
+            DvOrdinalSerializer dos = new DvOrdinalSerializer();
+            AttestationSerializer as = new AttestationSerializer();
+            PartySerializer ps = new PartySerializer();
+            MessageContentSerializer mcs = new MessageContentSerializer();
+
+            meta = writeHeader(buffer, meta, position);
+            position = dts.serialize(buffer, position, timeSent);
+
+            meta = writeHeader(buffer, meta, position);
+            position = prs.serialize(buffer, position, sender);
+
+            meta = writeHeader(buffer, meta, position);
+            position = prs.serialize(buffer, position, receiver);
+
+            meta = writeHeader(buffer, meta, position);
+            position = prs.serialize(buffer, position, senderNode);
+
+            meta = writeHeader(buffer, meta, position);
+            position = prs.serialize(buffer, position, receiverNode);
+
+            meta = writeHeader(buffer, meta, position);
+            position = stringSerialization(buffer, position, sendersReference);
+
+            meta = writeHeader(buffer, meta, position);
+            buffer.writeBoolean(position, initiator);
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+
+            meta = writeHeader(buffer, meta, position);
+            position = dos.serialize(buffer, position, urgency);
+
+            meta = writeHeader(buffer, meta, position);
+            position = as.serialize(buffer, position, signature);
+
+            meta = writeHeader(buffer, meta, position);
+            position = ps.setSerializer(buffer, position, parties);
+
+            writeHeader(buffer, meta, position);
+            position = mcs.serialize(buffer, position, content);
+
+            return position;
+        }
+
+        protected int serialize(Buffer buffer, int offset, Message m){
+            int position = offset;
+
+            MessageSerializer ms = new MessageSerializer();
+
+            position = ms.serialize(buffer, position, m.getTimeSent(),
+                    m.getSender(), m.getReceiver(), m.getSenderNode(),
+                    m.getReceiverNode(), m.getSendersReference(),
+                    m.isInitiator(), m.getUrgency(), m.getSignature(),
+                    m.getParties(), m.getContent());
+
+            return position;
+        }
+
+        protected Message deserialize(Buffer buffer, int offset){
+            int position = offset;
+
+            DvDateTimeSerializer dts = new DvDateTimeSerializer();
+            PartyRefSerializer prs = new PartyRefSerializer();
+            DvOrdinalSerializer dos = new DvOrdinalSerializer();
+            AttestationSerializer as = new AttestationSerializer();
+            PartySerializer ps = new PartySerializer();
+            MessageContentSerializer mcs = new MessageContentSerializer();
+
+            int timeSentPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvDateTime timeSent = dts.deserialize(buffer, timeSentPosition);
+
+            int senderPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            PartyRef sender = prs.deserialize(buffer, senderPosition);
+
+            int receiverPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            PartyRef receiver = prs.deserialize(buffer, receiverPosition);
+
+            int senderNodePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            PartyRef senderNode = prs.deserialize(buffer, senderNodePosition);
+
+            int receiverNodePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            PartyRef receiverNode = prs.deserialize(buffer, receiverNodePosition);
+
+            int sendersReferencePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            String sendersReference = stringDeserialization(buffer,
+                    sendersReferencePosition);
+
+            int initiatorPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            boolean initiator = buffer.readBoolean(initiatorPosition);
+
+            int urgencyPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            DvOrdinal urgency = dos.deserialize(buffer, urgencyPosition);
+
+            int signaturePosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            Attestation signature = as.deserialize(buffer, signaturePosition);
+
+            int partiesPosition = buffer.readInteger(position);
+            position += PrimitiveTypeSize.INT.getSize();
+            Set<Party> parties = ps.setDeserializer(buffer, partiesPosition);
+
+            int contentPosition = buffer.readInteger(position);
+            MessageContent content = mcs.deserialize(buffer, contentPosition);
+
+            return RMObjectFactory.newMessage(timeSent, sender, receiver,
+                    senderNode, receiverNode, sendersReference, initiator,
+                    urgency, signature, parties, content);
+        }
     }
 
     /**

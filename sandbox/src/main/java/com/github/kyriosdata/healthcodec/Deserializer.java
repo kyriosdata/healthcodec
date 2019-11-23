@@ -854,4 +854,22 @@ public interface Deserializer {
      * @return nova instância de EHRExtract
      */
     RMObject.EHRExtract deserializeEHRExtract();
+
+    /**
+     * Deserializador de GenericEntry.
+     * @return nova instância de GenericEntry
+     */
+    RMObject.GenericEntry deserializeGenericEntry();
+
+    /**
+     * Deserializador de MessageContent.
+     * @return nova instância de MessageContent
+     */
+    RMObject.MessageContent deserializeMessageContent();
+
+    /**
+     * Deserializador de Message.
+     * @return nova instância de Message
+     */
+    RMObject.Message deserializeMessage();
 }

@@ -3695,6 +3695,84 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     }
 
     /**
+     * Serializador de EHRExtract.
+     *
+     * @param g
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeGenericEntry(GenericEntry g) {
+        GenericEntrySerializer s = new GenericEntrySerializer();
+        register(GENERICENTRY, offset);
+        setOffset(s.serialize(buffer, offset, g));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de GenericEntry.
+     *
+     * @return nova instância de GenericEntry.
+     */
+    @Override
+    public GenericEntry deserializeGenericEntry() {
+        GenericEntrySerializer d = new GenericEntrySerializer();
+        return d.deserialize(buffer, getOffsetFromID(GENERICENTRY));
+    }
+
+    /**
+     * Serializador de MessageContent.
+     *
+     * @param m
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeMessageContent(MessageContent m) {
+        MessageContentSerializer s = new MessageContentSerializer();
+        register(MESSAGECONTENT, offset);
+        setOffset(s.serialize(buffer, offset, m));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de MessageContent.
+     *
+     * @return nova instância de MessageContent.
+     */
+    @Override
+    public MessageContent deserializeMessageContent() {
+        MessageContentSerializer d = new MessageContentSerializer();
+        return d.deserialize(buffer, getOffsetFromID(MESSAGECONTENT));
+    }
+
+    /**
+     * Serializador de Message.
+     *
+     * @param m
+     * @return instância de RMObjectSerializationClient atual
+     */
+    @Override
+    public RMObjectSerializationClient serializeMessage(Message m) {
+        MessageSerializer s = new MessageSerializer();
+        register(MESSAGE, offset);
+        setOffset(s.serialize(buffer, offset, m));
+
+        return this;
+    }
+
+    /**
+     * Deserializador de Message.
+     *
+     * @return nova instância de Message.
+     */
+    @Override
+    public Message deserializeMessage() {
+        MessageSerializer d = new MessageSerializer();
+        return d.deserialize(buffer, getOffsetFromID(MESSAGE));
+    }
+
+    /**
      * Método para registrar um determinado objeto no índice
      * 
      * @param id

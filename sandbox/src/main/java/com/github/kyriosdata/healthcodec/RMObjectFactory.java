@@ -818,4 +818,24 @@ public class RMObjectFactory {
                 otherParticipations, includeMultimedia, followLinks, directory,
                 terminology, demographics, accessControl);
     }
+
+    public static GenericEntry newGenericEntry(ContentItem contentItem,
+                                               ItemTree data){
+        return new GenericEntry(contentItem, data);
+    }
+
+    public static Message newMessage(DvDateTime timeSent, PartyRef sender,
+                                     PartyRef receiver, PartyRef senderNode,
+                                     PartyRef receiverNode,
+                                     String sendersReference, boolean initiator,
+                                     DvOrdinal urgency, Attestation signature,
+                                     Set<Party> parties, MessageContent content){
+        return new Message(timeSent, sender, receiver, senderNode, receiverNode,
+                sendersReference, initiator, urgency, signature, parties,
+                content);
+    }
+
+    public static  MessageContent newMessageContent(Locatable locatable){
+        return new MessageContent(locatable);
+    }
 }

@@ -135,7 +135,10 @@ public enum RMObjectID {
     XDEMOGRAPHICS(112),
     XFOLDER(113),
     XACCESSCONTROL(114),
-    EHREXTRACT(115);
+    EHREXTRACT(115),
+    GENERICENTRY(116),
+    MESSAGECONTENT(117),
+    MESSAGE(118);
 
     
     private final int value;
