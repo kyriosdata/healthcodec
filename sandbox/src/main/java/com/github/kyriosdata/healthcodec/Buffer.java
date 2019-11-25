@@ -36,73 +36,69 @@ import java.nio.charset.StandardCharsets;
 public class Buffer {
 
     /**
-     * Tamanho máximo do buffer.
+     * Tamanho máximo do buffer em bytes.
      */
-    private static final int MAX_SIZE_BUFFER = 10000000;
+    private static final int MAX_BYTES_SIZE_BUFFER = 10_000_000;
 
     /**
      * Estrutura empregada para armazenamento.
      */
-    private ByteBuffer buffer;
+    private final ByteBuffer buffer;
 
     /**
-     * Evita criação desnecessária de instância.
+     * Construtor empregado exclusivamente por factory methods.
      */
-    private Buffer() {
+    private Buffer(final ByteBuffer original) {
+        buffer = original;
     }
 
     /**
-     * Função responsável por encapsular um array de bytes
-     * recebido com entrada em um ByteBuffer que será armazenado
-     * no atributo da classe
+     * Cria uma instância (buffer) com a capaciadade máxima de bytes.
      *
-     * @return Retorna uma instância com o buffer encapsulado e pronto para
-     * as operações de E/S
+     * @return Cria um buffer com a capacidade máxima de bytes.
      */
-    public static Buffer serialize() {
-
-        Buffer bf = new Buffer();
-
-        bf.buffer = ByteBuffer.allocate(MAX_SIZE_BUFFER);
-
-        return bf;
+    public static Buffer newInstance() {
+        return new Buffer(ByteBuffer.allocate(MAX_BYTES_SIZE_BUFFER));
     }
 
     /**
-     * Função responsável por encapsular um array de bytes
-     * recebido com entrada em um ByteBuffer que será armazenado
-     * no atributo da classe
+     * Cria um novo buffer a partir dos dados armazenados no buffer fornecido.
      *
-     * @return Retorna uma instância com o buffer encapsulado e pronto para
-     * as operações de E/S
+     * @return Um novo buffer a partir dos dados do buffer fornecido.
      */
-    public static Buffer deserialize(Buffer b) {
-        Buffer bf = new Buffer();
-        bf.buffer = ByteBuffer.wrap(b.data());
-
-        return bf;
+    public static Buffer newInstance(Buffer original) {
+        return new Buffer(ByteBuffer.wrap(original.data()));
     }
 
     /**
-     * Função responsável por ler 1 byte do buffer e retorná-lo
+     * Cria buffer a partir dos dados fornecidos.
+     * @param dados Dados a partir do qual o buffer será definido.
      *
-     * @param position Posição do array
-     * @return byteValue correspondente
-     * @throws BufferUnderflowException no caso de não conseguir ler 4 bytes
-     *                                  do buffer
+     * @return Instância de buffer a partir dos dados fornecidos.
      */
-    public byte readByte(int position) throws BufferUnderflowException {
+    public static Buffer newInstance(byte[] dados) {
+        return new Buffer(ByteBuffer.wrap(dados));
+    }
+
+    /**
+     * Obtém o _byte_ do buffer na posição indicada.
+     *
+     * @param position Posição do _byte_ no buffer.
+     * @return O byte armazenado no buffer na posição indicada.
+     * @throws IndexOutOfBoundsException se a posição indicada for negativa
+     *                                   ou superior ao limite do buffer.
+     */
+    public byte readByte(int position) {
         return buffer.get(position);
     }
 
     /**
-     * Função responsável por escrever um único byte no buffer
+     * Armazena no buffer, na posição indicada, o byte fornecido.
      *
-     * @param position Posição do array
-     * @param b byte que será escrito
-     * @throws IndexOutOfBoundsException no caso de uma posição maior que o
-     * tamanho do array
-     * @throws ReadOnlyBufferException no caso do buffer ser apenas para escrita
+     * @param position Posição em que o byte deve ser depositado no buffer.
+     * @param b        O byte a ser depositado.
+     * @throws IndexOutOfBoundsException se a posição é negativa ou superior
+     *                                   ao limite do buffer.
      */
     public void writeByte(int position, byte b) {
         buffer.put(position, b);
@@ -115,7 +111,6 @@ public class Buffer {
      * @param position Posição inicial de leitura no <em>buffer</em>.
      * @return Valor inteiro correspondente aos 4 btyes lidos a partir da
      * posição indicada.
-     *
      * @throws BufferUnderflowException no caso de não conseguir ler 4 bytes do
      *                                  buffer
      */
@@ -129,7 +124,7 @@ public class Buffer {
      *
      * @param position A posição inicial da escrita do valor inteiro no
      *                 <em>buffer</em>.
-     * @param valor        Valor a ser armazenado no <em>buffer</em>.
+     * @param valor    Valor a ser armazenado no <em>buffer</em>.
      * @throws IndexOutOfBoundsException no caso de uma posição maior que o
      *                                   tamanho do array
      * @throws ReadOnlyBufferException   no caso do buffer ser apenas para
@@ -146,7 +141,6 @@ public class Buffer {
      * @param position Posição inicial de leitura no <em>buffer</em>.
      * @return double aos 8 btyes lidos a partir da
      * posição indicada.
-     *
      * @throws BufferUnderflowException no caso de não conseguir ler 8 bytes do
      *                                  buffer
      */
@@ -160,7 +154,7 @@ public class Buffer {
      *
      * @param position A posição inicial da escrita do double no
      *                 <em>buffer</em>.
-     * @param valor        Valor a ser armazenado no <em>buffer</em>.
+     * @param valor    Valor a ser armazenado no <em>buffer</em>.
      * @throws IndexOutOfBoundsException no caso de uma posição maior que o
      *                                   tamanho do array
      * @throws ReadOnlyBufferException   no caso do buffer ser apenas para
@@ -198,7 +192,7 @@ public class Buffer {
 
     /**
      * TODO Não é o caso de usar System.arraycopy?
-     *
+     * <p>
      * Função responsável por escrever um array de bytes do buffer a partir de
      * uma posição inicial e da quantidade de bytes que serão lidos a partir
      * desta posição

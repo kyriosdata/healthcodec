@@ -45,7 +45,7 @@ public class RMObjectSerializationClient implements Serializer, Deserializer {
     //Array auxiliar que auxilia na identificação da ordem de cada objeto
     private final int[] order;
     //Instância do buffer para a utilização das operações de W/R
-    private final Buffer buffer = Buffer.serialize();
+    private final Buffer buffer = Buffer.newInstance();
     //Posição atual para leitura e escrita no buffer
     private int offset;
 
