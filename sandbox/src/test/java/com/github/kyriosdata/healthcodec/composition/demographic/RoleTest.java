@@ -15,6 +15,7 @@ public class RoleTest {
     public static void testValidRoleTest(Role r){
         PartyTest.testValidParty(r.getParty());
         CapabilityTest.testValidCapability(r.getCapabilities().get(0));
+        //DvIntervalTest.testValidDvInterval(r.getTimeValidity());
         PartyRefTest.testValidPartyRef(r.getPerformer());
     }
 
@@ -32,6 +33,7 @@ public class RoleTest {
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectFactory.newRole(RMObjectTestHelper.party(false),
                     RMObjectTestHelper.capabilityList(true),
+                    RMObjectTestHelper.dvInterval(),
                     RMObjectTestHelper.partyRef());
         });
     }
@@ -41,6 +43,7 @@ public class RoleTest {
         assertThrows(IllegalArgumentException.class, () -> {
             RMObjectFactory.newRole(RMObjectTestHelper.party(false),
                     RMObjectTestHelper.capabilityList(false),
+                    RMObjectTestHelper.dvInterval(),
                     null);
         });
     }

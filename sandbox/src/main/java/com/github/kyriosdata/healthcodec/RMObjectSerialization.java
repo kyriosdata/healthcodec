@@ -24,6 +24,32 @@ import static com.github.kyriosdata.healthcodec.PrimitiveTypeSize.BOOLEAN;
 /**
  *
  * @author Gabriel
+ * 
+ * Classe que encapsula os métodos necessários para que as classes do MR sejam
+ * serializadas/desserializadas.
+ * Todos os métodos possuem a referência ao buffer e um inteiro offset 
+ * como parâmetro.
+ * IMPORTANTE: É de inteira responsabilidade do usuário que utilizar essa 
+ * coleção de métodos, o devido controle sob as posições do buffer para evitar
+ * qualquer tipo de resultado inesparado durante a utilização.
+ * 
+ * Funcionamento geral dos métodos
+ * 
+ * serializador: recebe o buffer, os atributos da classe e o offset.
+ * Um cabeçalho é contruído antes do armazenamento dos atributos da classe de
+ * modo que dois tipos de dados são armazenados:
+ * 1) Posição: a posição específica na qual o serializador do atributo inicia
+ * seu processamento. É armazenado um inteiro (4 bytes).
+ * 2) Condição de existência: certos atributos precisam estar necessariamente
+ * presentes no momentos de instanciação da classe. É armazenada uma flag no
+ * cabeçalho de modo que se a classe existe, um byte (1) é armazenado. Caso
+ * contrário, um byte (0) é armazenado.
+ *
+ * Seguindo essas condições, é possível serializar os tipos primitivos presentes
+ * em cada classe de forma direta a partir da posição indicada. E fazer o
+ * processo inverso apenas lendo as informações do cabeçalho e acessando a
+ * posição de cada classe, reconstruindo ao fim o objeto criado no {@link RMObjectFactory}
+ * 
  */
 public class RMObjectSerialization {
 
@@ -54,19 +80,19 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer,
                 int offset, String issuer, String assigner, String id,
                 String type) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, issuer);
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, assigner);
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, id);
             
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, type);
             
             return position;
@@ -114,17 +140,17 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<DvIdentifier> items)
                  {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             DvIdentifierSerializer dis = new DvIdentifierSerializer();
 
             for (DvIdentifier d : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = dis.serialize(buffer, position, d);
             }
 
@@ -265,13 +291,13 @@ public class RMObjectSerialization {
         protected int serialize(
                 Buffer buffer, int offset, String value, String scheme)
                  {
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, value);
             
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, scheme);
             
             return position;
@@ -333,13 +359,13 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String name, 
                 String version) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, name);
             
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, version);
             
             return position;
@@ -376,15 +402,15 @@ public class RMObjectSerialization {
                 Buffer buffer, int offset,
                 TerminologyID terminologyId, String codeString)
                  {
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
             
             TerminologyIDSerializer ts = new TerminologyIDSerializer();
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ts.serialize(buffer, position, terminologyId);
             
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, codeString);
             
             return position;
@@ -475,16 +501,16 @@ public class RMObjectSerialization {
             int position = offset + (setSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
-            int meta = offset;
+            int header = offset;
             DvEHRURISerializer des = new DvEHRURISerializer();
 
-            meta = writeHeader(buffer, meta, setSize);
+            header = writeHeader(buffer, header, setSize);
             Iterator<DvEHRURI> it = items.iterator();
 
             while (it.hasNext()){
                 DvEHRURI d = it.next();
                 int dvPosition = position;
-                meta = writeHeader(buffer, meta, dvPosition);
+                header = writeHeader(buffer, header, dvPosition);
                 position = des.serialize(buffer, position, d);
             }
 
@@ -643,7 +669,7 @@ public class RMObjectSerialization {
         protected int mapSerialization(Buffer buffer, int offset,
                                        Map<ObjectID, Party> map)
         {
-            int meta = offset;
+            int header = offset;
             int mapSize = map.size();
             int position = offset
                     + mapSize * (2 * PrimitiveTypeSize.INT.getSize()) +
@@ -651,18 +677,18 @@ public class RMObjectSerialization {
             ObjectIDSerializer ois = new ObjectIDSerializer();
             PartySerializer ps = new PartySerializer();
 
-            meta = writeHeader(buffer, meta, mapSize);
+            header = writeHeader(buffer, header, mapSize);
             if (mapSize == 0){
-                return meta;
+                return header;
             }
 
             for (Map.Entry<ObjectID, Party> entry : map.entrySet()){
                 ObjectID key = entry.getKey();
                 Party value = entry.getValue();
 
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = ois.serialize(buffer, position, key);
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = ps.serialize(buffer, position, value);
             }
 
@@ -704,14 +730,14 @@ public class RMObjectSerialization {
                 int offset,
                 ObjectID id,
                 String value) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
             ObjectIDSerializer os = new ObjectIDSerializer();
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = os.serialize(buffer, position, id);
             
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, value);
             
             return position;
@@ -753,18 +779,18 @@ public class RMObjectSerialization {
                 ObjectID id,
                 String namespace,
                 String type) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
             
             ObjectIDSerializer os = new ObjectIDSerializer();
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = os.serialize(buffer, position, id);
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, namespace);
             
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, type);
             
             return position;
@@ -805,16 +831,16 @@ public class RMObjectSerialization {
             int position = offset + (setSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
-            int meta = offset;
+            int header = offset;
             ObjectRefSerializer ors = new ObjectRefSerializer();
 
-            meta = writeHeader(buffer, meta, setSize);
+            header = writeHeader(buffer, header, setSize);
             Iterator<ObjectRef> it = items.iterator();
 
             while (it.hasNext()){
                 ObjectRef or = it.next();
                 int objectRefPosition = position;
-                meta = writeHeader(buffer, meta, objectRefPosition);
+                header = writeHeader(buffer, header, objectRefPosition);
                 position = ors.serialize(buffer, position, or);
             }
 
@@ -843,17 +869,17 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<ObjectRef> items)
         {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             ObjectRefSerializer dis = new ObjectRefSerializer();
 
             for (ObjectRef o : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = dis.serialize(buffer, position, o);
             }
 
@@ -890,27 +916,27 @@ public class RMObjectSerialization {
                 String namespace,
                 String type,
                 String path) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize()+
                     BOOLEAN.getSize();
             
             ObjectVersionIDSerializer os = new ObjectVersionIDSerializer();
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = os.serialize(buffer, position, id);
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, namespace);
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, type);
             
             boolean hasPath = path != null;
             if(hasPath){
-                writeHeader(buffer, meta, hasPath, position);
+                writeHeader(buffer, header, hasPath, position);
                 position = stringSerialization(buffer, position, path);
             } else {
-                writeHeader(buffer, meta, hasPath);
+                writeHeader(buffer, header, hasPath);
             }
             
             return position;
@@ -964,16 +990,16 @@ public class RMObjectSerialization {
             int position = offset + (setSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
-            int meta = offset;
+            int header = offset;
             LocatableRefSerializer lrs = new LocatableRefSerializer();
 
-            meta = writeHeader(buffer, meta, setSize);
+            header = writeHeader(buffer, header, setSize);
             Iterator<LocatableRef> it = lrefs.iterator();
 
             while (it.hasNext()){
                 LocatableRef lr = it.next();
                 int linkPosition = position;
-                meta = writeHeader(buffer, meta, linkPosition);
+                header = writeHeader(buffer, header, linkPosition);
                 position = lrs.serialize(buffer, position, lr);
             }
 
@@ -1064,18 +1090,18 @@ public class RMObjectSerialization {
                 String name,
                 List<DvIdentifier> identifiers)
                  {
-            int meta = offset;
+            int header = offset;
             int position = offset + (3 * PrimitiveTypeSize.INT.getSize());
             PartyRefSerializer prs = new PartyRefSerializer();
             DvIdentifierSerializer dis = new DvIdentifierSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = prs.serialize(buffer, position, externalRef);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, name);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = dis.listSerialize(buffer, position, identifiers);
 
             return position;
@@ -1120,25 +1146,25 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset,
                 ArchetypeID archetypeId,TemplateID templateId,
                 String rmVersion) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize() +
                     BOOLEAN.getSize();
             
             ArchetypeIDSerializer ais = new ArchetypeIDSerializer();
             TemplateIDSerializer tis = new TemplateIDSerializer();
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ais.serialize(buffer, position, archetypeId);
             
             boolean hasTemplateId = templateId != null;
             if(hasTemplateId){
-                meta = writeHeader(buffer, meta, hasTemplateId, position);
+                header = writeHeader(buffer, header, hasTemplateId, position);
                 position = tis.serialize(buffer, position, templateId);
             } else {
-                meta = writeHeader(buffer, meta, hasTemplateId);
+                header = writeHeader(buffer, header, hasTemplateId);
             }
             
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, rmVersion);
             
             return position;
@@ -1186,15 +1212,15 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, CodePhrase charset, 
                 CodePhrase language) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
             
             CodePhraseSerializer cps = new CodePhraseSerializer();
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cps.serialize(buffer, position, charset);
             
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = cps.serialize(buffer, position, language);
             
             return position;
@@ -1258,18 +1284,18 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, 
                 DvEncapsulated dvEncapsulated, String value,
                 String formalism) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
             
             DvEncapsulatedSerializer des = new DvEncapsulatedSerializer();
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = des.serialize(buffer, position, dvEncapsulated);
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, value);
             
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, formalism);
 
             return position;
@@ -1361,40 +1387,40 @@ public class RMObjectSerialization {
             DvMultimediaSerializer dvm = new DvMultimediaSerializer();
 
             int position = offset + 56;
-            int meta = offset;
+            int header = offset;
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dve.serialize(buffer, position,
                     dvEncapsulated.getCharset(),
                     dvEncapsulated.getLanguage());
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(
                     buffer, position, alternateText);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cps.serialize(buffer, position,
                     mediaType.getTerminologyID(), mediaType.getCodeString());
 
             if (hasCompressionAlgorithm){
-                meta = writeHeader(
-                        buffer, meta, hasCompressionAlgorithm, position);
+                header = writeHeader(
+                        buffer, header, hasCompressionAlgorithm, position);
                 position = cps.serialize(
                         buffer,
                         position,
                         compressionAlgorithm.getTerminologyID(),
                         compressionAlgorithm.getCodeString());
             } else {
-                meta = writeHeader(buffer, meta, false);
+                header = writeHeader(buffer, header, false);
             }
 
             if (hasIntegrityCheck && hasIntegrityCheckAlgorithm){
-                meta = writeHeader(buffer, meta, hasIntegrityCheck, position);
-                meta = writeHeader(buffer, meta, integrityCheck.length);
+                header = writeHeader(buffer, header, hasIntegrityCheck, position);
+                header = writeHeader(buffer, header, integrityCheck.length);
                 buffer.writeByteArray(position, integrityCheck);
                 position += integrityCheck.length;
 
-                meta = writeHeader(
-                        buffer, meta, hasIntegrityCheckAlgorithm, position);
+                header = writeHeader(
+                        buffer, header, hasIntegrityCheckAlgorithm, position);
                 position = cps.serialize(
                         buffer,
                         position,
@@ -1404,7 +1430,7 @@ public class RMObjectSerialization {
             }
 
             if (hasThumbnail){
-                meta = writeHeader(buffer, meta, hasThumbnail, position);
+                header = writeHeader(buffer, header, hasThumbnail, position);
                 position = dvm.serialize(
                         buffer,
                         position,
@@ -1418,14 +1444,14 @@ public class RMObjectSerialization {
                         thumbnail.getUri(),
                         thumbnail.getData());
             } else {
-                meta = writeHeader(buffer, meta, hasThumbnail);
+                header = writeHeader(buffer, header, hasThumbnail);
             }
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dvu.serialize(buffer, position, uri.getValue());
 
-            meta = writeHeader(buffer, meta, position);
-            writeHeader(buffer, meta, data.length);
+            header = writeHeader(buffer, header, position);
+            writeHeader(buffer, header, data.length);
             buffer.writeByteArray(position, data);
             position += data.length;
 
@@ -1453,82 +1479,82 @@ public class RMObjectSerialization {
             DVURISerializer dvu = new DVURISerializer();
             DvMultimediaSerializer dvm = new DvMultimediaSerializer();
 
-            int meta = offset;
-            int dvEncapsulatedPosition = buffer.readInteger(meta);
+            int header = offset;
+            int dvEncapsulatedPosition = buffer.readInteger(header);
             DvEncapsulated dvMultimediaDvEncapsulated
                     = dve.deserialize(buffer, dvEncapsulatedPosition);
-            meta += PrimitiveTypeSize.INT.getSize();
+            header += PrimitiveTypeSize.INT.getSize();
 
-            int alternateTextPosition = buffer.readInteger(meta);
+            int alternateTextPosition = buffer.readInteger(header);
             String alternateText
                     = stringDeserialization(buffer, alternateTextPosition);
-            meta += PrimitiveTypeSize.INT.getSize();
+            header += PrimitiveTypeSize.INT.getSize();
 
-            int mediaTypePosition = buffer.readInteger(meta);
+            int mediaTypePosition = buffer.readInteger(header);
             CodePhrase mediaType = cps.deserialize(buffer, mediaTypePosition);
-            meta += PrimitiveTypeSize.INT.getSize();
+            header += PrimitiveTypeSize.INT.getSize();
 
-            boolean hasCompressionAlgorithm = buffer.readBoolean(meta);
+            boolean hasCompressionAlgorithm = buffer.readBoolean(header);
             int compressionAlgorithmPosition = 0;
             CodePhrase compressionAlgorithm = null;
             if (hasCompressionAlgorithm){
-                meta += BOOLEAN.getSize();
-                compressionAlgorithmPosition = buffer.readInteger(meta);
+                header += BOOLEAN.getSize();
+                compressionAlgorithmPosition = buffer.readInteger(header);
                 compressionAlgorithm
                         = cps.deserialize(buffer, compressionAlgorithmPosition);
-                meta += PrimitiveTypeSize.INT.getSize();
+                header += PrimitiveTypeSize.INT.getSize();
             } else {
-                meta += BOOLEAN.getSize();
+                header += BOOLEAN.getSize();
             }
-            boolean hasIntegrityCheck = buffer.readBoolean(meta);
+            boolean hasIntegrityCheck = buffer.readBoolean(header);
             int integrityCheckPosition = 0;
             int integrityCheckLength = 0;
             byte[] integrityCheck = null;
             if (hasIntegrityCheck){
-                meta += BOOLEAN.getSize();
-                integrityCheckPosition = buffer.readInteger(meta);
-                meta += PrimitiveTypeSize.INT.getSize();
-                integrityCheckLength = buffer.readInteger(meta);
-                meta += PrimitiveTypeSize.INT.getSize();
+                header += BOOLEAN.getSize();
+                integrityCheckPosition = buffer.readInteger(header);
+                header += PrimitiveTypeSize.INT.getSize();
+                integrityCheckLength = buffer.readInteger(header);
+                header += PrimitiveTypeSize.INT.getSize();
 
                 integrityCheck = buffer.readByteArray(integrityCheckPosition,
                         integrityCheckLength);
             } else {
-                meta += BOOLEAN.getSize();
+                header += BOOLEAN.getSize();
             }
 
-            boolean hasIntegrityCheckAlgorithm = buffer.readBoolean(meta);
+            boolean hasIntegrityCheckAlgorithm = buffer.readBoolean(header);
             int integrityCheckAlgorithmPosition = 0;
             CodePhrase integrityCheckAlgorithm = null;
             if (hasIntegrityCheckAlgorithm){
-                meta += BOOLEAN.getSize();
-                integrityCheckAlgorithmPosition = buffer.readInteger(meta);
-                meta += PrimitiveTypeSize.INT.getSize();
+                header += BOOLEAN.getSize();
+                integrityCheckAlgorithmPosition = buffer.readInteger(header);
+                header += PrimitiveTypeSize.INT.getSize();
                 integrityCheckAlgorithm = cps.deserialize(buffer,
                         integrityCheckAlgorithmPosition);
             } else {
-                meta += BOOLEAN.getSize();
+                header += BOOLEAN.getSize();
             }
 
-            boolean hasThumbnail = buffer.readBoolean(meta);
+            boolean hasThumbnail = buffer.readBoolean(header);
             int thumbnailPosition = 0;
             DvMultimedia thumbnail = null;
             if (hasThumbnail){
-                meta += BOOLEAN.getSize();
-                thumbnailPosition = buffer.readInteger(meta);
-                meta += PrimitiveTypeSize.INT.getSize();
+                header += BOOLEAN.getSize();
+                thumbnailPosition = buffer.readInteger(header);
+                header += PrimitiveTypeSize.INT.getSize();
                 thumbnail = dvm.deserialize(buffer, thumbnailPosition);
             } else {
-                meta += BOOLEAN.getSize();
+                header += BOOLEAN.getSize();
             }
 
-            int uriPosition = buffer.readInteger(meta);
+            int uriPosition = buffer.readInteger(header);
             DVURI uri = dvu.deserialize(buffer, uriPosition);
-            meta += PrimitiveTypeSize.INT.getSize();
+            header += PrimitiveTypeSize.INT.getSize();
 
-            int dataPosition = buffer.readInteger(meta);
-            meta += PrimitiveTypeSize.INT.getSize();
-            int dataLength = buffer.readInteger(meta);
+            int dataPosition = buffer.readInteger(header);
+            header += PrimitiveTypeSize.INT.getSize();
+            int dataLength = buffer.readInteger(header);
             byte[] data = buffer.readByteArray(dataPosition, dataLength);
 
             return RMObjectFactory.newDvMultimedia(dvMultimediaDvEncapsulated,
@@ -1556,40 +1582,40 @@ public class RMObjectSerialization {
             TermMappingSerializer tms = new TermMappingSerializer();
             DVURISerializer dvu = new DVURISerializer();
 
-            int meta = offset;
+            int header = offset;
             int position = offset + 6 * PrimitiveTypeSize.INT.getSize()+
                     3 * BOOLEAN.getSize();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, value);
             if (hasMappings){
 
-                meta = writeHeader(buffer, meta, hasMappings, position);
+                header = writeHeader(buffer, header, hasMappings, position);
                 position = tms.listSerialize(buffer, position, mappings);
             } else {
-                meta = writeHeader(buffer, meta, hasMappings);
+                header = writeHeader(buffer, header, hasMappings);
             }
 
             if (hasFormatting){
-                meta = writeHeader(buffer, meta, hasFormatting, position);
+                header = writeHeader(buffer, header, hasFormatting, position);
                 position
                         = stringSerialization(buffer, position, formatting);
             } else {
-                meta = writeHeader(buffer, meta, hasFormatting);
+                header = writeHeader(buffer, header, hasFormatting);
             }
 
             if (hasHyperlink){
-                meta = writeHeader(buffer, meta, hasHyperlink, position);
+                header = writeHeader(buffer, header, hasHyperlink, position);
                 position
                         = dvu.serialize(buffer, position,
                                 hyperlink.getValue());
             } else {
-                meta = writeHeader(buffer, meta, hasHyperlink);
+                header = writeHeader(buffer, header, hasHyperlink);
             }
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cps.serialize(buffer, position, language);
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cps.serialize(buffer, position, charset);
 
             return position;
@@ -1666,16 +1692,16 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<DvText> items)
                  {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize * PrimitiveTypeSize.INT.getSize())
                     + PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             DvTextSerializer tms = new DvTextSerializer();
 
             for (DvText d : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = tms.serialize(buffer, position, d);
             }
 
@@ -1706,16 +1732,16 @@ public class RMObjectSerialization {
             int position = offset + (setSize *
                     PrimitiveTypeSize.INT.getSize())+
                     PrimitiveTypeSize.INT.getSize();
-            int meta = offset;
+            int header = offset;
             DvTextSerializer dts = new DvTextSerializer();
 
-            meta = writeHeader(buffer, meta, setSize);
+            header = writeHeader(buffer, header, setSize);
             Iterator<DvText> it = items.iterator();
 
             while (it.hasNext()){
                 DvText d = it.next();
                 int linkPosition = position;
-                meta = writeHeader(buffer, meta, linkPosition);
+                header = writeHeader(buffer, header, linkPosition);
                 position = dts.serialize(buffer, position, d);
             }
 
@@ -1748,11 +1774,11 @@ public class RMObjectSerialization {
                 DvText dvText, CodePhrase definingCode)
                  {
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
-            int meta = offset;
+            int header = offset;
             DvTextSerializer dvt = new DvTextSerializer();
             CodePhraseSerializer cps = new CodePhraseSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             if(dvText != null){
                 position = dvt.serialize(
                         buffer,
@@ -1765,7 +1791,7 @@ public class RMObjectSerialization {
                         dvText.getCharset());
             }
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = cps.serialize(buffer, position, definingCode);
 
             return position;
@@ -1824,7 +1850,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, CodePhrase target,
                 Match match, 
                 DvCodedText purpose) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize() +
                     BOOLEAN.getSize();
             boolean hasPurpose = purpose != null;
@@ -1832,16 +1858,16 @@ public class RMObjectSerialization {
             MatchSerializer ms = new MatchSerializer();
             DvCodedTextSerializer dct = new DvCodedTextSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cps.serialize(buffer, position, target);
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ms.serialize(buffer, position, match);
             if (hasPurpose){
-                writeHeader(buffer, meta, hasPurpose, position);
+                writeHeader(buffer, header, hasPurpose, position);
                 position = dct.serialize(buffer, position,
                         purpose.getDvText(), purpose.getDefiningCode());
             } else {
-                writeHeader(buffer, meta, hasPurpose);
+                writeHeader(buffer, header, hasPurpose);
             }
             return position;
         }
@@ -1887,17 +1913,17 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<TermMapping> mappings)
                  {
-            int meta = offset;
+            int header = offset;
             int listSize = mappings.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             TermMappingSerializer tms = new TermMappingSerializer();
 
             for (TermMapping t : mappings){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = tms.serialize(buffer, position,
                         t.getTarget(), t.getMatch(), t.getPurpose());
             }
@@ -1932,16 +1958,16 @@ public class RMObjectSerialization {
                 DvEHRURI target) {
 
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
-            int meta = offset;
+            int header = offset;
 
             DvTextSerializer dts = new DvTextSerializer();
             DvEHRURISerializer des = new DvEHRURISerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, meaning);
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, type);
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = des.serialize(buffer, position, target);
 
             return position;
@@ -1987,16 +2013,16 @@ public class RMObjectSerialization {
             int position = offset + (setSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
-            int meta = offset;
+            int header = offset;
             LinkSerializer ls = new LinkSerializer();
 
-            meta = writeHeader(buffer, meta, setSize);
+            header = writeHeader(buffer, header, setSize);
             Iterator<Link> it = links.iterator();
 
             while (it.hasNext()){
                 Link link = it.next();
                 int linkPosition = position;
-                meta = writeHeader(buffer, meta, linkPosition);
+                header = writeHeader(buffer, header, linkPosition);
                 position = ls.serialize(buffer, position, link);
             }
 
@@ -2030,20 +2056,20 @@ public class RMObjectSerialization {
                 int offset,
                 DvCodedText value,
                 String terminal) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize() +
                     BOOLEAN.getSize();
             boolean hasTerminal = terminal != null;
 
             DvCodedTextSerializer dcs = new DvCodedTextSerializer();
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dcs.serialize(buffer, position, value);
 
             if (hasTerminal){
-                meta = writeHeader(buffer, meta, hasTerminal, position);
+                header = writeHeader(buffer, header, hasTerminal, position);
                 position = stringSerialization(buffer, position, terminal);
             } else {
-                meta = writeHeader(buffer, meta, hasTerminal);
+                header = writeHeader(buffer, header, hasTerminal);
             }
 
             return position;
@@ -2148,54 +2174,52 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, String systemID,
                 PartyIdentified provider, PartyIdentified location,
-                /*DvDateTime time,*/ PartyProxy subject,
-                String versionID) {
-            int meta = offset;
-            int position = offset + (6 * PrimitiveTypeSize.INT.getSize())+
-                    5 * BOOLEAN.getSize();
+                                PartyProxy subject, String versionID) {
+            int header = offset;
+            int position = offset + (6 * PrimitiveTypeSize.INT.getSize()) + 5 * PrimitiveTypeSize.BOOLEAN.getSize();
             PartyIdentifiedSerializer pis = new PartyIdentifiedSerializer();
             PartyProxySerializer pps = new PartyProxySerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, systemID);
 
             boolean hasProvider = provider != null;
-            if (hasProvider){
-                meta = writeHeader(buffer, meta, hasProvider, position);
+            if (hasProvider) {
+                header = writeHeader(buffer, header, hasProvider, position);
                 position = pis.serialize(buffer, position, provider);
             } else {
-                meta = writeHeader(buffer, meta, hasProvider);
+                header = writeHeader(buffer, header, hasProvider);
             }
 
             boolean hasLocation = location != null;
-            if (hasLocation){
-                meta = writeHeader(buffer, meta, hasLocation, position);
+            if (hasLocation) {
+                header = writeHeader(buffer, header, hasLocation, position);
                 position = pis.serialize(buffer, position, location);
             } else {
-                meta = writeHeader(buffer, meta, hasLocation);
+                header = writeHeader(buffer, header, hasLocation);
             }
 
             boolean hasTime = false; //TO DO
-            if (hasTime){
-                meta = writeHeader(buffer, meta, hasTime, position);
+            if (hasTime) {
+                header = writeHeader(buffer, header, hasTime, position);
                 //position = pdt.serialize(buffer, position, time);
             } else {
-                meta = writeHeader(buffer, meta, hasTime);
+                header = writeHeader(buffer, header, hasTime);
             }
             boolean hasSubject = subject != null;
-            if (hasSubject){
-                meta = writeHeader(buffer, meta, hasSubject, position);
+            if (hasSubject) {
+                header = writeHeader(buffer, header, hasSubject, position);
                 position = pps.serialize(buffer, position, subject);
             } else {
-                meta = writeHeader(buffer, meta, hasSubject);
+                header = writeHeader(buffer, header, hasSubject);
             }
 
             boolean hasVersionID = versionID != null;
-            if (hasVersionID){
-                writeHeader(buffer, meta, hasVersionID, position);
+            if (hasVersionID) {
+                writeHeader(buffer, header, hasVersionID, position);
                 position = stringSerialization(buffer, position, versionID);
             } else {
-                writeHeader(buffer, meta, hasVersionID);
+                writeHeader(buffer, header, hasVersionID);
             }
 
             return position;
@@ -2213,7 +2237,6 @@ public class RMObjectSerialization {
                     fad.getSystemID(),
                     fad.getProvider(),
                     fad.getLocation(),
-                    /*fad.getTime(),*/
                     fad.getSubject(),
                     fad.getVersionID());
 
@@ -2231,42 +2254,42 @@ public class RMObjectSerialization {
                     = stringDeserialization(buffer, systemIDPosition);
 
             boolean hasProvider = buffer.readBoolean(position);
-            position += BOOLEAN.getSize();
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
             PartyIdentified provider = null;
-            if (hasProvider){
+            if (hasProvider) {
                 int providerPosition = buffer.readInteger(position);
                 position += PrimitiveTypeSize.INT.getSize();
                 provider = pis.deserialize(buffer, providerPosition);
             }
 
             boolean hasLocation = buffer.readBoolean(position);
-            position += BOOLEAN.getSize();
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
             PartyIdentified location = null;
-            if (hasLocation){
+            if (hasLocation) {
                 int locationPosition = buffer.readInteger(position);
                 position += PrimitiveTypeSize.INT.getSize();
                 location = pis.deserialize(buffer, locationPosition);
             }
 
             boolean hasTime = buffer.readBoolean(position);
-            position += BOOLEAN.getSize();
-            if (hasTime){
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
+            if (hasTime) {
                 //TODO
             }
 
             boolean hasSubject = buffer.readBoolean(position);
-            position += BOOLEAN.getSize();
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
             PartyProxy subject = null;
-            if (hasSubject){
+            if (hasSubject) {
                 int subjectPosition = buffer.readInteger(position);
                 position += PrimitiveTypeSize.INT.getSize();
                 subject = pps.deserialize(buffer, subjectPosition);
             }
 
             boolean hasVersionID = buffer.readBoolean(position);
-            position += BOOLEAN.getSize();
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
             String versionID = null;
-            if (hasVersionID){
+            if (hasVersionID) {
                 int versionIDPosition = buffer.readInteger(position);
                 position += PrimitiveTypeSize.INT.getSize();
                 versionID
@@ -2287,51 +2310,51 @@ public class RMObjectSerialization {
                 List<DvIdentifier> feederSystemItemIDs,
                 DvEncapsulated originalContent
         ) {
-            int meta = offset;
+            int header = offset;
             int position = offset + (4 * PrimitiveTypeSize.INT.getSize()) +
                     4 * BOOLEAN.getSize();
             FeederAuditDetailsSerializer fas
                     = new FeederAuditDetailsSerializer();
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = fas.serialize(buffer, position, originatingSystemAudit);
 
             boolean hasOriginatingSystemItemIDs
                     = originatingSystemItemIDs != null;
             DvIdentifierSerializer dis = new DvIdentifierSerializer();
             if (hasOriginatingSystemItemIDs){
-                meta = writeHeader(
-                        buffer, meta, hasOriginatingSystemItemIDs, position);
+                header = writeHeader(
+                        buffer, header, hasOriginatingSystemItemIDs, position);
                 position = dis.listSerialize(
                         buffer, position, originatingSystemItemIDs);
             } else {
-                meta = writeHeader(buffer, meta, hasOriginatingSystemItemIDs);
+                header = writeHeader(buffer, header, hasOriginatingSystemItemIDs);
             }
 
             boolean hasFeederSystemAudit = feederSystemAudit != null;
             if (hasFeederSystemAudit){
-                meta = writeHeader(buffer, meta, hasFeederSystemAudit, position);
+                header = writeHeader(buffer, header, hasFeederSystemAudit, position);
                 position = fas.serialize(buffer, position, feederSystemAudit);
             } else {
-                meta = writeHeader(buffer, meta, hasFeederSystemAudit);
+                header = writeHeader(buffer, header, hasFeederSystemAudit);
             }
 
             boolean hasFeederSystemItemIDs = feederSystemItemIDs != null;
             if (hasFeederSystemItemIDs){
-                meta = writeHeader(
-                        buffer, meta, hasFeederSystemItemIDs, position);
+                header = writeHeader(
+                        buffer, header, hasFeederSystemItemIDs, position);
                 position = dis.listSerialize(
                         buffer, position, feederSystemItemIDs);
             } else {
-                meta = writeHeader(buffer, meta, hasFeederSystemItemIDs);
+                header = writeHeader(buffer, header, hasFeederSystemItemIDs);
             }
 
             boolean hasOriginalContent = originalContent != null;
             DvEncapsulatedSerializer des = new DvEncapsulatedSerializer();
             if (hasOriginalContent){
-                writeHeader(buffer, meta, hasOriginalContent, position);
+                writeHeader(buffer, header, hasOriginalContent, position);
                 position = des.serialize(buffer, position, originalContent);
             } else {
-                writeHeader(buffer, meta, hasOriginalContent, position);
+                writeHeader(buffer, header, hasOriginalContent, position);
             }
 
             return position;
@@ -2415,7 +2438,7 @@ public class RMObjectSerialization {
 
             int position = offset + (6 * PrimitiveTypeSize.INT.getSize())+ 5 *
                     BOOLEAN.getSize();
-            int meta = offset;
+            int header = offset;
 
             UIDBasedIDSerializer uids = new UIDBasedIDSerializer();
             DvTextSerializer dts = new DvTextSerializer();
@@ -2425,40 +2448,40 @@ public class RMObjectSerialization {
 
             boolean hasUid = uid != null;
             if (hasUid){
-                meta = writeHeader(buffer, meta, hasUid, position);
+                header = writeHeader(buffer, header, hasUid, position);
                 position = uids.serialize(buffer, position, uid);
             } else {
-                meta = writeHeader(buffer, meta, hasUid);
+                header = writeHeader(buffer, header, hasUid);
             }
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, archetypeNodeId);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, name);
 
             boolean hasArchetypeDetails = archetypeDetails != null;
             if (hasArchetypeDetails){
-                meta = writeHeader(buffer, meta, hasArchetypeDetails, position);
+                header = writeHeader(buffer, header, hasArchetypeDetails, position);
                 position = as.serialize(buffer, position, archetypeDetails);
             } else {
-                meta = writeHeader(buffer, meta, hasArchetypeDetails);
+                header = writeHeader(buffer, header, hasArchetypeDetails);
             }
 
             boolean hasFeederAudit = feederAudit != null;
             if (hasFeederAudit){
-                meta = writeHeader(buffer, meta, hasFeederAudit, position);
+                header = writeHeader(buffer, header, hasFeederAudit, position);
                 position = fas.serialize(buffer, position, feederAudit);
             } else {
-                meta = writeHeader(buffer, meta, hasFeederAudit);
+                header = writeHeader(buffer, header, hasFeederAudit);
             }
 
             boolean hasLinks = links != null;
             if (hasLinks){
-                writeHeader(buffer, meta, hasLinks, position);
+                writeHeader(buffer, header, hasLinks, position);
                 position = ls.setSerializer(buffer, position, links);
             } else {
-                writeHeader(buffer, meta, hasLinks);
+                writeHeader(buffer, header, hasLinks);
             }
 
             return position;
@@ -2540,7 +2563,7 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, PartyIdentified pi,
                 DvCodedText relationship) {
-            int meta = offset;
+            int header = offset;
             int position = offset + (2 * PrimitiveTypeSize.INT.getSize())
                     + BOOLEAN.getSize();
             PartyIdentifiedSerializer pis = new PartyIdentifiedSerializer();
@@ -2552,13 +2575,13 @@ public class RMObjectSerialization {
             }
             boolean hasPi = pi != null;
             if (hasPi){
-                meta = writeHeader(buffer, meta, hasPi, position);
+                header = writeHeader(buffer, header, hasPi, position);
                 position = pis.serialize(buffer, position, pi);
             } else {
-                meta = writeHeader(buffer, meta, hasPi);
+                header = writeHeader(buffer, header, hasPi);
             }
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, relationship);
 
             return position;
@@ -2602,15 +2625,15 @@ public class RMObjectSerialization {
                 PartyRef externalRef) {
             int position = offset + PrimitiveTypeSize.INT.getSize()
                     + BOOLEAN.getSize();
-            int meta = offset;
+            int header = offset;
             PartyRefSerializer prs = new PartyRefSerializer();
 
             boolean hasExternalRef = externalRef != null;
             if (hasExternalRef){
-                writeHeader(buffer, meta, hasExternalRef, position);
+                writeHeader(buffer, header, hasExternalRef, position);
                 position = prs.serialize(buffer, position, externalRef);
             } else {
-                writeHeader(buffer, meta, hasExternalRef);
+                writeHeader(buffer, header, hasExternalRef);
             }
 
             return position;
@@ -2653,50 +2676,50 @@ public class RMObjectSerialization {
             int position = offset + 8 * PrimitiveTypeSize.INT.getSize() +
                     3 * BOOLEAN.getSize();
 
-            int meta = offset;
+            int header = offset;
             CodePhraseSerializer cps = new CodePhraseSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cps.serialize(buffer, position, language);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, purpose);
 
             boolean hasKeywords = keywords != null;
             if (hasKeywords){
-                meta = writeHeader(buffer, meta, hasKeywords, position);
+                header = writeHeader(buffer, header, hasKeywords, position);
                 position = listStringSerialization(buffer, position, keywords);
             } else {
-                meta = writeHeader(buffer, meta, hasKeywords);
+                header = writeHeader(buffer, header, hasKeywords);
             }
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, use);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, misuse);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, copyright);
 
             boolean hasOriginalResourceUri = originalResourceUri != null;
             if (hasOriginalResourceUri){
-                meta
-                        = writeHeader(buffer, meta, hasOriginalResourceUri,
+                header
+                        = writeHeader(buffer, header, hasOriginalResourceUri,
                                 position);
                 position = mapStringSerialization(
                         buffer, position, originalResourceUri);
             } else {
-                meta = writeHeader(buffer, meta, hasOriginalResourceUri);
+                header = writeHeader(buffer, header, hasOriginalResourceUri);
             }
 
             boolean hasOtherDetails = otherDetails != null;
             if (hasOtherDetails){
-                writeHeader(buffer, meta, hasOtherDetails, position);
+                writeHeader(buffer, header, hasOtherDetails, position);
                 position = mapStringSerialization(buffer, position,
                         otherDetails);
             } else {
-                writeHeader(buffer, meta, hasOtherDetails);
+                writeHeader(buffer, header, hasOtherDetails);
             }
 
             return position;
@@ -2781,18 +2804,18 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<ResourceDescriptionItem> items)
                  {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             ResourceDescriptionItemSerializer rdis
                     = new ResourceDescriptionItemSerializer();
 
             for (ResourceDescriptionItem d : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = rdis.serialize(buffer, position, d);
             }
 
@@ -2828,7 +2851,7 @@ public class RMObjectSerialization {
                 Map<String, String> author, String accreditation,
                 Map<String, String> otherDetails)
                  {
-            int meta = offset;
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize() +
                     2 * BOOLEAN.getSize();
             CodePhraseSerializer cps = new CodePhraseSerializer();
@@ -2840,28 +2863,28 @@ public class RMObjectSerialization {
                 throw new IllegalArgumentException("null author");
             }
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cps.serialize(buffer, position, language);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = mapStringSerialization(buffer, position, author);
 
             boolean hasAccreditation = accreditation != null;
             if (hasAccreditation){
-                meta = writeHeader(buffer, meta, hasAccreditation, position);
+                header = writeHeader(buffer, header, hasAccreditation, position);
                 position = stringSerialization(
                         buffer, position, accreditation);
             } else {
-                meta = writeHeader(buffer, meta, hasAccreditation);
+                header = writeHeader(buffer, header, hasAccreditation);
             }
 
             boolean hasOtherDetails = otherDetails != null;
             if (hasOtherDetails){
-                writeHeader(buffer, meta, hasOtherDetails, position);
+                writeHeader(buffer, header, hasOtherDetails, position);
                 position = mapStringSerialization(buffer, position,
                         otherDetails);
             } else {
-                writeHeader(buffer, meta, hasOtherDetails);
+                writeHeader(buffer, header, hasOtherDetails);
             }
 
             return position;
@@ -2921,7 +2944,7 @@ public class RMObjectSerialization {
         protected int mapSerialization(Buffer buffer, int offset,
                 Map<String, TranslationDetails> map)
                  {
-            int meta = offset;
+            int header = offset;
             int mapSize = map.size();
             int position = offset
                     + mapSize * (2 * PrimitiveTypeSize.INT.getSize()) +
@@ -2929,18 +2952,18 @@ public class RMObjectSerialization {
             TranslationDetailsSerializer tdss
                     = new TranslationDetailsSerializer();
 
-            meta = writeHeader(buffer, meta, mapSize);
+            header = writeHeader(buffer, header, mapSize);
             if (mapSize == 0){
-                return meta;
+                return header;
             }
 
             for (Map.Entry<String, TranslationDetails> entry : map.entrySet()){
                 String key = entry.getKey();
                 TranslationDetails value = entry.getValue();
 
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = stringSerialization(buffer, position, key);
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = tdss.serialize(buffer, position, value);
             }
 
@@ -3010,17 +3033,17 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<Item> items)
                  {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             ItemSerializer is = new ItemSerializer();
 
             for (Item d : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = is.serialize(buffer, position, d);
             }
 
@@ -3050,14 +3073,14 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, Item item,
                 List<Item> items) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
             ItemSerializer is = new ItemSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = is.serialize(buffer, position, item);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = is.listSerialize(buffer, position, items);
 
             return position;
@@ -3094,17 +3117,17 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<Cluster> items)
                  {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             ClusterSerializer cs = new ClusterSerializer();
 
             for (Cluster d : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = cs.serialize(buffer, position, d);
             }
 
@@ -3134,15 +3157,15 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, Item item,
                 DvCodedText nullFlavour) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
             ItemSerializer is = new ItemSerializer();
             DvCodedTextSerializer dts = new DvCodedTextSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = is.serialize(buffer, position, item);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, nullFlavour);
 
             return position;
@@ -3178,17 +3201,17 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<Element> items)
                  {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             ElementSerializer is = new ElementSerializer();
 
             for (Element d : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = is.serialize(buffer, position, d);
             }
 
@@ -3253,7 +3276,7 @@ public class RMObjectSerialization {
                 Archetyped archetypeDetails, FeederAudit feederAudit,
                 Set<Link> links,
                 List<Element> items) {
-            int meta = offset;
+            int header = offset;
             int position = offset + (7 * PrimitiveTypeSize.INT.getSize()) +
                     5 * BOOLEAN.getSize();
 
@@ -3266,49 +3289,49 @@ public class RMObjectSerialization {
 
             boolean hasUid = uid != null;
             if (hasUid){
-                meta = writeHeader(buffer, meta, hasUid, position);
+                header = writeHeader(buffer, header, hasUid, position);
                 position = us.serialize(buffer, position, uid);
             } else {
-                meta = writeHeader(buffer, meta, hasUid);
+                header = writeHeader(buffer, header, hasUid);
             }
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(
                     buffer, position, archetypeNodeId);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, name);
 
             boolean hasArchetypeDetails = archetypeDetails != null;
             if (hasArchetypeDetails){
-                meta = writeHeader(buffer, meta, hasArchetypeDetails, position);
+                header = writeHeader(buffer, header, hasArchetypeDetails, position);
                 position = as.serialize(buffer, position, archetypeDetails);
             } else {
-                meta = writeHeader(buffer, meta, hasArchetypeDetails);
+                header = writeHeader(buffer, header, hasArchetypeDetails);
             }
 
             boolean hasFeederAudit = feederAudit != null;
             if (hasFeederAudit){
-                meta = writeHeader(buffer, meta, hasFeederAudit, position);
+                header = writeHeader(buffer, header, hasFeederAudit, position);
                 position = fas.serialize(buffer, position, feederAudit);
             } else {
-                meta = writeHeader(buffer, meta, hasFeederAudit);
+                header = writeHeader(buffer, header, hasFeederAudit);
             }
 
             boolean hasLinks = links != null;
             if (hasLinks){
-                meta = writeHeader(buffer, meta, hasLinks, position);
+                header = writeHeader(buffer, header, hasLinks, position);
                 position = ls.setSerializer(buffer, position, links);
             } else {
-                meta = writeHeader(buffer, meta, hasLinks);
+                header = writeHeader(buffer, header, hasLinks);
             }
 
             boolean hasItems = items != null;
             if (hasItems){
-                writeHeader(buffer, meta, hasItems, position);
+                writeHeader(buffer, header, hasItems, position);
                 position = es.listSerialize(buffer, position, items);
             } else {
-                writeHeader(buffer, meta, hasItems);
+                writeHeader(buffer, header, hasItems);
             }
 
             return position;
@@ -3430,16 +3453,16 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, ItemStructure is,
                 Element item) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
 
             ItemStructureSerializer iss = new ItemStructureSerializer();
             ElementSerializer es = new ElementSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = iss.serialize(buffer, position, is);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = es.serialize(buffer, position, item);
 
             return position;
@@ -3478,15 +3501,15 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, ItemStructure is,
                 List<Cluster> rows) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
             ItemStructureSerializer iss = new ItemStructureSerializer();
             ClusterSerializer cs = new ClusterSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = iss.serialize(buffer, position, is);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = cs.listSerialize(buffer, position, rows);
 
             return position;
@@ -3524,21 +3547,21 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, ItemStructure is,
                 List<Item> items) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize() +
                     BOOLEAN.getSize();
             ItemStructureSerializer iss = new ItemStructureSerializer();
             ItemSerializer isr = new ItemSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = iss.serialize(buffer, position, is);
 
             boolean hasItems = items != null;
             if (hasItems){
-                writeHeader(buffer, meta, hasItems, position);
+                writeHeader(buffer, header, hasItems, position);
                 position = isr.listSerialize(buffer, position, items);
             } else {
-                writeHeader(buffer, meta, hasItems);
+                writeHeader(buffer, header, hasItems);
             }
 
             return position;
@@ -3580,16 +3603,16 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, Locatable locatable,
                 ItemStructure details) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
 
             LocatableSerializer ls = new LocatableSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ls.serialize(buffer, position, locatable);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = iss.serialize(buffer, position, details);
 
             return position;
@@ -3628,16 +3651,16 @@ public class RMObjectSerialization {
             int position = offset + (setSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
-            int meta = offset;
+            int header = offset;
             PartyIdentitySerializer pis = new PartyIdentitySerializer();
 
-            meta = writeHeader(buffer, meta, setSize);
+            header = writeHeader(buffer, header, setSize);
             Iterator<PartyIdentity> it = piSet.iterator();
 
             while (it.hasNext()){
                 PartyIdentity pi = it.next();
                 int linkPosition = position;
-                meta = writeHeader(buffer, meta, linkPosition);
+                header = writeHeader(buffer, header, linkPosition);
                 position = pis.serialize(buffer, position, pi);
             }
 
@@ -3668,25 +3691,25 @@ public class RMObjectSerialization {
     public static class PartyRelationshipSerializer {
 
         protected int serialize(Buffer buffer, int offset, Locatable locatable,
-                ItemStructure details, ObjectRef source,
-                ObjectRef target) {
-            int meta = offset;
+                                ItemStructure details, ObjectRef source,
+                                ObjectRef target) {
+            int header = offset;
             int position = offset + 5 * PrimitiveTypeSize.INT.getSize();
 
             LocatableSerializer ls = new LocatableSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
             ObjectRefSerializer ors = new ObjectRefSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ls.serialize(buffer, position, locatable);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = iss.serialize(buffer, position, details);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ors.serialize(buffer, position, source);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = ors.serialize(buffer, position, target);
 
             return position;
@@ -3738,16 +3761,16 @@ public class RMObjectSerialization {
             int position = offset + (setSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
-            int meta = offset;
+            int header = offset;
             PartyRelationshipSerializer pis = new PartyRelationshipSerializer();
 
-            meta = writeHeader(buffer, meta, setSize);
+            header = writeHeader(buffer, header, setSize);
             Iterator<PartyRelationship> it = prSet.iterator();
 
             while (it.hasNext()){
                 PartyRelationship pr = it.next();
                 int linkPosition = position;
-                meta = writeHeader(buffer, meta, linkPosition);
+                header = writeHeader(buffer, header, linkPosition);
                 position = pis.serialize(buffer, position, pr);
             }
 
@@ -3779,16 +3802,16 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, Locatable locatable,
                 ItemStructure details) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
 
             LocatableSerializer ls = new LocatableSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ls.serialize(buffer, position, locatable);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = iss.serialize(buffer, position, details);
 
             return position;
@@ -3825,17 +3848,17 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<Address> items)
                  {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             AddressSerializer dis = new AddressSerializer();
 
             for (Address d : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = dis.serialize(buffer, position, d);
             }
 
@@ -3864,18 +3887,18 @@ public class RMObjectSerialization {
     public static class ContactSerializer {
 
         protected int serialize(Buffer buffer, int offset, Locatable locatable,
-                List<Address> addresses) {
-            int meta = offset;
+                                List<Address> addresses) {
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
 
             LocatableSerializer ls = new LocatableSerializer();
             AddressSerializer as = new AddressSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ls.serialize(buffer, position, locatable);
 
             //DvInterval<DvDate> timeValidity todo
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = as.listSerialize(buffer, position, addresses);
 
             return position;
@@ -3886,8 +3909,7 @@ public class RMObjectSerialization {
             int position = offset;
             ContactSerializer cs = new ContactSerializer();
 
-            position = cs.serialize(buffer, position, c.getLocatable(),
-                    c.getAddresses());
+            position = cs.serialize(buffer, position, c.getLocatable(), c.getAddresses());
 
             return position;
         }
@@ -3915,16 +3937,16 @@ public class RMObjectSerialization {
             int setSize = contacts.size();
             int position = offset + (setSize * PrimitiveTypeSize.INT.getSize())
                     + PrimitiveTypeSize.INT.getSize();
-            int meta = offset;
+            int header = offset;
             ContactSerializer cs = new ContactSerializer();
 
-            meta = writeHeader(buffer, meta, setSize);
+            header = writeHeader(buffer, header, setSize);
             Iterator<Contact> it = contacts.iterator();
 
             while (it.hasNext()){
                 Contact c = it.next();
                 int contactPosition = position;
-                meta = writeHeader(buffer, meta, contactPosition);
+                header = writeHeader(buffer, header, contactPosition);
                 position = cs.serialize(buffer, position, c);
             }
 
@@ -3958,7 +3980,7 @@ public class RMObjectSerialization {
                 Set<PartyRelationship> relationships,
                 Set<LocatableRef> reverseRelationships,
                 ItemStructure details) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 6 *
                     PrimitiveTypeSize.INT.getSize()+
                     BOOLEAN.getSize();
@@ -3970,28 +3992,28 @@ public class RMObjectSerialization {
             PartyRelationshipSerializer prs = new PartyRelationshipSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ls.serialize(buffer, position, locatable);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = pis.setSerializer(buffer, position, identities);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cs.setSerializer(buffer, position, contacts);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = prs.setSerializer(buffer, position, relationships);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = lrs.setSerializer(
                     buffer, position, reverseRelationships);
 
             boolean hasDetails = details != null;
             if (hasDetails){
-                writeHeader(buffer, meta, hasDetails, position);
+                writeHeader(buffer, header, hasDetails, position);
                 position = iss.serialize(buffer, position, details);
             } else {
-                writeHeader(buffer, meta, hasDetails);
+                writeHeader(buffer, header, hasDetails);
             }
 
             return position;
@@ -4060,16 +4082,16 @@ public class RMObjectSerialization {
             int position = offset + (setSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
-            int meta = offset;
+            int header = offset;
             PartySerializer ps = new PartySerializer();
 
-            meta = writeHeader(buffer, meta, setSize);
+            header = writeHeader(buffer, header, setSize);
             Iterator<Party> it = items.iterator();
 
             while (it.hasNext()){
                 Party p = it.next();
                 int partyPosition = position;
-                meta = writeHeader(buffer, meta, partyPosition);
+                header = writeHeader(buffer, header, partyPosition);
                 position = ps.serialize(buffer, position, p);
             }
 
@@ -4100,16 +4122,16 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset, Locatable credentials,
                 ItemStructure details) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
 
             LocatableSerializer ls = new LocatableSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ls.serialize(buffer, position, credentials);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = iss.serialize(buffer, position, details);
 
             return position;
@@ -4147,17 +4169,17 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<Capability> items)
                  {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             CapabilitySerializer cs = new CapabilitySerializer();
 
             for (Capability c : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = cs.serialize(buffer, position, c);
             }
 
@@ -4184,73 +4206,73 @@ public class RMObjectSerialization {
     }
     
     public static class RoleSerializer {
-        protected int serialize(Buffer buffer, int offset, Party party, 
-                List<Capability> capabilities, 
-                PartyRef performer){
-            int meta = offset;
+        protected int serialize(Buffer buffer, int offset, Party party,
+                                List<Capability> capabilities,
+                                PartyRef performer) {
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize() +
-                    2 * BOOLEAN.getSize();
-            
+                    2 * PrimitiveTypeSize.BOOLEAN.getSize();
+
             PartySerializer ps = new PartySerializer();
             CapabilitySerializer cs = new CapabilitySerializer();
             PartyRefSerializer prs = new PartyRefSerializer();
-            
-            meta = writeHeader(buffer, meta, position);
+
+            header = writeHeader(buffer, header, position);
             position = ps.serialize(buffer, position, party);
-            
+
             boolean hasCapabilities = capabilities != null;
             if(hasCapabilities){
-                meta = writeHeader(buffer, meta, hasCapabilities, position);
+                header = writeHeader(buffer, header, hasCapabilities, position);
                 position = cs.listSerialize(buffer, position, capabilities);
             } else {
-                meta = writeHeader(buffer, meta, hasCapabilities);
+                header = writeHeader(buffer, header, hasCapabilities);
             }
-            
+
             //TODO DvInterval<DvDate> timeValidity
-            
-            writeHeader(buffer, meta, position);
+
+            writeHeader(buffer, header, position);
             position = prs.serialize(buffer, position, performer);
-            
+
             return position;
         }
-        
-        protected int serialize(Buffer buffer, int offset, 
-                Role r) {
+
+        protected int serialize(Buffer buffer, int offset, Role r) {
             int position = offset;
             RoleSerializer rs = new RoleSerializer();
-            
+
             position = rs.serialize(buffer, position, r.getParty(),
                     r.getCapabilities(), r.getPerformer());
-            
+
             return position;
         }
-        
+
         protected Role deserialize(Buffer buffer, int offset){
             int position = offset;
             PartySerializer ps = new PartySerializer();
             CapabilitySerializer cs = new CapabilitySerializer();
             PartyRefSerializer prs = new PartyRefSerializer();
-            
+
             int partyPosition = buffer.readInteger(position);
             position += PrimitiveTypeSize.INT.getSize();
             Party party = ps.deserialize(buffer, partyPosition);
-            
+
             boolean hasCapabilities = buffer.readBoolean(position);
-            position += BOOLEAN.getSize();
+            position += PrimitiveTypeSize.BOOLEAN.getSize();
             List<Capability> capabilities = null;
             if(hasCapabilities){
                 int capabilitiesPosition = buffer.readInteger(position);
                 position += PrimitiveTypeSize.INT.getSize();
                 capabilities = cs.deserializeList(buffer, capabilitiesPosition);
             }
-            
+
             //TODO DvInterval<DvDate> timeValidity
-            
+
             int performerPosition = buffer.readInteger(position);
             position += PrimitiveTypeSize.INT.getSize();
             PartyRef performer = prs.deserialize(buffer, performerPosition);
-            
-            return RMObjectFactory.newRole(party, capabilities, performer);
+
+            return RMObjectFactory.newRole(party, capabilities, null,
+                    performer);
         }
         
         protected int setSerializer(Buffer buffer, int offset,
@@ -4259,16 +4281,16 @@ public class RMObjectSerialization {
             int position = offset + (setSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
-            int meta = offset;
+            int header = offset;
             RoleSerializer rs = new RoleSerializer();
 
-            meta = writeHeader(buffer, meta, setSize);
+            header = writeHeader(buffer, header, setSize);
             Iterator<Role> it = roles.iterator();
 
             while (it.hasNext()){
                 Role role = it.next();
                 int linkPosition = position;
-                meta = writeHeader(buffer, meta, linkPosition);
+                header = writeHeader(buffer, header, linkPosition);
                 position = rs.serialize(buffer, position, role);
             }
 
@@ -4299,20 +4321,20 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, Party party, 
                 Set<Role> roles, 
                 Set<DvText> languages){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
             
             PartySerializer ps = new PartySerializer();
             RoleSerializer rs = new RoleSerializer();
             DvTextSerializer dts = new DvTextSerializer();
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ps.serialize(buffer, position, party);
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = rs.setSerializer(buffer, position, roles);
             
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = dts.setSerializer(buffer, position, languages);
             
             return position;
@@ -4481,25 +4503,25 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, 
                 LocatableRef instructionId, String activityId, 
                 ItemStructure wfDetails) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize() +
                     BOOLEAN.getSize();
             
             LocatableRefSerializer lrs = new LocatableRefSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = lrs.serialize(buffer, position, instructionId);
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, activityId);
             
             boolean hasWfDetails = wfDetails != null;
             if(hasWfDetails){
-                writeHeader(buffer, meta, hasWfDetails, position);
+                writeHeader(buffer, header, hasWfDetails, position);
                 position = iss.serialize(buffer, position, wfDetails);
             } else {
-                 writeHeader(buffer, meta, hasWfDetails);
+                 writeHeader(buffer, header, hasWfDetails);
             }
             
             return position;
@@ -4550,29 +4572,29 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, 
                 DvCodedText currentState, DvCodedText transition, 
                 DvCodedText careflowStep){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize() +
                     2 * BOOLEAN.getSize();
             
             DvCodedTextSerializer dcs = new DvCodedTextSerializer();
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dcs.serialize(buffer, position, currentState);
             
             boolean hasTransition = transition != null;
             if(hasTransition){
-                meta = writeHeader(buffer, meta, hasTransition, position);
+                header = writeHeader(buffer, header, hasTransition, position);
                 position = dcs.serialize(buffer, position, transition);
             } else {
-                meta = writeHeader(buffer, meta, hasTransition);
+                header = writeHeader(buffer, header, hasTransition);
             }
             
             boolean hasCareflowStep = careflowStep != null;
             if(hasCareflowStep){
-                writeHeader(buffer, meta, hasCareflowStep, position);
+                writeHeader(buffer, header, hasCareflowStep, position);
                 position = dcs.serialize(buffer, position, careflowStep);
             } else {
-                 writeHeader(buffer, meta, hasCareflowStep);
+                 writeHeader(buffer, header, hasCareflowStep);
             }
             
             return position;
@@ -4625,23 +4647,23 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, Locatable locatable, 
                 ItemStructure description, DvParsable timing, 
                 String actionArchetypeId){
-            int meta = offset;
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
             
             LocatableSerializer ls = new LocatableSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
             DvParsableSerializer dps = new DvParsableSerializer();
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ls.serialize(buffer, position, locatable);
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = iss.serialize(buffer, position, description);
             
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dps.serialize(buffer, position, timing);
             
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = stringSerialization(
                     buffer, position, actionArchetypeId);
             
@@ -4689,17 +4711,17 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<Activity> items)
         {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             ActivitySerializer as = new ActivitySerializer();
 
             for (Activity a : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = as.serialize(buffer, position, a);
             }
 
@@ -4730,16 +4752,16 @@ public class RMObjectSerialization {
                                 DvOrdered upper){
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize() +
                     2 * PrimitiveTypeSize.BOOLEAN.getSize();
-            int meta = offset;
+            int header = offset;
 
             boolean hasLower = lower != null;
             boolean hasUpper = upper != null;
 
             DvOrderedSerializer ds = new DvOrderedSerializer();
-            meta = writeHeader(buffer, meta, hasLower, position);
+            header = writeHeader(buffer, header, hasLower, position);
             position = ds.serialize(buffer, position, lower);
 
-            writeHeader(buffer, meta, hasUpper, position);
+            writeHeader(buffer, header, hasUpper, position);
             position = ds.serialize(buffer, position, upper);
 
             return position;
@@ -4784,7 +4806,7 @@ public class RMObjectSerialization {
     public static class DvIntervalSerializer {
         protected int serialize(Buffer buffer, int offset, DvOrdered lower,
                                 DvOrdered upper){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize() +
                     2 * PrimitiveTypeSize.BOOLEAN.getSize();
             boolean hasLower = lower != null;
@@ -4795,10 +4817,10 @@ public class RMObjectSerialization {
             }
 
             DvOrderedSerializer dos = new DvOrderedSerializer();
-            meta = writeHeader(buffer, meta, hasLower, position);
+            header = writeHeader(buffer, header, hasLower, position);
             position = dos.serialize(buffer, position, lower);
 
-            writeHeader(buffer, meta, hasUpper, position);
+            writeHeader(buffer, header, hasUpper, position);
             position = dos.serialize(buffer, position, upper);
 
             return position;
@@ -4849,15 +4871,15 @@ public class RMObjectSerialization {
     public static class ReferenceRangeSerializer {
         protected int serialize(Buffer buffer, int offset, DvText meaning,
                                 DvInterval range){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
             DvIntervalSerializer dis = new DvIntervalSerializer();
             DvTextSerializer dts = new DvTextSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, meaning);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = dis.serialize(buffer, position, range);
 
             return position;
@@ -4899,17 +4921,17 @@ public class RMObjectSerialization {
                     isLowerIncluded())){
                 return offset;
             }
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             ReferenceRangeSerializer rrs = new ReferenceRangeSerializer();
 
             for (ReferenceRange r : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = rrs.serialize(buffer, position, r);
             }
 
@@ -4942,7 +4964,7 @@ public class RMObjectSerialization {
                                 CodePhrase normalStatus){
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize() +
                     3 * PrimitiveTypeSize.BOOLEAN.getSize();
-            int meta = offset;
+            int header = offset;
 
             boolean hasOtherReferenceRanges = otherReferenceRanges != null;
             boolean hasNormalRange = normalRange != null;
@@ -4952,17 +4974,17 @@ public class RMObjectSerialization {
             DvIntervalSerializer dis = new DvIntervalSerializer();
             CodePhraseSerializer cps = new CodePhraseSerializer();
 
-            meta = writeHeader(buffer, meta, hasOtherReferenceRanges, position);
+            header = writeHeader(buffer, header, hasOtherReferenceRanges, position);
             if(hasOtherReferenceRanges){
                 position = rrs.listSerialize(buffer, position, otherReferenceRanges);
             }
 
-            meta = writeHeader(buffer, meta, hasNormalRange, position);
+            header = writeHeader(buffer, header, hasNormalRange, position);
             if(hasNormalRange){
                 position = dis.serialize(buffer, position, normalRange);
             }
 
-            writeHeader(buffer, meta, hasNormalStatus, position);
+            writeHeader(buffer, header, hasNormalStatus, position);
             if(hasNormalStatus){
                 position = cps.serialize(buffer, position, normalStatus);
             }
@@ -5026,27 +5048,27 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, DvAmount dvAmount,
                                 double numerator, double denominator,
                                 ProportionKind type, int precision){
-            int meta = offset;
+            int header = offset;
             int position = offset + 5 * PrimitiveTypeSize.INT.getSize();
 
             DvAmountSerializer das = new DvAmountSerializer();
             ProportionKindSerializer pks = new ProportionKindSerializer();
 
-            meta = writeHeader(buffer, meta ,position);
+            header = writeHeader(buffer, header ,position);
             position = das.serialize(buffer, position, dvAmount);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             buffer.writeDouble(position, numerator);
             position += PrimitiveTypeSize.DOUBLE.getSize();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             buffer.writeDouble(position, denominator);
             position += PrimitiveTypeSize.DOUBLE.getSize();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = pks.serialize(buffer, position, type);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             buffer.writeInteger(position, precision);
             position += PrimitiveTypeSize.INT.getSize();
 
@@ -5095,21 +5117,21 @@ public class RMObjectSerialization {
     public static class DvQuantitySerializer {
         protected int serialize(Buffer buffer, int offset, DvAmount dvAmount,
                                 String units, double magnitude, int precision){
-            int meta = offset;
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
 
             DvAmountSerializer das = new DvAmountSerializer();
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = das.serialize(buffer, position, dvAmount);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, units);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             buffer.writeDouble(position, magnitude);
             position += PrimitiveTypeSize.DOUBLE.getSize();
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             buffer.writeInteger(position, precision);
             position += PrimitiveTypeSize.INT.getSize();
 
@@ -5152,15 +5174,15 @@ public class RMObjectSerialization {
     public static class DvDurationSerializer {
         protected int serialize(Buffer buffer, int offset, DvAmount dvAmount,
                                 String value){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
 
             DvAmountSerializer das = new DvAmountSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = das.serialize(buffer, position, dvAmount);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, value);
 
             return position;
@@ -5197,15 +5219,15 @@ public class RMObjectSerialization {
     public static class DvAbsoluteQuantitySerializer {
         protected int serialize(Buffer buffer, int offset,
                                 DvAbsoluteQuantityWithDvCount d){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
             DvQuantifiedSerializer dqs = new DvQuantifiedSerializer();
             DvCountSerializer dcs = new DvCountSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dqs.serialize(buffer, position, d.getDvQuantified());
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = dcs.serialize(buffer, position, d.getDvCount());
 
             return position;
@@ -5213,16 +5235,16 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset,
                                 DvAbsoluteQuantityWithDvDuration d){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
 
             DvQuantifiedSerializer dfs = new DvQuantifiedSerializer();
             DvDurationSerializer dds = new DvDurationSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dfs.serialize(buffer, position, d.getDvQuantified());
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = dds.serialize(buffer, position, d.getDvDuration());
 
             return position;
@@ -5230,16 +5252,16 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset,
                                 DvAbsoluteQuantityWithDvProportion d){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
 
             DvQuantifiedSerializer dfs = new DvQuantifiedSerializer();
             DvProportionSerializer dps = new DvProportionSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dfs.serialize(buffer, position, d.getDvQuantified());
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = dps.serialize(buffer, position, d.getDvProportion());
 
             return position;
@@ -5247,16 +5269,16 @@ public class RMObjectSerialization {
 
         protected int serialize(Buffer buffer, int offset,
                                 DvAbsoluteQuantityWithDvQuantity d){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
 
             DvQuantifiedSerializer dfs = new DvQuantifiedSerializer();
             DvQuantitySerializer dqs = new DvQuantitySerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dfs.serialize(buffer, position, d.getDvQuantified());
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = dqs.serialize(buffer, position, d.getDvQuantity());
 
             return position;
@@ -5395,14 +5417,14 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset,
                                 DvAbsoluteQuantityWithDvDuration dvAbsoluteQuantity,
                                 String value){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
             DvAbsoluteQuantitySerializer das = new DvAbsoluteQuantitySerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = das.serialize(buffer, position, dvAbsoluteQuantity);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, value);
 
             return position;
@@ -5443,14 +5465,14 @@ public class RMObjectSerialization {
                                 boolean minuteKnown, boolean secondKnown,
                                 boolean fractionalSecKnown,
                                 DvTemporal dvTemporal){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
             DvTemporalSerializer dts = new DvTemporalSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, dvTemporal);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
 
             buffer.writeBoolean(position, isPartial);
             position += PrimitiveTypeSize.BOOLEAN.getSize();
@@ -5512,18 +5534,18 @@ public class RMObjectSerialization {
                                 boolean minuteKnown, boolean secondKnown,
                                 boolean fractionalSecKnown,
                                 DvTemporal dvTemporal, DvDate dateTime){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
             DvTemporalSerializer dts = new DvTemporalSerializer();
             DvDateSerializer dds = new DvDateSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, dvTemporal);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dds.serialize(buffer, position, dateTime);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
 
             buffer.writeBoolean(position, isPartial);
             position += PrimitiveTypeSize.BOOLEAN.getSize();
@@ -5630,20 +5652,20 @@ public class RMObjectSerialization {
      */
     public static int listStringSerialization(Buffer buffer, int offset,
             List<String> list) {
-        int meta = offset;
+        int header = offset;
         int listSize = list.size();
         int position = offset + (listSize * PrimitiveTypeSize.INT.getSize()) +
                 PrimitiveTypeSize.INT.getSize();
 
-        meta = writeHeader(buffer, meta, listSize);
+        header = writeHeader(buffer, header, listSize);
         if (listSize == 0){
-            return meta;
+            return header;
         }
 
         Iterator<String> it = list.iterator();
         while (it.hasNext()){
             String value = it.next();
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, value);
         }
 
@@ -5693,10 +5715,10 @@ public class RMObjectSerialization {
             int offset,
             Map<String, String> map) {
         int mapSize = map.size();
-        int meta = offset;
-        meta = writeHeader(buffer, meta, mapSize);
+        int header = offset;
+        header = writeHeader(buffer, header, mapSize);
         if (mapSize == 0){
-            return meta;
+            return header;
         }
         int position = offset + mapSize * (2 *
                 PrimitiveTypeSize.INT.getSize()) +
@@ -5706,9 +5728,9 @@ public class RMObjectSerialization {
             String key = entry.getKey();
             String value = entry.getValue();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, key);
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, value);
         }
 
@@ -5718,15 +5740,15 @@ public class RMObjectSerialization {
     public static class DvQuantifiedSerializer {
         protected int serialize(Buffer buffer, int offset, DvOrdered dvOrdered,
                                 String magnitudeStatus){
-            int meta = offset;
+            int header = offset;
             int position = offset +  2 * PrimitiveTypeSize.INT.getSize() +
                     PrimitiveTypeSize.BOOLEAN.getSize();
             DvOrderedSerializer dos = new DvOrderedSerializer();
             boolean hasMagnitudeStatus = magnitudeStatus != null;
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dos.serialize(buffer, position, dvOrdered);
-            writeHeader(buffer, meta, hasMagnitudeStatus, position);
+            writeHeader(buffer, header, hasMagnitudeStatus, position);
             position = stringSerialization(buffer, position, magnitudeStatus);
 
             return position;
@@ -5765,18 +5787,18 @@ public class RMObjectSerialization {
     public static class DvAmountSerializer {
         protected int serialize(Buffer buffer, int offset, DvOrdered dvOrdered,
                                 double accuracy, boolean accuracyPercent){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
 
             DvOrderedSerializer dos = new DvOrderedSerializer();
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dos.serialize(buffer, position, dvOrdered);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             buffer.writeDouble(position, accuracy);
             position += PrimitiveTypeSize.DOUBLE.getSize();
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             buffer.writeBoolean(position, accuracyPercent);
             position += PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -5819,24 +5841,24 @@ public class RMObjectSerialization {
                                 List<ReferenceRange> otherReferenceRanges,
                                 DvInterval normalRange, int value,
                                 DvCodedText symbol){
-            int meta = offset;
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
 
             ReferenceRangeSerializer rrs = new ReferenceRangeSerializer();
             DvIntervalSerializer dis = new DvIntervalSerializer();
             DvCodedTextSerializer dcs = new DvCodedTextSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = rrs.listSerialize(buffer, position, otherReferenceRanges);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dis.serialize(buffer, position, normalRange);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             buffer.writeInteger(position, value);
             position += PrimitiveTypeSize.INT.getSize();
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = dcs.serialize(buffer, position, symbol);
 
             return position;
@@ -5884,15 +5906,15 @@ public class RMObjectSerialization {
     public static class DvCountSerializer {
         protected int serialize(Buffer buffer, int offset, DvAmount dvAmount,
                                 int magnitude){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
 
             DvAmountSerializer das = new DvAmountSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = das.serialize(buffer, position, dvAmount);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             buffer.writeInteger(position, magnitude);
             position += PrimitiveTypeSize.INT.getSize();
 
@@ -5928,7 +5950,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, PartyProxy performer,
                                 DvText function, DvCodedText mode,
                                 DvInterval time){
-            int meta = offset;
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize() +
                     PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -5939,16 +5961,16 @@ public class RMObjectSerialization {
             DvCodedTextSerializer dcs = new DvCodedTextSerializer();
             DvIntervalSerializer dis = new DvIntervalSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = pps.serialize(buffer, position, performer);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, function);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dcs.serialize(buffer, position, mode);
 
-            writeHeader(buffer, meta, hasTime, position);
+            writeHeader(buffer, header, hasTime, position);
             position = dis.serialize(buffer, position, time);
 
             return position;
@@ -6000,17 +6022,17 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<Participation> items)
         {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             ParticipationSerializer dis = new ParticipationSerializer();
 
             for (Participation p : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = dis.serialize(buffer, position, p);
             }
 
@@ -6043,16 +6065,16 @@ public class RMObjectSerialization {
             int position = offset + (setSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
-            int meta = offset;
+            int header = offset;
             ParticipationSerializer des = new ParticipationSerializer();
 
-            meta = writeHeader(buffer, meta, setSize);
+            header = writeHeader(buffer, header, setSize);
             Iterator<Participation> it = items.iterator();
 
             while (it.hasNext()){
                 Participation p = it.next();
                 int participationPosition = position;
-                meta = writeHeader(buffer, meta, participationPosition);
+                header = writeHeader(buffer, header, participationPosition);
                 position = des.serialize(buffer, position, p);
             }
 
@@ -6085,7 +6107,7 @@ public class RMObjectSerialization {
                                 String timePosition, PartyProxy committer,
                                 DvDateTime timeCommitted,
                                 DvCodedText changeType, DvText description){
-            int meta = offset;
+            int header = offset;
             int position = offset + 5 * PrimitiveTypeSize.INT.getSize();
 
             PartyProxySerializer pps = new PartyProxySerializer();
@@ -6093,20 +6115,20 @@ public class RMObjectSerialization {
             DvCodedTextSerializer dcs = new DvCodedTextSerializer();
             DvDateTimeSerializer dds = new DvDateTimeSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, timePosition);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = pps.serialize(buffer, position, committer);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dds.serialize(buffer, position,
                     timeCommitted);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dcs.serialize(buffer, position, changeType);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, description);
 
             return position;
@@ -6163,17 +6185,17 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<AuditDetails> items)
         {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             AuditDetailsSerializer dis = new AuditDetailsSerializer();
 
             for (AuditDetails a : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = dis.serialize(buffer, position, a);
             }
 
@@ -6205,7 +6227,7 @@ public class RMObjectSerialization {
                                 DvMultimedia attestedView, String proof,
                                 Set<DvEHRURI> items, DvText reason,
                                 boolean isPending){
-            int meta = offset;
+            int header = offset;
             int position = offset + 6 * PrimitiveTypeSize.INT.getSize();
 
             AuditDetailsSerializer ads = new AuditDetailsSerializer();
@@ -6213,22 +6235,22 @@ public class RMObjectSerialization {
             DvEHRURISerializer des = new DvEHRURISerializer();
             DvTextSerializer dts = new DvTextSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ads.serialize(buffer, position, auditDetails);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dms.serialize(buffer, position, attestedView);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, proof);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = des.setSerializer(buffer, position, items);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, reason);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             buffer.writeBoolean(position, isPending);
             position += PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -6289,16 +6311,16 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset,
                                 List<AuditDetails> audits,
                                 ObjectVersionID versionID){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
 
             AuditDetailsSerializer ads = new AuditDetailsSerializer();
             ObjectVersionIDSerializer ovs = new ObjectVersionIDSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ads.listSerialize(buffer, position, audits);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = ovs.serialize(buffer, position, versionID);
 
             return position;
@@ -6335,18 +6357,18 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<RevisionHistoryItem> items)
         {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             RevisionHistoryItemSerializer rhs =
                     new RevisionHistoryItemSerializer();
 
             for (RevisionHistoryItem r : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = rhs.serialize(buffer, position, r);
             }
 
@@ -6413,20 +6435,20 @@ public class RMObjectSerialization {
     public static class ContributionSerializer {
         protected int serialize(Buffer buffer, int offset, ObjectID uid,
                                 Set<ObjectRef> versions, AuditDetails audit){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
 
             ObjectIDSerializer ois = new ObjectIDSerializer();
             ObjectRefSerializer ors = new ObjectRefSerializer();
             AuditDetailsSerializer ads = new AuditDetailsSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ois.serialize(buffer, position, uid);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ors.setSerializer(buffer, position, versions);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = ads.serialize(buffer, position, audit);
 
             return position;
@@ -6469,20 +6491,20 @@ public class RMObjectSerialization {
     public static class FolderSerializer {
         protected int serialize(Buffer buffer, int offset, Locatable locatable,
                                 List<Folder> folders, List<ObjectRef> items){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
 
             LocatableSerializer ls = new LocatableSerializer();
             FolderSerializer fs = new FolderSerializer();
             ObjectRefSerializer ors = new ObjectRefSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ls.serialize(buffer, position, locatable);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = fs.listSerialize(buffer, position, folders);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = ors.listSerialize(buffer, position, items);
 
             return position;
@@ -6523,7 +6545,7 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<Folder> folders)
         {
-            int meta = offset;
+            int header = offset;
             if(folders == null){
                 int position = offset;
                 buffer.writeInteger(position, -1);
@@ -6536,11 +6558,11 @@ public class RMObjectSerialization {
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             FolderSerializer dis = new FolderSerializer();
 
             for (Folder f : folders){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = dis.serialize(buffer, position, f);
             }
 
@@ -6608,7 +6630,7 @@ public class RMObjectSerialization {
                                 ResourceDescription description,
                                 RevisionHistory revisionHistory,
                                 boolean isControlled){
-            int meta = offset;
+            int header = offset;
             int position = offset + 5 * PrimitiveTypeSize.INT.getSize() +
                     2 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -6622,23 +6644,23 @@ public class RMObjectSerialization {
             boolean hasDescription = description != null;
             boolean hasRevisionHistory = revisionHistory != null;
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cps.serialize(buffer, position, originalLanguage);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = tds.mapSerialization(buffer, position, translations);
 
-            meta = writeHeader(buffer, meta, hasDescription, position);
+            header = writeHeader(buffer, header, hasDescription, position);
             if(hasDescription){
                 position = rds.serialize(buffer, position, description);
             }
 
-            meta = writeHeader(buffer, meta, hasRevisionHistory, position);
+            header = writeHeader(buffer, header, hasRevisionHistory, position);
             if(hasRevisionHistory){
                 position = rhs.serialize(buffer, position, revisionHistory);
             }
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             buffer.writeBoolean(position, isControlled);
             position += PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -6713,7 +6735,7 @@ public class RMObjectSerialization {
                                 String resourcePackageUri,
                                 Map<String, String> otherDetails,
                                 AuthoredResource parentResource){
-            int meta = offset;
+            int header = offset;
             int position = offset + 7 * PrimitiveTypeSize.INT.getSize() +
                     4 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -6726,33 +6748,33 @@ public class RMObjectSerialization {
                     new ResourceDescriptionItemSerializer();
             AuthoredResourceSerializer ars = new AuthoredResourceSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = mapStringSerialization(buffer, position, originalAuthor);
 
-            meta = writeHeader(buffer, meta, hasOtherContributors, position);
+            header = writeHeader(buffer, header, hasOtherContributors, position);
             if(hasOtherContributors){
                 position = listStringSerialization(buffer, position,
                     otherContributors);
             }
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, lifecycleState);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = rds.listSerialize(buffer, position, details);
 
-            meta = writeHeader(buffer, meta, hasResourcePackageUri, position);
+            header = writeHeader(buffer, header, hasResourcePackageUri, position);
             if(hasResourcePackageUri){
                 position = stringSerialization(buffer, position,
                         resourcePackageUri);
             }
 
-            meta = writeHeader(buffer, meta, hasOtherDetails, position);
+            header = writeHeader(buffer, header, hasOtherDetails, position);
             if(hasOtherDetails){
                 position = mapStringSerialization(buffer, position, otherDetails);
             }
 
-            writeHeader(buffer, meta, hasParentResource, position);
+            writeHeader(buffer, header, hasParentResource, position);
             if(hasParentResource){
                 position = ars.serialize(buffer, position, parentResource);
             }
@@ -6844,7 +6866,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset,
                                         Locatable locatable, DvDateTime time,
                                         ItemTree data, ItemStructure state){
-            int meta = offset;
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
 
             LocatableSerializer ls = new LocatableSerializer();
@@ -6852,16 +6874,16 @@ public class RMObjectSerialization {
             ItemTreeSerializer its = new ItemTreeSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ls.serialize(buffer, position, locatable);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, time);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = its.serialize(buffer, position, data);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = iss.serialize(buffer, position, state);
 
             return position;
@@ -6908,7 +6930,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset,
                                 Locatable locatable, DvDateTime time,
                                 ItemSingle data, ItemStructure state){
-            int meta = offset;
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
 
             LocatableSerializer ls = new LocatableSerializer();
@@ -6916,16 +6938,16 @@ public class RMObjectSerialization {
             ItemSingleSerializer its = new ItemSingleSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ls.serialize(buffer, position, locatable);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, time);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = its.serialize(buffer, position, data);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = iss.serialize(buffer, position, state);
 
             return position;
@@ -6972,7 +6994,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset,
                                 Locatable locatable, DvDateTime time,
                                 ItemTable data, ItemStructure state){
-            int meta = offset;
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize();
 
             LocatableSerializer ls = new LocatableSerializer();
@@ -6980,16 +7002,16 @@ public class RMObjectSerialization {
             ItemTableSerializer its = new ItemTableSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ls.serialize(buffer, position, locatable);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, time);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = its.serialize(buffer, position, data);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = iss.serialize(buffer, position, state);
 
             return position;
@@ -7037,17 +7059,17 @@ public class RMObjectSerialization {
         protected int listSerializeItemTree(
                 Buffer buffer, int offset, List<EventWithItemTree> items)
         {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             EventSerializer es = new EventSerializer();
 
             for (EventWithItemTree e : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = es.serialize(buffer, position, e);
             }
 
@@ -7077,17 +7099,17 @@ public class RMObjectSerialization {
         protected int listSerializeItemSingle(
                 Buffer buffer, int offset, List<EventWithItemSingle> items)
         {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             EventSerializer es = new EventSerializer();
 
             for (EventWithItemSingle e : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = es.serialize(buffer, position, e);
             }
 
@@ -7117,17 +7139,17 @@ public class RMObjectSerialization {
         protected int listSerializeItemTable(
                 Buffer buffer, int offset, List<EventWithItemTable> items)
         {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             EventSerializer es = new EventSerializer();
 
             for (EventWithItemTable e : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = es.serialize(buffer, position, e);
             }
 
@@ -7161,7 +7183,7 @@ public class RMObjectSerialization {
                                 List<EventWithItemTree> events,
                                 DvDuration period, DvDuration duration,
                                 ItemStructure summary) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 6 * PrimitiveTypeSize.INT.getSize() +
                     4 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -7176,28 +7198,28 @@ public class RMObjectSerialization {
             DvDurationSerializer dds = new DvDurationSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dss.serialize(buffer, position, dataStructure);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, origin);
 
-            meta = writeHeader(buffer, meta, hasEvents, position);
+            header = writeHeader(buffer, header, hasEvents, position);
             if(hasEvents){
                 position = es.listSerializeItemTree(buffer, position, events);
             }
 
-            meta = writeHeader(buffer, meta, hasPeriod, position);
+            header = writeHeader(buffer, header, hasPeriod, position);
             if(hasPeriod){
                 position = dds.serialize(buffer, position, period);
             }
 
-            meta = writeHeader(buffer, meta, hasDuration, position);
+            header = writeHeader(buffer, header, hasDuration, position);
             if(hasDuration){
                 position = dds.serialize(buffer, position, duration);
             }
 
-            writeHeader(buffer, meta, hasSummary, position);
+            writeHeader(buffer, header, hasSummary, position);
             if(hasSummary){
                 position = iss.serialize(buffer, position, summary);
             }
@@ -7279,7 +7301,7 @@ public class RMObjectSerialization {
                                           List<EventWithItemSingle> events,
                                           DvDuration period, DvDuration duration,
                                           ItemStructure summary) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 6 * PrimitiveTypeSize.INT.getSize() +
                     4 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -7294,28 +7316,28 @@ public class RMObjectSerialization {
             DvDurationSerializer dds = new DvDurationSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dss.serialize(buffer, position, dataStructure);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, origin);
 
-            meta = writeHeader(buffer, meta, hasEvents, position);
+            header = writeHeader(buffer, header, hasEvents, position);
             if(hasEvents){
                 position = es.listSerializeItemSingle(buffer, position, events);
             }
 
-            meta = writeHeader(buffer, meta, hasPeriod, position);
+            header = writeHeader(buffer, header, hasPeriod, position);
             if(hasPeriod){
                 position = dds.serialize(buffer, position, period);
             }
 
-            meta = writeHeader(buffer, meta, hasDuration, position);
+            header = writeHeader(buffer, header, hasDuration, position);
             if(hasDuration){
                 position = dds.serialize(buffer, position, duration);
             }
 
-            writeHeader(buffer, meta, hasSummary, position);
+            writeHeader(buffer, header, hasSummary, position);
             if(hasSummary){
                 position = iss.serialize(buffer, position, summary);
             }
@@ -7395,7 +7417,7 @@ public class RMObjectSerialization {
                                          List<EventWithItemTable> events,
                                          DvDuration period, DvDuration duration,
                                          ItemStructure summary) {
-            int meta = offset;
+            int header = offset;
             int position = offset + 6 * PrimitiveTypeSize.INT.getSize() +
                     4 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -7410,28 +7432,28 @@ public class RMObjectSerialization {
             DvDurationSerializer dds = new DvDurationSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dss.serialize(buffer, position, dataStructure);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, origin);
 
-            meta = writeHeader(buffer, meta, hasEvents, position);
+            header = writeHeader(buffer, header, hasEvents, position);
             if(hasEvents){
                 position = es.listSerializeItemTable(buffer, position, events);
             }
 
-            meta = writeHeader(buffer, meta, hasPeriod, position);
+            header = writeHeader(buffer, header, hasPeriod, position);
             if(hasPeriod){
                 position = dds.serialize(buffer, position, period);
             }
 
-            meta = writeHeader(buffer, meta, hasDuration, position);
+            header = writeHeader(buffer, header, hasDuration, position);
             if(hasDuration){
                 position = dds.serialize(buffer, position, duration);
             }
 
-            writeHeader(buffer, meta, hasSummary, position);
+            writeHeader(buffer, header, hasSummary, position);
             if(hasSummary){
                 position = iss.serialize(buffer, position, summary);
             }
@@ -7511,7 +7533,7 @@ public class RMObjectSerialization {
         protected int serializeItemTree(Buffer buffer, int offset,
                                 EventWithItemTree event, DvDuration width,
                                 DvCodedText mathFunction, int sampleCount){
-            int meta = offset;
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize() +
                     2 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -7522,20 +7544,20 @@ public class RMObjectSerialization {
             DvDurationSerializer dds = new DvDurationSerializer();
             DvCodedTextSerializer dcs = new DvCodedTextSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = es.serialize(buffer, position, event);
 
-            meta = writeHeader(buffer, meta, hasWidth, position);
+            header = writeHeader(buffer, header, hasWidth, position);
             if(hasWidth){
                 position = dds.serialize(buffer, position, width);
             }
 
-            meta = writeHeader(buffer, meta, hasMathFunction, position);
+            header = writeHeader(buffer, header, hasMathFunction, position);
             if(hasMathFunction){
                 position = dcs.serialize(buffer, position, mathFunction);
             }
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             buffer.writeInteger(position, sampleCount);
             position += PrimitiveTypeSize.INT.getSize();
 
@@ -7597,7 +7619,7 @@ public class RMObjectSerialization {
                                           DvDuration width,
                                           DvCodedText mathFunction,
                                           int sampleCount){
-            int meta = offset;
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize() +
                     2 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -7608,20 +7630,20 @@ public class RMObjectSerialization {
             DvDurationSerializer dds = new DvDurationSerializer();
             DvCodedTextSerializer dcs = new DvCodedTextSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = es.serialize(buffer, position, event);
 
-            meta = writeHeader(buffer, meta, hasWidth, position);
+            header = writeHeader(buffer, header, hasWidth, position);
             if(hasWidth){
                 position = dds.serialize(buffer, position, width);
             }
 
-            meta = writeHeader(buffer, meta, hasMathFunction, position);
+            header = writeHeader(buffer, header, hasMathFunction, position);
             if(hasMathFunction){
                 position = dcs.serialize(buffer, position, mathFunction);
             }
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             buffer.writeInteger(position, sampleCount);
             position += PrimitiveTypeSize.INT.getSize();
 
@@ -7683,7 +7705,7 @@ public class RMObjectSerialization {
                                          DvDuration width,
                                          DvCodedText mathFunction,
                                          int sampleCount){
-            int meta = offset;
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize() +
                     2 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -7694,20 +7716,20 @@ public class RMObjectSerialization {
             DvDurationSerializer dds = new DvDurationSerializer();
             DvCodedTextSerializer dcs = new DvCodedTextSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = es.serialize(buffer, position, event);
 
-            meta = writeHeader(buffer, meta, hasWidth, position);
+            header = writeHeader(buffer, header, hasWidth, position);
             if(hasWidth){
                 position = dds.serialize(buffer, position, width);
             }
 
-            meta = writeHeader(buffer, meta, hasMathFunction, position);
+            header = writeHeader(buffer, header, hasMathFunction, position);
             if(hasMathFunction){
                 position = dcs.serialize(buffer, position, mathFunction);
             }
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             buffer.writeInteger(position, sampleCount);
             position += PrimitiveTypeSize.INT.getSize();
 
@@ -7900,17 +7922,17 @@ public class RMObjectSerialization {
         protected int listSerialize(
                 Buffer buffer, int offset, List<ContentItem> items)
         {
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             ContentItemSerializer dis = new ContentItemSerializer();
 
             for (ContentItem c : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = dis.serialize(buffer, position, c);
             }
 
@@ -7942,7 +7964,7 @@ public class RMObjectSerialization {
                                 CodePhrase encoding, PartyProxy subject,
                                 PartyProxy provider, ObjectRef workflowId,
                                 List<Participation> otherParticipations){
-            int meta = offset;
+            int header = offset;
             int position = offset + 7 * PrimitiveTypeSize.INT.getSize() +
                 3 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -7956,29 +7978,29 @@ public class RMObjectSerialization {
             ObjectRefSerializer ors = new ObjectRefSerializer();
             ParticipationSerializer ps = new ParticipationSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cis.serialize(buffer, position, contentItem);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cps.serialize(buffer, position, language);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cps.serialize(buffer, position, encoding);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = pps.serialize(buffer, position, subject);
 
-            meta = writeHeader(buffer, meta, hasProvider, position);
+            header = writeHeader(buffer, header, hasProvider, position);
             if(hasProvider){
                 position = pps.serialize(buffer, position, provider);
             }
 
-            meta = writeHeader(buffer, meta, hasWorkflowId, position);
+            header = writeHeader(buffer, header, hasWorkflowId, position);
             if(hasWorkflowId){
                 position = ors.serialize(buffer, position, workflowId);
             }
 
-            writeHeader(buffer, meta, hasOtherParticipations, position);
+            writeHeader(buffer, header, hasOtherParticipations, position);
             if(hasOtherParticipations){
                 position = ps.listSerialize(buffer, position, otherParticipations);
             }
@@ -8061,7 +8083,7 @@ public class RMObjectSerialization {
     public static class CareEntrySerializer {
         protected int serialize(Buffer buffer, int offset, Entry entry,
                                 ItemStructure protocol, ObjectRef guidelineId){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
                     + 2 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -8072,15 +8094,15 @@ public class RMObjectSerialization {
             ItemStructureSerializer iss = new ItemStructureSerializer();
             ObjectRefSerializer ors = new ObjectRefSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = es.serialize(buffer, position, entry);
 
-            meta = writeHeader(buffer, meta, hasProtocol, position);
+            header = writeHeader(buffer, header, hasProtocol, position);
             if(hasProtocol){
                 position = iss.serialize(buffer, position, protocol);
             }
 
-            writeHeader(buffer, meta, hasGuidelineId, position);
+            writeHeader(buffer, header, hasGuidelineId, position);
             if(hasGuidelineId){
                 position = ors.serialize(buffer, position, guidelineId);
             }
@@ -8136,7 +8158,7 @@ public class RMObjectSerialization {
                                 ItemStructure description,
                                 ISMTransition ismTransition,
                                 InstructionDetails instructionDetails){
-            int meta = offset;
+            int header = offset;
             int position = offset + 4 * PrimitiveTypeSize.INT.getSize()
                 + PrimitiveTypeSize.BOOLEAN.getSize();
             boolean hasInstructionDetails = instructionDetails != null;
@@ -8147,16 +8169,16 @@ public class RMObjectSerialization {
             InstructionDetailsSerializer ids = new
                     InstructionDetailsSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, time);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = iss.serialize(buffer, position, description);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = its.serialize(buffer, position, ismTransition);
 
-            meta = writeHeader(buffer, meta, hasInstructionDetails, position);
+            header = writeHeader(buffer, header, hasInstructionDetails, position);
             if(hasInstructionDetails){
                 position = ids.serialize(buffer, position, instructionDetails);
             }
@@ -8216,15 +8238,15 @@ public class RMObjectSerialization {
     public static class AdminEntrySerializer {
         protected int serialize(Buffer buffer, int offset, Entry entry,
                                 ItemStructure data){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
             EntrySerializer es = new EntrySerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = es.serialize(buffer, position, entry);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = iss.serialize(buffer, position, data);
 
             return position;
@@ -8260,15 +8282,15 @@ public class RMObjectSerialization {
     public static class EvaluationSerializer {
         protected int serialize(Buffer buffer, int offset, CareEntry careEntry,
                                 ItemStructure data){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
             CareEntrySerializer es = new CareEntrySerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = es.serialize(buffer, position, careEntry);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = iss.serialize(buffer, position, data);
 
             return position;
@@ -8306,7 +8328,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, CareEntry careEntry,
                                 DvText narrative, List<Activity> activities,
                                 DvDateTime expiryTime,DvParsable wfDefinition){
-            int meta = offset;
+            int header = offset;
             int position = offset + 5 * PrimitiveTypeSize.INT.getSize()
                     + 3 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -8320,23 +8342,23 @@ public class RMObjectSerialization {
             DvDateTimeSerializer ddts = new DvDateTimeSerializer();
             DvParsableSerializer dps = new DvParsableSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ces.serialize(buffer, position, careEntry);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, narrative);
 
-            meta = writeHeader(buffer, meta, hasActivities, position);
+            header = writeHeader(buffer, header, hasActivities, position);
             if(hasActivities){
                 position = as.listSerialize(buffer, position, activities);
             }
 
-            meta = writeHeader(buffer, meta, hasExpiryTime, position);
+            header = writeHeader(buffer, header, hasExpiryTime, position);
             if(hasExpiryTime){
                 position = ddts.serialize(buffer, position, expiryTime);
             }
 
-            writeHeader(buffer, meta, hasWfDefinition, position);
+            writeHeader(buffer, header, hasWfDefinition, position);
             if(hasWfDefinition){
                 position = dps.serialize(buffer, position, wfDefinition);
             }
@@ -8409,7 +8431,7 @@ public class RMObjectSerialization {
                                 CareEntry careEntry,
                                 HistoryWithItemTree data,
                                 HistoryWithItemTree state){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
                     + PrimitiveTypeSize.BOOLEAN.getSize();
             CareEntrySerializer ces = new CareEntrySerializer();
@@ -8417,10 +8439,10 @@ public class RMObjectSerialization {
 
             boolean hasState = state != null;
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ces.serialize(buffer, position, careEntry);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = hs.serialize(buffer, position, data);
 
             return position;
@@ -8461,7 +8483,7 @@ public class RMObjectSerialization {
                                                   CareEntry careEntry,
                                                   HistoryWithItemTree data,
                                                   HistoryWithItemSingle state){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
                     + PrimitiveTypeSize.BOOLEAN.getSize();
             CareEntrySerializer ces = new CareEntrySerializer();
@@ -8469,13 +8491,13 @@ public class RMObjectSerialization {
 
             boolean hasState = state != null;
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ces.serialize(buffer, position, careEntry);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = hs.serialize(buffer, position, data);
 
-            writeHeader(buffer, meta, hasState, position);
+            writeHeader(buffer, header, hasState, position);
             if(hasState){
                 position = hs.serialize(buffer, position, state);
             }
@@ -8526,7 +8548,7 @@ public class RMObjectSerialization {
                                                   CareEntry careEntry,
                                                   HistoryWithItemTree data,
                                                   HistoryWithItemTable state){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
                     + PrimitiveTypeSize.BOOLEAN.getSize();
             CareEntrySerializer ces = new CareEntrySerializer();
@@ -8534,13 +8556,13 @@ public class RMObjectSerialization {
 
             boolean hasState = state != null;
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ces.serialize(buffer, position, careEntry);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = hs.serialize(buffer, position, data);
 
-            writeHeader(buffer, meta, hasState, position);
+            writeHeader(buffer, header, hasState, position);
             if(hasState){
                 position = hs.serialize(buffer, position, state);
             }
@@ -8591,7 +8613,7 @@ public class RMObjectSerialization {
                                                   CareEntry careEntry,
                                                   HistoryWithItemSingle data,
                                                   HistoryWithItemTree state){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
                     + PrimitiveTypeSize.BOOLEAN.getSize();
             CareEntrySerializer ces = new CareEntrySerializer();
@@ -8599,13 +8621,13 @@ public class RMObjectSerialization {
 
             boolean hasState = state != null;
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ces.serialize(buffer, position, careEntry);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = hs.serialize(buffer, position, data);
 
-            writeHeader(buffer, meta, hasState, position);
+            writeHeader(buffer, header, hasState, position);
             if(hasState){
                 position = hs.serialize(buffer, position, state);
             }
@@ -8656,7 +8678,7 @@ public class RMObjectSerialization {
                                                     CareEntry careEntry,
                                                     HistoryWithItemSingle data,
                                                     HistoryWithItemSingle state){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
                     + PrimitiveTypeSize.BOOLEAN.getSize();
             CareEntrySerializer ces = new CareEntrySerializer();
@@ -8664,13 +8686,13 @@ public class RMObjectSerialization {
 
             boolean hasState = state != null;
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ces.serialize(buffer, position, careEntry);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = hs.serialize(buffer, position, data);
 
-            writeHeader(buffer, meta, hasState, position);
+            writeHeader(buffer, header, hasState, position);
             if(hasState){
                 position = hs.serialize(buffer, position, state);
             }
@@ -8721,7 +8743,7 @@ public class RMObjectSerialization {
                                                    CareEntry careEntry,
                                                    HistoryWithItemSingle data,
                                                    HistoryWithItemTable state){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
                     + PrimitiveTypeSize.BOOLEAN.getSize();
             CareEntrySerializer ces = new CareEntrySerializer();
@@ -8729,13 +8751,13 @@ public class RMObjectSerialization {
 
             boolean hasState = state != null;
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ces.serialize(buffer, position, careEntry);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = hs.serialize(buffer, position, data);
 
-            writeHeader(buffer, meta, hasState, position);
+            writeHeader(buffer, header, hasState, position);
             if(hasState){
                 position = hs.serialize(buffer, position, state);
             }
@@ -8786,7 +8808,7 @@ public class RMObjectSerialization {
                                                  CareEntry careEntry,
                                                  HistoryWithItemTable data,
                                                  HistoryWithItemTree state){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
                     + PrimitiveTypeSize.BOOLEAN.getSize();
             CareEntrySerializer ces = new CareEntrySerializer();
@@ -8794,13 +8816,13 @@ public class RMObjectSerialization {
 
             boolean hasState = state != null;
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ces.serialize(buffer, position, careEntry);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = hs.serialize(buffer, position, data);
 
-            writeHeader(buffer, meta, hasState, position);
+            writeHeader(buffer, header, hasState, position);
             if(hasState){
                 position = hs.serialize(buffer, position, state);
             }
@@ -8851,7 +8873,7 @@ public class RMObjectSerialization {
                                                    CareEntry careEntry,
                                                    HistoryWithItemTable data,
                                                    HistoryWithItemSingle state){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
                     + PrimitiveTypeSize.BOOLEAN.getSize();
             CareEntrySerializer ces = new CareEntrySerializer();
@@ -8859,13 +8881,13 @@ public class RMObjectSerialization {
 
             boolean hasState = state != null;
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ces.serialize(buffer, position, careEntry);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = hs.serialize(buffer, position, data);
 
-            writeHeader(buffer, meta, hasState, position);
+            writeHeader(buffer, header, hasState, position);
             if(hasState){
                 position = hs.serialize(buffer, position, state);
             }
@@ -8916,7 +8938,7 @@ public class RMObjectSerialization {
                                                   CareEntry careEntry,
                                                   HistoryWithItemTable data,
                                                   HistoryWithItemTable state){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
                     + PrimitiveTypeSize.BOOLEAN.getSize();
             CareEntrySerializer ces = new CareEntrySerializer();
@@ -8924,13 +8946,13 @@ public class RMObjectSerialization {
 
             boolean hasState = state != null;
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ces.serialize(buffer, position, careEntry);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = hs.serialize(buffer, position, data);
 
-            writeHeader(buffer, meta, hasState, position);
+            writeHeader(buffer, header, hasState, position);
             if(hasState){
                 position = hs.serialize(buffer, position, state);
             }
@@ -8981,17 +9003,17 @@ public class RMObjectSerialization {
     public static class SectionSerializer {
         protected int serialize(Buffer buffer, int offset,
                                 ContentItem contentItem, List<ContentItem> items){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize()
                     + PrimitiveTypeSize.BOOLEAN.getSize();
             boolean hasItems = items != null;
 
             ContentItemSerializer cis = new ContentItemSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cis.serialize(buffer, position, contentItem);
 
-            writeHeader(buffer, meta, hasItems, position);
+            writeHeader(buffer, header, hasItems, position);
             if(hasItems){
                 position = cis.listSerialize(buffer, position, items);
             }
@@ -9038,7 +9060,7 @@ public class RMObjectSerialization {
                                 List<Participation> participations,
                                 String location, DvCodedText setting,
                                 ItemStructure otherContext){
-            int meta = offset;
+            int header = offset;
             int position = offset + 7 * PrimitiveTypeSize.INT.getSize()
                 + 5 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -9054,33 +9076,33 @@ public class RMObjectSerialization {
             DvCodedTextSerializer dcs = new DvCodedTextSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, hasHealthCareFacility, position);
+            header = writeHeader(buffer, header, hasHealthCareFacility, position);
             if(hasHealthCareFacility){
                 position = pis.serialize(buffer, position, healthCareFacility);
             }
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, startTime);
 
-            meta = writeHeader(buffer, meta, hasEndTime, position);
+            header = writeHeader(buffer, header, hasEndTime, position);
             if(hasEndTime){
                 position = dts.serialize(buffer, position, endTime);
             }
 
-            meta = writeHeader(buffer, meta, hasParticipations, position);
+            header = writeHeader(buffer, header, hasParticipations, position);
             if(hasParticipations){
                 position = ps.listSerialize(buffer, position, participations);
             }
 
-            meta = writeHeader(buffer, meta, hasLocation, position);
+            header = writeHeader(buffer, header, hasLocation, position);
             if(hasLocation){
                 position = stringSerialization(buffer, position, location);
             }
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dcs.serialize(buffer, position, setting);
 
-            meta = writeHeader(buffer, meta, hasOtherContext, position);
+            header = writeHeader(buffer, header, hasOtherContext, position);
             position = iss.serialize(buffer, position, otherContext);
 
             return position;
@@ -9174,7 +9196,7 @@ public class RMObjectSerialization {
                                 List<ContentItem> content, CodePhrase language,
                                 EventContext context, PartyProxy composer,
                                 DvCodedText category, CodePhrase territory){
-            int meta = offset;
+            int header = offset;
             int position = offset + 7 * PrimitiveTypeSize.INT.getSize()
                 + 2 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -9188,29 +9210,29 @@ public class RMObjectSerialization {
             PartyProxySerializer pps = new PartyProxySerializer();
             DvCodedTextSerializer dcs = new DvCodedTextSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ls.serialize(buffer, position, locatable);
 
-            meta = writeHeader(buffer, meta, hasContent, position);
+            header = writeHeader(buffer, header, hasContent, position);
             if(hasContent){
                 position = cis.listSerialize(buffer, position, content);
             }
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cps.serialize(buffer, position, language);
 
-            meta = writeHeader(buffer, meta, hasContext, position);
+            header = writeHeader(buffer, header, hasContext, position);
             if(hasContext){
                 position = ecs.serialize(buffer, position, context);
             }
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = pps.serialize(buffer, position, composer);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dcs.serialize(buffer, position, category);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cps.serialize(buffer, position ,territory);
 
             return position;
@@ -9286,32 +9308,32 @@ public class RMObjectSerialization {
                                 List<ObjectRef> contributions,
                                 ObjectRef ehrStatus, ObjectRef directory,
                                 List<ObjectRef> compositions){
-            int meta = offset;
+            int header = offset;
             int position = offset + 7 * PrimitiveTypeSize.INT.getSize();
 
             HierObjectIDSerializer hs = new HierObjectIDSerializer();
             DvDateTimeSerializer dts = new DvDateTimeSerializer();
             ObjectRefSerializer ors = new ObjectRefSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = hs.serialize(buffer, position, systemID);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = hs.serialize(buffer, position, ehrID);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, timeCreated);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ors.listSerialize(buffer, position, contributions);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ors.serialize(buffer, position, ehrStatus);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ors.serialize(buffer, position, directory);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ors.listSerialize(buffer, position, compositions);
 
             return position;
@@ -9374,7 +9396,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, Locatable locatable,
                                 PartySelf subject, boolean isQueryable,
                                 boolean isModifiable,ItemStructure otherDetails){
-            int meta = offset;
+            int header = offset;
             int position = offset + 5 * PrimitiveTypeSize.INT.getSize()
                     + 2 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -9385,23 +9407,23 @@ public class RMObjectSerialization {
             PartySelfSerializer pss = new PartySelfSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ls.serialize(buffer, position, locatable);
 
-            meta = writeHeader(buffer, meta, hasSubject, position);
+            header = writeHeader(buffer, header, hasSubject, position);
             if(hasSubject){
                 position = pss.serialize(buffer, position, subject);
             }
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             buffer.writeBoolean(position, isQueryable);
             position += PrimitiveTypeSize.BOOLEAN.getSize();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             buffer.writeBoolean(position, isModifiable);
             position += PrimitiveTypeSize.BOOLEAN.getSize();
 
-            writeHeader(buffer, meta, hasOtherDetails, position);
+            writeHeader(buffer, header, hasOtherDetails, position);
             position = iss.serialize(buffer, position, otherDetails);
 
             return position;
@@ -9528,20 +9550,20 @@ public class RMObjectSerialization {
     public static class XCompositionSerializer {
         protected int serialize(Buffer buffer, int offset, boolean primary,
                                 DvEHRURI originalPath, Composition composition){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize();
 
             DvEHRURISerializer ds = new DvEHRURISerializer();
             CompositionSerializer cs = new CompositionSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             buffer.writeBoolean(position, primary);
             position += PrimitiveTypeSize.BOOLEAN.getSize();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ds.serialize(buffer, position, originalPath);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = cs.serialize(buffer, position, composition);
 
             return position;
@@ -9582,7 +9604,7 @@ public class RMObjectSerialization {
 
         protected int listSerialize(
                 Buffer buffer, int offset, List<XComposition> items){
-            int meta = offset;
+            int header = offset;
             if(items.size() == 0){
                 return offset;
             }
@@ -9591,11 +9613,11 @@ public class RMObjectSerialization {
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             XCompositionSerializer xcs = new XCompositionSerializer();
 
             for (XComposition c : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = xcs.serialize(buffer, position, c);
             }
 
@@ -9628,7 +9650,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset,
                                 Map<ObjectID, Party> parties,
                                 ItemStructure details){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize()
                     + 2 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -9638,12 +9660,12 @@ public class RMObjectSerialization {
             ObjectIDSerializer ois = new ObjectIDSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, hasParties, position);
+            header = writeHeader(buffer, header, hasParties, position);
             if(hasParties){
                 position = ois.mapSerialization(buffer, position, parties);
             }
 
-            meta = writeHeader(buffer, meta, hasDetails, position);
+            header = writeHeader(buffer, header, hasDetails, position);
             if(hasDetails){
                 position = iss.serialize(buffer, position, details);
             }
@@ -9694,7 +9716,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset, Locatable locatable,
                                 List<XFolder> folders,
                                 List<XComposition> compositions){
-            int meta = offset;
+            int header = offset;
             int position = offset + 3 * PrimitiveTypeSize.INT.getSize()
                     + 2 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -9705,15 +9727,15 @@ public class RMObjectSerialization {
             XFolderSerializer xfs = new XFolderSerializer();
             XCompositionSerializer xcs = new XCompositionSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ls.serialize(buffer, position, locatable);
 
-            meta = writeHeader(buffer, meta, hasFolders, position);
+            header = writeHeader(buffer, header, hasFolders, position);
             if(hasFolders){
                 position = xfs.listSerialize(buffer, position, folders);
             }
 
-            writeHeader(buffer, meta, hasCompositions, position);
+            writeHeader(buffer, header, hasCompositions, position);
             if(hasCompositions){
                 position = xcs.listSerialize(buffer, position, compositions);
             }
@@ -9768,16 +9790,16 @@ public class RMObjectSerialization {
 
         protected int listSerialize(
                 Buffer buffer, int offset, List<XFolder> items){
-            int meta = offset;
+            int header = offset;
             int listSize = items.size();
             int position = offset + (listSize *
                     PrimitiveTypeSize.INT.getSize()) +
                     PrimitiveTypeSize.INT.getSize();
-            meta = writeHeader(buffer, meta, listSize);
+            header = writeHeader(buffer, header, listSize);
             XFolderSerializer xfs = new XFolderSerializer();
 
             for (XFolder f : items){
-                meta = writeHeader(buffer, meta, position);
+                header = writeHeader(buffer, header, position);
                 position = xfs.serialize(buffer, position, f);
             }
 
@@ -9807,7 +9829,7 @@ public class RMObjectSerialization {
         protected int serialize(Buffer buffer, int offset,
                                 Map<ObjectID, Party> groups,
                                 ItemStructure details){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize()
                     + 2 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -9817,12 +9839,12 @@ public class RMObjectSerialization {
             ObjectIDSerializer ois = new ObjectIDSerializer();
             ItemStructureSerializer iss = new ItemStructureSerializer();
 
-            meta = writeHeader(buffer, meta, hasParties, position);
+            header = writeHeader(buffer, header, hasParties, position);
             if(hasParties){
                 position = ois.mapSerialization(buffer, position, groups);
             }
 
-            writeHeader(buffer, meta, hasDetails, position);
+            writeHeader(buffer, header, hasDetails, position);
             if(hasDetails){
                 position = iss.serialize(buffer, position, details);
             }
@@ -9878,7 +9900,7 @@ public class RMObjectSerialization {
                                 XFolder directory, XTerminology terminology,
                                 XDemographics demographics,
                                 XAccessControl accessControl){
-            int meta = offset;
+            int header = offset;
             int position = offset + 11 * PrimitiveTypeSize.INT.getSize()
                     + 9 * PrimitiveTypeSize.BOOLEAN.getSize();
 
@@ -9900,56 +9922,56 @@ public class RMObjectSerialization {
             XDemographicsSerializer xds = new XDemographicsSerializer();
             XAccessControlSerializer xas = new XAccessControlSerializer();
 
-            meta = writeHeader(buffer, meta, hasTimeCreated, position);
+            header = writeHeader(buffer, header, hasTimeCreated, position);
             if(hasTimeCreated){
                 position = dts.serialize(buffer, position, timeCreated);
             }
 
-            meta = writeHeader(buffer, meta, hasEhrId, position);
+            header = writeHeader(buffer, header, hasEhrId, position);
             if(hasEhrId){
                 position = stringSerialization(buffer, position, ehrId);
             }
 
-            meta = writeHeader(buffer, meta, hasSubjectOfCare, position);
+            header = writeHeader(buffer, header, hasSubjectOfCare, position);
             if(hasSubjectOfCare){
                 position = prs.serialize(buffer, position, subjectOfCare);
             }
 
-            meta = writeHeader(buffer, meta, hasOriginator, position);
+            header = writeHeader(buffer, header, hasOriginator, position);
             if(hasOriginator){
                 position = prs.serialize(buffer, position, originator);
             }
 
-            meta = writeHeader(buffer, meta, hasOtherParticipations, position);
+            header = writeHeader(buffer, header, hasOtherParticipations, position);
             if(hasOtherParticipations){
                 position = ps.setSerializer(buffer, position,
                         otherParticipations);
             }
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             buffer.writeBoolean(position, includeMultimedia);
             position += PrimitiveTypeSize.BOOLEAN.getSize();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             buffer.writeInteger(position, followLinks);
             position += PrimitiveTypeSize.INT.getSize();
 
-            meta = writeHeader(buffer, meta, hasDirectory, position);
+            header = writeHeader(buffer, header, hasDirectory, position);
             if(hasDirectory){
                 position = xfs.serialize(buffer, position, directory);
             }
 
-            meta = writeHeader(buffer, meta, hasTerminology, position);
+            header = writeHeader(buffer, header, hasTerminology, position);
             if(hasTerminology){
                 position = xts.serialize(buffer, position, terminology);
             }
 
-            meta = writeHeader(buffer, meta, hasDemographics, position);
+            header = writeHeader(buffer, header, hasDemographics, position);
             if(hasDemographics){
                 position = xds.serialize(buffer, position, demographics);
             }
 
-            writeHeader(buffer, meta, hasAccessControl, position);
+            writeHeader(buffer, header, hasAccessControl, position);
             if(hasAccessControl){
                 position = xas.serialize(buffer, position, accessControl);
             }
@@ -10042,7 +10064,6 @@ public class RMObjectSerialization {
             XFolder directory = null;
             if(hasDirectory){
                 int directoryPosition = buffer.readInteger(position);
-                System.out.println(directoryPosition);
                 position += PrimitiveTypeSize.INT.getSize();
                 directory = xfs.deserialize(buffer, directoryPosition);
             }
@@ -10084,16 +10105,16 @@ public class RMObjectSerialization {
     public static class GenericEntrySerializer {
         protected int serialize(Buffer buffer, int offset,
                                 ContentItem contentItem, ItemTree data){
-            int meta = offset;
+            int header = offset;
             int position = offset + 2 * PrimitiveTypeSize.INT.getSize();
 
             ContentItemSerializer cis = new ContentItemSerializer();
             ItemTreeSerializer its = new ItemTreeSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = cis.serialize(buffer, position, contentItem);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = its.serialize(buffer, position, data);
 
             return position;
@@ -10169,7 +10190,7 @@ public class RMObjectSerialization {
                                 boolean initiator, DvOrdinal urgency,
                                 Attestation signature,Set<Party> parties,
                                 MessageContent content){
-            int meta = offset;
+            int header = offset;
             int position = offset + 11 * PrimitiveTypeSize.INT.getSize();
 
             DvDateTimeSerializer dts = new DvDateTimeSerializer();
@@ -10179,38 +10200,38 @@ public class RMObjectSerialization {
             PartySerializer ps = new PartySerializer();
             MessageContentSerializer mcs = new MessageContentSerializer();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dts.serialize(buffer, position, timeSent);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = prs.serialize(buffer, position, sender);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = prs.serialize(buffer, position, receiver);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = prs.serialize(buffer, position, senderNode);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = prs.serialize(buffer, position, receiverNode);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = stringSerialization(buffer, position, sendersReference);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             buffer.writeBoolean(position, initiator);
             position += PrimitiveTypeSize.BOOLEAN.getSize();
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = dos.serialize(buffer, position, urgency);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = as.serialize(buffer, position, signature);
 
-            meta = writeHeader(buffer, meta, position);
+            header = writeHeader(buffer, header, position);
             position = ps.setSerializer(buffer, position, parties);
 
-            writeHeader(buffer, meta, position);
+            writeHeader(buffer, header, position);
             position = mcs.serialize(buffer, position, content);
 
             return position;

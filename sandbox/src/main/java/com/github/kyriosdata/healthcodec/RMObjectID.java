@@ -17,6 +17,8 @@ package com.github.kyriosdata.healthcodec;
 /**
  *
  * @author Gabriel
+ * Enumerador responsável por atribuir identificadores únicos para cada classe
+ * serializada/desserializada em {@link RMObjectSerialization}.
  */
 public enum RMObjectID {
     UNKNOWN(-1),

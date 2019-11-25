@@ -22,6 +22,9 @@ import java.util.Set;
 /**
  *
  * @author Gabriel
+ * Classe responsável por armazenar todos os construtores das classes do MR
+ * que serão serializadas/desserializadas através de
+ * {@link RMObjectSerialization }
  */
 public class RMObject {
 
@@ -947,7 +950,7 @@ public class RMObject {
         private final String systemID;
         private final PartyIdentified provider;
         private final PartyIdentified location;
-        //private final DvDateTime time; TODO
+        //private final DvDateTime time;
         private final PartyProxy subject;
         private final String versionID;
 
@@ -955,7 +958,7 @@ public class RMObject {
                 String systemID,
                 PartyIdentified provider,
                 PartyIdentified location,
-                //DateTime time, TODO
+                /*DvDateTime time,*/
                 PartyProxy subject,
                 String versionID) {
             if (systemID.isEmpty()) {
@@ -1713,6 +1716,9 @@ public class RMObject {
         private final Actor actor;
 
         protected Agent(Actor actor) {
+            if(actor == null){
+                throw new IllegalArgumentException("null actor");
+            }
             this.actor = actor;
         }
 
@@ -1726,6 +1732,10 @@ public class RMObject {
         private final Actor actor;
 
         protected Group(Actor actor) {
+
+            if(actor == null){
+                throw new IllegalArgumentException("null actor");
+            }
             this.actor = actor;
         }
 
@@ -1739,6 +1749,9 @@ public class RMObject {
         private final Actor actor;
 
         protected Organisation(Actor actor) {
+            if(actor == null){
+                throw new IllegalArgumentException("null actor");
+            }
             this.actor = actor;
         }
 
@@ -1752,6 +1765,10 @@ public class RMObject {
         private final Actor actor;
 
         protected Person(Actor actor) {
+            if(actor == null){
+                throw new IllegalArgumentException("null actor");
+            }
+
             this.actor = actor;
         }
 
@@ -2650,7 +2667,7 @@ public class RMObject {
         private final Map<String, String> otherDetails;
         private final AuthoredResource parentResource;
 
-        public ResourceDescription(Map<String, String> originalAuthor,
+        protected ResourceDescription(Map<String, String> originalAuthor,
                                    List<String> otherContributors,
                                    String lifecycleState,
                                    List<ResourceDescriptionItem> details,
@@ -2702,7 +2719,7 @@ public class RMObject {
         private final RevisionHistory revisionHistory;
         private final boolean isControlled;
 
-        public AuthoredResource(CodePhrase originalLanguage,
+        protected AuthoredResource(CodePhrase originalLanguage,
                                 Map<String, TranslationDetails> translations,
                                 ResourceDescription description,
                                 RevisionHistory revisionHistory,
@@ -2757,7 +2774,7 @@ public class RMObject {
         private final ItemTree data;
         private final ItemStructure state;
 
-        public EventWithItemTree(Locatable locatable, DvDateTime time,
+        protected EventWithItemTree(Locatable locatable, DvDateTime time,
                                  ItemTree data, ItemStructure state) {
             if (time == null) {
                 throw new IllegalArgumentException("null time");
@@ -2794,7 +2811,7 @@ public class RMObject {
         private final ItemSingle data;
         private final ItemStructure state;
 
-        public EventWithItemSingle(Locatable locatable, DvDateTime time,
+        protected EventWithItemSingle(Locatable locatable, DvDateTime time,
                                    ItemSingle data, ItemStructure state) {
             if (time == null) {
                 throw new IllegalArgumentException("null time");
@@ -2831,7 +2848,7 @@ public class RMObject {
         private final ItemTable data;
         private final ItemStructure state;
 
-        public EventWithItemTable(Locatable locatable, DvDateTime time,
+        protected EventWithItemTable(Locatable locatable, DvDateTime time,
                                   ItemTable data, ItemStructure state) {
             if (time == null) {
                 throw new IllegalArgumentException("null time");
@@ -2871,7 +2888,7 @@ public class RMObject {
         private final DvDuration duration;
         private final ItemStructure summary;
 
-        public HistoryWithItemTree(DataStructure dataStructure,
+        protected HistoryWithItemTree(DataStructure dataStructure,
                                    DvDateTime origin,
                                    List<EventWithItemTree> events,
                                    DvDuration period, DvDuration duration,
@@ -2926,7 +2943,7 @@ public class RMObject {
         private final DvDuration duration;
         private final ItemStructure summary;
 
-        public HistoryWithItemSingle(DataStructure dataStructure,
+        protected HistoryWithItemSingle(DataStructure dataStructure,
                                      DvDateTime origin,
                                      List<EventWithItemSingle> events,
                                      DvDuration period, DvDuration duration,
@@ -2981,7 +2998,7 @@ public class RMObject {
         private final DvDuration duration;
         private final ItemStructure summary;
 
-        public HistoryWithItemTable(DataStructure dataStructure,
+        protected HistoryWithItemTable(DataStructure dataStructure,
                                     DvDateTime origin,
                                     List<EventWithItemTable> events,
                                     DvDuration period, DvDuration duration,
@@ -3034,7 +3051,7 @@ public class RMObject {
         private final DvCodedText mathFunction;
         private final int sampleCount;
 
-        public IntervalEventWithItemTree(EventWithItemTree event,
+        protected IntervalEventWithItemTree(EventWithItemTree event,
                                          DvDuration width,
                                          DvCodedText mathFunction,
                                          int sampleCount) {
@@ -3073,7 +3090,7 @@ public class RMObject {
         private final DvCodedText mathFunction;
         private final int sampleCount;
 
-        public IntervalEventWithItemSingle(EventWithItemSingle event,
+        protected IntervalEventWithItemSingle(EventWithItemSingle event,
                                            DvDuration width,
                                            DvCodedText mathFunction,
                                            int sampleCount) {
@@ -3112,7 +3129,7 @@ public class RMObject {
         private final DvCodedText mathFunction;
         private final int sampleCount;
 
-        public IntervalEventWithItemTable(EventWithItemTable event,
+        protected IntervalEventWithItemTable(EventWithItemTable event,
                                           DvDuration width,
                                           DvCodedText mathFunction,
                                           int sampleCount) {
@@ -3148,7 +3165,7 @@ public class RMObject {
     public static class PointEventWithItemTree {
         private final EventWithItemTree event;
 
-        public PointEventWithItemTree(EventWithItemTree event) {
+        protected PointEventWithItemTree(EventWithItemTree event) {
             this.event = event;
         }
 
@@ -3160,7 +3177,7 @@ public class RMObject {
     public static class PointEventWithItemSingle {
         private final EventWithItemSingle event;
 
-        public PointEventWithItemSingle(EventWithItemSingle event) {
+        protected PointEventWithItemSingle(EventWithItemSingle event) {
             this.event = event;
         }
 
@@ -3172,7 +3189,7 @@ public class RMObject {
     public static class PointEventWithItemTable {
         private final EventWithItemTable event;
 
-        public PointEventWithItemTable(EventWithItemTable event) {
+        protected PointEventWithItemTable(EventWithItemTable event) {
             this.event = event;
         }
 
@@ -3184,7 +3201,7 @@ public class RMObject {
     public static class ContentItem {
         private final Locatable locatable;
 
-        public ContentItem(Locatable locatable) {
+        protected ContentItem(Locatable locatable) {
             if (locatable == null) {
                 throw new IllegalArgumentException("null locatable");
             }
@@ -3233,7 +3250,7 @@ public class RMObject {
             return otherParticipations;
         }
 
-        public Entry(ContentItem contentItem, CodePhrase language,
+        protected Entry(ContentItem contentItem, CodePhrase language,
                      CodePhrase encoding, PartyProxy subject,
                      PartyProxy provider, ObjectRef workflowId,
                      List<Participation> otherParticipations) {
@@ -3266,7 +3283,7 @@ public class RMObject {
         private final ItemStructure protocol;
         private final ObjectRef guidelineId;
 
-        public CareEntry(Entry entry, ItemStructure protocol,
+        protected CareEntry(Entry entry, ItemStructure protocol,
                          ObjectRef guidelineId) {
             this.entry = entry;
             this.protocol = protocol;
@@ -3292,7 +3309,7 @@ public class RMObject {
         private final ISMTransition ismTransition;
         private final InstructionDetails instructionDetails;
 
-        public Action(DvDateTime time, ItemStructure description,
+        protected Action(DvDateTime time, ItemStructure description,
                       ISMTransition ismTransition,
                       InstructionDetails instructionDetails) {
 
@@ -3333,7 +3350,7 @@ public class RMObject {
         private final Entry entry;
         private final ItemStructure data;
 
-        public AdminEntry(Entry entry, ItemStructure data) {
+        protected AdminEntry(Entry entry, ItemStructure data) {
             if (data == null) {
                 throw new IllegalArgumentException("null data");
             }
@@ -3354,7 +3371,7 @@ public class RMObject {
         private final CareEntry careEntry;
         private final ItemStructure data;
 
-        public Evaluation(CareEntry careEntry, ItemStructure data) {
+        protected Evaluation(CareEntry careEntry, ItemStructure data) {
             if (data == null) {
                 throw new IllegalArgumentException("null data");
             }
@@ -3378,7 +3395,7 @@ public class RMObject {
         private final DvDateTime expiryTime;
         private final DvParsable wfDefinition;
 
-        public Instruction(CareEntry careEntry, DvText narrative,
+        protected Instruction(CareEntry careEntry, DvText narrative,
                            List<Activity> activities, DvDateTime expiryTime,
                            DvParsable wfDefinition) {
 
@@ -3422,7 +3439,7 @@ public class RMObject {
         private final HistoryWithItemTree data;
         private final HistoryWithItemTree state;
 
-        public ObservationWithItemTreeItemTree(CareEntry careEntry,
+        protected ObservationWithItemTreeItemTree(CareEntry careEntry,
                                                HistoryWithItemTree data,
                                                HistoryWithItemTree state) {
             if(careEntry == null){
@@ -3454,7 +3471,7 @@ public class RMObject {
         private final HistoryWithItemTree data;
         private final HistoryWithItemSingle state;
 
-        public ObservationWithItemTreeItemSingle(CareEntry careEntry,
+        protected ObservationWithItemTreeItemSingle(CareEntry careEntry,
                                                  HistoryWithItemTree data,
                                                  HistoryWithItemSingle state) {
             if(careEntry == null){
@@ -3486,7 +3503,7 @@ public class RMObject {
         private final HistoryWithItemTree data;
         private final HistoryWithItemTable state;
 
-        public ObservationWithItemTreeItemTable(CareEntry careEntry,
+        protected ObservationWithItemTreeItemTable(CareEntry careEntry,
                                                 HistoryWithItemTree data,
                                                 HistoryWithItemTable state) {
             if(careEntry == null){
@@ -3518,7 +3535,7 @@ public class RMObject {
         private final HistoryWithItemSingle data;
         private final HistoryWithItemTree state;
 
-        public ObservationWithItemSingleItemTree(CareEntry careEntry,
+        protected ObservationWithItemSingleItemTree(CareEntry careEntry,
                                                  HistoryWithItemSingle data,
                                                  HistoryWithItemTree state) {
             if(careEntry == null){
@@ -3550,7 +3567,7 @@ public class RMObject {
         private final HistoryWithItemSingle data;
         private final HistoryWithItemSingle state;
 
-        public ObservationWithItemSingleItemSingle(CareEntry careEntry,
+        protected ObservationWithItemSingleItemSingle(CareEntry careEntry,
                                                    HistoryWithItemSingle data,
                                                    HistoryWithItemSingle state) {
             if(careEntry == null){
@@ -3582,7 +3599,7 @@ public class RMObject {
         private final HistoryWithItemSingle data;
         private final HistoryWithItemTable state;
 
-        public ObservationWithItemSingleItemTable(CareEntry careEntry,
+        protected ObservationWithItemSingleItemTable(CareEntry careEntry,
                                                   HistoryWithItemSingle data,
                                                 HistoryWithItemTable state) {
             if(careEntry == null){
@@ -3614,7 +3631,7 @@ public class RMObject {
         private final HistoryWithItemTable data;
         private final HistoryWithItemTree state;
 
-        public ObservationWithItemTableItemTree(CareEntry careEntry,
+        protected ObservationWithItemTableItemTree(CareEntry careEntry,
                                                 HistoryWithItemTable data,
                                                 HistoryWithItemTree state) {
             if(careEntry == null){
@@ -3646,7 +3663,7 @@ public class RMObject {
         private final HistoryWithItemTable data;
         private final HistoryWithItemSingle state;
 
-        public ObservationWithItemTableItemSingle(CareEntry careEntry,
+        protected ObservationWithItemTableItemSingle(CareEntry careEntry,
                                                   HistoryWithItemTable data,
                                                   HistoryWithItemSingle state) {
             if(careEntry == null){
@@ -3678,7 +3695,7 @@ public class RMObject {
         private final HistoryWithItemTable data;
         private final HistoryWithItemTable state;
 
-        public ObservationWithItemTableItemTable(CareEntry careEntry,
+        protected ObservationWithItemTableItemTable(CareEntry careEntry,
                                                  HistoryWithItemTable data,
                                                  HistoryWithItemTable state) {
             if(careEntry == null){
@@ -3740,7 +3757,7 @@ public class RMObject {
         private final DvCodedText setting;
         private final ItemStructure otherContext;
 
-        public EventContext(PartyIdentified healthCareFacility,
+        protected EventContext(PartyIdentified healthCareFacility,
                             DvDateTime startTime, DvDateTime endTime,
                             List<Participation> participations, String location,
                             DvCodedText setting, ItemStructure otherContext) {
@@ -3804,7 +3821,7 @@ public class RMObject {
         private final DvCodedText category;
         private final CodePhrase territory;
 
-        public Composition(Locatable locatable, List<ContentItem> content,
+        protected Composition(Locatable locatable, List<ContentItem> content,
                            CodePhrase language, EventContext context,
                            PartyProxy composer, DvCodedText category,
                            CodePhrase territory) {
@@ -3906,7 +3923,7 @@ public class RMObject {
             return compositions;
         }
 
-        public EHR(HierObjectID systemID, HierObjectID ehrID,
+        protected EHR(HierObjectID systemID, HierObjectID ehrID,
                    DvDateTime timeCreated, List<ObjectRef> contributions,
                    ObjectRef ehrStatus, ObjectRef directory,
                    List<ObjectRef> compositions) {
@@ -3960,7 +3977,7 @@ public class RMObject {
         private final boolean isModifiable;
         private final ItemStructure otherDetails;
 
-        public EHRStatus(Locatable locatable, PartySelf subject,
+        protected EHRStatus(Locatable locatable, PartySelf subject,
                          boolean isQueryable, boolean isModifiable,
                          ItemStructure otherDetails) {
             if(locatable == null){
@@ -4000,7 +4017,7 @@ public class RMObject {
     public static class EHRAccess {
         private final Locatable locatable;
 
-        public EHRAccess(Locatable locatable) {
+        protected EHRAccess(Locatable locatable) {
             if(locatable == null){
                 throw new IllegalArgumentException("null locatable");
             }
@@ -4015,7 +4032,7 @@ public class RMObject {
     public static class XTerminology {
         private final ItemStructure itemStructure;
 
-        public XTerminology(ItemStructure itemStructure) {
+        protected XTerminology(ItemStructure itemStructure) {
             if(itemStructure == null){
                 throw new IllegalArgumentException("null item structure");
             }
@@ -4032,7 +4049,7 @@ public class RMObject {
         private final DvEHRURI originalPath;
         private final Composition composition;
 
-        public XComposition(boolean primary, DvEHRURI originalPath,
+        protected XComposition(boolean primary, DvEHRURI originalPath,
                             Composition composition) {
             if(originalPath == null) {
                 throw new IllegalArgumentException("null originalPath");
@@ -4062,7 +4079,7 @@ public class RMObject {
         private final Map<ObjectID, Party> parties;
         private final ItemStructure details;
 
-        public XDemographics(Map<ObjectID, Party> parties,
+        protected XDemographics(Map<ObjectID, Party> parties,
                              ItemStructure details) {
             if(parties != null && parties.isEmpty()) {
                 throw new IllegalArgumentException("empty paries");
@@ -4085,7 +4102,7 @@ public class RMObject {
         private final List<XFolder> folders;
         private final List<XComposition> compositions;
 
-        public XFolder(Locatable locatable, List<XFolder> folders,
+        protected XFolder(Locatable locatable, List<XFolder> folders,
                        List<XComposition> compositions) {
             if(locatable == null){
                 throw new IllegalArgumentException("null locatable");
@@ -4118,7 +4135,7 @@ public class RMObject {
         private final Map<ObjectID, Party> groups;
         private final ItemStructure details;
 
-        public XAccessControl(Map<ObjectID, Party> groups,
+        protected XAccessControl(Map<ObjectID, Party> groups,
                               ItemStructure details) {
             if(groups != null && groups.isEmpty()) {
                 throw new IllegalArgumentException("empty groups");
@@ -4193,7 +4210,7 @@ public class RMObject {
             return accessContro;
         }
 
-        public EHRExtract(DvDateTime timeCreated, String ehrId,
+        protected EHRExtract(DvDateTime timeCreated, String ehrId,
                           PartyRef subjectOfCare, PartyRef originator,
                           Set<Participation> otherParticipations,
                           boolean includeMultimedia, int followLinks,
@@ -4218,7 +4235,7 @@ public class RMObject {
         private final ContentItem contentItem;
         private final ItemTree data;
 
-        public GenericEntry(ContentItem contentItem, ItemTree data) {
+        protected GenericEntry(ContentItem contentItem, ItemTree data) {
             if(contentItem == null){
                 throw new IllegalArgumentException("null contentItem");
             }
@@ -4238,7 +4255,7 @@ public class RMObject {
     public static class MessageContent {
         private final Locatable locatable;
 
-        public MessageContent(Locatable locatable) {
+        protected MessageContent(Locatable locatable) {
             if(locatable == null){
                 throw new IllegalArgumentException("null locatbale");
             }
@@ -4307,7 +4324,7 @@ public class RMObject {
             return content;
         }
 
-        public Message(DvDateTime timeSent, PartyRef sender, PartyRef receiver,
+        protected Message(DvDateTime timeSent, PartyRef sender, PartyRef receiver,
                        PartyRef senderNode, PartyRef receiverNode,
                        String sendersReference, boolean initiator,
                        DvOrdinal urgency, Attestation signature,

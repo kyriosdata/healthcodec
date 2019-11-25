@@ -439,11 +439,12 @@ public class RMObjectTestHelper {
         String systemID = "systemID";
         PartyIdentified provider = RMObjectTestHelper.partyIdentified();
         PartyIdentified location = RMObjectTestHelper.partyIdentified();
+        DvDateTime time = dvDateTime();
         PartyProxy subject = RMObjectTestHelper.partyProxy();
         String versionID = "versionID";
 
         return RMObjectFactory.newFeederAuditDetails(systemID, provider,
-                location, subject, versionID);
+                location,  subject, versionID);
     }
 
     /**
@@ -669,7 +670,7 @@ public class RMObjectTestHelper {
         ObjectRef target = RMObjectTestHelper.objectRef();
 
         return RMObjectFactory.newPartyRelationship(locatable, details,
-                source, target);
+                 source, target);
     }
 
     /**
@@ -740,9 +741,12 @@ public class RMObjectTestHelper {
         List<Capability> capabilities = RMObjectTestHelper.
                 capabilityList(false);
 
+        DvInterval timeValidity = RMObjectTestHelper.dvInterval();
+
         PartyRef performer = RMObjectTestHelper.partyRef();
 
-        return RMObjectFactory.newRole(party, capabilities, performer);
+        return RMObjectFactory.newRole(party, capabilities, timeValidity,
+                performer);
     }
 
     /**

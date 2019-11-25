@@ -207,14 +207,12 @@ public class RMObjectFactory {
             String systemID,
             PartyIdentified provider,
             PartyIdentified location,
-            //DateTime time, TODO
             PartyProxy subject,
             String versionID) {
         return new FeederAuditDetails(
                 systemID,
                 provider,
                 location,
-                /*time,*/
                 subject, versionID);
     }
 
@@ -310,8 +308,10 @@ public class RMObjectFactory {
     }
     
     public static PartyRelationship newPartyRelationship(Locatable locatable, 
-            ItemStructure details, ObjectRef source, ObjectRef target ){
-        return new PartyRelationship(locatable, details, source, target);
+            ItemStructure details, ObjectRef source,
+                                                         ObjectRef target ){
+        return new PartyRelationship(locatable, details, source,
+                target);
     }
     
     public static Address newAddress(Locatable locatable, 
@@ -319,9 +319,9 @@ public class RMObjectFactory {
         return new Address(locatable, details);
     }
     
-    public static Contact newContact(Locatable locatable, 
-            List<Address> addresses){
-        return new Contact(locatable, addresses);
+    public static Contact newContact(Locatable locatable,
+                                     List<Address> addresses){
+        return new Contact(locatable,  addresses);
     }
     
     public static Party newParty(Locatable locatable, 
@@ -338,7 +338,7 @@ public class RMObjectFactory {
     }
     
     public static Role newRole(Party party, List<Capability> capabilities, 
-            PartyRef performer){
+            DvInterval timeValidity, PartyRef performer){
         return new Role(party, capabilities, performer);
     }
     
