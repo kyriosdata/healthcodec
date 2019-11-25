@@ -72,8 +72,8 @@ public class RMObjectFactory {
         return new DVURI(value);
     }
 
-    public static DVEHRURI newDVEHRURI(String value) {
-        return new DVEHRURI(value);
+    public static DvEHRURI newDvEHRURI(String value) {
+        return new DvEHRURI(value);
     }
 
     public static VersionTreeID newVersionTreeID(String value) {
@@ -113,10 +113,6 @@ public class RMObjectFactory {
             String type,
             String path) {
         return new LocatableRef(id, namespace, type, path);
-    }
-
-    public static ProportionKind newPropotionKind(int value) {
-        return new ProportionKind(value);
     }
 
     public static AccessGroupRef newAccessGroupRef(ObjectID id) {
@@ -191,7 +187,7 @@ public class RMObjectFactory {
         return new TermMapping(target, match, purpose);
     }
 
-    public static Link newLink(DvText meaning, DvText type, DVEHRURI target) {
+    public static Link newLink(DvText meaning, DvText type, DvEHRURI target) {
         return new Link(meaning, type, target);
     }
 
@@ -211,14 +207,12 @@ public class RMObjectFactory {
             String systemID,
             PartyIdentified provider,
             PartyIdentified location,
-            //DateTime time, TODO
             PartyProxy subject,
             String versionID) {
         return new FeederAuditDetails(
                 systemID,
                 provider,
                 location,
-                /*time,*/
                 subject, versionID);
     }
 
@@ -314,8 +308,10 @@ public class RMObjectFactory {
     }
     
     public static PartyRelationship newPartyRelationship(Locatable locatable, 
-            ItemStructure details, ObjectRef source, ObjectRef target ){
-        return new PartyRelationship(locatable, details, source, target);
+            ItemStructure details, ObjectRef source,
+                                                         ObjectRef target ){
+        return new PartyRelationship(locatable, details, source,
+                target);
     }
     
     public static Address newAddress(Locatable locatable, 
@@ -323,9 +319,9 @@ public class RMObjectFactory {
         return new Address(locatable, details);
     }
     
-    public static Contact newContact(Locatable locatable, 
-            List<Address> addresses){
-        return new Contact(locatable, addresses);
+    public static Contact newContact(Locatable locatable,
+                                     List<Address> addresses){
+        return new Contact(locatable,  addresses);
     }
     
     public static Party newParty(Locatable locatable, 
@@ -342,7 +338,7 @@ public class RMObjectFactory {
     }
     
     public static Role newRole(Party party, List<Capability> capabilities, 
-            PartyRef performer){
+            DvInterval timeValidity, PartyRef performer){
         return new Role(party, capabilities, performer);
     }
     
@@ -382,5 +378,464 @@ public class RMObjectFactory {
             ItemStructure description, DvParsable timing, 
             String actionArchetypeId){
         return new Activity(locatable, description, timing, actionArchetypeId);
+    }
+
+    public static Interval newInterval(DvOrdered lower,DvOrdered upper){
+        return new Interval(lower, upper);
+    }
+
+    public static DvInterval newDvInterval(DvOrdered lower, DvOrdered upper){
+        return new DvInterval(lower, upper);
+    }
+
+    public static ReferenceRange newReferenceRange(DvText meaning,
+                                                   DvInterval range){
+        return new ReferenceRange(meaning, range);
+    }
+
+    public static DvOrdered newDvOrdered(
+            List<ReferenceRange> otherReferenceRanges,
+            DvInterval normalRange,
+            CodePhrase normalStatus){
+        return new DvOrdered(otherReferenceRanges, normalRange, normalStatus);
+    }
+
+    public static DvQuantified newDvQuantified(DvOrdered dvOrdered,
+                                               String magnitudeStatus){
+        return new DvQuantified(dvOrdered, magnitudeStatus);
+    }
+
+    public static DvAmount newDvAmount(DvOrdered dvOrdered,
+                                       double accuracy,
+                                       boolean accuracyPercent){
+        return new DvAmount(dvOrdered, accuracy, accuracyPercent);
+    }
+
+    public static DvOrdinal newDvOrdinal(List<ReferenceRange>
+                                                 otherReferenceRanges,
+                                         DvInterval normalRange, int value,
+                                         DvCodedText symbol){
+        return new DvOrdinal(otherReferenceRanges, normalRange, value, symbol);
+    }
+
+    public static DvCount newDvCount(DvAmount dvAmount, int magnitude){
+        return new DvCount(dvAmount, magnitude);
+    }
+
+    public static DvProportion newDvProportion(DvAmount dvAmount,
+                                                double numerator,
+                                                double denominator,
+                                                ProportionKind type,
+                                                int precision){
+        return new DvProportion(dvAmount, numerator, denominator, type,
+                precision);
+    }
+
+    public static DvQuantity newDvQuantity(DvAmount dvAmount, String units,
+                                           double magnitude, int precision){
+        return new DvQuantity(dvAmount, units, magnitude, precision);
+    }
+
+    public static DvDuration newDvDuration(DvAmount dvAmount, String value){
+        return new DvDuration(dvAmount, value);
+    }
+
+    public static DvAbsoluteQuantityWithDvCount newDvAbsoluteQuantity(
+            DvQuantified dvQuantified, DvCount dvCount){
+        return new DvAbsoluteQuantityWithDvCount(dvQuantified, dvCount);
+    }
+
+    public static DvAbsoluteQuantityWithDvQuantity newDvAbsoluteQuantity(
+            DvQuantified dvQuantified, DvQuantity dvQuantity){
+        return new DvAbsoluteQuantityWithDvQuantity(dvQuantified, dvQuantity);
+    }
+
+    public static DvAbsoluteQuantityWithDvProportion newDvAbsoluteQuantity(
+            DvQuantified dvQuantified, DvProportion dvProportion){
+        return new DvAbsoluteQuantityWithDvProportion(dvQuantified, dvProportion);
+    }
+
+    public static DvAbsoluteQuantityWithDvDuration newDvAbsoluteQuantity(
+            DvQuantified dvQuantified, DvDuration dvDuration){
+        return new DvAbsoluteQuantityWithDvDuration(dvQuantified,dvDuration);
+    }
+
+    public static DvTemporal newDvTemporal(
+            DvAbsoluteQuantityWithDvDuration dvAbsoluteQuantity, String value){
+        return new DvTemporal(dvAbsoluteQuantity, value);
+    }
+
+    public static DvDate newDvDate(boolean dayKnown, boolean monthKnown,
+                                   boolean isPartial, DvTemporal dvTemporal){
+        return new DvDate(dayKnown, monthKnown, isPartial, dvTemporal);
+    }
+
+    public static DvTime newDvTime(boolean isPartial, boolean minuteKnown,
+                                   boolean secondKnown, boolean fractionalSecKnown,
+                                   DvTemporal dvTemporal){
+        return new DvTime(isPartial, minuteKnown, secondKnown,
+                fractionalSecKnown, dvTemporal);
+    }
+
+    public static DvDateTime newDvDateTime(boolean isPartial,
+                                            boolean minuteKnown,
+                                            boolean secondKnown,
+                                            boolean fractionalSecKnown,
+                                            DvTemporal dvTemporal,
+                                            DvDate dateTime){
+        return new DvDateTime(isPartial, minuteKnown, secondKnown,
+                fractionalSecKnown,dvTemporal, dateTime);
+    }
+
+    public static Participation newParticipation(PartyProxy performer,
+                                                 DvText function,
+                                                 DvCodedText mode,
+                                                 DvInterval time){
+        return new Participation(performer, function, mode, time);
+    }
+
+    public static AuditDetails newAuditDetails(String timePosition,
+                                               PartyProxy committer,
+                                               DvDateTime timeCommitted,
+                                               DvCodedText changeType,
+                                               DvText description){
+        return new AuditDetails(timePosition, committer, timeCommitted,
+                changeType, description);
+    }
+
+    public static Attestation newAttestation(AuditDetails auditDetails,
+                                             DvMultimedia attestedView,
+                                             String proof, Set<DvEHRURI> items,
+                                             DvText reason, boolean isPending){
+        return new Attestation(auditDetails, attestedView, proof, items, reason,
+                isPending);
+    }
+
+    public static RevisionHistoryItem newRevisionHistoryItem(
+            List<AuditDetails> audits, ObjectVersionID versionID){
+        return new RevisionHistoryItem(audits, versionID);
+    }
+
+    public static RevisionHistory newRevisionHistory(
+            List<RevisionHistoryItem> items){
+        return new RevisionHistory(items);
+    }
+
+    public static Contribution newContribution(ObjectID uid,
+                                               Set<ObjectRef> versions,
+                                               AuditDetails audit){
+        return new Contribution(uid, versions, audit);
+    }
+
+    public static Folder newFolder(Locatable locatable, List<Folder> folders,
+                                   List<ObjectRef> items){
+        return new Folder(locatable, folders, items);
+    }
+
+    public static AuthoredResource newAuthoredResource(
+            CodePhrase originalLanguage,
+            Map<String, TranslationDetails> translations,
+            ResourceDescription description,
+            RevisionHistory revisionHistory, boolean isControlled){
+        return new AuthoredResource(originalLanguage, translations, description,
+                revisionHistory, isControlled);
+    }
+
+    public static ResourceDescription newResourceDescription(
+            Map<String, String> originalAuthor,List<String> otherContributors,
+            String lifecycleState, List<ResourceDescriptionItem> details,
+            String resourcePackageUri, Map<String, String> otherDetails,
+            AuthoredResource parentResource){
+        return new ResourceDescription(originalAuthor, otherContributors,
+                lifecycleState, details, resourcePackageUri, otherDetails,
+                parentResource);
+    }
+
+    public static EventWithItemTree newEventWithItemTree(Locatable locatable,
+                                                         DvDateTime time,
+                                                         ItemTree data,
+                                                         ItemStructure state){
+        return new EventWithItemTree(locatable, time, data, state);
+    }
+
+    public static EventWithItemSingle newEventWithItemSingle(Locatable locatable,
+                                                            DvDateTime time,
+                                                            ItemSingle data,
+                                                            ItemStructure state){
+        return new EventWithItemSingle(locatable, time, data, state);
+    }
+
+    public static EventWithItemTable newEventWithItemTable(Locatable locatable,
+                                                           DvDateTime time,
+                                                           ItemTable data,
+                                                           ItemStructure state){
+        return new EventWithItemTable(locatable, time, data, state);
+    }
+
+    public static HistoryWithItemTree newHistoryWithItemTree(
+            DataStructure dataStructure,DvDateTime origin,
+            List<EventWithItemTree> events, DvDuration period,
+            DvDuration duration, ItemStructure summary){
+        return new HistoryWithItemTree(dataStructure, origin, events, period,
+                duration, summary);
+    }
+
+    public static HistoryWithItemSingle newHistoryWithItemSingle(
+            DataStructure dataStructure,DvDateTime origin,
+            List<EventWithItemSingle> events, DvDuration period,
+            DvDuration duration, ItemStructure summary){
+        return new HistoryWithItemSingle(dataStructure, origin, events, period,
+                duration, summary);
+    }
+
+    public static HistoryWithItemTable newHistoryWithItemTable(
+            DataStructure dataStructure,DvDateTime origin,
+            List<EventWithItemTable> events, DvDuration period,
+            DvDuration duration, ItemStructure summary){
+        return new HistoryWithItemTable(dataStructure, origin, events, period,
+                duration, summary);
+    }
+
+    public static IntervalEventWithItemTree newIntervalEventWithItemTree(
+            EventWithItemTree event, DvDuration width, DvCodedText mathFunction,
+            int sampleCount){
+        return new IntervalEventWithItemTree(event, width, mathFunction,
+                sampleCount);
+    }
+
+    public static IntervalEventWithItemSingle newIntervalEventWithItemSingle(
+            EventWithItemSingle event, DvDuration width, DvCodedText mathFunction,
+            int sampleCount){
+        return new IntervalEventWithItemSingle(event, width, mathFunction,
+                sampleCount);
+    }
+
+    public static IntervalEventWithItemTable newIntervalEventWithItemTable(
+            EventWithItemTable event, DvDuration width, DvCodedText mathFunction,
+            int sampleCount){
+        return new IntervalEventWithItemTable(event, width, mathFunction,
+                sampleCount);
+    }
+
+    public static PointEventWithItemTree newPointEventWithItemTree(
+            EventWithItemTree event){
+        return new PointEventWithItemTree(event);
+    }
+
+    public static PointEventWithItemSingle newPointEventWithItemSingle(
+            EventWithItemSingle event){
+        return new PointEventWithItemSingle(event);
+    }
+
+    public static PointEventWithItemTable newPointEventWithItemTable(
+            EventWithItemTable event){
+        return new PointEventWithItemTable(event);
+    }
+
+    public static ContentItem newContentItem(Locatable locatable){
+        return new ContentItem(locatable);
+    }
+
+    public static Entry newEntry(ContentItem contentItem, CodePhrase language,
+                                 CodePhrase encoding, PartyProxy subject,
+                                 PartyProxy provider, ObjectRef workflowId,
+                                 List<Participation> otherParticipations){
+        return new Entry(contentItem, language, encoding, subject, provider,
+                workflowId, otherParticipations);
+    }
+
+    public static CareEntry newCareEntry(Entry entry, ItemStructure protocol,
+                                         ObjectRef guidelineId){
+        return new CareEntry(entry, protocol, guidelineId);
+    }
+
+    public static Action newAction(DvDateTime time, ItemStructure description,
+                                   ISMTransition ismTransition,
+                                   InstructionDetails instructionDetails){
+        return new Action(time, description, ismTransition, instructionDetails);
+    }
+
+    public static AdminEntry newAdminEntry(Entry entry, ItemStructure data){
+        return new AdminEntry(entry, data);
+    }
+
+    public static Evaluation newEvaluation(CareEntry careEntry,
+                                           ItemStructure data){
+        return new Evaluation(careEntry, data);
+    }
+
+    public static Instruction newInstruction(CareEntry careEntry,
+                                             DvText narrative,
+                                             List<Activity> activities,
+                                             DvDateTime expiryTime,
+                                             DvParsable wfDefinition){
+        return new Instruction(careEntry, narrative, activities, expiryTime,
+                wfDefinition);
+    }
+
+    public static ObservationWithItemTreeItemTree
+        newObservationWithItemTreeItemTree(CareEntry careEntry,
+                                           HistoryWithItemTree data,
+                                           HistoryWithItemTree state){
+        return new ObservationWithItemTreeItemTree(careEntry, data, state);
+    }
+
+    public static ObservationWithItemTreeItemSingle
+    newObservationWithItemTreeItemSingle(CareEntry careEntry,
+                                         HistoryWithItemTree data,
+                                         HistoryWithItemSingle state){
+        return new ObservationWithItemTreeItemSingle(careEntry, data, state);
+    }
+
+    public static ObservationWithItemTreeItemTable
+    newObservationWithItemTreeItemTable(CareEntry careEntry,
+                                        HistoryWithItemTree data,
+                                        HistoryWithItemTable state){
+        return new ObservationWithItemTreeItemTable(careEntry, data, state);
+    }
+
+    public static ObservationWithItemSingleItemTree
+    newObservationWithItemSingleItemTree(CareEntry careEntry,
+                                         HistoryWithItemSingle data,
+                                         HistoryWithItemTree state){
+        return new ObservationWithItemSingleItemTree(careEntry, data, state);
+    }
+
+    public static ObservationWithItemSingleItemSingle
+    newObservationWithItemSingleItemSingle(CareEntry careEntry,
+                                           HistoryWithItemSingle data,
+                                           HistoryWithItemSingle state){
+        return new ObservationWithItemSingleItemSingle(careEntry, data, state);
+    }
+
+    public static ObservationWithItemSingleItemTable
+    newObservationWithItemSingleItemTable(CareEntry careEntry,
+                                          HistoryWithItemSingle data,
+                                          HistoryWithItemTable state){
+        return new ObservationWithItemSingleItemTable(careEntry, data, state);
+    }
+
+    public static ObservationWithItemTableItemTree
+    newObservationWithItemTableItemTree(CareEntry careEntry,
+                                        HistoryWithItemTable data,
+                                        HistoryWithItemTree state){
+        return new ObservationWithItemTableItemTree(careEntry, data, state);
+    }
+
+    public static ObservationWithItemTableItemSingle
+    newObservationWithItemTableItemSingle(CareEntry careEntry,
+                                          HistoryWithItemTable data,
+                                          HistoryWithItemSingle state){
+        return new ObservationWithItemTableItemSingle(careEntry, data, state);
+    }
+
+    public static ObservationWithItemTableItemTable
+    newObservationWithItemTableItemTable(CareEntry careEntry,
+                                         HistoryWithItemTable data,
+                                         HistoryWithItemTable state){
+        return new ObservationWithItemTableItemTable(careEntry, data, state);
+    }
+
+    public static Section newSection(ContentItem contentItem,
+                                     List<ContentItem> items){
+        return new Section(contentItem, items);
+    }
+
+    public static EventContext newEventContext(
+            PartyIdentified healthCareFacility,DvDateTime startTime,
+            DvDateTime endTime, List<Participation> participations,
+            String location, DvCodedText setting, ItemStructure otherContext){
+        return new EventContext(healthCareFacility, startTime, endTime,
+            participations, location, setting, otherContext);
+    }
+
+    public static Composition newComposition(Locatable locatable,
+                                             List<ContentItem> content,
+                                             CodePhrase language,
+                                             EventContext context,
+                                             PartyProxy composer,
+                                             DvCodedText category,
+                                             CodePhrase territory){
+        return new Composition(locatable, content, language, context, composer,
+                category, territory);
+    }
+
+    public static EHR newEHR(HierObjectID systemID, HierObjectID ehrID,
+                             DvDateTime timeCreated, List<ObjectRef> contributions,
+                             ObjectRef ehrStatus, ObjectRef directory,
+                             List<ObjectRef> compositions){
+        return new EHR(systemID, ehrID, timeCreated, contributions, ehrStatus,
+                directory, compositions);
+    }
+
+    public static EHRStatus newEHRStatus(Locatable locatable, PartySelf subject,
+                                         boolean isQueryable,
+                                         boolean isModifiable,
+                                         ItemStructure otherDetails){
+        return new EHRStatus(locatable, subject, isQueryable,
+                isModifiable, otherDetails);
+    }
+
+    public static EHRAccess newEHRAccess(Locatable locatable){
+        return new EHRAccess(locatable);
+    }
+
+    public static XTerminology newXTerminology(ItemStructure itemStructure){
+        return new XTerminology(itemStructure);
+    }
+
+    public static XComposition newXComposition(boolean primary,
+                                               DvEHRURI originalPath,
+                                               Composition composition ){
+        return new XComposition(primary, originalPath, composition);
+    }
+
+    public static XDemographics newXDemographics(Map<ObjectID, Party> parties,
+                                                 ItemStructure details){
+        return new XDemographics(parties, details);
+    }
+
+    public static XFolder newXFolder(Locatable locatable, List<XFolder> folders,
+                                     List<XComposition> compositions){
+        return new XFolder(locatable, folders, compositions);
+    }
+
+    public static XAccessControl newXAccessControl(Map<ObjectID, Party> groups,
+                                                   ItemStructure details){
+        return new XAccessControl(groups, details);
+    }
+
+    public static EHRExtract newEHRExtract(DvDateTime timeCreated,
+                                           String ehrId, PartyRef subjectOfCare,
+                                           PartyRef originator,
+                                           Set<Participation> otherParticipations,
+                                           boolean includeMultimedia,
+                                           int followLinks, XFolder directory,
+                                           XTerminology terminology,
+                                           XDemographics demographics,
+                                           XAccessControl accessControl){
+        return new EHRExtract(timeCreated, ehrId, subjectOfCare, originator,
+                otherParticipations, includeMultimedia, followLinks, directory,
+                terminology, demographics, accessControl);
+    }
+
+    public static GenericEntry newGenericEntry(ContentItem contentItem,
+                                               ItemTree data){
+        return new GenericEntry(contentItem, data);
+    }
+
+    public static Message newMessage(DvDateTime timeSent, PartyRef sender,
+                                     PartyRef receiver, PartyRef senderNode,
+                                     PartyRef receiverNode,
+                                     String sendersReference, boolean initiator,
+                                     DvOrdinal urgency, Attestation signature,
+                                     Set<Party> parties, MessageContent content){
+        return new Message(timeSent, sender, receiver, senderNode, receiverNode,
+                sendersReference, initiator, urgency, signature, parties,
+                content);
+    }
+
+    public static  MessageContent newMessageContent(Locatable locatable){
+        return new MessageContent(locatable);
     }
 }

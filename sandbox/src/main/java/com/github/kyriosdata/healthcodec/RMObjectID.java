@@ -17,8 +17,11 @@ package com.github.kyriosdata.healthcodec;
 /**
  *
  * @author Gabriel
+ * Enumerador responsável por atribuir identificadores únicos para cada classe
+ * serializada/desserializada em {@link RMObjectSerialization}.
  */
 public enum RMObjectID {
+    UNKNOWN(-1),
     DVBOOLEAN(0),
     DVIDENTIFIER(1),
     INTERNETID(2),
@@ -29,7 +32,7 @@ public enum RMObjectID {
     TEMPLATEID(7),
     CODEPHRASE(8),
     DVURI(9),
-    DVEHRURI(10),
+    DvEHRURI(10),
     VERSIONTREEID(11),
     ARCHETYPEID(12),
     OBJECTVERSIONID(13),
@@ -85,12 +88,77 @@ public enum RMObjectID {
     INSTRUCTIONDETAILS(63),
     ISMTRANSITION(64),
     ACTIVITY(65),
-    UID(66);
+    UID(66),
+    INTERVAL(67),
+    DVINTERVAL(68),
+    REFERENCERANGE(69),
+    DVORDERED(70),
+    DVQUANTIFIED(71),
+    DVAMOUNT(72),
+    DVORDINAL(73),
+    DVCOUNT(74),
+    DVPROPORTION(75),
+    DVQUANTITY(76),
+    DVDURATION(77),
+    DVABSOLUTEQUANTITY(78),
+    DVDATE(79),
+    DVTIME(80),
+    DVDATETIME(81),
+    DVTEMPORAL(82),
+    PARTICIPATION(83),
+    AUDITDETAILS(84),
+    ATTESTATION(85),
+    REVISIONHISTORYITEM(86),
+    REVISIONHISTORY(87),
+    CONTRIBUTION(88),
+    FOLDER(89),
+    AUTHOREDRESOURCE(90),
+    RESOURCEDESCRIPTION(91),
+    EVENT(92),
+    INTERVALEVENT(93),
+    HISTORY(94),
+    POINTEVENT(95),
+    CONTENTITEM(96),
+    ENTRY(97),
+    CAREENTRY(98),
+    ACTION(99),
+    ADMINENTRY(100),
+    EVALUATION(101),
+    INSTRUCTION(102),
+    OBSERVATION(103),
+    SECTION(104),
+    EVENTCONTEXT(105),
+    COMPOSITION(106),
+    EHR(107),
+    EHRSTATUS(108),
+    EHRACCESS(109),
+    XTERMINOLOGY(110),
+    XCOMPOSITION(111),
+    XDEMOGRAPHICS(112),
+    XFOLDER(113),
+    XACCESSCONTROL(114),
+    EHREXTRACT(115),
+    GENERICENTRY(116),
+    MESSAGECONTENT(117),
+    MESSAGE(118);
+
     
     private final int value;
 
-    private RMObjectID(int value) {
+    RMObjectID(int value) {
         this.value = value;
+    }
+
+    public static RMObjectID fromValue(int value) {
+        if (value >  0) {
+            for (RMObjectID id : values()) {
+                if(id.getValue() == value){
+                    return id;
+                }
+            }
+        }
+
+        return UNKNOWN;
     }
 
     public int getValue() {

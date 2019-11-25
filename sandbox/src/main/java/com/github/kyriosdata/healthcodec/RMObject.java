@@ -14,6 +14,7 @@
  */
 package com.github.kyriosdata.healthcodec;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,6 +22,9 @@ import java.util.Set;
 /**
  *
  * @author Gabriel
+ * Classe responsável por armazenar todos os construtores das classes do MR
+ * que serão serializadas/desserializadas através de
+ * {@link RMObjectSerialization }
  */
 public class RMObject {
 
@@ -45,18 +49,18 @@ public class RMObject {
         private final String type;
 
         protected DvIdentifier(String issuer, String assigner, String id,
-                String type) {
-            if(issuer == null || issuer.isEmpty()){
-                throw new IllegalArgumentException("issuer vazio ou null");
+                               String type) {
+            if (issuer == null || issuer.isEmpty()) {
+                throw new IllegalArgumentException("issuer is empty ou null");
             }
-            if(assigner == null || assigner.isEmpty()){
-                throw new IllegalArgumentException("assigner vazio ou null");
+            if (assigner == null || assigner.isEmpty()) {
+                throw new IllegalArgumentException("assigner is empty ou null");
             }
-            if(id == null || id.isEmpty()){
-                throw new IllegalArgumentException("id vazio ou null");
+            if (id == null || id.isEmpty()) {
+                throw new IllegalArgumentException("id is empty ou null");
             }
-            if(type == null || type.isEmpty()){
-                throw new IllegalArgumentException("type vazio ou null");
+            if (type == null || type.isEmpty()) {
+                throw new IllegalArgumentException("type is empty ou null");
             }
             this.issuer = issuer;
             this.assigner = assigner;
@@ -80,13 +84,13 @@ public class RMObject {
             return type;
         }
     }
-    
+
     public static class UID {
         private final String value;
 
         protected UID(String value) {
-            if(value.isEmpty()){
-                throw new IllegalArgumentException("value vazio");
+            if (value.isEmpty()) {
+                throw new IllegalArgumentException("value is empty");
             }
             this.value = value;
         }
@@ -145,8 +149,8 @@ public class RMObject {
         private final String scheme;
 
         protected GenericID(String value, String scheme) {
-            if(scheme.isEmpty()) {
-                throw new IllegalArgumentException("scheme vazio");
+            if (scheme.isEmpty()) {
+                throw new IllegalArgumentException("scheme is empty");
             }
             this.objectID = RMObjectFactory.newObjectID(value);
             this.scheme = scheme;
@@ -181,9 +185,9 @@ public class RMObject {
         private final ObjectID objectID;
 
         protected TerminologyID(String name, String version) {
-            String nameVersion = name + ( version == null ?
-                "" : "(" + version + ")" );
-            
+            String nameVersion = name + (version == null ?
+                    "" : "(" + version + ")");
+
             this.name = name;
             this.version = version;
             this.objectID = RMObjectFactory.newObjectID(nameVersion);
@@ -208,11 +212,11 @@ public class RMObject {
         private final String codeString;
 
         protected CodePhrase(TerminologyID terminologyID, String codeString) {
-            if(terminologyID == null) {
+            if (terminologyID == null) {
                 throw new IllegalArgumentException("null terminologyId");
             }
-            if(codeString.isEmpty()) {
-                throw new IllegalArgumentException("codeString vazio");
+            if (codeString.isEmpty()) {
+                throw new IllegalArgumentException("codeString is empty");
             }
             this.terminologyID = terminologyID;
             this.codeString = codeString;
@@ -232,8 +236,8 @@ public class RMObject {
         private final String value;
 
         protected DVURI(String value) {
-            if(value == null || value.isEmpty()){
-                throw new IllegalArgumentException("codeString null ou vazio");
+            if (value == null || value.isEmpty()) {
+                throw new IllegalArgumentException("codeString null ou is empty");
             }
             this.value = value;
         }
@@ -243,13 +247,13 @@ public class RMObject {
         }
     }
 
-    public static class DVEHRURI {
+    public static class DvEHRURI {
 
         private final DVURI dvuri;
 
-        protected DVEHRURI(String value) {
+        protected DvEHRURI(String value) {
             if (value == null || value.isEmpty()) {
-                throw new IllegalArgumentException("value vazio");
+                throw new IllegalArgumentException("value is empty");
             }
             this.dvuri = RMObjectFactory.newDVURI(value);
         }
@@ -265,7 +269,7 @@ public class RMObject {
 
         protected VersionTreeID(String value) {
             if (value == null || value.isEmpty()) {
-                throw new IllegalArgumentException("value vazio");
+                throw new IllegalArgumentException("value is empty");
             }
             this.value = value;
         }
@@ -281,7 +285,7 @@ public class RMObject {
 
         protected ArchetypeID(String value) {
             if (value == null || value.isEmpty()) {
-                throw new IllegalArgumentException("value vazio");
+                throw new IllegalArgumentException("value is empty");
             }
             this.objectID = RMObjectFactory.newObjectID(value);
         }
@@ -297,7 +301,7 @@ public class RMObject {
 
         protected ObjectVersionID(String value) {
             if (value == null || value.isEmpty()) {
-                throw new IllegalArgumentException("value vazio");
+                throw new IllegalArgumentException("value is empty");
             }
             this.uidBasedID = RMObjectFactory.newUIDBasedID(value);
         }
@@ -313,7 +317,7 @@ public class RMObject {
 
         protected HierObjectID(String value) {
             if (value == null || value.isEmpty()) {
-                throw new IllegalArgumentException("value vazio");
+                throw new IllegalArgumentException("value is empty");
             }
             this.uidBasedID = RMObjectFactory.newUIDBasedID(value);
         }
@@ -329,7 +333,7 @@ public class RMObject {
 
         protected ObjectID(String value) {
             if (value == null || value.isEmpty()) {
-                throw new IllegalArgumentException("value vazio");
+                throw new IllegalArgumentException("value is empty");
             }
             this.value = value;
         }
@@ -391,9 +395,9 @@ public class RMObject {
 
         private final ObjectRef objectRef;
         private final String path;
-        
+
         protected LocatableRef(ObjectVersionID id, String namespace, String type,
-                String path) {
+                               String path) {
             if (id == null) {
                 throw new IllegalArgumentException("null id");
             }
@@ -404,45 +408,75 @@ public class RMObject {
                 throw new IllegalArgumentException("null type");
             }
             if (path != null && path.isEmpty()) {
-                throw new IllegalArgumentException("path vazio");
+                throw new IllegalArgumentException("path is empty");
             }
             this.objectRef = RMObjectFactory.newObjectRef(
-                    RMObjectFactory.newObjectID(id.getUIDBasedID().getValue()), 
+                    RMObjectFactory.newObjectID(id.getUIDBasedID().getValue()),
                     namespace, type);
             this.path = path;
         }
-        
+
         public ObjectRef getObjectRef() {
             return objectRef;
         }
-        
+
         public String getPath() {
             return path;
         }
     }
 
-    public static class ProportionKind {
+    public enum ProportionKind {
+        RATIO(0),
+        UNITARY(1),
+        PERCENT(2),
+        FRACTION(3),
+        INTEGER_FRACTION(4);
 
-        private final int value;
-
-        protected ProportionKind(int value) {
+        ProportionKind(int value) {
             this.value = value;
         }
 
         public int getValue() {
             return value;
         }
+
+        public String toString() {
+            return Integer.toString(value);
+        }
+
+        public static ProportionKind fromValue(int value) {
+            switch (value) {
+                case 0:
+                    return RATIO;
+                case 1:
+                    return UNITARY;
+                case 2:
+                    return PERCENT;
+                case 3:
+                    return FRACTION;
+                case 4:
+                    return INTEGER_FRACTION;
+                default:
+                    throw new IllegalArgumentException("unknown value");
+            }
+        }
+
+        public static ProportionKind valueOf(int value) {
+            return fromValue(value);
+        }
+
+        private int value;
     }
 
     public static class AccessGroupRef {
-        
+
         private final ObjectRef objectRef;
 
         protected AccessGroupRef(ObjectID id) {
-            if(id == null){
+            if (id == null) {
                 throw new IllegalArgumentException("null id");
             }
-            this.objectRef = RMObjectFactory.newObjectRef(id, 
+            this.objectRef = RMObjectFactory.newObjectRef(id,
                     "ACCESS_CONTROL", "ACCESS_GROUP");
         }
 
@@ -458,16 +492,16 @@ public class RMObject {
         private final List<DvIdentifier> identifiers;
 
         protected PartyIdentified(PartyRef externalRef, String name,
-                List<DvIdentifier> identifiers) {
-            if(externalRef == null && name == null && identifiers == null) {
+                                  List<DvIdentifier> identifiers) {
+            if (externalRef == null && name == null && identifiers == null) {
                 throw new IllegalArgumentException(
-                        "externalRef, name, identifiers todos vazios");
+                        "externalRef, name, identifiers todos is emptys");
             }
-            if(name != null && name.isEmpty()) {
-                throw new IllegalArgumentException("name vazio");
+            if (name != null && name.isEmpty()) {
+                throw new IllegalArgumentException("name is empty");
             }
-            if(identifiers != null && identifiers.size() == 0) {
-                throw new IllegalArgumentException("identifiers vazios");
+            if (identifiers != null && identifiers.size() == 0) {
+                throw new IllegalArgumentException("identifiers is emptys");
             }
             this.externalRef = externalRef;
             this.name = name;
@@ -499,7 +533,7 @@ public class RMObject {
                 throw new IllegalArgumentException("null archetypeId");
             }
             if (rmVersion.isEmpty()) {
-                throw new IllegalArgumentException("rmVersion vazio");
+                throw new IllegalArgumentException("rmVersion is empty");
             }
             this.archetypeId = archetypeId;
             this.templateId = templateId;
@@ -543,8 +577,8 @@ public class RMObject {
         private final String value;
 
         protected UIDBasedID(String value) {
-            if(value.isEmpty()){
-                throw new IllegalArgumentException("value vazio");
+            if (value.isEmpty()) {
+                throw new IllegalArgumentException("value is empty");
             }
             this.value = value;
         }
@@ -560,13 +594,13 @@ public class RMObject {
         private final String value;
         private final String formalism;
 
-        protected DvParsable(DvEncapsulated dvEncapsulated, String value, 
-                String formalism) {
+        protected DvParsable(DvEncapsulated dvEncapsulated, String value,
+                             String formalism) {
             if (value == null) {
                 throw new IllegalArgumentException("null value");
             }
             if (formalism.isEmpty()) {
-                throw new IllegalArgumentException("formalism null ou vazio");
+                throw new IllegalArgumentException("formalism is empty");
             }
             this.dvEncapsulated = dvEncapsulated;
             this.value = value;
@@ -576,7 +610,7 @@ public class RMObject {
         public DvEncapsulated getDvEncapsulated() {
             return dvEncapsulated;
         }
-        
+
         public String getValue() {
             return value;
         }
@@ -591,7 +625,7 @@ public class RMObject {
         private final DvParsable value;
 
         protected DvTimeSpecification(DvParsable value) {
-            if(value == null) {
+            if (value == null) {
                 throw new IllegalArgumentException("null value");
             }
             this.value = value;
@@ -686,7 +720,7 @@ public class RMObject {
         }
     }
 
-    public static enum Match {
+    public enum Match {
         NARROWER("<"),
         EQUIVALENT("="),
         BROADER(">"),
@@ -726,7 +760,7 @@ public class RMObject {
         public final DvCodedText purpose;
 
         protected TermMapping(CodePhrase target,
-                Match match, DvCodedText purpose) {
+                              Match match, DvCodedText purpose) {
             if (target == null) {
                 throw new IllegalArgumentException("null target");
             }
@@ -761,14 +795,14 @@ public class RMObject {
         private final CodePhrase charset;
 
         protected DvText(String value,
-                List<TermMapping> mappings,
-                String formatting,
-                DVURI hyperlink, CodePhrase language, CodePhrase charset) {
+                         List<TermMapping> mappings,
+                         String formatting,
+                         DVURI hyperlink, CodePhrase language, CodePhrase charset) {
             if (mappings != null && mappings.isEmpty()) {
-                throw new IllegalArgumentException("mapping vazio");
+                throw new IllegalArgumentException("mapping is empty");
             }
             if (formatting != null && formatting.isEmpty()) {
-                throw new IllegalArgumentException("formatting vazio");
+                throw new IllegalArgumentException("formatting is empty");
             }
             this.value = value;
             this.mappings = mappings;
@@ -829,16 +863,16 @@ public class RMObject {
 
         private final DvText meaning;
         private final DvText type;
-        private final DVEHRURI target;
+        private final DvEHRURI target;
 
-        protected Link(DvText meaning, DvText type, DVEHRURI target) {
-            if(meaning == null) {
+        protected Link(DvText meaning, DvText type, DvEHRURI target) {
+            if (meaning == null) {
                 throw new IllegalArgumentException("null meaning");
             }
-            if(type == null) {
+            if (type == null) {
                 throw new IllegalArgumentException("null type");
             }
-            if(target == null) {
+            if (target == null) {
                 throw new IllegalArgumentException("null target");
             }
             this.meaning = meaning;
@@ -854,7 +888,7 @@ public class RMObject {
             return type;
         }
 
-        public DVEHRURI getTarget() {
+        public DvEHRURI getTarget() {
             return target;
         }
     }
@@ -888,7 +922,7 @@ public class RMObject {
         protected DvParagraph(List<DvText> items) {
             if (items == null || items.size() == 0) {
                 throw new IllegalArgumentException(
-                        "null items ou items vazios");
+                        "null items ou items is emptys");
             }
             this.items = items;
         }
@@ -916,7 +950,7 @@ public class RMObject {
         private final String systemID;
         private final PartyIdentified provider;
         private final PartyIdentified location;
-        //private final DvDateTime time; TODO
+        //private final DvDateTime time;
         private final PartyProxy subject;
         private final String versionID;
 
@@ -924,11 +958,11 @@ public class RMObject {
                 String systemID,
                 PartyIdentified provider,
                 PartyIdentified location,
-                //DateTime time, TODO
+                /*DvDateTime time,*/
                 PartyProxy subject,
                 String versionID) {
             if (systemID.isEmpty()) {
-                throw new IllegalArgumentException("empty null ou vazio");
+                throw new IllegalArgumentException("empty null ou is empty");
             }
             this.systemID = systemID;
             this.provider = provider;
@@ -979,11 +1013,11 @@ public class RMObject {
             if (originatingSystemItemIDs != null &&
                     originatingSystemItemIDs.size() == 0) {
                 throw new IllegalArgumentException(
-                        "originatingSystemItemIds vazio");
+                        "originatingSystemItemIds is empty");
             }
             if (feederSystemItemIDs != null &&
                     feederSystemItemIDs.size() == 0) {
-                throw new IllegalArgumentException("feederSystemItemIds vazio");
+                throw new IllegalArgumentException("feederSystemItemIds is empty");
             }
             this.originatingSystemAudit = originatingSystemAudit;
             this.originatingSystemItemIDs = originatingSystemItemIDs;
@@ -1036,7 +1070,7 @@ public class RMObject {
                 throw new IllegalArgumentException("null name");
             }
             if (links != null && links.isEmpty()) {
-                throw new IllegalArgumentException("links vazio");
+                throw new IllegalArgumentException("links is empty");
             }
             this.uid = uid;
             this.archetypeNodeId = archetypeNodeId;
@@ -1129,16 +1163,16 @@ public class RMObject {
                         "en");
             }
             if (purpose.isEmpty()) {
-                throw new IllegalArgumentException("purpose vazio");
+                throw new IllegalArgumentException("purpose is empty");
             }
             if (use != null && use.isEmpty()) {
-                throw new IllegalArgumentException("use vazio");
+                throw new IllegalArgumentException("use is empty");
             }
             if (misuse != null && misuse.isEmpty()) {
-                throw new IllegalArgumentException("misuse vazio");
+                throw new IllegalArgumentException("misuse is empty");
             }
             if (copyright != null && copyright.isEmpty()) {
-                throw new IllegalArgumentException("copyright vazio");
+                throw new IllegalArgumentException("copyright is empty");
             }
             this.language = language;
             this.purpose = purpose;
@@ -1297,8 +1331,8 @@ public class RMObject {
         private final List<Element> items;
 
         protected ItemList(UIDBasedID uid, String archetypeNodeId, DvText name,
-                Archetyped archetypeDetails, FeederAudit feederAudit,
-                Set<Link> links, List<Element> items) {
+                           Archetyped archetypeDetails, FeederAudit feederAudit,
+                           Set<Link> links, List<Element> items) {
             this.uid = uid;
             this.archetypeNodeId = archetypeNodeId;
             this.name = name;
@@ -1356,7 +1390,7 @@ public class RMObject {
         private final Element item;
 
         protected ItemSingle(ItemStructure itemStructure, Element item) {
-            if(item == null) {
+            if (item == null) {
                 throw new IllegalArgumentException("item null");
             }
             this.itemStructure = itemStructure;
@@ -1441,7 +1475,7 @@ public class RMObject {
         private final ObjectRef target;
 
         protected PartyRelationship(Locatable locatable,
-                ItemStructure details, ObjectRef source, ObjectRef target) {
+                                    ItemStructure details, ObjectRef source, ObjectRef target) {
             if (locatable == null) {
                 throw new IllegalArgumentException("null locatable");
             }
@@ -1505,7 +1539,7 @@ public class RMObject {
 
         protected Contact(Locatable locatable, List<Address> addresses) {
             if (addresses == null || addresses.size() == 0) {
-                throw new IllegalArgumentException("addresses null ou vazio");
+                throw new IllegalArgumentException("addresses null ou is empty");
             }
             this.locatable = locatable;
             this.addresses = addresses;
@@ -1530,20 +1564,20 @@ public class RMObject {
         private final ItemStructure details;
 
         protected Party(Locatable locatable, Set<PartyIdentity> identities,
-                Set<Contact> contacts, Set<PartyRelationship> relationships,
-                Set<LocatableRef> reverseRelationships, ItemStructure details) {
+                        Set<Contact> contacts, Set<PartyRelationship> relationships,
+                        Set<LocatableRef> reverseRelationships, ItemStructure details) {
             if (locatable == null) {
                 throw new IllegalArgumentException("null locatable");
             }
             if (identities == null || identities.isEmpty()) {
-                throw new IllegalArgumentException("identities null ou vazio");
+                throw new IllegalArgumentException("identities null ou is empty");
             }
             if (contacts != null && contacts.isEmpty()) {
-                throw new IllegalArgumentException("contacts vazio");
+                throw new IllegalArgumentException("contacts is empty");
             }
             if (relationships != null) {
                 if (relationships.isEmpty()) {
-                    throw new IllegalArgumentException("relationships vazio");
+                    throw new IllegalArgumentException("relationships is empty");
                 }
             }
             this.locatable = locatable;
@@ -1609,9 +1643,9 @@ public class RMObject {
         private final PartyRef performer;
 
         protected Role(Party party, List<Capability> capabilities,
-                PartyRef performer) {
+                       PartyRef performer) {
             if (capabilities != null && capabilities.size() == 0) {
-                throw new IllegalArgumentException("capabilities vazio");
+                throw new IllegalArgumentException("capabilities is empty");
             }
             if (performer == null) {
                 throw new IllegalArgumentException("null performer");
@@ -1654,10 +1688,10 @@ public class RMObject {
                 throw new IllegalArgumentException("no legal identity");
             }
             if (roles != null && roles.isEmpty()) {
-                throw new IllegalArgumentException("roles vazio");
+                throw new IllegalArgumentException("roles is empty");
             }
             if (languages != null && languages.isEmpty()) {
-                throw new IllegalArgumentException("languages vazio");
+                throw new IllegalArgumentException("languages is empty");
             }
             this.party = party;
             this.roles = roles;
@@ -1682,6 +1716,9 @@ public class RMObject {
         private final Actor actor;
 
         protected Agent(Actor actor) {
+            if(actor == null){
+                throw new IllegalArgumentException("null actor");
+            }
             this.actor = actor;
         }
 
@@ -1695,6 +1732,10 @@ public class RMObject {
         private final Actor actor;
 
         protected Group(Actor actor) {
+
+            if(actor == null){
+                throw new IllegalArgumentException("null actor");
+            }
             this.actor = actor;
         }
 
@@ -1708,6 +1749,9 @@ public class RMObject {
         private final Actor actor;
 
         protected Organisation(Actor actor) {
+            if(actor == null){
+                throw new IllegalArgumentException("null actor");
+            }
             this.actor = actor;
         }
 
@@ -1720,7 +1764,11 @@ public class RMObject {
 
         private final Actor actor;
 
-        public Person(Actor actor) {
+        protected Person(Actor actor) {
+            if(actor == null){
+                throw new IllegalArgumentException("null actor");
+            }
+
             this.actor = actor;
         }
 
@@ -1735,13 +1783,13 @@ public class RMObject {
         private final String activityId;
         private final ItemStructure wfDetails;
 
-        public InstructionDetails(LocatableRef instructionId,
-                String activityId, ItemStructure wfDetails) {
+        protected InstructionDetails(LocatableRef instructionId,
+                                     String activityId, ItemStructure wfDetails) {
             if (instructionId == null) {
                 throw new IllegalArgumentException("null instructionId");
             }
             if (activityId.isEmpty()) {
-                throw new IllegalArgumentException("activityId null ou vazio");
+                throw new IllegalArgumentException("activityId null ou is empty");
             }
             this.instructionId = instructionId;
             this.activityId = activityId;
@@ -1767,8 +1815,8 @@ public class RMObject {
         private final DvCodedText transition;
         private final DvCodedText careflowStep;
 
-        public ISMTransition(DvCodedText currentState,
-                DvCodedText transition, DvCodedText careflowStep) {
+        protected ISMTransition(DvCodedText currentState,
+                                DvCodedText transition, DvCodedText careflowStep) {
             if (currentState == null) {
                 throw new IllegalArgumentException("null currentState");
             }
@@ -1789,23 +1837,23 @@ public class RMObject {
             return careflowStep;
         }
     }
-    
+
     public static class Activity {
         private final Locatable locatable;
         private final ItemStructure description;
         private final DvParsable timing;
         private final String actionArchetypeId;
 
-        public Activity(Locatable locatable, ItemStructure description, 
-                DvParsable timing, String actionArchetypeId) {
+        protected Activity(Locatable locatable, ItemStructure description,
+                           DvParsable timing, String actionArchetypeId) {
             if (description == null) {
                 throw new IllegalArgumentException("null description");
             }
             if (timing == null) {
                 throw new IllegalArgumentException("null timing");
             }
-            if(actionArchetypeId.isEmpty()) {
-                throw new IllegalArgumentException("actionArchetypeId vazio");
+            if (actionArchetypeId.isEmpty()) {
+                throw new IllegalArgumentException("actionArchetypeId is empty");
             }
             this.locatable = locatable;
             this.description = description;
@@ -1827,6 +1875,2502 @@ public class RMObject {
 
         public String getActionArchetypeId() {
             return actionArchetypeId;
+        }
+    }
+
+    public static class DvOrdered {
+        private List<ReferenceRange> otherReferenceRanges;
+        private final DvInterval normalRange;
+        private final CodePhrase normalStatus;
+
+        protected DvOrdered(List<ReferenceRange> otherReferenceRanges,
+                            DvInterval normalRange, CodePhrase normalStatus) {
+            if (otherReferenceRanges != null) {
+                if (otherReferenceRanges.isEmpty()) {
+                    throw new IllegalArgumentException(
+                            "otherReferenceRanges is empty");
+                }
+                this.otherReferenceRanges =
+                        new ArrayList<ReferenceRange>(otherReferenceRanges);
+            } else {
+                this.otherReferenceRanges = null;
+            }
+
+            this.otherReferenceRanges = otherReferenceRanges;
+            this.normalRange = normalRange;
+            this.normalStatus = normalStatus;
+        }
+
+        public List<ReferenceRange> getOtherReferenceRanges() {
+            return otherReferenceRanges;
+        }
+
+        public DvInterval getNormalRange() {
+            return normalRange;
+        }
+
+        public CodePhrase getNormalStatus() {
+            return normalStatus;
+        }
+    }
+
+    public static class Interval {
+        private final DvOrdered lower;
+        private final DvOrdered upper;
+        private boolean lowerIncluded;
+        private boolean upperIncluded;
+
+        protected Interval(DvOrdered lower, DvOrdered upper) {
+            this.lower = lower;
+            this.upper = upper;
+            this.lowerIncluded = true;
+            this.upperIncluded = true;
+        }
+
+        public DvOrdered getLower() {
+            return lower;
+        }
+
+        public DvOrdered getUpper() {
+            return upper;
+        }
+
+        public boolean isLowerIncluded() {
+            return lowerIncluded;
+        }
+
+        public boolean isUpperIncluded() {
+            return upperIncluded;
+        }
+    }
+
+    public static class DvInterval {
+        private final Interval interval;
+
+        protected DvInterval(DvOrdered lower, DvOrdered upper) {
+            this.interval = new Interval(lower, upper);
+        }
+
+        public Interval getInterval() {
+            return interval;
+        }
+    }
+
+    public static class ReferenceRange {
+        private final DvText meaning;
+        private final DvInterval range;
+
+        protected ReferenceRange(DvText meaning, DvInterval range) {
+            if (meaning == null) {
+                throw new IllegalArgumentException("null meaning");
+            }
+            if (range == null) {
+                throw new IllegalArgumentException("null range");
+            }
+            this.meaning = meaning;
+            this.range = range;
+        }
+
+        public DvText getMeaning() {
+            return meaning;
+        }
+
+        public DvInterval getRange() {
+            return range;
+        }
+    }
+
+    public static class DvQuantified {
+        private final DvOrdered dvOrdered;
+        private final String magnitudeStatus;
+
+        protected DvQuantified(DvOrdered dvOrdered, String magnitudeStatus) {
+            this.dvOrdered = dvOrdered;
+            this.magnitudeStatus = magnitudeStatus;
+        }
+
+        public DvOrdered getDvOrdered() {
+            return dvOrdered;
+        }
+
+        public String getMagnitudeStatus() {
+            return magnitudeStatus;
+        }
+    }
+
+    public static class DvAmount {
+        private final DvOrdered dvOrdered;
+        private final double accuracy;
+        private final boolean accuracyPercent;
+
+        protected DvAmount(DvOrdered dvOrdered, double accuracy,
+                           boolean accuracyPercent) {
+            this.dvOrdered = dvOrdered;
+            this.accuracy = accuracy;
+            this.accuracyPercent = accuracyPercent;
+        }
+
+        public DvOrdered getDvOrdered() {
+            return dvOrdered;
+        }
+
+        public double getAccuracy() {
+            return accuracy;
+        }
+
+        public boolean isAccuracyPercent() {
+            return accuracyPercent;
+        }
+    }
+
+    public static class DvOrdinal {
+        private final List<ReferenceRange> otherReferenceRanges;
+        private final DvInterval normalRange;
+        private final int value;
+        private final DvCodedText symbol;
+
+        public List<ReferenceRange> getOtherReferenceRanges() {
+            return otherReferenceRanges;
+        }
+
+        public DvInterval getNormalRange() {
+            return normalRange;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public DvCodedText getSymbol() {
+            return symbol;
+        }
+
+        protected DvOrdinal(List<ReferenceRange> otherReferenceRanges,
+                            DvInterval normalRange, int value, DvCodedText symbol) {
+            this.otherReferenceRanges = otherReferenceRanges;
+            this.normalRange = normalRange;
+            this.value = value;
+            this.symbol = symbol;
+        }
+    }
+
+    public static class DvCount {
+        private final DvAmount dvAmount;
+        private final int magnitude;
+
+        protected DvCount(DvAmount dvAmount, int magnitude) {
+            this.dvAmount = dvAmount;
+            this.magnitude = magnitude;
+        }
+
+        public DvAmount getDvAmount() {
+            return dvAmount;
+        }
+
+        public int getMagnitude() {
+            return magnitude;
+        }
+    }
+
+    public static class DvProportion {
+        private final DvAmount dvAmount;
+        private final double numerator;
+        private final double denominator;
+        private final ProportionKind type;
+        private final int precision;
+
+        public DvAmount getDvAmount() {
+            return dvAmount;
+        }
+
+        public double getNumerator() {
+            return numerator;
+        }
+
+        public double getDenominator() {
+            return denominator;
+        }
+
+        public ProportionKind getType() {
+            return type;
+        }
+
+        public int getPrecision() {
+            return precision;
+        }
+
+        protected DvProportion(DvAmount dvAmount, double numerator,
+                               double denominator, ProportionKind type,
+                               int precision) {
+            if (type == null) {
+                throw new IllegalArgumentException("null type");
+            } else if (type == ProportionKind.UNITARY) {
+                if (denominator != 1) {
+                    throw new IllegalArgumentException(
+                            "denominator for unitary proportion must be 1");
+                }
+            } else if (type == ProportionKind.PERCENT) {
+                if (denominator != 100) {
+                    throw new IllegalArgumentException(
+                            "denominator for unitary proportion must be 100");
+                }
+            } else if (type == ProportionKind.FRACTION ||
+                    type == ProportionKind.INTEGER_FRACTION) {
+
+                if (!bothIntegral(numerator, denominator)) {
+                    throw new IllegalArgumentException(
+                            "both numberator and denominator must be integral for " +
+                                    "fraction or integer fraction proportion");
+                }
+            }
+
+
+            this.dvAmount = dvAmount;
+            this.numerator = numerator;
+            this.denominator = denominator;
+            this.type = type;
+            this.precision = precision;
+        }
+
+        private boolean bothIntegral(double num1, double num2) {
+            return (Math.floor(num1) == num1) && (Math.floor(num2) == num2);
+        }
+    }
+
+    public static class DvQuantity {
+        private final DvAmount dvAmount;
+        private final String units;
+        private final double magnitude;
+        private final int precision;
+
+        protected DvQuantity(DvAmount dvAmount, String units, double magnitude,
+                             int precision) {
+
+            if (precision < -1) {
+                throw new IllegalArgumentException("negative precision");
+            }
+
+            this.dvAmount = dvAmount;
+            this.units = units;
+            this.magnitude = magnitude;
+            this.precision = precision;
+        }
+
+        public DvAmount getDvAmount() {
+            return dvAmount;
+        }
+
+        public String getUnits() {
+            return units;
+        }
+
+        public double getMagnitude() {
+            return magnitude;
+        }
+
+        public int getPrecision() {
+            return precision;
+        }
+    }
+
+    public static class DvDuration {
+        private final DvAmount dvAmount;
+        private final String value;
+
+        protected DvDuration(DvAmount dvAmount, String value) {
+            this.dvAmount = dvAmount;
+            this.value = value;
+        }
+
+        public DvAmount getDvAmount() {
+            return dvAmount;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public static class DvAbsoluteQuantityWithDvQuantity {
+        private final DvQuantified dvQuantified;
+        private final DvQuantity dvQuantity;
+        private RMObjectID id;
+
+        protected DvAbsoluteQuantityWithDvQuantity(DvQuantified dvQuantified,
+                                                   DvQuantity dvQuantity) {
+            this.dvQuantified = dvQuantified;
+            this.dvQuantity = dvQuantity;
+            this.id = RMObjectID.DVQUANTITY;
+        }
+
+        public DvQuantified getDvQuantified() {
+            return dvQuantified;
+        }
+
+        public DvQuantity getDvQuantity() {
+            return dvQuantity;
+        }
+
+        public RMObjectID getId() {
+            return id;
+        }
+    }
+
+    public static class DvAbsoluteQuantityWithDvCount {
+        private final DvQuantified dvQuantified;
+        private final DvCount dvCount;
+        private RMObjectID id;
+
+        protected DvAbsoluteQuantityWithDvCount(DvQuantified dvQuantified,
+                                                DvCount dvCount) {
+            this.dvQuantified = dvQuantified;
+            this.dvCount = dvCount;
+            this.id = RMObjectID.DVCOUNT;
+        }
+
+        public DvQuantified getDvQuantified() {
+            return dvQuantified;
+        }
+
+        public DvCount getDvCount() {
+            return dvCount;
+        }
+
+        public RMObjectID getId() {
+            return id;
+        }
+    }
+
+    public static class DvAbsoluteQuantityWithDvProportion {
+        private final DvQuantified dvQuantified;
+        private final DvProportion dvProportion;
+        private RMObjectID id;
+
+        protected DvAbsoluteQuantityWithDvProportion(DvQuantified dvQuantified,
+                                                     DvProportion dvProportion) {
+            this.dvQuantified = dvQuantified;
+            this.dvProportion = dvProportion;
+            this.id = RMObjectID.DVPROPORTION;
+        }
+
+        public DvQuantified getDvQuantified() {
+            return dvQuantified;
+        }
+
+        public DvProportion getDvProportion() {
+            return dvProportion;
+        }
+
+        public RMObjectID getId() {
+            return id;
+        }
+    }
+
+    public static class DvAbsoluteQuantityWithDvDuration {
+        private final DvQuantified dvQuantified;
+        private final DvDuration dvDuration;
+        private RMObjectID id;
+
+        protected DvAbsoluteQuantityWithDvDuration(DvQuantified dvQuantified,
+                                                   DvDuration dvDuration) {
+            this.dvQuantified = dvQuantified;
+            this.dvDuration = dvDuration;
+            this.id = RMObjectID.DVPROPORTION;
+        }
+
+        public DvQuantified getDvQuantified() {
+            return dvQuantified;
+        }
+
+        public DvDuration getDvDuration() {
+            return dvDuration;
+        }
+
+        public RMObjectID getId() {
+            return id;
+        }
+    }
+
+    public static class DvTemporal {
+        private final DvAbsoluteQuantityWithDvDuration dvAbsoluteQuantity;
+        private final String value;
+
+        protected DvTemporal(DvAbsoluteQuantityWithDvDuration dvAbsoluteQuantity,
+                             String value) {
+            this.dvAbsoluteQuantity = dvAbsoluteQuantity;
+            this.value = value;
+        }
+
+        public DvAbsoluteQuantityWithDvDuration getDvAbsoluteQuantity() {
+            return dvAbsoluteQuantity;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public static class DvDateTime {
+        private final boolean isPartial;
+        private final boolean minuteKnown;
+        private final boolean secondKnown;
+        private final boolean fractionalSecKnown;
+        private final DvTemporal dvTemporal;
+        private final DvDate dateTime;
+
+        protected DvDateTime(boolean isPartial, boolean minuteKnown,
+                             boolean secondKnown, boolean fractionalSecKnown,
+                             DvTemporal dvTemporal, DvDate dateTime) {
+            this.isPartial = isPartial;
+            this.minuteKnown = minuteKnown;
+            this.secondKnown = secondKnown;
+            this.fractionalSecKnown = fractionalSecKnown;
+            this.dvTemporal = dvTemporal;
+            this.dateTime = dateTime;
+        }
+
+        public boolean isPartial() {
+            return isPartial;
+        }
+
+        public boolean isMinuteKnown() {
+            return minuteKnown;
+        }
+
+        public boolean isSecondKnown() {
+            return secondKnown;
+        }
+
+        public boolean isFractionalSecKnown() {
+            return fractionalSecKnown;
+        }
+
+        public DvTemporal getDvTemporal() {
+            return dvTemporal;
+        }
+
+        public DvDate getDateTime() {
+            return dateTime;
+        }
+    }
+
+    public static class DvTime {
+        private final boolean isPartial;
+        private final boolean minuteKnown;
+        private final boolean secondKnown;
+        private final boolean fractionalSecKnown;
+        private final DvTemporal dvTemporal;
+
+        protected DvTime(boolean isPartial, boolean minuteKnown,
+                         boolean secondKnown, boolean fractionalSecKnown,
+                         DvTemporal dvTemporal) {
+            this.isPartial = isPartial;
+            this.minuteKnown = minuteKnown;
+            this.secondKnown = secondKnown;
+            this.fractionalSecKnown = fractionalSecKnown;
+            this.dvTemporal = dvTemporal;
+        }
+
+        public boolean isPartial() {
+            return isPartial;
+        }
+
+        public boolean isMinuteKnown() {
+            return minuteKnown;
+        }
+
+        public boolean isSecondKnown() {
+            return secondKnown;
+        }
+
+        public boolean isFractionalSecKnown() {
+            return fractionalSecKnown;
+        }
+
+        public DvTemporal getDvTemporal() {
+            return dvTemporal;
+        }
+    }
+
+    public static class DvDate {
+        private final boolean dayKnown;
+        private final boolean monthKnown;
+        private final boolean isPartial;
+        private final DvTemporal dvTemporal;
+
+        protected DvDate(boolean dayKnown, boolean monthKnown, boolean isPartial,
+                         DvTemporal dvTemporal) {
+            this.dayKnown = dayKnown;
+            this.monthKnown = monthKnown;
+            this.isPartial = isPartial;
+            this.dvTemporal = dvTemporal;
+        }
+
+        public boolean isDayKnown() {
+            return dayKnown;
+        }
+
+        public boolean isMonthKnown() {
+            return monthKnown;
+        }
+
+        public boolean isPartial() {
+            return isPartial;
+        }
+
+        public DvTemporal getDvTemporal() {
+            return dvTemporal;
+        }
+    }
+
+    public static class Participation {
+        private final PartyProxy performer;
+        private final DvText function;
+        private final DvCodedText mode;
+        private final DvInterval time;
+
+        public PartyProxy getPerformer() {
+            return performer;
+        }
+
+        public DvText getFunction() {
+            return function;
+        }
+
+        public DvCodedText getMode() {
+            return mode;
+        }
+
+        public DvInterval getTime() {
+            return time;
+        }
+
+        protected Participation(PartyProxy performer, DvText function,
+                                DvCodedText mode, DvInterval time) {
+            if (performer == null) {
+                throw new IllegalArgumentException("null performer");
+            }
+            if (function == null) {
+                throw new IllegalArgumentException("null function");
+            }
+            if (mode == null) {
+                throw new IllegalArgumentException("null mode");
+            }
+            this.performer = performer;
+            this.function = function;
+            this.mode = mode;
+            this.time = time;
+        }
+    }
+
+    public static class AuditDetails {
+        private final String timePosition;
+        private final PartyProxy committer;
+        private final DvDateTime timeCommitted;
+        private final DvCodedText changeType;
+        private final DvText description;
+
+        protected AuditDetails(String timePosition, PartyProxy committer,
+                               DvDateTime timeCommitted, DvCodedText changeType,
+                               DvText description) {
+            this.timePosition = timePosition;
+            this.committer = committer;
+            this.timeCommitted = timeCommitted;
+            this.changeType = changeType;
+            this.description = description;
+        }
+
+        public String getTimePosition() {
+            return timePosition;
+        }
+
+        public PartyProxy getCommitter() {
+            return committer;
+        }
+
+        public DvDateTime getTimeCommitted() {
+            return timeCommitted;
+        }
+
+        public DvCodedText getChangeType() {
+            return changeType;
+        }
+
+        public DvText getDescription() {
+            return description;
+        }
+    }
+
+    public static class Attestation {
+        private final AuditDetails auditDetails;
+        private final DvMultimedia attestedView;
+        private final String proof;
+        private final Set<DvEHRURI> items;
+        private final DvText reason;
+        private final boolean isPending;
+
+        protected Attestation(AuditDetails auditDetails, DvMultimedia attestedView,
+                              String proof, Set<DvEHRURI> items, DvText reason,
+                              boolean isPending) {
+            if (items != null && items.isEmpty()) {
+                throw new IllegalArgumentException("empty items");
+            }
+            if (reason == null) {
+                throw new IllegalArgumentException("null reason");
+            }
+
+            this.auditDetails = auditDetails;
+            this.attestedView = attestedView;
+            this.proof = proof;
+            this.items = items;
+            this.reason = reason;
+            this.isPending = isPending;
+        }
+
+        public AuditDetails getAuditDetails() {
+            return auditDetails;
+        }
+
+        public DvMultimedia getAttestedView() {
+            return attestedView;
+        }
+
+        public String getProof() {
+            return proof;
+        }
+
+        public Set<DvEHRURI> getItems() {
+            return items;
+        }
+
+        public DvText getReason() {
+            return reason;
+        }
+
+        public boolean isPending() {
+            return isPending;
+        }
+    }
+
+    public static class RevisionHistoryItem {
+        private final List<AuditDetails> audits;
+        private final ObjectVersionID versionID;
+
+        protected RevisionHistoryItem(List<AuditDetails> audits,
+                                      ObjectVersionID versionID) {
+            if (audits == null || audits.size() == 0) {
+                throw new IllegalArgumentException("empty audits");
+            }
+            if (versionID == null) {
+                throw new IllegalArgumentException("null versionId");
+            }
+
+            this.audits = audits;
+            this.versionID = versionID;
+        }
+
+        public List<AuditDetails> getAudits() {
+            return audits;
+        }
+
+        public ObjectVersionID getVersionID() {
+            return versionID;
+        }
+    }
+
+    public static class RevisionHistory {
+        private final List<RevisionHistoryItem> items;
+
+        protected RevisionHistory(List<RevisionHistoryItem> items) {
+            if (items == null || items.size() == 0) {
+                throw new IllegalArgumentException("empty items");
+            }
+            this.items = items;
+        }
+
+        public List<RevisionHistoryItem> getItems() {
+            return items;
+        }
+    }
+
+    public static class Contribution {
+        private final ObjectID uid;
+        private final Set<ObjectRef> versions;
+        private final AuditDetails audit;
+
+        protected Contribution(ObjectID uid, Set<ObjectRef> versions,
+                               AuditDetails audit) {
+            if (uid == null) {
+                throw new IllegalArgumentException("null uid");
+            }
+            if (audit == null) {
+                throw new IllegalArgumentException("null audit");
+            }
+            if (audit.getDescription() == null) {
+                throw new IllegalArgumentException("null audit description");
+            }
+            if (versions == null || versions.isEmpty()) {
+                throw new IllegalArgumentException("invalid versions");
+            }
+            this.uid = uid;
+            this.versions = versions;
+            this.audit = audit;
+        }
+
+        public ObjectID getUid() {
+            return uid;
+        }
+
+        public Set<ObjectRef> getVersions() {
+            return versions;
+        }
+
+        public AuditDetails getAudit() {
+            return audit;
+        }
+    }
+
+    public static class Folder {
+        private final Locatable locatable;
+        private final List<Folder> folders;
+        private final List<ObjectRef> items;
+
+        protected Folder(Locatable locatable, List<Folder> folders,
+                         List<ObjectRef> items) {
+            if (folders != null && folders.size() == 0) {
+                throw new IllegalArgumentException("sub-folders is emptys");
+            }
+            this.locatable = locatable;
+            this.folders = folders;
+            this.items = items;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public List<Folder> getFolders() {
+            return folders;
+        }
+
+        public List<ObjectRef> getItems() {
+            return items;
+        }
+    }
+
+    public static class ResourceDescription {
+        private final Map<String, String> originalAuthor;
+        private final List<String> otherContributors;
+        private final String lifecycleState;
+        private final List<ResourceDescriptionItem> details;
+        private final String resourcePackageUri;
+        private final Map<String, String> otherDetails;
+        private final AuthoredResource parentResource;
+
+        protected ResourceDescription(Map<String, String> originalAuthor,
+                                   List<String> otherContributors,
+                                   String lifecycleState,
+                                   List<ResourceDescriptionItem> details,
+                                   String resourcePackageUri,
+                                   Map<String, String> otherDetails,
+                                   AuthoredResource parentResource) {
+            this.originalAuthor = originalAuthor;
+            this.otherContributors = otherContributors;
+            this.lifecycleState = lifecycleState;
+            this.details = details;
+            this.resourcePackageUri = resourcePackageUri;
+            this.otherDetails = otherDetails;
+            this.parentResource = parentResource;
+        }
+
+        public Map<String, String> getOriginalAuthor() {
+            return originalAuthor;
+        }
+
+        public List<String> getOtherContributors() {
+            return otherContributors;
+        }
+
+        public String getLifecycleState() {
+            return lifecycleState;
+        }
+
+        public List<ResourceDescriptionItem> getDetails() {
+            return details;
+        }
+
+        public String getResourcePackageUri() {
+            return resourcePackageUri;
+        }
+
+        public Map<String, String> getOtherDetails() {
+            return otherDetails;
+        }
+
+        public AuthoredResource getParentResource() {
+            return parentResource;
+        }
+    }
+
+    public static class AuthoredResource {
+        private final CodePhrase originalLanguage;
+        private final Map<String, TranslationDetails> translations;
+        private final ResourceDescription description;
+        private final RevisionHistory revisionHistory;
+        private final boolean isControlled;
+
+        protected AuthoredResource(CodePhrase originalLanguage,
+                                Map<String, TranslationDetails> translations,
+                                ResourceDescription description,
+                                RevisionHistory revisionHistory,
+                                boolean isControlled) {
+            if (originalLanguage == null) {
+                throw new IllegalArgumentException("null originalLanguage");
+            }
+            if (translations != null) {
+                if (translations.isEmpty()) {
+                    throw new IllegalArgumentException("empty translations");
+                }
+                if (translations.containsKey(originalLanguage.getCodeString())) {
+                    throw new IllegalArgumentException(
+                            "original language in translations");
+                }
+            }
+            if (isControlled == (revisionHistory == null)) {
+                throw new IllegalArgumentException(
+                        "breach of revision history validity");
+            }
+            this.originalLanguage = originalLanguage;
+            this.translations = translations;
+            this.description = description;
+            this.revisionHistory = revisionHistory;
+            this.isControlled = isControlled;
+        }
+
+        public CodePhrase getOriginalLanguage() {
+            return originalLanguage;
+        }
+
+        public Map<String, TranslationDetails> getTranslations() {
+            return translations;
+        }
+
+        public ResourceDescription getDescription() {
+            return description;
+        }
+
+        public RevisionHistory getRevisionHistory() {
+            return revisionHistory;
+        }
+
+        public boolean isControlled() {
+            return isControlled;
+        }
+    }
+
+    public static class EventWithItemTree {
+        private final Locatable locatable;
+        private final DvDateTime time;
+        private final ItemTree data;
+        private final ItemStructure state;
+
+        protected EventWithItemTree(Locatable locatable, DvDateTime time,
+                                 ItemTree data, ItemStructure state) {
+            if (time == null) {
+                throw new IllegalArgumentException("null time");
+            }
+            if (data == null) {
+                throw new IllegalArgumentException("null data");
+            }
+            this.locatable = locatable;
+            this.time = time;
+            this.data = data;
+            this.state = state;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public DvDateTime getTime() {
+            return time;
+        }
+
+        public ItemTree getData() {
+            return data;
+        }
+
+        public ItemStructure getState() {
+            return state;
+        }
+    }
+
+    public static class EventWithItemSingle {
+        private final Locatable locatable;
+        private final DvDateTime time;
+        private final ItemSingle data;
+        private final ItemStructure state;
+
+        protected EventWithItemSingle(Locatable locatable, DvDateTime time,
+                                   ItemSingle data, ItemStructure state) {
+            if (time == null) {
+                throw new IllegalArgumentException("null time");
+            }
+            if (data == null) {
+                throw new IllegalArgumentException("null data");
+            }
+            this.locatable = locatable;
+            this.time = time;
+            this.data = data;
+            this.state = state;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public DvDateTime getTime() {
+            return time;
+        }
+
+        public ItemSingle getData() {
+            return data;
+        }
+
+        public ItemStructure getState() {
+            return state;
+        }
+    }
+
+    public static class EventWithItemTable {
+        private final Locatable locatable;
+        private final DvDateTime time;
+        private final ItemTable data;
+        private final ItemStructure state;
+
+        protected EventWithItemTable(Locatable locatable, DvDateTime time,
+                                  ItemTable data, ItemStructure state) {
+            if (time == null) {
+                throw new IllegalArgumentException("null time");
+            }
+            if (data == null) {
+                throw new IllegalArgumentException("null data");
+            }
+            this.locatable = locatable;
+            this.time = time;
+            this.data = data;
+            this.state = state;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public DvDateTime getTime() {
+            return time;
+        }
+
+        public ItemTable getData() {
+            return data;
+        }
+
+        public ItemStructure getState() {
+            return state;
+        }
+    }
+
+
+    public static class HistoryWithItemTree {
+        private final DataStructure dataStructure;
+        private final DvDateTime origin;
+        private final List<EventWithItemTree> events;
+        private final DvDuration period;
+        private final DvDuration duration;
+        private final ItemStructure summary;
+
+        protected HistoryWithItemTree(DataStructure dataStructure,
+                                   DvDateTime origin,
+                                   List<EventWithItemTree> events,
+                                   DvDuration period, DvDuration duration,
+                                   ItemStructure summary) {
+            if (origin == null) {
+                throw new IllegalArgumentException("null origin");
+            }
+            if (events != null && events.size() == 0) {
+                throw new IllegalArgumentException("empty events");
+            }
+            if (events == null && summary == null) {
+                throw new IllegalArgumentException("null events and summary");
+            }
+            this.dataStructure = dataStructure;
+            this.origin = origin;
+            this.events = events;
+            this.period = period;
+            this.duration = duration;
+            this.summary = summary;
+        }
+
+        public DataStructure getDataStructure() {
+            return dataStructure;
+        }
+
+        public DvDateTime getOrigin() {
+            return origin;
+        }
+
+        public List<EventWithItemTree> getEvents() {
+            return events;
+        }
+
+        public DvDuration getPeriod() {
+            return period;
+        }
+
+        public DvDuration getDuration() {
+            return duration;
+        }
+
+        public ItemStructure getSummary() {
+            return summary;
+        }
+    }
+
+    public static class HistoryWithItemSingle {
+        private final DataStructure dataStructure;
+        private final DvDateTime origin;
+        private final List<EventWithItemSingle> events;
+        private final DvDuration period;
+        private final DvDuration duration;
+        private final ItemStructure summary;
+
+        protected HistoryWithItemSingle(DataStructure dataStructure,
+                                     DvDateTime origin,
+                                     List<EventWithItemSingle> events,
+                                     DvDuration period, DvDuration duration,
+                                     ItemStructure summary) {
+            if (origin == null) {
+                throw new IllegalArgumentException("null origin");
+            }
+            if (events != null && events.size() == 0) {
+                throw new IllegalArgumentException("empty events");
+            }
+            if (events == null && summary == null) {
+                throw new IllegalArgumentException("null events and summary");
+            }
+            this.dataStructure = dataStructure;
+            this.origin = origin;
+            this.events = events;
+            this.period = period;
+            this.duration = duration;
+            this.summary = summary;
+        }
+
+        public DataStructure getDataStructure() {
+            return dataStructure;
+        }
+
+        public DvDateTime getOrigin() {
+            return origin;
+        }
+
+        public List<EventWithItemSingle> getEvents() {
+            return events;
+        }
+
+        public DvDuration getPeriod() {
+            return period;
+        }
+
+        public DvDuration getDuration() {
+            return duration;
+        }
+
+        public ItemStructure getSummary() {
+            return summary;
+        }
+    }
+
+    public static class HistoryWithItemTable {
+        private final DataStructure dataStructure;
+        private final DvDateTime origin;
+        private final List<EventWithItemTable> events;
+        private final DvDuration period;
+        private final DvDuration duration;
+        private final ItemStructure summary;
+
+        protected HistoryWithItemTable(DataStructure dataStructure,
+                                    DvDateTime origin,
+                                    List<EventWithItemTable> events,
+                                    DvDuration period, DvDuration duration,
+                                    ItemStructure summary) {
+            if (origin == null) {
+                throw new IllegalArgumentException("null origin");
+            }
+            if (events != null && events.size() == 0) {
+                throw new IllegalArgumentException("empty events");
+            }
+            if (events == null && summary == null) {
+                throw new IllegalArgumentException("null events and summary");
+            }
+            this.dataStructure = dataStructure;
+            this.origin = origin;
+            this.events = events;
+            this.period = period;
+            this.duration = duration;
+            this.summary = summary;
+        }
+
+        public DataStructure getDataStructure() {
+            return dataStructure;
+        }
+
+        public DvDateTime getOrigin() {
+            return origin;
+        }
+
+        public List<EventWithItemTable> getEvents() {
+            return events;
+        }
+
+        public DvDuration getPeriod() {
+            return period;
+        }
+
+        public DvDuration getDuration() {
+            return duration;
+        }
+
+        public ItemStructure getSummary() {
+            return summary;
+        }
+    }
+
+    public static class IntervalEventWithItemTree {
+        private final EventWithItemTree event;
+        private final DvDuration width;
+        private final DvCodedText mathFunction;
+        private final int sampleCount;
+
+        protected IntervalEventWithItemTree(EventWithItemTree event,
+                                         DvDuration width,
+                                         DvCodedText mathFunction,
+                                         int sampleCount) {
+            if (width == null) {
+                throw new IllegalArgumentException("null width");
+            }
+            if (mathFunction == null) {
+                throw new IllegalArgumentException("null mathFunction");
+            }
+            this.event = event;
+            this.width = width;
+            this.mathFunction = mathFunction;
+            this.sampleCount = sampleCount;
+        }
+
+        public EventWithItemTree getEvent() {
+            return event;
+        }
+
+        public DvDuration getWidth() {
+            return width;
+        }
+
+        public DvCodedText getMathFunction() {
+            return mathFunction;
+        }
+
+        public int getSampleCount() {
+            return sampleCount;
+        }
+    }
+
+    public static class IntervalEventWithItemSingle {
+        private final EventWithItemSingle event;
+        private final DvDuration width;
+        private final DvCodedText mathFunction;
+        private final int sampleCount;
+
+        protected IntervalEventWithItemSingle(EventWithItemSingle event,
+                                           DvDuration width,
+                                           DvCodedText mathFunction,
+                                           int sampleCount) {
+            if (width == null) {
+                throw new IllegalArgumentException("null width");
+            }
+            if (mathFunction == null) {
+                throw new IllegalArgumentException("null mathFunction");
+            }
+            this.event = event;
+            this.width = width;
+            this.mathFunction = mathFunction;
+            this.sampleCount = sampleCount;
+        }
+
+        public EventWithItemSingle getEvent() {
+            return event;
+        }
+
+        public DvDuration getWidth() {
+            return width;
+        }
+
+        public DvCodedText getMathFunction() {
+            return mathFunction;
+        }
+
+        public int getSampleCount() {
+            return sampleCount;
+        }
+    }
+
+    public static class IntervalEventWithItemTable {
+        private final EventWithItemTable event;
+        private final DvDuration width;
+        private final DvCodedText mathFunction;
+        private final int sampleCount;
+
+        protected IntervalEventWithItemTable(EventWithItemTable event,
+                                          DvDuration width,
+                                          DvCodedText mathFunction,
+                                          int sampleCount) {
+            if (width == null) {
+                throw new IllegalArgumentException("null width");
+            }
+            if (mathFunction == null) {
+                throw new IllegalArgumentException("null mathFunction");
+            }
+            this.event = event;
+            this.width = width;
+            this.mathFunction = mathFunction;
+            this.sampleCount = sampleCount;
+        }
+
+        public EventWithItemTable getEvent() {
+            return event;
+        }
+
+        public DvDuration getWidth() {
+            return width;
+        }
+
+        public DvCodedText getMathFunction() {
+            return mathFunction;
+        }
+
+        public int getSampleCount() {
+            return sampleCount;
+        }
+    }
+
+    public static class PointEventWithItemTree {
+        private final EventWithItemTree event;
+
+        protected PointEventWithItemTree(EventWithItemTree event) {
+            this.event = event;
+        }
+
+        public EventWithItemTree getEvent() {
+            return event;
+        }
+    }
+
+    public static class PointEventWithItemSingle {
+        private final EventWithItemSingle event;
+
+        protected PointEventWithItemSingle(EventWithItemSingle event) {
+            this.event = event;
+        }
+
+        public EventWithItemSingle getEvent() {
+            return event;
+        }
+    }
+
+    public static class PointEventWithItemTable {
+        private final EventWithItemTable event;
+
+        protected PointEventWithItemTable(EventWithItemTable event) {
+            this.event = event;
+        }
+
+        public EventWithItemTable getEvent() {
+            return event;
+        }
+    }
+
+    public static class ContentItem {
+        private final Locatable locatable;
+
+        protected ContentItem(Locatable locatable) {
+            if (locatable == null) {
+                throw new IllegalArgumentException("null locatable");
+            }
+            this.locatable = locatable;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+    }
+
+    public static class Entry {
+        private final ContentItem contentItem;
+        private final CodePhrase language;
+        private final CodePhrase encoding;
+        private final PartyProxy subject;
+        private final PartyProxy provider;
+        private final ObjectRef workflowId;
+        private final List<Participation> otherParticipations;
+
+        public ContentItem getContentItem() {
+            return contentItem;
+        }
+
+        public CodePhrase getLanguage() {
+            return language;
+        }
+
+        public CodePhrase getEncoding() {
+            return encoding;
+        }
+
+        public PartyProxy getSubject() {
+            return subject;
+        }
+
+        public PartyProxy getProvider() {
+            return provider;
+        }
+
+        public ObjectRef getWorkflowId() {
+            return workflowId;
+        }
+
+        public List<Participation> getOtherParticipations() {
+            return otherParticipations;
+        }
+
+        protected Entry(ContentItem contentItem, CodePhrase language,
+                     CodePhrase encoding, PartyProxy subject,
+                     PartyProxy provider, ObjectRef workflowId,
+                     List<Participation> otherParticipations) {
+            if (language == null) {
+                throw new IllegalArgumentException("null language");
+            }
+            if (encoding == null) {
+                throw new IllegalArgumentException("null encoding");
+            }
+            if (subject == null) {
+                throw new IllegalArgumentException("null subject");
+            }
+            if (otherParticipations != null && otherParticipations.isEmpty()) {
+                throw new IllegalArgumentException("otherParticipations is empty");
+            }
+
+            this.contentItem = contentItem;
+            this.language = language;
+            this.encoding = encoding;
+            this.subject = subject;
+            this.provider = provider;
+            this.workflowId = workflowId;
+            this.otherParticipations = (otherParticipations == null ? null :
+                    new ArrayList<Participation>(otherParticipations));
+        }
+    }
+
+    public static class CareEntry {
+        private final Entry entry;
+        private final ItemStructure protocol;
+        private final ObjectRef guidelineId;
+
+        protected CareEntry(Entry entry, ItemStructure protocol,
+                         ObjectRef guidelineId) {
+            this.entry = entry;
+            this.protocol = protocol;
+            this.guidelineId = guidelineId;
+        }
+
+        public Entry getEntry() {
+            return entry;
+        }
+
+        public ItemStructure getProtocol() {
+            return protocol;
+        }
+
+        public ObjectRef getGuidelineId() {
+            return guidelineId;
+        }
+    }
+
+    public static class Action {
+        private final DvDateTime time;
+        private final ItemStructure description;
+        private final ISMTransition ismTransition;
+        private final InstructionDetails instructionDetails;
+
+        protected Action(DvDateTime time, ItemStructure description,
+                      ISMTransition ismTransition,
+                      InstructionDetails instructionDetails) {
+
+            if (time == null) {
+                throw new IllegalArgumentException("null time");
+            }
+            if (description == null) {
+                throw new IllegalArgumentException("null description");
+            }
+            if (ismTransition == null) {
+                throw new IllegalArgumentException("null ismTransition");
+            }
+
+            this.time = time;
+            this.description = description;
+            this.ismTransition = ismTransition;
+            this.instructionDetails = instructionDetails;
+        }
+
+        public DvDateTime getTime() {
+            return time;
+        }
+
+        public ItemStructure getDescription() {
+            return description;
+        }
+
+        public ISMTransition getIsmTransition() {
+            return ismTransition;
+        }
+
+        public InstructionDetails getInstructionDetails() {
+            return instructionDetails;
+        }
+    }
+
+    public static class AdminEntry {
+        private final Entry entry;
+        private final ItemStructure data;
+
+        protected AdminEntry(Entry entry, ItemStructure data) {
+            if (data == null) {
+                throw new IllegalArgumentException("null data");
+            }
+            this.entry = entry;
+            this.data = data;
+        }
+
+        public Entry getEntry() {
+            return entry;
+        }
+
+        public ItemStructure getData() {
+            return data;
+        }
+    }
+
+    public static class Evaluation {
+        private final CareEntry careEntry;
+        private final ItemStructure data;
+
+        protected Evaluation(CareEntry careEntry, ItemStructure data) {
+            if (data == null) {
+                throw new IllegalArgumentException("null data");
+            }
+            this.careEntry = careEntry;
+            this.data = data;
+        }
+
+        public CareEntry getCareEntry() {
+            return careEntry;
+        }
+
+        public ItemStructure getData() {
+            return data;
+        }
+    }
+
+    public static class Instruction {
+        private final CareEntry careEntry;
+        private final DvText narrative;
+        private final List<Activity> activities;
+        private final DvDateTime expiryTime;
+        private final DvParsable wfDefinition;
+
+        protected Instruction(CareEntry careEntry, DvText narrative,
+                           List<Activity> activities, DvDateTime expiryTime,
+                           DvParsable wfDefinition) {
+
+            if (narrative == null) {
+                throw new IllegalArgumentException("null narrative");
+            }
+            if (activities != null && activities.size() == 0) {
+                throw new IllegalArgumentException("empty activities");
+            }
+
+            this.careEntry = careEntry;
+            this.narrative = narrative;
+            this.activities = activities;
+            this.expiryTime = expiryTime;
+            this.wfDefinition = wfDefinition;
+        }
+
+        public CareEntry getCareEntry() {
+            return careEntry;
+        }
+
+        public DvText getNarrative() {
+            return narrative;
+        }
+
+        public List<Activity> getActivities() {
+            return activities;
+        }
+
+        public DvDateTime getExpiryTime() {
+            return expiryTime;
+        }
+
+        public DvParsable getWfDefinition() {
+            return wfDefinition;
+        }
+    }
+
+    public static class ObservationWithItemTreeItemTree {
+        private final CareEntry careEntry;
+        private final HistoryWithItemTree data;
+        private final HistoryWithItemTree state;
+
+        protected ObservationWithItemTreeItemTree(CareEntry careEntry,
+                                               HistoryWithItemTree data,
+                                               HistoryWithItemTree state) {
+            if(careEntry == null){
+                throw new IllegalArgumentException("null careEntry");
+            }
+            if(data == null){
+                throw new IllegalArgumentException("null data");
+            }
+            this.careEntry = careEntry;
+            this.data = data;
+            this.state = state;
+        }
+
+        public CareEntry getCareEntry() {
+            return careEntry;
+        }
+
+        public HistoryWithItemTree getData() {
+            return data;
+        }
+
+        public HistoryWithItemTree getState() {
+            return state;
+        }
+    }
+
+    public static class ObservationWithItemTreeItemSingle {
+        private final CareEntry careEntry;
+        private final HistoryWithItemTree data;
+        private final HistoryWithItemSingle state;
+
+        protected ObservationWithItemTreeItemSingle(CareEntry careEntry,
+                                                 HistoryWithItemTree data,
+                                                 HistoryWithItemSingle state) {
+            if(careEntry == null){
+                throw new IllegalArgumentException("null careEntry");
+            }
+            if(data == null){
+                throw new IllegalArgumentException("null data");
+            }
+            this.careEntry = careEntry;
+            this.data = data;
+            this.state = state;
+        }
+
+        public CareEntry getCareEntry() {
+            return careEntry;
+        }
+
+        public HistoryWithItemTree getData() {
+            return data;
+        }
+
+        public HistoryWithItemSingle getState() {
+            return state;
+        }
+    }
+
+    public static class ObservationWithItemTreeItemTable {
+        private final CareEntry careEntry;
+        private final HistoryWithItemTree data;
+        private final HistoryWithItemTable state;
+
+        protected ObservationWithItemTreeItemTable(CareEntry careEntry,
+                                                HistoryWithItemTree data,
+                                                HistoryWithItemTable state) {
+            if(careEntry == null){
+                throw new IllegalArgumentException("null careEntry");
+            }
+            if(data == null){
+                throw new IllegalArgumentException("null data");
+            }
+            this.careEntry = careEntry;
+            this.data = data;
+            this.state = state;
+        }
+
+        public CareEntry getCareEntry() {
+            return careEntry;
+        }
+
+        public HistoryWithItemTree getData() {
+            return data;
+        }
+
+        public HistoryWithItemTable getState() {
+            return state;
+        }
+    }
+
+    public static class ObservationWithItemSingleItemTree {
+        private final CareEntry careEntry;
+        private final HistoryWithItemSingle data;
+        private final HistoryWithItemTree state;
+
+        protected ObservationWithItemSingleItemTree(CareEntry careEntry,
+                                                 HistoryWithItemSingle data,
+                                                 HistoryWithItemTree state) {
+            if(careEntry == null){
+                throw new IllegalArgumentException("null careEntry");
+            }
+            if(data == null){
+                throw new IllegalArgumentException("null data");
+            }
+            this.careEntry = careEntry;
+            this.data = data;
+            this.state = state;
+        }
+
+        public CareEntry getCareEntry() {
+            return careEntry;
+        }
+
+        public HistoryWithItemSingle getData() {
+            return data;
+        }
+
+        public HistoryWithItemTree getState() {
+            return state;
+        }
+    }
+
+    public static class ObservationWithItemSingleItemSingle {
+        private final CareEntry careEntry;
+        private final HistoryWithItemSingle data;
+        private final HistoryWithItemSingle state;
+
+        protected ObservationWithItemSingleItemSingle(CareEntry careEntry,
+                                                   HistoryWithItemSingle data,
+                                                   HistoryWithItemSingle state) {
+            if(careEntry == null){
+                throw new IllegalArgumentException("null careEntry");
+            }
+            if(data == null){
+                throw new IllegalArgumentException("null data");
+            }
+            this.careEntry = careEntry;
+            this.data = data;
+            this.state = state;
+        }
+
+        public CareEntry getCareEntry() {
+            return careEntry;
+        }
+
+        public HistoryWithItemSingle getData() {
+            return data;
+        }
+
+        public HistoryWithItemSingle getState() {
+            return state;
+        }
+    }
+
+    public static class ObservationWithItemSingleItemTable {
+        private final CareEntry careEntry;
+        private final HistoryWithItemSingle data;
+        private final HistoryWithItemTable state;
+
+        protected ObservationWithItemSingleItemTable(CareEntry careEntry,
+                                                  HistoryWithItemSingle data,
+                                                HistoryWithItemTable state) {
+            if(careEntry == null){
+                throw new IllegalArgumentException("null careEntry");
+            }
+            if(data == null){
+                throw new IllegalArgumentException("null data");
+            }
+            this.careEntry = careEntry;
+            this.data = data;
+            this.state = state;
+        }
+
+        public CareEntry getCareEntry() {
+            return careEntry;
+        }
+
+        public HistoryWithItemSingle getData() {
+            return data;
+        }
+
+        public HistoryWithItemTable getState() {
+            return state;
+        }
+    }
+
+    public static class ObservationWithItemTableItemTree {
+        private final CareEntry careEntry;
+        private final HistoryWithItemTable data;
+        private final HistoryWithItemTree state;
+
+        protected ObservationWithItemTableItemTree(CareEntry careEntry,
+                                                HistoryWithItemTable data,
+                                                HistoryWithItemTree state) {
+            if(careEntry == null){
+                throw new IllegalArgumentException("null careEntry");
+            }
+            if(data == null){
+                throw new IllegalArgumentException("null data");
+            }
+            this.careEntry = careEntry;
+            this.data = data;
+            this.state = state;
+        }
+
+        public CareEntry getCareEntry() {
+            return careEntry;
+        }
+
+        public HistoryWithItemTable getData() {
+            return data;
+        }
+
+        public HistoryWithItemTree getState() {
+            return state;
+        }
+    }
+
+    public static class ObservationWithItemTableItemSingle {
+        private final CareEntry careEntry;
+        private final HistoryWithItemTable data;
+        private final HistoryWithItemSingle state;
+
+        protected ObservationWithItemTableItemSingle(CareEntry careEntry,
+                                                  HistoryWithItemTable data,
+                                                  HistoryWithItemSingle state) {
+            if(careEntry == null){
+                throw new IllegalArgumentException("null careEntry");
+            }
+            if(data == null){
+                throw new IllegalArgumentException("null data");
+            }
+            this.careEntry = careEntry;
+            this.data = data;
+            this.state = state;
+        }
+
+        public CareEntry getCareEntry() {
+            return careEntry;
+        }
+
+        public HistoryWithItemTable getData() {
+            return data;
+        }
+
+        public HistoryWithItemSingle getState() {
+            return state;
+        }
+    }
+
+    public static class ObservationWithItemTableItemTable {
+        private final CareEntry careEntry;
+        private final HistoryWithItemTable data;
+        private final HistoryWithItemTable state;
+
+        protected ObservationWithItemTableItemTable(CareEntry careEntry,
+                                                 HistoryWithItemTable data,
+                                                 HistoryWithItemTable state) {
+            if(careEntry == null){
+                throw new IllegalArgumentException("null careEntry");
+            }
+            if(data == null){
+                throw new IllegalArgumentException("null data");
+            }
+            this.careEntry = careEntry;
+            this.data = data;
+            this.state = state;
+        }
+
+        public CareEntry getCareEntry() {
+            return careEntry;
+        }
+
+        public HistoryWithItemTable getData() {
+            return data;
+        }
+
+        public HistoryWithItemTable getState() {
+            return state;
+        }
+    }
+    
+    public static class Section {
+        private final ContentItem contentItem;
+        private final List<ContentItem> items;
+
+        public ContentItem getContentItem() {
+            return contentItem;
+        }
+
+        public List<ContentItem> getItems() {
+            return items;
+        }
+
+        public Section(ContentItem contentItem, List<ContentItem> items) {
+            if(contentItem == null){
+                throw new IllegalArgumentException("null contentItem");
+            }
+            if (items != null && items.isEmpty()) {
+                throw new IllegalArgumentException("items is empty");
+            }
+
+
+            this.contentItem = contentItem;
+            this.items = items;
+        }
+    }
+
+    public static class EventContext {
+        private final PartyIdentified healthCareFacility;
+        private final DvDateTime startTime;
+        private final DvDateTime endTime;
+        private final List<Participation> participations;
+        private final String location;
+        private final DvCodedText setting;
+        private final ItemStructure otherContext;
+
+        protected EventContext(PartyIdentified healthCareFacility,
+                            DvDateTime startTime, DvDateTime endTime,
+                            List<Participation> participations, String location,
+                            DvCodedText setting, ItemStructure otherContext) {
+            if (startTime == null) {
+                throw new IllegalArgumentException("null startTime");
+            }
+            if (participations != null && participations.isEmpty()) {
+                throw new IllegalArgumentException("empty participations");
+            }
+            if (location != null && location.isEmpty()) {
+                throw new IllegalArgumentException("empty location");
+            }
+            if(setting == null) {
+                throw new IllegalArgumentException("null setting");
+            }
+            this.healthCareFacility = healthCareFacility;
+            this.startTime = startTime;
+            this.endTime = endTime;
+            this.participations = ( participations == null ?
+                    null : new ArrayList<Participation>(participations) );
+            this.location = location;
+            this.setting = setting;
+            this.otherContext = otherContext;
+        }
+
+        public PartyIdentified getHealthCareFacility() {
+            return healthCareFacility;
+        }
+
+        public DvDateTime getStartTime() {
+            return startTime;
+        }
+
+        public DvDateTime getEndTime() {
+            return endTime;
+        }
+
+        public List<Participation> getParticipations() {
+            return participations;
+        }
+
+        public String getLocation() {
+            return location;
+        }
+
+        public DvCodedText getSetting() {
+            return setting;
+        }
+
+        public ItemStructure getOtherContext() {
+            return otherContext;
+        }
+    }
+
+    public static class Composition {
+        private final Locatable locatable;
+        private final List<ContentItem> content;
+        private final CodePhrase language;
+        private final EventContext context;
+        private final PartyProxy composer;
+        private final DvCodedText category;
+        private final CodePhrase territory;
+
+        protected Composition(Locatable locatable, List<ContentItem> content,
+                           CodePhrase language, EventContext context,
+                           PartyProxy composer, DvCodedText category,
+                           CodePhrase territory) {
+            if(locatable == null){
+                throw new IllegalArgumentException("null locatable");
+            }
+            if (content != null && content.isEmpty()) {
+                throw new IllegalArgumentException("empty content");
+            }
+            if (composer == null) {
+                throw new IllegalArgumentException("null composer");
+            }
+            if (language == null) {
+                throw new IllegalArgumentException("null language");
+            }
+            if (category == null) {
+                throw new IllegalArgumentException("null category");
+            }
+            if(category.getDefiningCode().getCodeString().equals("persistent")
+                    && context != null){
+                throw new IllegalArgumentException("invalid persistent category");
+            }
+            if (territory == null) {
+                throw new IllegalArgumentException("null territory");
+            }
+
+            this.locatable = locatable;
+            this.content = content;
+            this.language = language;
+            this.context = context;
+            this.composer = composer;
+            this.category = category;
+            this.territory = territory;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public List<ContentItem> getContent() {
+            return content;
+        }
+
+        public CodePhrase getLanguage() {
+            return language;
+        }
+
+        public EventContext getContext() {
+            return context;
+        }
+
+        public PartyProxy getComposer() {
+            return composer;
+        }
+
+        public DvCodedText getCategory() {
+            return category;
+        }
+
+        public CodePhrase getTerritory() {
+            return territory;
+        }
+    }
+
+    public static class EHR {
+        private final HierObjectID systemID;
+        private final HierObjectID ehrID;
+        private final DvDateTime timeCreated;
+        private final List<ObjectRef> contributions;
+        private final ObjectRef ehrStatus;
+        private final ObjectRef directory;
+        private final List<ObjectRef> compositions;
+
+        public HierObjectID getSystemID() {
+            return systemID;
+        }
+
+        public HierObjectID getEhrID() {
+            return ehrID;
+        }
+
+        public DvDateTime getTimeCreated() {
+            return timeCreated;
+        }
+
+        public List<ObjectRef> getContributions() {
+            return contributions;
+        }
+
+        public ObjectRef getEhrStatus() {
+            return ehrStatus;
+        }
+
+        public ObjectRef getDirectory() {
+            return directory;
+        }
+
+        public List<ObjectRef> getCompositions() {
+            return compositions;
+        }
+
+        protected EHR(HierObjectID systemID, HierObjectID ehrID,
+                   DvDateTime timeCreated, List<ObjectRef> contributions,
+                   ObjectRef ehrStatus, ObjectRef directory,
+                   List<ObjectRef> compositions) {
+            if (systemID == null) {
+                throw new IllegalArgumentException("null systemID");
+            }
+            if (ehrID == null) {
+                throw new IllegalArgumentException("null ehrID");
+            }
+            if (timeCreated == null) {
+                throw new IllegalArgumentException("null timeCreated");
+            }
+            if (contributions == null) {
+                throw new IllegalArgumentException("null contributions");
+            }
+            for (ObjectRef ref : contributions) {
+                if (! "CONTRIBUTION".equals(ref.getType())) {
+                    throw new IllegalArgumentException(
+                            "non-contribution type object reference");
+                }
+            }
+            if (compositions == null) {
+                throw new IllegalArgumentException("null compositions");
+            }
+            for (ObjectRef ref : compositions) {
+                if (! "VERSIONED_COMPOSITION".equals(
+                        ref.getType())) {
+                    throw new IllegalArgumentException(
+                            "non-versioned_composition type object reference");
+                }
+            }
+            if (directory != null && !"VERSIONED_FOLDER".equals(
+                    directory.getType())) {
+                throw new IllegalArgumentException(
+                        "non-versioned_folder type object reference");
+            }
+            this.systemID = systemID;
+            this.ehrID = ehrID;
+            this.timeCreated = timeCreated;
+            this.contributions = contributions;
+            this.ehrStatus = ehrStatus;
+            this.directory = directory;
+            this.compositions = compositions;
+        }
+    }
+
+    public static class EHRStatus {
+        private final Locatable locatable;
+        private final PartySelf subject;
+        private final boolean isQueryable;
+        private final boolean isModifiable;
+        private final ItemStructure otherDetails;
+
+        protected EHRStatus(Locatable locatable, PartySelf subject,
+                         boolean isQueryable, boolean isModifiable,
+                         ItemStructure otherDetails) {
+            if(locatable == null){
+                throw new IllegalArgumentException("null locatable");
+            }
+            if (subject == null) {
+                throw new IllegalArgumentException("null subject");
+            }
+            this.locatable = locatable;
+            this.subject = subject;
+            this.isQueryable = isQueryable;
+            this.isModifiable = isModifiable;
+            this.otherDetails = otherDetails;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public PartySelf getSubject() {
+            return subject;
+        }
+
+        public boolean isQueryable() {
+            return isQueryable;
+        }
+
+        public boolean isModifiable() {
+            return isModifiable;
+        }
+
+        public ItemStructure getOtherDetails() {
+            return otherDetails;
+        }
+    }
+
+    public static class EHRAccess {
+        private final Locatable locatable;
+
+        protected EHRAccess(Locatable locatable) {
+            if(locatable == null){
+                throw new IllegalArgumentException("null locatable");
+            }
+            this.locatable = locatable;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+    }
+
+    public static class XTerminology {
+        private final ItemStructure itemStructure;
+
+        protected XTerminology(ItemStructure itemStructure) {
+            if(itemStructure == null){
+                throw new IllegalArgumentException("null item structure");
+            }
+            this.itemStructure = itemStructure;
+        }
+
+        public ItemStructure getItemStructure() {
+            return itemStructure;
+        }
+    }
+
+    public static class XComposition {
+        private final boolean primary;
+        private final DvEHRURI originalPath;
+        private final Composition composition;
+
+        protected XComposition(boolean primary, DvEHRURI originalPath,
+                            Composition composition) {
+            if(originalPath == null) {
+                throw new IllegalArgumentException("null originalPath");
+            }
+            if(composition == null) {
+                throw new IllegalArgumentException("null composition");
+            }
+            this.primary = primary;
+            this.originalPath = originalPath;
+            this.composition = composition;
+        }
+
+        public boolean isPrimary() {
+            return primary;
+        }
+
+        public DvEHRURI getOriginalPath() {
+            return originalPath;
+        }
+
+        public Composition getComposition() {
+            return composition;
+        }
+    }
+
+    public static class XDemographics {
+        private final Map<ObjectID, Party> parties;
+        private final ItemStructure details;
+
+        protected XDemographics(Map<ObjectID, Party> parties,
+                             ItemStructure details) {
+            if(parties != null && parties.isEmpty()) {
+                throw new IllegalArgumentException("empty paries");
+            }
+            this.parties = parties;
+            this.details = details;
+        }
+
+        public Map<ObjectID, Party> getParties() {
+            return parties;
+        }
+
+        public ItemStructure getDetails() {
+            return details;
+        }
+    }
+
+    public static class XFolder {
+        private final Locatable locatable;
+        private final List<XFolder> folders;
+        private final List<XComposition> compositions;
+
+        protected XFolder(Locatable locatable, List<XFolder> folders,
+                       List<XComposition> compositions) {
+            if(locatable == null){
+                throw new IllegalArgumentException("null locatable");
+            }
+            if (folders != null && folders.isEmpty()) {
+                throw new IllegalArgumentException("empty folders");
+            }
+            if (compositions != null && compositions.isEmpty()) {
+                throw new IllegalArgumentException("empty compositions");
+            }
+            this.locatable = locatable;
+            this.folders = folders;
+            this.compositions = compositions;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+
+        public List<XFolder> getFolders() {
+            return folders;
+        }
+
+        public List<XComposition> getCompositions() {
+            return compositions;
+        }
+    }
+
+    public static class XAccessControl {
+        private final Map<ObjectID, Party> groups;
+        private final ItemStructure details;
+
+        protected XAccessControl(Map<ObjectID, Party> groups,
+                              ItemStructure details) {
+            if(groups != null && groups.isEmpty()) {
+                throw new IllegalArgumentException("empty groups");
+            }
+            this.groups = groups;
+            this.details = details;
+        }
+
+        public Map<ObjectID, Party> getGroups() {
+            return groups;
+        }
+
+        public ItemStructure getDetails() {
+            return details;
+        }
+    }
+
+    public static class EHRExtract {
+        private final DvDateTime timeCreated;
+        private final String ehrId;
+        private final PartyRef subjectOfCare;
+        private final PartyRef originator;
+        private final Set<Participation> otherParticipations;
+        private final boolean includeMultimedia;
+        private final int followLinks;
+        private final XFolder directory;
+        private final XTerminology terminology;
+        private final XDemographics demographics;
+        private final XAccessControl accessContro;
+
+        public DvDateTime getTimeCreated() {
+            return timeCreated;
+        }
+
+        public String getEhrId() {
+            return ehrId;
+        }
+
+        public PartyRef getSubjectOfCare() {
+            return subjectOfCare;
+        }
+
+        public PartyRef getOriginator() {
+            return originator;
+        }
+
+        public Set<Participation> getOtherParticipations() {
+            return otherParticipations;
+        }
+
+        public boolean isIncludeMultimedia() {
+            return includeMultimedia;
+        }
+
+        public int getFollowLinks() {
+            return followLinks;
+        }
+
+        public XFolder getDirectory() {
+            return directory;
+        }
+
+        public XTerminology getTerminology() {
+            return terminology;
+        }
+
+        public XDemographics getDemographics() {
+            return demographics;
+        }
+
+        public XAccessControl getAccessControl() {
+            return accessContro;
+        }
+
+        protected EHRExtract(DvDateTime timeCreated, String ehrId,
+                          PartyRef subjectOfCare, PartyRef originator,
+                          Set<Participation> otherParticipations,
+                          boolean includeMultimedia, int followLinks,
+                          XFolder directory, XTerminology terminology,
+                          XDemographics demographics,
+                          XAccessControl accessControl) {
+            this.timeCreated = timeCreated;
+            this.ehrId = ehrId;
+            this.subjectOfCare = subjectOfCare;
+            this.originator = originator;
+            this.otherParticipations = otherParticipations;
+            this.includeMultimedia = includeMultimedia;
+            this.followLinks = followLinks;
+            this.directory = directory;
+            this.terminology = terminology;
+            this.demographics = demographics;
+            this.accessContro = accessControl;
+        }
+    }
+
+    public static class GenericEntry {
+        private final ContentItem contentItem;
+        private final ItemTree data;
+
+        protected GenericEntry(ContentItem contentItem, ItemTree data) {
+            if(contentItem == null){
+                throw new IllegalArgumentException("null contentItem");
+            }
+            this.contentItem = contentItem;
+            this.data = data;
+        }
+
+        public ContentItem getContentItem() {
+            return contentItem;
+        }
+
+        public ItemTree getData() {
+            return data;
+        }
+    }
+
+    public static class MessageContent {
+        private final Locatable locatable;
+
+        protected MessageContent(Locatable locatable) {
+            if(locatable == null){
+                throw new IllegalArgumentException("null locatbale");
+            }
+            this.locatable = locatable;
+        }
+
+        public Locatable getLocatable() {
+            return locatable;
+        }
+    }
+
+    public static class Message {
+        private final DvDateTime timeSent;
+        private final PartyRef sender;
+        private final PartyRef receiver;
+        private final PartyRef senderNode;
+        private final PartyRef receiverNode;
+        private final String sendersReference;
+        private final boolean initiator;
+        private final DvOrdinal urgency;
+        private final Attestation signature;
+        private final Set<Party> parties;
+        private final MessageContent content;
+
+        public DvDateTime getTimeSent() {
+            return timeSent;
+        }
+
+        public PartyRef getSender() {
+            return sender;
+        }
+
+        public PartyRef getReceiver() {
+            return receiver;
+        }
+
+        public PartyRef getSenderNode() {
+            return senderNode;
+        }
+
+        public PartyRef getReceiverNode() {
+            return receiverNode;
+        }
+
+        public String getSendersReference() {
+            return sendersReference;
+        }
+
+        public boolean isInitiator() {
+            return initiator;
+        }
+
+        public DvOrdinal getUrgency() {
+            return urgency;
+        }
+
+        public Attestation getSignature() {
+            return signature;
+        }
+
+        public Set<Party> getParties() {
+            return parties;
+        }
+
+        public MessageContent getContent() {
+            return content;
+        }
+
+        protected Message(DvDateTime timeSent, PartyRef sender, PartyRef receiver,
+                       PartyRef senderNode, PartyRef receiverNode,
+                       String sendersReference, boolean initiator,
+                       DvOrdinal urgency, Attestation signature,
+                       Set<Party> parties, MessageContent content) {
+            if (timeSent == null) {
+                throw new IllegalArgumentException("timeSent null");
+            }
+            if (sender == null) {
+                throw new IllegalArgumentException("sender null");
+            }
+            if (receiver == null) {
+                throw new IllegalArgumentException("receiver null");
+            }
+            if (sendersReference.isEmpty()) {
+                throw new IllegalArgumentException(
+                        "null or empty sendersReference");
+            }
+            if (senderNode == null) {
+                throw new IllegalArgumentException("senderNode null");
+            }
+            if (receiverNode == null) {
+                throw new IllegalArgumentException("receiverNode null");
+            }
+            if (urgency == null) {
+                throw new IllegalArgumentException("urgency null");
+            }
+            if(signature == null){
+                throw new IllegalArgumentException("signature null");
+            }
+            if (parties != null && parties.isEmpty()) {
+                throw new IllegalArgumentException("empty parties");
+            }
+            if (content == null) {
+                throw new IllegalArgumentException("content null");
+            }
+            this.timeSent = timeSent;
+            this.sender = sender;
+            this.receiver = receiver;
+            this.senderNode = senderNode;
+            this.receiverNode = receiverNode;
+            this.sendersReference = sendersReference;
+            this.initiator = initiator;
+            this.urgency = urgency;
+            this.signature = signature;
+            this.parties = parties;
+            this.content = content;
         }
     }
 }

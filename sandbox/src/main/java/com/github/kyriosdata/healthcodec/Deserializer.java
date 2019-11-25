@@ -98,11 +98,11 @@ public interface Deserializer {
     RMObject.DVURI deserializeDVURI();
 
     /**
-     * Deserializador de DVEHRURI
+     * Deserializador de DvEHRURI
      *
-     * @return Instância de DVEHRURI
+     * @return Instância de DvEHRURI
      */
-    RMObject.DVEHRURI deserializeDVEHRURI();
+    RMObject.DvEHRURI deserializeDvEHRURI();
 
     /**
      * Deserializador de VersionTreeID
@@ -454,4 +454,422 @@ public interface Deserializer {
      * @return nova instância de Activity
      */
     RMObject.Activity deserializeActivity();
+
+    /**
+     * Deserializador de DvOrdered.
+     * @return nova instância de DvOrdered.
+     */
+    RMObject.DvOrdered deserializeDvOrdered();
+
+    /**
+     * Deserializador de DvInterval.
+     * @return nova instância de DvInterval
+     */
+    RMObject.DvInterval deserializeDvInterval();
+
+    /**
+     * Deserializador de DvQuantified.
+     * @return nova instância de DvQuantified
+     */
+    RMObject.DvQuantified deserializeDvQuantified();
+
+    /**
+     * Deserializador de DvAmount.
+     * @return nova instância de DvAmount
+     */
+    RMObject.DvAmount deserializeDvAmount();
+
+    /**
+     * Deserializador de DvOrdinal.
+     * @return nova instância de DvOrdinal
+     */
+    RMObject.DvOrdinal deserializeDvOrdinal();
+
+    /**
+     * Deserializador de DvCount.
+     * @return nova instância de DvCount
+     */
+    RMObject.DvCount deserializeDvCount();
+
+    /**
+     * Deserializador de DvProportion.
+     * @return nova instância de DvProportion
+     */
+    RMObject.DvProportion deserializeDvProportion();
+
+    /**
+     * Deserializador de DvQuantity.
+     * @return nova instância de DvQuantity
+     */
+    RMObject.DvQuantity deserializeDvQuantity();
+
+    /**
+     * Deserializador de DvDuration.
+     * @return nova instância de DvDuration
+     */
+    RMObject.DvDuration deserializeDvDuration();
+
+    /**
+     * Deserializador de DvAbsoluteQuantity.
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    RMObject.DvAbsoluteQuantityWithDvCount
+        deserializeDvAbsoluteQuantityDvCount();
+
+    /**
+     * Deserializador de DvAbsoluteQuantity.
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    RMObject.DvAbsoluteQuantityWithDvDuration
+        deserializeDvAbsoluteQuantityDvDuration();
+
+    /**
+     * Deserializador de DvAbsoluteQuantity.
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    RMObject.DvAbsoluteQuantityWithDvProportion
+        deserializeDvAbsoluteQuantityDvProportion();
+
+    /**
+     * Deserializador de DvAbsoluteQuantity.
+     * @return nova instância de DvAbsoluteQuantity
+     */
+    RMObject.DvAbsoluteQuantityWithDvQuantity
+        deserializeDvAbsoluteQuantityDvQuantity();
+
+    /**
+     * Deserializador de DvDate.
+     * @return nova instância de DvDate
+     */
+    RMObject.DvDate deserializeDvDate();
+
+    /**
+     * Deserializador de DvTime.
+     * @return nova instância de DvTime
+     */
+    RMObject.DvTime deserializeDvTime();
+
+    /**
+     * Deserializador de DvDateTime.
+     * @return nova instância de DvDateTime
+     */
+    RMObject.DvDateTime deserializeDvDateTime();
+
+    /**
+     * Deserializador de DvTemporal.
+     * @return nova instância de DvTemporal
+     */
+    RMObject.DvTemporal deserializeDvTemporal();
+
+    /**
+     * Deserializador de Participation.
+     * @return nova instância de Participation
+     */
+    RMObject.Participation deserializeParticipation();
+
+    /**
+     * Deserializador de AuditDetails.
+     * @return nova instância de AuditDetails
+     */
+    RMObject.AuditDetails deserializeAuditDetails();
+
+    /**
+     * Deserializador de Attestation.
+     * @return nova instância de Attestation
+     */
+    RMObject.Attestation deserializeAttestation();
+
+    /**
+     * Deserializador de RevisionHistoryItem.
+     * @return nova instância de RevisionHistoryItem
+     */
+    RMObject.RevisionHistoryItem deserializeRevisionHistoryItem();
+
+    /**
+     * Deserializador de RevisionHistory.
+     * @return nova instância de RevisionHistory
+     */
+    RMObject.RevisionHistory deserializeRevisionHistory();
+
+    /**
+     * Deserializador de Contribution.
+     * @return nova instância de Contribution
+     */
+    RMObject.Contribution deserializeContribution();
+
+    /**
+     * Deserializador de Folder.
+     * @return nova instância de Folder
+     */
+    RMObject.Folder deserializeFolder();
+
+    /**
+     * Deserializador de AuthoredResource.
+     * @return nova instância de AuthoredResource
+     */
+    RMObject.AuthoredResource deserializeAuthoredResource();
+
+    /**
+     * Deserializador de ResourceDescription.
+     * @return nova instância de ResourceDescription
+     */
+    RMObject.ResourceDescription deserializeResourceDescription();
+
+    /**
+     * Deserializador de Event com ItemTree.
+     * @return nova instância de Event com ItemTree
+     */
+    RMObject.EventWithItemTree deserializeEventWithItemTree();
+
+    /**
+     * Deserializador de Event com ItemSingle.
+     * @return nova instância de Event com ItemSingle
+     */
+    RMObject.EventWithItemSingle deserializeEventWithItemSingle();
+
+    /**
+     * Deserializador de Event com ItemTable.
+     * @return nova instância de Event com ItemTable
+     */
+    RMObject.EventWithItemTable deserializeEventWithItemTable();
+
+    /**
+     * Deserializador de IntervalEvent com ItemTree.
+     * @return nova instância de IntervalEvent com ItemTree
+     */
+    RMObject.IntervalEventWithItemTree deserializeIntervalEventWithItemTree();
+
+    /**
+     * Deserializador de IntervalEvent com ItemSingle.
+     * @return nova instância de IntervalEvent com ItemSingle
+     */
+    RMObject.IntervalEventWithItemSingle deserializeIntervalEventWithItemSingle();
+
+    /**
+     * Deserializador de IntervalEvent com ItemTable.
+     * @return nova instância de IntervalEvent com ItemTable
+     */
+    RMObject.IntervalEventWithItemTable deserializeIntervalEventWithItemTable();
+
+    /**
+     * Deserializador de History com ItemTree.
+     * @return nova instância de History com ItemTree
+     */
+    RMObject.HistoryWithItemTree deserializeHistoryWithItemTree();
+
+    /**
+     * Deserializador de History com ItemSingle.
+     * @return nova instância de History com ItemSingle
+     */
+    RMObject.HistoryWithItemSingle deserializeHistoryWithItemSingle();
+
+    /**
+     * Deserializador de History com ItemTable.
+     * @return nova instância de History com ItemTable
+     */
+    RMObject.HistoryWithItemTable deserializeHistoryWithItemTable();
+
+    /**
+     * Deserializador de PointEvent com ItemTree.
+     * @return nova instância de PointEvent com ItemTree
+     */
+    RMObject.PointEventWithItemTree deserializePointEventWithItemTree();
+
+    /**
+     * Deserializador de PointEvent com ItemSingle.
+     * @return nova instância de PointEvent com ItemSingle
+     */
+    RMObject.PointEventWithItemSingle deserializePointEventWithItemSingle();
+
+    /**
+     * Deserializador de PointEvent com ItemTable.
+     * @return nova instância de PointEvent com ItemTable
+     */
+    RMObject.PointEventWithItemTable deserializePointEventWithItemTable();
+
+    /**
+     * Deserializador de ContentItem.
+     * @return nova instância de ContentItem
+     */
+    RMObject.ContentItem deserializeContentItem();
+
+    /**
+     * Deserializador de Entry.
+     * @return nova instância de Entry
+     */
+    RMObject.Entry deserializeEntry();
+
+    /**
+     * Deserializador de CareEntry.
+     * @return nova instância de CareEntry
+     */
+    RMObject.CareEntry deserializeCareEntry();
+
+    /**
+     * Deserializador de Action.
+     * @return nova instância de Action
+     */
+    RMObject.Action deserializeAction();
+
+    /**
+     * Deserializador de AdminEntry.
+     * @return nova instância de AdminEntry
+     */
+    RMObject.AdminEntry deserializeAdminEntry();
+
+    /**
+     * Deserializador de Evaluation.
+     * @return nova instância de Evaluation
+     */
+    RMObject.Evaluation deserializeEvaluation();
+
+    /**
+     * Deserializador de Instruction.
+     * @return nova instância de Instruction
+     */
+    RMObject.Instruction deserializeInstruction();
+
+    /**
+     * Deserializador de Observation com data ItemTree e state ItemTree.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemTreeItemTree deserializeObservationWithItemTreeItemTree();
+
+    /**
+     * Deserializador de Observation com data ItemTree e state ItemSingle.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemTreeItemSingle deserializeObservationWithItemTreeItemSingle();
+
+    /**
+     * Deserializador de Observation com data ItemTree e state ItemTable.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemTreeItemTable deserializeObservationWithItemTreeItemTable();
+
+    /**
+     * Deserializador de Observation com data ItemSingle e state ItemTree.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemSingleItemTree deserializeObservationWithItemSingleItemTree();
+
+    /**
+     * Deserializador de Observation com data ItemSingle e state ItemSingle.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemSingleItemSingle deserializeObservationWithItemSingleItemSingle();
+
+    /**
+     * Deserializador de Observation com data ItemSingle e state ItemTable.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemSingleItemTable deserializeObservationWithItemSingleItemTable();
+
+    /**
+     * Deserializador de Observation com data ItemTable e state ItemTable.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemTableItemTable deserializeObservationWithItemTableItemTable();
+
+    /**
+     * Deserializador de Observation com data ItemTable e state ItemTree.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemTableItemTree deserializeObservationWithItemTableItemTree();
+
+    /**
+     * Deserializador de Observation com data ItemTable e state ItemSingle.
+     * @return nova instância de Observation
+     */
+    RMObject.ObservationWithItemTableItemSingle deserializeObservationWithItemTableItemSingle();
+
+    /**
+     * Deserializador de Section.
+     * @return nova instância de Section
+     */
+    RMObject.Section deserializeSection();
+
+    /**
+     * Deserializador de EventContext.
+     * @return nova instância de EventContext
+     */
+    RMObject.EventContext deserializeEventContext();
+
+    /**
+     * Deserializador de Composition.
+     * @return nova instância de Composition
+     */
+    RMObject.Composition deserializeComposition();
+
+    /**
+     * Deserializador de EHR.
+     * @return nova instância de EHR
+     */
+    RMObject.EHR deserializeEHR();
+
+    /**
+     * Deserializador de EHRStatus.
+     * @return nova instância de EHRStatus
+     */
+    RMObject.EHRStatus deserializeEHRStatus();
+
+    /**
+     * Deserializador de EHRAccess.
+     * @return nova instância de EHRAccess
+     */
+    RMObject.EHRAccess deserializeEHRAccess();
+
+    /**
+     * Deserializador de XTerminology.
+     * @return nova instância de XTerminology
+     */
+    RMObject.XTerminology deserializeXTerminology();
+
+    /**
+     * Deserializador de XComposition.
+     * @return nova instância de XComposition
+     */
+    RMObject.XComposition deserializeXComposition();
+
+    /**
+     * Deserializador de XDemographics.
+     * @return nova instância de XDemographics
+     */
+    RMObject.XDemographics deserializeXDemographics();
+
+    /**
+     * Deserializador de XFolder.
+     * @return nova instância de XFolder
+     */
+    RMObject.XFolder deserializeXFolder();
+
+    /**
+     * Deserializador de XAccessControl.
+     * @return nova instância de XAccessControl
+     */
+    RMObject.XAccessControl deserializeXAccessControl();
+
+    /**
+     * Deserializador de EHRExtract.
+     * @return nova instância de EHRExtract
+     */
+    RMObject.EHRExtract deserializeEHRExtract();
+
+    /**
+     * Deserializador de GenericEntry.
+     * @return nova instância de GenericEntry
+     */
+    RMObject.GenericEntry deserializeGenericEntry();
+
+    /**
+     * Deserializador de MessageContent.
+     * @return nova instância de MessageContent
+     */
+    RMObject.MessageContent deserializeMessageContent();
+
+    /**
+     * Deserializador de Message.
+     * @return nova instância de Message
+     */
+    RMObject.Message deserializeMessage();
 }
