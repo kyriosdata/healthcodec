@@ -181,13 +181,11 @@ public class Buffer {
      *                                   posição no buffer
      */
     public byte[] readByteArray(int position, int length) {
-        byte[] byteArray = new byte[length];
-        int j = 0;
-        for (int i = position; i < (position + length); i++) {
-            byteArray[j] = buffer.get(i);
-            j++;
-        }
-        return byteArray;
+        byte[] bytes = new byte[length];
+        buffer.position(position);
+        buffer.get(bytes, 0, length);
+
+        return bytes;
     }
 
     /**
@@ -198,21 +196,16 @@ public class Buffer {
      * desta posição
      *
      * @param position Posição do array
-     * @param b[]      Array de bytes fonte que será armazenado no buffer
+     * @param bytes     Vetor de bytes cujo conteúdo será depositado no buffer.
      * @throws BufferUnderflowException  no caso de não conseguir ler a
      *                                   quantidade
      *                                   de bytes do buffer
      * @throws IndexOutOfBoundsException no caso de não conseguir acessar a
      *                                   posição no buffer
-     * @throws BufferOverflowException   se não existe espaço suficiente para
-     *                                   armazenar o array de bytes
      */
-    public void writeByteArray(int position, byte[] b) {
-        int j = 0;
-        for (int i = position; i < (position + b.length); i++) {
-            writeByte(i, b[j]);
-            j++;
-        }
+    public void writeByteArray(int position, byte[] bytes) {
+        buffer.position(position);
+        buffer.put(bytes);
     }
 
     /**
