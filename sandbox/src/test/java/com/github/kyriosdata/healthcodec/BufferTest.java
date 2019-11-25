@@ -27,7 +27,6 @@ class BufferTest {
         assertEquals(umByte, carregado);
     }
 
-
     @Test
     void verificaLimitesBufferSemElementos() {
         Buffer buffer = Buffer.newInstance(new byte[0]);
@@ -35,7 +34,7 @@ class BufferTest {
                 () -> buffer.readByte(0));
     }
 
-    _re@Test
+    @Test
     void verificaLimites() {
         Buffer buffer = Buffer.newInstance(new byte[1]);
         assertEquals(0, buffer.readByte(0));
