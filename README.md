@@ -7,4 +7,6 @@ Veja [como](CONTRIBUTING.md) contribuir.
 ## Tópicos correlatos
 
 - [External Data Representation (XDR)](https://en.wikipedia.org/wiki/External_Data_Representation)
+- [Message Pack](https://msgpack.org/)
+- [Protocol Buffer](https://developers.google.com/protocol-buffers/)
 
