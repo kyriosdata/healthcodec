@@ -71,7 +71,7 @@
         <checkstyle.plugin.versao>3.1.0</checkstyle.plugin.versao>
         <checkstyle.versao>8.25</checkstyle.versao>
         <dependency.check.versao>5.2.2</dependency.check.versao>
-        <h2.versao>1.4.200</h2.versao>
+        <h2.versao>2.0.206</h2.versao>
         <junit.versao>5.5.2</junit.versao>
         <maven.compiler.versao>3.8.1</maven.compiler.versao>
         <pmd.plugin.versao>3.12.0</pmd.plugin.versao>
